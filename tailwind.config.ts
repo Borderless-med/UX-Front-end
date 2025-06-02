@@ -29,7 +29,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#2A5C82',
+					DEFAULT: '#4A90A4',
 					foreground: '#ffffff'
 				},
 				secondary: {
@@ -58,6 +58,10 @@ export default {
 				},
 				'neutral-gray': '#6B7280',
 				'cta-red': '#C53030',
+				'dark-bg': '#1a1f2e',
+				'dark-card': '#2a3441',
+				'teal-accent': '#4A90A4',
+				'success-green': '#10B981',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

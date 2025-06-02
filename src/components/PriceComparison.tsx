@@ -1,123 +1,171 @@
 
 import { useState } from 'react';
-import { Search, Calculator, TrendingDown } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 
 const PriceComparison = () => {
   const [selectedTreatment, setSelectedTreatment] = useState('');
+  const [priceRange, setPriceRange] = useState([100, 5000]);
 
   const treatments = [
-    { id: 'implants', name: 'Dental Implants', sgPrice: 'S$3,000 - S$6,000', jbPrice: 'RM2,500 - RM4,500', savings: '40-60%' },
-    { id: 'root-canal', name: 'Root Canal Treatment', sgPrice: 'S$800 - S$1,500', jbPrice: 'RM400 - RM800', savings: '45-65%' },
-    { id: 'crown', name: 'Dental Crown', sgPrice: 'S$1,200 - S$2,500', jbPrice: 'RM600 - RM1,200', savings: '50-70%' },
-    { id: 'cleaning', name: 'Professional Cleaning', sgPrice: 'S$80 - S$150', jbPrice: 'RM60 - RM120', savings: '25-45%' },
-    { id: 'filling', name: 'Tooth Filling', sgPrice: 'S$150 - S$400', jbPrice: 'RM80 - RM200', savings: '40-60%' },
-    { id: 'extraction', name: 'Tooth Extraction', sgPrice: 'S$200 - S$500', jbPrice: 'RM100 - RM250', savings: '45-65%' }
+    { 
+      id: 'tooth-filling', 
+      name: 'Tooth Filling', 
+      sgPrice: '$300', 
+      jbPrice: '$100', 
+      savings: '$200',
+      action: 'Book Consultation'
+    },
+    { 
+      id: 'root-canal', 
+      name: 'Root Canal', 
+      sgPrice: '$1800', 
+      jbPrice: '$600', 
+      savings: '$1200',
+      action: 'Book Consultation'
+    },
+    { 
+      id: 'dental-crown', 
+      name: 'Dental Crown', 
+      sgPrice: '$1200', 
+      jbPrice: '$400', 
+      savings: '$800',
+      action: 'Book Consultation'
+    },
+    { 
+      id: 'dental-implant', 
+      name: 'Dental Implant', 
+      sgPrice: '$4000', 
+      jbPrice: '$1500', 
+      savings: '$2500',
+      action: 'Book Consultation'
+    },
+    { 
+      id: 'teeth-whitening', 
+      name: 'Teeth Whitening', 
+      sgPrice: '$400-800', 
+      jbPrice: '$150-300', 
+      savings: '$250',
+      action: 'Book Consultation'
+    },
+    { 
+      id: 'braces-metal', 
+      name: 'Braces (Metal)', 
+      sgPrice: '$4000-6000', 
+      jbPrice: '$1500-2500', 
+      savings: '$2500',
+      action: 'Book Consultation'
+    },
+    { 
+      id: 'wisdom-tooth', 
+      name: 'Wisdom Tooth Removal', 
+      sgPrice: '$800-1500', 
+      jbPrice: '$250-500', 
+      savings: '$550',
+      action: 'Book Consultation'
+    },
+    { 
+      id: 'gum-treatment', 
+      name: 'Gum Treatment', 
+      sgPrice: '$500-1200', 
+      jbPrice: '$200-400', 
+      savings: '$300',
+      action: 'Book Consultation'
+    },
   ];
 
-  const selectedTreatmentData = treatments.find(t => t.id === selectedTreatment);
-
   return (
-    <section id="compare" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section id="compare" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-bg">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Compare Treatment Costs
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Compare Dental Prices
           </h2>
-          <p className="text-lg text-neutral-gray max-w-2xl mx-auto">
-            See how much you can save on quality dental care by choosing treatments in Johor Bahru
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Comprehensive filtering system to find your perfect dental solution
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          {/* Treatment Selection */}
-          <Card className="mb-8 shadow-lg border-0 bg-gradient-to-r from-blue-50 to-white">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/10 p-2 rounded-lg">
-                  <Search className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl">Select Treatment</CardTitle>
-                  <CardDescription>Choose a dental treatment to compare prices</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
+        {/* Filters */}
+        <Card className="mb-8 bg-dark-card border-gray-600">
+          <CardHeader>
+            <CardTitle className="text-white">Treatment Type</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Select onValueChange={setSelectedTreatment} value={selectedTreatment}>
-                <SelectTrigger className="w-full text-lg p-6 border-2 bg-white">
-                  <SelectValue placeholder="Choose a dental treatment..." />
+                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectValue placeholder="All Treatments" />
                 </SelectTrigger>
-                <SelectContent className="bg-white">
+                <SelectContent className="bg-dark-card border-gray-600">
+                  <SelectItem value="all">All Treatments</SelectItem>
                   {treatments.map((treatment) => (
-                    <SelectItem key={treatment.id} value={treatment.id} className="text-lg p-3">
+                    <SelectItem key={treatment.id} value={treatment.id} className="text-white">
                       {treatment.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </CardContent>
-          </Card>
+              
+              <Select>
+                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectValue placeholder="$100 - $5000" />
+                </SelectTrigger>
+                <SelectContent className="bg-dark-card border-gray-600">
+                  <SelectItem value="100-500" className="text-white">$100 - $500</SelectItem>
+                  <SelectItem value="500-1000" className="text-white">$500 - $1000</SelectItem>
+                  <SelectItem value="1000-5000" className="text-white">$1000 - $5000</SelectItem>
+                </SelectContent>
+              </Select>
 
-          {/* Price Comparison Results */}
-          {selectedTreatmentData && (
-            <div className="grid md:grid-cols-2 gap-6 mb-8 animate-fade-in">
-              {/* Singapore Prices */}
-              <Card className="border-2 border-red-100 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-white">
-                  <CardTitle className="text-xl text-red-700 flex items-center gap-2">
-                    🇸🇬 Singapore
-                  </CardTitle>
-                  <CardDescription>Typical price range</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="text-3xl font-bold text-gray-900 mb-2">
-                    {selectedTreatmentData.sgPrice}
-                  </div>
-                  <p className="text-neutral-gray">Average market rate</p>
-                </CardContent>
-              </Card>
+              <Select>
+                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectValue placeholder="Any Distance" />
+                </SelectTrigger>
+                <SelectContent className="bg-dark-card border-gray-600">
+                  <SelectItem value="any" className="text-white">Any Distance</SelectItem>
+                  <SelectItem value="near" className="text-white">Near Causeway</SelectItem>
+                  <SelectItem value="city" className="text-white">JB City Center</SelectItem>
+                </SelectContent>
+              </Select>
 
-              {/* Johor Bahru Prices */}
-              <Card className="border-2 border-green-100 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardHeader className="bg-gradient-to-r from-green-50 to-white">
-                  <CardTitle className="text-xl text-green-700 flex items-center gap-2">
-                    🇲🇾 Johor Bahru
-                  </CardTitle>
-                  <CardDescription>Typical price range</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="text-3xl font-bold text-gray-900 mb-2">
-                    {selectedTreatmentData.jbPrice}
-                  </div>
-                  <p className="text-neutral-gray">Quality verified clinics</p>
-                </CardContent>
-              </Card>
+              <Select>
+                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectValue placeholder="Any Rating" />
+                </SelectTrigger>
+                <SelectContent className="bg-dark-card border-gray-600">
+                  <SelectItem value="any" className="text-white">Any Rating</SelectItem>
+                  <SelectItem value="4plus" className="text-white">4+ Stars</SelectItem>
+                  <SelectItem value="4.5plus" className="text-white">4.5+ Stars</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          )}
+          </CardContent>
+        </Card>
 
-          {/* Savings Highlight */}
-          {selectedTreatmentData && (
-            <Card className="bg-gradient-to-r from-primary to-blue-600 text-white shadow-xl animate-fade-in">
-              <CardContent className="p-8">
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <div className="bg-white/20 p-3 rounded-full">
-                      <TrendingDown className="h-8 w-8" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold mb-1">Potential Savings</h3>
-                      <p className="text-blue-100">On {selectedTreatmentData.name}</p>
-                    </div>
-                  </div>
-                  <div className="text-5xl font-bold mb-4">{selectedTreatmentData.savings}</div>
-                  <p className="text-xl text-blue-100 mb-6">
-                    Save significantly while maintaining quality standards
-                  </p>
+        {/* Treatment Comparison Table */}
+        <Card className="bg-dark-card border-gray-600">
+          <CardHeader className="bg-teal-accent/20">
+            <div className="grid grid-cols-5 gap-4 text-white font-semibold">
+              <div>Treatment</div>
+              <div>Singapore Price</div>
+              <div>JB Partner Price</div>
+              <div>Potential Savings</div>
+              <div>Action</div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            {treatments.map((treatment, index) => (
+              <div key={treatment.id} className="grid grid-cols-5 gap-4 p-4 border-b border-gray-600 hover:bg-dark-bg/50 transition-colors">
+                <div className="text-white font-medium">{treatment.name}</div>
+                <div className="text-red-400 font-semibold">{treatment.sgPrice}</div>
+                <div className="text-success-green font-semibold">{treatment.jbPrice}</div>
+                <div className="text-teal-accent font-semibold">+{treatment.savings}</div>
+                <div>
                   <Button 
-                    className="bg-white text-primary hover:bg-gray-100 font-semibold px-8 py-3 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+                    size="sm" 
+                    className="bg-gray-600 hover:bg-gray-500 text-white"
                     onClick={() => {
                       const element = document.getElementById('waitlist');
                       if (element) {
@@ -125,31 +173,13 @@ const PriceComparison = () => {
                       }
                     }}
                   >
-                    Get Early Access
+                    {treatment.action}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Coming Soon Notice */}
-          {!selectedTreatment && (
-            <Card className="border-2 border-yellow-200 bg-yellow-50 shadow-lg">
-              <CardContent className="p-8 text-center">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <Calculator className="h-8 w-8 text-yellow-600" />
-                  <h3 className="text-xl font-semibold text-yellow-800">Interactive Price Calculator</h3>
-                </div>
-                <p className="text-yellow-700 mb-4">
-                  Select a treatment above to see detailed price comparisons and potential savings
-                </p>
-                <p className="text-sm text-yellow-600">
-                  Full clinic directory and booking system launching August 2025
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

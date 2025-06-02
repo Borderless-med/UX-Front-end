@@ -39,21 +39,21 @@ const WaitlistSection = () => {
 
   if (isSubmitted) {
     return (
-      <section id="waitlist" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="waitlist" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-bg">
         <div className="max-w-2xl mx-auto text-center">
-          <Card className="border-2 border-green-200 bg-green-50 shadow-xl">
+          <Card className="border-2 border-success-green bg-dark-card shadow-xl">
             <CardContent className="p-8">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <div className="bg-green-100 p-3 rounded-full">
-                  <CheckCircle className="h-8 w-8 text-green-600" />
+                <div className="bg-success-green/20 p-3 rounded-full">
+                  <CheckCircle className="h-8 w-8 text-success-green" />
                 </div>
-                <h3 className="text-2xl font-bold text-green-800">You're All Set!</h3>
+                <h3 className="text-2xl font-bold text-success-green">You're All Set!</h3>
               </div>
-              <p className="text-green-700 text-lg mb-6">
+              <p className="text-gray-300 text-lg mb-6">
                 Thank you for joining our waitlist. We'll send you updates as we get closer to launch.
               </p>
-              <div className="bg-white p-4 rounded-lg border border-green-200">
-                <p className="text-sm text-green-600 font-medium">
+              <div className="bg-dark-bg p-4 rounded-lg border border-gray-600">
+                <p className="text-sm text-teal-accent font-medium">
                   Expected launch: August 2025
                 </p>
               </div>
@@ -65,17 +65,17 @@ const WaitlistSection = () => {
   }
 
   return (
-    <section id="waitlist" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <section id="waitlist" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-bg">
       <div className="max-w-2xl mx-auto">
-        <Card className="shadow-xl border-0 bg-white">
+        <Card className="shadow-xl border-gray-600 bg-dark-card">
           <CardHeader className="text-center pb-6">
-            <div className="bg-primary/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-              <Mail className="h-8 w-8 text-primary" />
+            <div className="bg-teal-accent/20 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+              <Mail className="h-8 w-8 text-teal-accent" />
             </div>
-            <CardTitle className="text-3xl font-bold text-gray-900 mb-2">
+            <CardTitle className="text-3xl font-bold text-white mb-2">
               Join the Waitlist
             </CardTitle>
-            <CardDescription className="text-lg">
+            <CardDescription className="text-lg text-gray-300">
               Be the first to know when we launch with exclusive early access to our platform
             </CardDescription>
           </CardHeader>
@@ -88,7 +88,7 @@ const WaitlistSection = () => {
                   placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full text-lg p-6 border-2 focus:border-primary"
+                  className="w-full text-lg p-6 border-2 border-gray-600 bg-dark-bg text-white focus:border-teal-accent"
                   required
                 />
               </div>
@@ -96,7 +96,7 @@ const WaitlistSection = () => {
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="w-full bg-cta-red hover:bg-red-700 text-white font-semibold py-6 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:transform-none disabled:hover:scale-100"
+                className="w-full bg-teal-accent hover:bg-teal-accent/80 text-white font-semibold py-6 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:transform-none disabled:hover:scale-100"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
@@ -112,9 +112,9 @@ const WaitlistSection = () => {
               </Button>
             </form>
 
-            <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-semibold text-blue-900 mb-3">What you'll get:</h4>
-              <ul className="text-blue-800 space-y-2">
+            <div className="mt-8 p-6 bg-teal-accent/20 rounded-lg border border-teal-accent/30">
+              <h4 className="font-semibold text-white mb-3">What you'll get:</h4>
+              <ul className="text-gray-300 space-y-2">
                 <li>✓ Early access to price comparisons</li>
                 <li>✓ Priority booking with verified clinics</li>
                 <li>✓ Exclusive launch offers and discounts</li>

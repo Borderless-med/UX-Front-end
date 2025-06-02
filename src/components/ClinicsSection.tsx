@@ -2,90 +2,133 @@
 import { Building2, Shield, Star, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 const ClinicsSection = () => {
-  const features = [
+  const clinics = [
     {
-      icon: Shield,
-      title: 'Verified Quality',
-      description: 'All clinics undergo rigorous verification for safety and quality standards'
+      name: 'JB Dental Excellence',
+      status: 'Verification Complete',
+      statusColor: 'bg-success-green',
+      rating: 4.8,
+      reviews: 156,
+      specialties: ['Implants', 'Orthodontics']
     },
     {
-      icon: Star,
-      title: 'Patient Reviews',
-      description: 'Real patient experiences and ratings to help you make informed decisions'
+      name: 'Mahkota Medical Centre',
+      status: 'Final Review',
+      statusColor: 'bg-yellow-500',
+      rating: 4.7,
+      reviews: 203,
+      specialties: ['General', 'Surgery']
     },
     {
-      icon: Clock,
-      title: 'Easy Booking',
-      description: 'Seamless appointment scheduling that works with your travel plans'
+      name: 'Smile Specialist Clinic',
+      status: 'Documents Pending',
+      statusColor: 'bg-gray-500',
+      rating: 4.6,
+      reviews: 89,
+      specialties: ['Cosmetic', 'Whitening']
+    },
+    {
+      name: 'Advanced Dental Care',
+      status: 'Verification Complete',
+      statusColor: 'bg-success-green',
+      rating: 4.9,
+      reviews: 234,
+      specialties: ['Endodontics', 'Periodontics']
+    },
+    {
+      name: 'Premier Oral Health',
+      status: 'Final Review',
+      statusColor: 'bg-yellow-500',
+      rating: 4.5,
+      reviews: 167,
+      specialties: ['General', 'Pediatric']
     }
   ];
 
   return (
-    <section id="clinics" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <section id="clinics" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-card">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <Badge className="mb-4 px-4 py-2 text-sm font-medium bg-yellow-100 text-yellow-800 border-yellow-200">
-            Coming Soon
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Verified Clinic Network
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Find Clinics
           </h2>
-          <p className="text-lg text-neutral-gray max-w-2xl mx-auto">
-            We're carefully selecting and verifying the best dental clinics in Johor Bahru 
-            to ensure you receive quality care at affordable prices.
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Meet Our First Partners in August 2025
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {features.map((feature, index) => (
-            <Card key={index} className="text-center shadow-lg border-0 hover:shadow-xl transition-all duration-300 bg-white">
-              <CardHeader>
-                <div className="bg-primary/10 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <feature.icon className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl mb-2">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base leading-relaxed">
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Progress Indicator */}
-        <Card className="bg-gradient-to-r from-primary to-blue-600 text-white shadow-xl">
-          <CardContent className="p-8">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <Building2 className="h-10 w-10" />
-                <div>
-                  <h3 className="text-2xl font-bold mb-1">Network Development</h3>
-                  <p className="text-blue-100">Building partnerships with quality providers</p>
-                </div>
-              </div>
-              
-              <div className="max-w-md mx-auto mb-6">
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Clinic Verification Progress</span>
-                  <span>23/50 Clinics</span>
-                </div>
-                <div className="w-full bg-blue-700 rounded-full h-3">
-                  <div className="bg-white h-3 rounded-full" style={{ width: '46%' }}></div>
-                </div>
-              </div>
-
-              <p className="text-lg text-blue-100 mb-4">
-                Join our waitlist to be notified when we launch with verified clinic partners
-              </p>
-              
-              <div className="text-sm text-blue-200">
-                Expected launch: August 2025
+        {/* Verification Progress */}
+        <Card className="mb-12 bg-dark-bg border-gray-600">
+          <CardContent className="p-8 text-center">
+            <h3 className="text-2xl font-bold text-white mb-6">Verification Progress</h3>
+            <div className="flex justify-center items-center mb-6">
+              <span className="text-4xl font-bold text-success-green">23</span>
+              <span className="text-2xl text-gray-400 mx-2">/</span>
+              <span className="text-2xl text-gray-400">100</span>
+              <span className="text-lg text-gray-300 ml-4">Clinics Verified</span>
+            </div>
+            <div className="max-w-md mx-auto mb-6">
+              <div className="w-full bg-gray-700 rounded-full h-3">
+                <div className="bg-success-green h-3 rounded-full" style={{ width: '23%' }}></div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Partner Clinic Preview */}
+        <div className="mb-12">
+          <h3 className="text-xl font-bold text-white mb-6 text-center">Partner Clinic Preview</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {clinics.slice(0, 5).map((clinic, index) => (
+              <Card key={index} className="bg-dark-bg border-gray-600 hover:border-teal-accent transition-all duration-300">
+                <CardHeader>
+                  <div className="flex justify-between items-start mb-2">
+                    <CardTitle className="text-white text-lg">{clinic.name}</CardTitle>
+                    <Badge className={`${clinic.statusColor} text-white text-xs`}>
+                      {clinic.status}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-400">★</span>
+                    <span className="text-white font-semibold">{clinic.rating}</span>
+                    <span className="text-gray-400">({clinic.reviews} reviews)</span>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {clinic.specialties.map((specialty, i) => (
+                      <Badge key={i} variant="outline" className="border-gray-600 text-gray-300">
+                        {specialty}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Early Access CTA */}
+        <Card className="bg-gradient-to-r from-teal-accent to-blue-600 text-white">
+          <CardContent className="p-8 text-center">
+            <h3 className="text-2xl font-bold mb-4">Request Early Access</h3>
+            <p className="text-lg mb-6">
+              Be among the first to book with our verified partner clinics when we launch in August 2025
+            </p>
+            <Button 
+              className="bg-white text-teal-accent hover:bg-gray-100 font-semibold px-8 py-3 text-lg rounded-lg"
+              onClick={() => {
+                const element = document.getElementById('waitlist');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
+              Get Priority Access
+            </Button>
           </CardContent>
         </Card>
       </div>
