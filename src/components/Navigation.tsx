@@ -2,9 +2,11 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -14,55 +16,74 @@ const Navigation = () => {
     setIsMenuOpen(false);
   };
 
+  const scrollToWaitlist = () => {
+    // If not on home page, navigate to home first
+    if (location.pathname !== '/') {
+      window.location.href = '/#waitlist';
+    } else {
+      scrollToSection('waitlist');
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-dark-bg/95 backdrop-blur-md shadow-lg z-50 border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <span className="text-xl font-bold text-teal-accent">SG-JB Dental</span>
+            <Link to="/" className="text-xl font-bold text-teal-accent">SG-JB Dental</Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <button
-                onClick={() => scrollToSection('home')}
-                className="text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              <Link
+                to="/"
+                className={`transition-colors duration-200 font-medium ${
+                  location.pathname === '/' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Home
-              </button>
-              <button
-                onClick={() => scrollToSection('compare')}
-                className="text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/compare"
+                className={`transition-colors duration-200 font-medium ${
+                  location.pathname === '/compare' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Compare Prices
-              </button>
-              <button
-                onClick={() => scrollToSection('clinics')}
-                className="text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/clinics"
+                className={`transition-colors duration-200 font-medium ${
+                  location.pathname === '/clinics' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Find Clinics
-              </button>
-              <button
-                onClick={() => scrollToSection('how-it-works')}
-                className="text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/how-it-works"
+                className={`transition-colors duration-200 font-medium ${
+                  location.pathname === '/how-it-works' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 How It Works
-              </button>
-              <button
-                onClick={() => scrollToSection('qa')}
-                className="text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/qa"
+                className={`transition-colors duration-200 font-medium ${
+                  location.pathname === '/qa' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Q&A
-              </button>
+              </Link>
             </div>
           </div>
 
           {/* CTA Button */}
           <div className="hidden md:block">
             <Button 
-              onClick={() => scrollToSection('waitlist')}
+              onClick={scrollToWaitlist}
               className="bg-teal-accent hover:bg-teal-accent/80 text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200"
             >
               Get Early Access
@@ -84,38 +105,53 @@ const Navigation = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-dark-bg border-t border-gray-700">
-              <button
-                onClick={() => scrollToSection('home')}
-                className="block w-full text-left px-3 py-2 text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              <Link
+                to="/"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
+                  location.pathname === '/' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Home
-              </button>
-              <button
-                onClick={() => scrollToSection('compare')}
-                className="block w-full text-left px-3 py-2 text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/compare"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
+                  location.pathname === '/compare' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Compare Prices
-              </button>
-              <button
-                onClick={() => scrollToSection('clinics')}
-                className="block w-full text-left px-3 py-2 text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/clinics"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
+                  location.pathname === '/clinics' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Find Clinics
-              </button>
-              <button
-                onClick={() => scrollToSection('how-it-works')}
-                className="block w-full text-left px-3 py-2 text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/how-it-works"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
+                  location.pathname === '/how-it-works' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 How It Works
-              </button>
-              <button
-                onClick={() => scrollToSection('qa')}
-                className="block w-full text-left px-3 py-2 text-gray-300 hover:text-teal-accent transition-colors duration-200 font-medium"
+              </Link>
+              <Link
+                to="/qa"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
+                  location.pathname === '/qa' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
+                }`}
               >
                 Q&A
-              </button>
+              </Link>
               <Button 
-                onClick={() => scrollToSection('waitlist')}
+                onClick={scrollToWaitlist}
                 className="w-full bg-teal-accent hover:bg-teal-accent/80 text-white font-medium mt-4"
               >
                 Get Early Access

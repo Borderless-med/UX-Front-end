@@ -1,10 +1,7 @@
 
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
-import PriceComparison from '@/components/PriceComparison';
-import ClinicsSection from '@/components/ClinicsSection';
 import HowItWorksSection from '@/components/HowItWorksSection';
-import QASection from '@/components/QASection';
 import WaitlistSection from '@/components/WaitlistSection';
 
 const Index = () => {
@@ -12,10 +9,7 @@ const Index = () => {
     <div className="min-h-screen font-inter bg-dark-bg text-white">
       <Navigation />
       <HeroSection />
-      <PriceComparison />
-      <ClinicsSection />
       <HowItWorksSection />
-      <QASection />
       <WaitlistSection />
       
       {/* Footer */}
