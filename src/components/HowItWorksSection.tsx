@@ -1,5 +1,6 @@
 
 import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const HowItWorksSection = () => {
   const steps = [
@@ -48,6 +49,25 @@ const HowItWorksSection = () => {
     }
   ];
 
+  const sentimentFeatures = [
+    {
+      title: 'Fake Review Detection',
+      description: 'Advanced algorithms identify bot-generated and paid reviews with 94.2% accuracy'
+    },
+    {
+      title: 'Linguistic Analysis',
+      description: 'Natural language processing detects authentic patient experiences vs promotional content'
+    },
+    {
+      title: 'Pattern Recognition',
+      description: 'Identifies suspicious review patterns, timing clusters, and coordinated posting activities'
+    },
+    {
+      title: 'Confidence Scoring',
+      description: 'Each review gets a confidence score based on authenticity, detail level, and verification status'
+    }
+  ];
+
   return (
     <section id="how-it-works" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-card">
       <div className="max-w-7xl mx-auto">
@@ -75,24 +95,74 @@ const HowItWorksSection = () => {
           ))}
         </div>
 
-        {/* AI Verification System */}
+        {/* Detailed Features with Tabs */}
         <Card className="bg-dark-bg border-gray-600">
           <CardContent className="p-8">
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-white mb-4">AI Verification System</h3>
-              <p className="text-gray-300">Our advanced verification process ensures every partner clinic meets the highest standards</p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {verificationFeatures.map((feature, index) => (
-                <div key={index} className="text-center">
-                  <div className="bg-teal-accent/20 p-4 rounded-lg mb-4">
-                    <h4 className="text-white font-semibold mb-2">{feature.title}</h4>
-                    <p className="text-gray-300 text-sm">{feature.description}</p>
+            <Tabs defaultValue="verification" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 bg-dark-card border-gray-600">
+                <TabsTrigger value="verification" className="text-white data-[state=active]:bg-teal-accent data-[state=active]:text-white">
+                  AI Verification System
+                </TabsTrigger>
+                <TabsTrigger value="sentiment" className="text-white data-[state=active]:bg-teal-accent data-[state=active]:text-white">
+                  Sentiment Analysis
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="verification" className="mt-8">
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-white mb-4">AI Verification System</h3>
+                  <p className="text-gray-300">Our advanced verification process ensures every partner clinic meets the highest standards</p>
+                </div>
+                
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {verificationFeatures.map((feature, index) => (
+                    <div key={index} className="text-center">
+                      <div className="bg-teal-accent/20 p-4 rounded-lg mb-4">
+                        <h4 className="text-white font-semibold mb-2">{feature.title}</h4>
+                        <p className="text-gray-300 text-sm">{feature.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="sentiment" className="mt-8">
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-white mb-4">Advanced Sentiment Analysis</h3>
+                  <p className="text-gray-300 mb-6">
+                    Beyond simple Google ratings - our proprietary system provides authentic patient feedback analysis
+                  </p>
+                  <div className="bg-teal-accent/10 border border-teal-accent/30 rounded-lg p-6 mb-8">
+                    <h4 className="text-teal-accent font-bold text-lg mb-2">Platform Superiority</h4>
+                    <p className="text-white text-sm">
+                      While Google ratings can be easily manipulated through fake reviews, paid comments, and bot-generated content, 
+                      our AI-powered sentiment analysis provides genuine insights into patient experiences with 94.2% accuracy in detecting fraudulent reviews.
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
+                
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {sentimentFeatures.map((feature, index) => (
+                    <div key={index} className="text-center">
+                      <div className="bg-blue-500/20 p-4 rounded-lg mb-4">
+                        <h4 className="text-white font-semibold mb-2">{feature.title}</h4>
+                        <p className="text-gray-300 text-sm">{feature.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 text-center">
+                  <div className="bg-gray-800/50 rounded-lg p-6">
+                    <h4 className="text-white font-semibold mb-3">Why This Matters for International Patients</h4>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      When seeking dental care across borders, authentic patient feedback is crucial for safety and quality assurance. 
+                      Our sentiment analysis ensures you're making decisions based on genuine patient experiences, not manipulated ratings.
+                    </p>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
