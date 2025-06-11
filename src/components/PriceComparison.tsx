@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -163,12 +164,19 @@ const PriceComparison = () => {
 
               <Select onValueChange={setSelectedDistance} value={selectedDistance}>
                 <SelectTrigger className="bg-white border-blue-light text-blue-dark">
-                  <SelectValue placeholder="Any Distance" />
+                  <SelectValue placeholder="Distance from CIQ" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-blue-light z-50">
                   <SelectItem value="any" className="text-blue-dark">Any Distance</SelectItem>
-                  <SelectItem value="near" className="text-blue-dark">Near Causeway</SelectItem>
-                  <SelectItem value="city" className="text-blue-dark">JB City Center</SelectItem>
+                  <SelectItem value="0-2km" className="text-blue-dark">Within 2km from CIQ</SelectItem>
+                  <SelectItem value="2-5km" className="text-blue-dark">2-5km from CIQ</SelectItem>
+                  <SelectItem value="5-10km" className="text-blue-dark">5-10km from CIQ</SelectItem>
+                  <SelectItem value="10-15km" className="text-blue-dark">10-15km from CIQ</SelectItem>
+                  <SelectItem value="15km+" className="text-blue-dark">15km+ from CIQ</SelectItem>
+                  <SelectItem value="causeway-area" className="text-blue-dark">Near Causeway Bridge</SelectItem>
+                  <SelectItem value="city-center" className="text-blue-dark">JB City Center</SelectItem>
+                  <SelectItem value="taman-sentosa" className="text-blue-dark">Taman Sentosa Area</SelectItem>
+                  <SelectItem value="skudai" className="text-blue-dark">Skudai Area</SelectItem>
                 </SelectContent>
               </Select>
 
