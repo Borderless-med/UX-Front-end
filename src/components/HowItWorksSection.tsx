@@ -99,10 +99,10 @@ const HowItWorksSection = () => {
           <CardContent className="p-8">
             <Tabs defaultValue="verification" className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-gray-100 border-gray-200">
-                <TabsTrigger value="verification" className="text-gray-700 data-[state=active]:bg-teal-accent data-[state=active]:text-white">
+                <TabsTrigger value="verification">
                   AI Verification System
                 </TabsTrigger>
-                <TabsTrigger value="sentiment" className="text-gray-700 data-[state=active]:bg-teal-accent data-[state=active]:text-white">
+                <TabsTrigger value="sentiment">
                   Sentiment Analysis
                 </TabsTrigger>
               </TabsList>
