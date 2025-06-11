@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Shield, Users, MapPin, DollarSign } from 'lucide-react';
@@ -19,7 +18,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
+    <section id="home" className="pt-36 pb-16 px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto w-full">
         {/* Hero Header */}
         <div className="text-center animate-fade-in mb-16">
