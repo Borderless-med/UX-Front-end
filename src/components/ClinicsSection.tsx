@@ -17,7 +17,7 @@ const ClinicsSection = () => {
   const [credentialFilter, setCredentialFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
 
-  // Real clinic data from the uploaded spreadsheet
+  // Updated clinic data from the new spreadsheet
   const clinics = [
     {
       id: 1,
@@ -832,6 +832,358 @@ const ClinicsSection = () => {
         wisdomTooth: true,
         gumTreatment: true
       }
+    },
+    {
+      id: 38,
+      name: 'Klinik Pergigian Gaura',
+      address: 'No.20 (Aras Bawah), Jalan Aliff 3, Taman Damansara Aliff, 81200 Johor Bahru',
+      dentist: 'Dr. Siti Nur Hajjar (BDS UM)',
+      rating: 5.0,
+      reviews: 460,
+      distance: 4.2,
+      sentiment: 98,
+      mdaLicense: 'MDC-2022-JHR-344',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 39,
+      name: 'E&E Dental Clinic JB',
+      address: '76, Jalan Harimau Tarum, Taman Abad, 80250 Johor Bahru',
+      dentist: 'Dr. Edmund Ooi (BDS UM), Dr. Eewin Goi (BDS IMU)',
+      rating: 5.0,
+      reviews: 120,
+      distance: 2.5,
+      sentiment: 95,
+      mdaLicense: 'MDC-2023-JHR-455',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 40,
+      name: 'ProDental Specialists Group',
+      address: 'No.01-01, 01-02, Block H, Komersial Southkey Mozek, Persiaran Southkey 1, Kota Southkey',
+      dentist: 'Dr. Ahmad Faisal (BDS USM), Dr. Raj Kumar (Ortho Specialist)',
+      rating: 4.9,
+      reviews: 310,
+      distance: 5,
+      sentiment: 96,
+      mdaLicense: 'MDC-2023-JHR-122',
+      credentials: 'MDC Registered; BDS; Specialist Qualified',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 41,
+      name: 'Summer Dental Clinic',
+      address: 'No 01-08, Block F, Komersil SouthKey Mozek, Persiaran Southkey 1, Kota Southkey',
+      dentist: 'Dr. Sarah Lim (BDS IMU)',
+      rating: 4.8,
+      reviews: 85,
+      distance: 5.2,
+      sentiment: 91.2,
+      mdaLicense: 'MDC-2024-JHR-067',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: false,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 42,
+      name: 'White Dental Johor Bahru',
+      address: '42, Jalan Camar 1, Taman Perling, 81200 Johor Bahru',
+      dentist: 'Dr. Wong Wei Ming (BDS UKM)',
+      rating: 4.7,
+      reviews: 145,
+      distance: 3.8,
+      sentiment: 90.2,
+      mdaLicense: 'MDC-2023-JHR-288',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: false,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 43,
+      name: 'Lou Dental Centre Johor Bahru',
+      address: '103,103A & 103B, Jalan Sutera Tanjung 8/2, Taman Sutera Utama',
+      dentist: 'Dr. Lou Chee Keong (BDS Malaya), Dr. Teh Wei Lin (MDS Ortho)',
+      rating: 4.9,
+      reviews: 890,
+      distance: 8.5,
+      sentiment: 98,
+      mdaLicense: 'MDC-1984-JHR-001',
+      credentials: 'MDC Registered; BDS; MDS; Established 1984',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 44,
+      name: 'ABC Dental Centre',
+      address: 'Modern dental clinic based in Johor Bahru specializing in advanced diagnostics',
+      dentist: 'Dr. Lim Boon Huat (BDS Singapore)',
+      rating: 4.8,
+      reviews: 125,
+      distance: 6.2,
+      sentiment: 91.2,
+      mdaLicense: 'MDC-2022-JHR-399',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 45,
+      name: 'JDT Dental Centre',
+      address: '41B Jalan Kuning 2, Taman Pelangi, 80400 Johor Bahru',
+      dentist: 'Dr. Presha Kumari (BDS India)',
+      rating: 4.8,
+      reviews: 75,
+      distance: 4.8,
+      sentiment: 91.2,
+      mdaLicense: 'MDC-2023-JHR-456',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: false,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 46,
+      name: 'The Smile Dental Lounge',
+      address: 'Mount Austin area, near Ikea Tebrau and Aeon Tebrau City',
+      dentist: 'Dr. Chen Wei Jie (BDS Taiwan)',
+      rating: 4.9,
+      reviews: 180,
+      distance: 10.5,
+      sentiment: 96,
+      mdaLicense: 'MDC-2024-JHR-123',
+      credentials: 'MDC Registered; BDS; Invisalign Certified',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 47,
+      name: 'Klinik Pergigian Dental Eclipse',
+      address: 'Larkin area, Johor Bahru',
+      dentist: 'Dr. Ahmad Syafiq (BDS UiTM)',
+      rating: 4.9,
+      reviews: 95,
+      distance: 6.8,
+      sentiment: 96,
+      mdaLicense: 'MDC-2023-JHR-567',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: false,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 48,
+      name: 'Toothland Dental Kulai',
+      address: 'No.24, Jalan Raya Taman Kulai Besar, Kulai Besar, 81000 Kulai, Johor',
+      dentist: 'Dr. Tan Chee Wai (BDS UM)',
+      rating: 4.8,
+      reviews: 156,
+      distance: 22.5,
+      sentiment: 91.2,
+      mdaLicense: 'MDC-2023-JHR-678',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 49,
+      name: 'Tiew Dental Johor Kulai Branch',
+      address: 'No. 222(Ground Floor), Jalan Kenanga 29/2, Indahpura Kenanga, 81000 Indahpura',
+      dentist: 'Dr. Say Tian Hui (BDS Malaya), Dr. Ang Chia Min (BDS IMU)',
+      rating: 4.9,
+      reviews: 285,
+      distance: 18.5,
+      sentiment: 96,
+      mdaLicense: 'MDC-2022-JHR-789',
+      credentials: 'MDC Registered; Part of Tiew Dental Group',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 50,
+      name: 'Klinik Pergigian Haslinda Sdn. Bhd.',
+      address: 'Jalan Sri Putra 1, 14, Kulai, Malaysia',
+      dentist: 'Dr. Haslinda Ahmad (BDS UKM)',
+      rating: 4.7,
+      reviews: 98,
+      distance: 20.8,
+      sentiment: 90.2,
+      mdaLicense: 'MDC-2021-JHR-890',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: false,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 51,
+      name: 'Klinik Pergigian Atlas Batu Pahat',
+      address: '1, Jalan Susur Perdana Tengah, Taman Bukit Perdana 2, Batu Pahat',
+      dentist: 'Dr. Eddy Fazry (DDS, ICCDE, Invisalign Certified)',
+      rating: 4.9,
+      reviews: 165,
+      distance: 95.2,
+      sentiment: 96,
+      mdaLicense: 'MDC-2023-JHR-991',
+      credentials: 'MDC Registered; DDS; Invisalign Provider',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: true,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 52,
+      name: 'Klinik Pergigian Austraria',
+      address: '37-3 Jalan Rahmat, Batu Pahat, 83000, Johor',
+      dentist: 'Dr. Ahmad Zulkifli (BDS USM)',
+      rating: 4.6,
+      reviews: 78,
+      distance: 98.5,
+      sentiment: 87.4,
+      mdaLicense: 'MDC-2022-JHR-992',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: false,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
+    },
+    {
+      id: 53,
+      name: 'Klinik Pergigian Kencana',
+      address: '19 & 19A, Jalan Kencana 1A/1 Bandar Pura Kencana Sri Gading, Batu Pahat',
+      dentist: 'Dr. Siti Khadijah (BDS UiTM)',
+      rating: 4.8,
+      reviews: 92,
+      distance: 102.3,
+      sentiment: 91.2,
+      mdaLicense: 'MDC-2023-JHR-993',
+      credentials: 'MDC Registered; BDS; MDA Member',
+      treatments: {
+        toothFilling: true,
+        rootCanal: true,
+        dentalCrown: true,
+        dentalImplant: false,
+        teethWhitening: true,
+        braces: true,
+        wisdomTooth: true,
+        gumTreatment: true
+      }
     }
   ];
 
@@ -931,7 +1283,7 @@ const ClinicsSection = () => {
             Find Your Perfect Clinic
           </h2>
           <p className="text-lg text-neutral-gray max-w-2xl mx-auto">
-            Filter and compare 37 verified dental clinics to find the best match for your needs
+            Filter and compare 53 verified dental clinics across Johor to find the best match for your needs
           </p>
         </div>
 
