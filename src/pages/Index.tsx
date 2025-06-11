@@ -1,3 +1,4 @@
+
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
 import WaitlistSection from '@/components/WaitlistSection';
@@ -20,6 +21,14 @@ const Index = () => {
               <p className="text-gray-600 mb-4">
                 Connecting Singapore patients to quality, affordable dental care across the causeway
               </p>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Powered by</span>
+                <img 
+                  src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
+                  alt="TrustMedAI" 
+                  className="h-5 w-auto"
+                />
+              </div>
             </div>
             
             <div>

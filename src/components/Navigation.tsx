@@ -30,8 +30,16 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 flex items-center space-x-4">
             <Link to="/" className="text-xl font-bold text-blue-primary">SG-JB Dental</Link>
+            <div className="hidden sm:flex items-center space-x-2">
+              <span className="text-xs text-gray-400">Powered by</span>
+              <img 
+                src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
+                alt="TrustMedAI" 
+                className="h-6 w-auto"
+              />
+            </div>
           </div>
 
           {/* Desktop Navigation */}
