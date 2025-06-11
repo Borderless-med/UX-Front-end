@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -8,25 +7,25 @@ const HowItWorksSection = () => {
       number: 1,
       title: 'AI Verification',
       description: 'Our system verifies clinic credentials through MDA license verification and credential analysis with 98.7% match accuracy',
-      color: 'bg-teal-accent'
+      color: 'bg-blue-600'
     },
     {
       number: 2,
       title: 'Smart Matching',
       description: 'Priority clinic matching based on your treatment needs, location preferences, and quality requirements',
-      color: 'bg-blue-500'
+      color: 'bg-blue-600'
     },
     {
       number: 3,
       title: 'Traffic-Aware Scheduling',
       description: 'Integrated scheduling using real-time traffic data with automatic rescheduling for causeway delays',
-      color: 'bg-teal-accent'
+      color: 'bg-blue-600'
     },
     {
       number: 4,
       title: '24/7 Support',
       description: 'Continuous support throughout your treatment journey with emergency hotline and follow-up coordination',
-      color: 'bg-blue-500'
+      color: 'bg-blue-600'
     }
   ];
 
