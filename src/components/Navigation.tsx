@@ -28,16 +28,16 @@ const Navigation = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg z-50 border-b border-blue-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center space-x-8">
-            <Link to="/" className="text-xl font-bold text-blue-primary">SG-JB Dental</Link>
-            <div className="hidden sm:flex items-center space-x-4">
-              <span className="text-base text-gray-600 font-semibold">Powered by</span>
+        <div className="flex justify-between items-center h-20">
+          {/* Logo - Vertical Stack */}
+          <div className="flex-shrink-0 flex flex-col items-start">
+            <Link to="/" className="text-xl font-bold text-blue-primary leading-tight">SG-JB Dental</Link>
+            <div className="flex flex-col items-start mt-1">
+              <span className="text-xs text-gray-600 font-medium leading-tight">powered by</span>
               <img 
                 src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
                 alt="TrustMedAI" 
-                className="h-12 w-auto"
+                className="h-6 w-auto mt-0.5"
               />
             </div>
           </div>
