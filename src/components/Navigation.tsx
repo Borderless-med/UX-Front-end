@@ -30,14 +30,14 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center space-x-4">
+          <div className="flex-shrink-0 flex items-center space-x-6">
             <Link to="/" className="text-xl font-bold text-blue-primary">SG-JB Dental</Link>
-            <div className="hidden sm:flex items-center space-x-2">
-              <span className="text-xs text-gray-400">Powered by</span>
+            <div className="hidden sm:flex items-center space-x-3">
+              <span className="text-sm text-gray-500 font-medium">Powered by</span>
               <img 
                 src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
                 alt="TrustMedAI" 
-                className="h-6 w-auto"
+                className="h-8 w-auto"
               />
             </div>
           </div>
