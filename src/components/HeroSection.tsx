@@ -2,8 +2,11 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Shield, Users, MapPin, DollarSign } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   const scrollToWaitlist = () => {
     const element = document.getElementById('waitlist');
     if (element) {
@@ -11,11 +14,8 @@ const HeroSection = () => {
     }
   };
 
-  const scrollToCalculator = () => {
-    const element = document.getElementById('compare');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const goToCompare = () => {
+    navigate('/compare');
   };
 
   return (
@@ -45,7 +45,7 @@ const HeroSection = () => {
               Get Your Free Consultation
             </Button>
             <Button 
-              onClick={scrollToCalculator}
+              onClick={goToCompare}
               variant="outline"
               className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
             >
@@ -197,7 +197,7 @@ const HeroSection = () => {
           <div className="text-center mt-8">
             <p className="text-gray-600 mb-4">*Prices include consultation, treatment, and follow-up care. No hidden costs.</p>
             <Button 
-              onClick={scrollToCalculator}
+              onClick={goToCompare}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg"
             >
               View Complete Pricing Guide
