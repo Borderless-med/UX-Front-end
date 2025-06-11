@@ -11,13 +11,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 const ClinicsSection = () => {
   const [selectedTreatment, setSelectedTreatment] = useState('');
   const [selectedRating, setSelectedRating] = useState('');
-  const [maxDistance, setMaxDistance] = useState(50);
+  const [maxDistance, setMaxDistance] = useState(110); // Increased to accommodate Batu Pahat clinics
   const [sentimentFilter, setSentimentFilter] = useState('');
   const [minReviews, setMinReviews] = useState(0);
   const [credentialFilter, setCredentialFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
 
-  // Updated clinic data from the new spreadsheet
+  // All 53 clinics from the new list
   const clinics = [
     {
       id: 1,
@@ -1187,6 +1187,8 @@ const ClinicsSection = () => {
     }
   ];
 
+  console.log('Total clinics in array:', clinics.length);
+
   const treatments = [
     'All Treatments', 'Tooth Filling', 'Root Canal', 'Dental Crown', 'Dental Implant', 
     'Teeth Whitening', 'Braces (Metal)', 'Wisdom Tooth Removal', 'Gum Treatment'
@@ -1234,11 +1236,14 @@ const ClinicsSection = () => {
                            (locationFilter === '2-5km' && clinic.distance > 2 && clinic.distance <= 5) ||
                            (locationFilter === '5-10km' && clinic.distance > 5 && clinic.distance <= 10) ||
                            (locationFilter === '10-15km' && clinic.distance > 10 && clinic.distance <= 15) ||
-                           (locationFilter === '15km+' && clinic.distance > 15) ||
+                           (locationFilter === '15-25km' && clinic.distance > 15 && clinic.distance <= 25) ||
+                           (locationFilter === '25km+' && clinic.distance > 25) ||
                            (locationFilter === 'causeway-area' && clinic.distance <= 3) ||
                            (locationFilter === 'city-center' && clinic.distance <= 8) ||
                            (locationFilter === 'taman-sentosa' && clinic.address.toLowerCase().includes('sentosa')) ||
-                           (locationFilter === 'skudai' && clinic.address.toLowerCase().includes('skudai'));
+                           (locationFilter === 'skudai' && clinic.address.toLowerCase().includes('skudai')) ||
+                           (locationFilter === 'kulai' && clinic.address.toLowerCase().includes('kulai')) ||
+                           (locationFilter === 'batu-pahat' && clinic.address.toLowerCase().includes('batu pahat'));
 
     return matchesTreatment && matchesRating && matchesDistance && matchesSentiment && 
            matchesReviews && matchesCredentials && matchesLocation;
@@ -1268,7 +1273,7 @@ const ClinicsSection = () => {
   const resetFilters = () => {
     setSelectedTreatment('');
     setSelectedRating('');
-    setMaxDistance(50);
+    setMaxDistance(110); // Updated to accommodate all clinics
     setSentimentFilter('');
     setMinReviews(0);
     setCredentialFilter('');
@@ -1359,11 +1364,14 @@ const ClinicsSection = () => {
                     <SelectItem value="2-5km" className="text-blue-dark">2-5km from CIQ</SelectItem>
                     <SelectItem value="5-10km" className="text-blue-dark">5-10km from CIQ</SelectItem>
                     <SelectItem value="10-15km" className="text-blue-dark">10-15km from CIQ</SelectItem>
-                    <SelectItem value="15km+" className="text-blue-dark">15km+ from CIQ</SelectItem>
+                    <SelectItem value="15-25km" className="text-blue-dark">15-25km from CIQ</SelectItem>
+                    <SelectItem value="25km+" className="text-blue-dark">25km+ from CIQ</SelectItem>
                     <SelectItem value="causeway-area" className="text-blue-dark">Near Causeway Bridge</SelectItem>
                     <SelectItem value="city-center" className="text-blue-dark">JB City Center</SelectItem>
                     <SelectItem value="taman-sentosa" className="text-blue-dark">Taman Sentosa Area</SelectItem>
                     <SelectItem value="skudai" className="text-blue-dark">Skudai Area</SelectItem>
+                    <SelectItem value="kulai" className="text-blue-dark">Kulai Area</SelectItem>
+                    <SelectItem value="batu-pahat" className="text-blue-dark">Batu Pahat Area</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1378,7 +1386,7 @@ const ClinicsSection = () => {
                 <Slider
                   value={[maxDistance]}
                   onValueChange={(value) => setMaxDistance(value[0])}
-                  max={50}
+                  max={110}
                   min={1}
                   step={1}
                   className="w-full"
