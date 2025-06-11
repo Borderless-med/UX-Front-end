@@ -1,6 +1,5 @@
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 
 const HeroSection = () => {
   const scrollToWaitlist = () => {
@@ -18,15 +17,15 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-teal-accent/20 to-dark-bg min-h-screen flex items-center">
+    <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-teal-accent/10 to-white min-h-screen flex items-center">
       <div className="max-w-7xl mx-auto w-full">
         <div className="text-center animate-fade-in">
           {/* Hero Headline */}
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold text-text-dark mb-6 leading-tight">
             Join 1,200+ Smart Savers
           </h1>
           
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-text-gray mb-8 max-w-2xl mx-auto leading-relaxed">
             Sign up before August 30 for Priority Clinic Matching
           </p>
 
@@ -49,17 +48,17 @@ const HeroSection = () => {
 
           {/* Trust Stats */}
           <div className="flex flex-col md:flex-row gap-8 justify-center items-center text-center mb-12">
-            <div className="text-white">
+            <div className="text-text-dark">
               <div className="text-3xl font-bold text-teal-accent mb-1">23/100</div>
-              <div className="text-sm text-gray-300">Clinics Verified</div>
+              <div className="text-sm text-text-gray">Clinics Verified</div>
             </div>
-            <div className="text-white">
+            <div className="text-text-dark">
               <div className="text-3xl font-bold text-success-green mb-1">✓</div>
-              <div className="text-sm text-gray-300">Transparent Pricing Guarantee</div>
+              <div className="text-sm text-text-gray">Transparent Pricing Guarantee</div>
             </div>
-            <div className="text-white">
+            <div className="text-text-dark">
               <div className="text-3xl font-bold text-teal-accent mb-1">AI</div>
-              <div className="text-sm text-gray-300">Verified Quality</div>
+              <div className="text-sm text-text-gray">Verified Quality</div>
             </div>
           </div>
         </div>

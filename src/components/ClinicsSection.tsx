@@ -49,29 +49,29 @@ const ClinicsSection = () => {
   ];
 
   return (
-    <section id="clinics" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-card">
+    <section id="clinics" className="py-16 px-4 sm:px-6 lg:px-8 bg-light-card">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-text-dark mb-4">
             Find Clinics
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-text-gray max-w-2xl mx-auto">
             Meet Our First Partners in August 2025
           </p>
         </div>
 
         {/* Verification Progress */}
-        <Card className="mb-12 bg-dark-bg border-gray-600">
+        <Card className="mb-12 bg-white border-gray-200 shadow-sm">
           <CardContent className="p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-6">Verification Progress</h3>
+            <h3 className="text-2xl font-bold text-text-dark mb-6">Verification Progress</h3>
             <div className="flex justify-center items-center mb-6">
               <span className="text-4xl font-bold text-success-green">23</span>
-              <span className="text-2xl text-gray-400 mx-2">/</span>
-              <span className="text-2xl text-gray-400">100</span>
-              <span className="text-lg text-gray-300 ml-4">Clinics Verified</span>
+              <span className="text-2xl text-neutral-gray mx-2">/</span>
+              <span className="text-2xl text-neutral-gray">100</span>
+              <span className="text-lg text-text-gray ml-4">Clinics Verified</span>
             </div>
             <div className="max-w-md mx-auto mb-6">
-              <div className="w-full bg-gray-700 rounded-full h-3">
+              <div className="w-full bg-gray-200 rounded-full h-3">
                 <div className="bg-success-green h-3 rounded-full" style={{ width: '23%' }}></div>
               </div>
             </div>
@@ -80,27 +80,27 @@ const ClinicsSection = () => {
 
         {/* Partner Clinic Preview */}
         <div className="mb-12">
-          <h3 className="text-xl font-bold text-white mb-6 text-center">Partner Clinic Preview</h3>
+          <h3 className="text-xl font-bold text-text-dark mb-6 text-center">Partner Clinic Preview</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {clinics.slice(0, 5).map((clinic, index) => (
-              <Card key={index} className="bg-dark-bg border-gray-600 hover:border-teal-accent transition-all duration-300">
+              <Card key={index} className="bg-white border-gray-200 hover:border-teal-accent transition-all duration-300 shadow-sm hover:shadow-md">
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
-                    <CardTitle className="text-white text-lg">{clinic.name}</CardTitle>
+                    <CardTitle className="text-text-dark text-lg">{clinic.name}</CardTitle>
                     <Badge className={`${clinic.statusColor} text-white text-xs`}>
                       {clinic.status}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-yellow-400">★</span>
-                    <span className="text-white font-semibold">{clinic.rating}</span>
-                    <span className="text-gray-400">({clinic.reviews} reviews)</span>
+                    <span className="text-text-dark font-semibold">{clinic.rating}</span>
+                    <span className="text-neutral-gray">({clinic.reviews} reviews)</span>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {clinic.specialties.map((specialty, i) => (
-                      <Badge key={i} variant="outline" className="border-gray-600 text-gray-300">
+                      <Badge key={i} variant="outline" className="border-gray-300 text-text-gray">
                         {specialty}
                       </Badge>
                     ))}
@@ -112,7 +112,7 @@ const ClinicsSection = () => {
         </div>
 
         {/* Early Access CTA */}
-        <Card className="bg-gradient-to-r from-teal-accent to-blue-600 text-white">
+        <Card className="bg-gradient-to-r from-teal-accent to-blue-600 text-white shadow-lg">
           <CardContent className="p-8 text-center">
             <h3 className="text-2xl font-bold mb-4">Request Early Access</h3>
             <p className="text-lg mb-6">
