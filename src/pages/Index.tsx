@@ -1,4 +1,3 @@
-
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
 import WaitlistSection from '@/components/WaitlistSection';
@@ -18,15 +17,15 @@ const Index = () => {
               <div className="mb-4">
                 <span className="text-2xl font-bold text-blue-600">SG-JB Dental</span>
               </div>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-8">
                 Connecting Singapore patients to quality, affordable dental care across the causeway
               </p>
-              <div className="flex items-center space-x-3">
-                <span className="text-base text-gray-600 font-medium">Powered by</span>
+              <div className="flex items-center space-x-4">
+                <span className="text-lg text-gray-700 font-bold">Powered by</span>
                 <img 
                   src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
                   alt="TrustMedAI" 
-                  className="h-7 w-auto"
+                  className="h-10 w-auto"
                 />
               </div>
             </div>
