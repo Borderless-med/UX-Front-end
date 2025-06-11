@@ -22,7 +22,7 @@ const HeroSection = () => {
     <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto w-full">
         {/* Hero Header */}
-        <div className="text-center animate-fade-in mb-12">
+        <div className="text-center animate-fade-in mb-16">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             World-Class Dental Care<br />
             <span className="text-blue-600">Just Across the Causeway</span>
@@ -33,11 +33,11 @@ const HeroSection = () => {
           </p>
           
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join 1,200+ smart Singapore patients who've discovered quality, affordable dental care in Johor Bahru
+            Join thousands of smart Singapore patients who've discovered quality, affordable dental care in Johor Bahru
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button 
               onClick={scrollToWaitlist}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
@@ -55,7 +55,7 @@ const HeroSection = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-20">
           <Card className="p-6 text-center bg-blue-50 border-blue-200 hover:shadow-lg transition-shadow">
             <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
             <div className="text-2xl font-bold text-gray-900 mb-2">MDC Verified</div>
@@ -82,7 +82,7 @@ const HeroSection = () => {
         </div>
 
         {/* Social Proof Section */}
-        <div className="bg-gray-50 rounded-2xl p-8 mb-16">
+        <div className="bg-gray-50 rounded-2xl p-8 mb-20">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
             Thousands of Singapore Patients Choose JB Dental Care
           </h2>
@@ -136,7 +136,7 @@ const HeroSection = () => {
         </div>
 
         {/* Price Comparison Preview */}
-        <div className="bg-blue-50 rounded-2xl p-8 mb-16">
+        <div className="bg-blue-50 rounded-2xl p-8">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
             Transparent Pricing - Know Exactly What You'll Pay
           </h2>
@@ -194,7 +194,7 @@ const HeroSection = () => {
             </Card>
           </div>
           
-          <div className="text-center mt-6">
+          <div className="text-center mt-8">
             <p className="text-gray-600 mb-4">*Prices include consultation, treatment, and follow-up care. No hidden costs.</p>
             <Button 
               onClick={scrollToCalculator}
@@ -202,31 +202,6 @@ const HeroSection = () => {
             >
               View Complete Pricing Guide
             </Button>
-          </div>
-        </div>
-
-        {/* Trust and Safety Section */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
-            Malaysian Dental Standards You Can Trust
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card className="p-6 bg-white border border-gray-200 hover:shadow-lg transition-shadow">
-              <Shield className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Regulatory Compliance</h3>
-              <p className="text-gray-600">
-                All our partner clinics are registered with the Malaysian Dental Council (MDC) under the Dental Act 2018, ensuring stringent professional requirements and patient safety standards.
-              </p>
-            </Card>
-            
-            <Card className="p-6 bg-white border border-gray-200 hover:shadow-lg transition-shadow">
-              <Users className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">International Credentials</h3>
-              <p className="text-gray-600">
-                Our dentists hold BDS degrees from respected institutions and many have additional training from the UK, Australia, and Singapore, with specialized certifications in various dental fields.
-              </p>
-            </Card>
           </div>
         </div>
       </div>
