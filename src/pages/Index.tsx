@@ -1,7 +1,5 @@
-
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
-import HowItWorksSection from '@/components/HowItWorksSection';
 import WaitlistSection from '@/components/WaitlistSection';
 
 const Index = () => {
@@ -9,7 +7,6 @@ const Index = () => {
     <div className="min-h-screen font-inter bg-white text-gray-900">
       <Navigation />
       <HeroSection />
-      <HowItWorksSection />
       <WaitlistSection />
       
       {/* Footer */}
