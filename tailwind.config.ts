@@ -29,7 +29,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#4A90A4',
+					DEFAULT: '#4A90E2',
 					foreground: '#ffffff'
 				},
 				secondary: {
@@ -56,11 +56,17 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				'neutral-gray': '#6B7280',
+				'neutral-gray': '#64748B',
 				'cta-red': '#C53030',
 				'light-bg': '#ffffff',
-				'light-card': '#f8fafc',
-				'teal-accent': '#4A90A4',
+				'light-card': '#F8FAFC',
+				'dark-bg': '#1E293B',
+				'dark-card': '#334155',
+				'blue-primary': '#4A90E2',
+				'blue-secondary': '#7BB3F0',
+				'blue-accent': '#2563EB',
+				'blue-light': '#DBEAFE',
+				'blue-dark': '#1E40AF',
 				'success-green': '#10B981',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

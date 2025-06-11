@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -119,32 +118,32 @@ const PriceComparison = () => {
   };
 
   return (
-    <section id="compare" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-bg">
+    <section id="compare" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-blue-dark mb-4">
             Compare Dental Prices
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-neutral-gray max-w-2xl mx-auto">
             Comprehensive filtering system to find your perfect dental solution
           </p>
         </div>
 
         {/* Filters */}
-        <Card className="mb-8 bg-dark-card border-gray-600">
+        <Card className="mb-8 bg-light-card border-blue-light">
           <CardHeader>
-            <CardTitle className="text-white">Filter Treatments</CardTitle>
+            <CardTitle className="text-blue-dark">Filter Treatments</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
               <Select onValueChange={setSelectedTreatment} value={selectedTreatment}>
-                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                   <SelectValue placeholder="All Treatments" />
                 </SelectTrigger>
-                <SelectContent className="bg-dark-card border-gray-600">
-                  <SelectItem value="all" className="text-white">All Treatments</SelectItem>
+                <SelectContent className="bg-white border-blue-light z-50">
+                  <SelectItem value="all" className="text-blue-dark">All Treatments</SelectItem>
                   {treatments.map((treatment) => (
-                    <SelectItem key={treatment.id} value={treatment.id} className="text-white">
+                    <SelectItem key={treatment.id} value={treatment.id} className="text-blue-dark">
                       {treatment.name}
                     </SelectItem>
                   ))}
@@ -152,47 +151,47 @@ const PriceComparison = () => {
               </Select>
               
               <Select onValueChange={setSelectedPriceRange} value={selectedPriceRange}>
-                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                   <SelectValue placeholder="All Price Ranges" />
                 </SelectTrigger>
-                <SelectContent className="bg-dark-card border-gray-600">
-                  <SelectItem value="100-500" className="text-white">$100 - $500</SelectItem>
-                  <SelectItem value="500-1000" className="text-white">$500 - $1000</SelectItem>
-                  <SelectItem value="1000-5000" className="text-white">$1000 - $5000</SelectItem>
+                <SelectContent className="bg-white border-blue-light z-50">
+                  <SelectItem value="100-500" className="text-blue-dark">$100 - $500</SelectItem>
+                  <SelectItem value="500-1000" className="text-blue-dark">$500 - $1000</SelectItem>
+                  <SelectItem value="1000-5000" className="text-blue-dark">$1000 - $5000</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select onValueChange={setSelectedDistance} value={selectedDistance}>
-                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                   <SelectValue placeholder="Any Distance" />
                 </SelectTrigger>
-                <SelectContent className="bg-dark-card border-gray-600">
-                  <SelectItem value="any" className="text-white">Any Distance</SelectItem>
-                  <SelectItem value="near" className="text-white">Near Causeway</SelectItem>
-                  <SelectItem value="city" className="text-white">JB City Center</SelectItem>
+                <SelectContent className="bg-white border-blue-light z-50">
+                  <SelectItem value="any" className="text-blue-dark">Any Distance</SelectItem>
+                  <SelectItem value="near" className="text-blue-dark">Near Causeway</SelectItem>
+                  <SelectItem value="city" className="text-blue-dark">JB City Center</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select onValueChange={setSelectedRating} value={selectedRating}>
-                <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                   <SelectValue placeholder="Any Rating" />
                 </SelectTrigger>
-                <SelectContent className="bg-dark-card border-gray-600">
-                  <SelectItem value="any" className="text-white">Any Rating</SelectItem>
-                  <SelectItem value="4plus" className="text-white">4+ Stars</SelectItem>
-                  <SelectItem value="4.5plus" className="text-white">4.5+ Stars</SelectItem>
+                <SelectContent className="bg-white border-blue-light z-50">
+                  <SelectItem value="any" className="text-blue-dark">Any Rating</SelectItem>
+                  <SelectItem value="4plus" className="text-blue-dark">4+ Stars</SelectItem>
+                  <SelectItem value="4.5plus" className="text-blue-dark">4.5+ Stars</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div className="flex justify-between items-center">
-              <p className="text-gray-300">
+              <p className="text-neutral-gray">
                 Showing {filteredTreatments.length} of {treatments.length} treatments
               </p>
               <Button 
                 variant="outline" 
                 onClick={handleResetFilters}
-                className="border-gray-600 text-white hover:bg-gray-700"
+                className="border-blue-light text-blue-dark hover:bg-blue-light"
               >
                 Reset Filters
               </Button>
@@ -201,9 +200,9 @@ const PriceComparison = () => {
         </Card>
 
         {/* Treatment Comparison Table */}
-        <Card className="bg-dark-card border-gray-600">
-          <CardHeader className="bg-teal-accent/20">
-            <div className="grid grid-cols-5 gap-4 text-white font-semibold">
+        <Card className="bg-light-card border-blue-light">
+          <CardHeader className="bg-blue-light">
+            <div className="grid grid-cols-5 gap-4 text-blue-dark font-semibold">
               <div>Treatment</div>
               <div>Singapore Price</div>
               <div>JB Partner Price</div>
@@ -213,20 +212,20 @@ const PriceComparison = () => {
           </CardHeader>
           <CardContent className="p-0">
             {filteredTreatments.length === 0 ? (
-              <div className="p-8 text-center text-gray-400">
+              <div className="p-8 text-center text-neutral-gray">
                 No treatments match your selected criteria. Try adjusting your filters.
               </div>
             ) : (
               filteredTreatments.map((treatment, index) => (
-                <div key={treatment.id} className="grid grid-cols-5 gap-4 p-4 border-b border-gray-600 hover:bg-dark-bg/50 transition-colors">
-                  <div className="text-white font-medium">{treatment.name}</div>
-                  <div className="text-red-400 font-semibold">{treatment.sgPrice}</div>
+                <div key={treatment.id} className="grid grid-cols-5 gap-4 p-4 border-b border-blue-light hover:bg-blue-light/50 transition-colors">
+                  <div className="text-blue-dark font-medium">{treatment.name}</div>
+                  <div className="text-cta-red font-semibold">{treatment.sgPrice}</div>
                   <div className="text-success-green font-semibold">{treatment.jbPrice}</div>
-                  <div className="text-teal-accent font-semibold">+{treatment.savings}</div>
+                  <div className="text-blue-primary font-semibold">+{treatment.savings}</div>
                   <div>
                     <Button 
                       size="sm" 
-                      className="bg-gray-600 hover:bg-gray-500 text-white"
+                      className="bg-blue-secondary hover:bg-blue-primary text-white"
                       onClick={() => {
                         const element = document.getElementById('waitlist');
                         if (element) {
