@@ -69,13 +69,13 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-card">
+    <section id="how-it-works" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             How It Works
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Step-by-step process for safe, affordable dental care
           </p>
         </div>
@@ -83,43 +83,43 @@ const HowItWorksSection = () => {
         {/* Process Steps */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {steps.map((step) => (
-            <Card key={step.number} className="bg-dark-bg border-gray-600 hover:border-teal-accent transition-all duration-300">
+            <Card key={step.number} className="bg-light-card border-gray-200 hover:border-teal-accent transition-all duration-300 shadow-sm hover:shadow-md">
               <CardContent className="p-6 text-center">
                 <div className={`w-12 h-12 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4`}>
                   {step.number}
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">{step.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
         {/* Detailed Features with Tabs */}
-        <Card className="bg-dark-bg border-gray-600">
+        <Card className="bg-light-card border-gray-200 shadow-sm">
           <CardContent className="p-8">
             <Tabs defaultValue="verification" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-dark-card border-gray-600">
-                <TabsTrigger value="verification" className="text-white data-[state=active]:bg-teal-accent data-[state=active]:text-white">
+              <TabsList className="grid w-full grid-cols-2 bg-gray-100 border-gray-200">
+                <TabsTrigger value="verification" className="text-gray-700 data-[state=active]:bg-teal-accent data-[state=active]:text-white">
                   AI Verification System
                 </TabsTrigger>
-                <TabsTrigger value="sentiment" className="text-white data-[state=active]:bg-teal-accent data-[state=active]:text-white">
+                <TabsTrigger value="sentiment" className="text-gray-700 data-[state=active]:bg-teal-accent data-[state=active]:text-white">
                   Sentiment Analysis
                 </TabsTrigger>
               </TabsList>
               
               <TabsContent value="verification" className="mt-8">
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">AI Verification System</h3>
-                  <p className="text-gray-300">Our advanced verification process ensures every partner clinic meets the highest standards</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">AI Verification System</h3>
+                  <p className="text-gray-600">Our advanced verification process ensures every partner clinic meets the highest standards</p>
                 </div>
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {verificationFeatures.map((feature, index) => (
                     <div key={index} className="text-center">
-                      <div className="bg-teal-accent/20 p-4 rounded-lg mb-4">
-                        <h4 className="text-white font-semibold mb-2">{feature.title}</h4>
-                        <p className="text-gray-300 text-sm">{feature.description}</p>
+                      <div className="bg-teal-accent/10 p-4 rounded-lg mb-4 border border-teal-accent/20">
+                        <h4 className="text-gray-900 font-semibold mb-2">{feature.title}</h4>
+                        <p className="text-gray-600 text-sm">{feature.description}</p>
                       </div>
                     </div>
                   ))}
@@ -128,13 +128,13 @@ const HowItWorksSection = () => {
 
               <TabsContent value="sentiment" className="mt-8">
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">Advanced Sentiment Analysis</h3>
-                  <p className="text-gray-300 mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Advanced Sentiment Analysis</h3>
+                  <p className="text-gray-600 mb-6">
                     Beyond simple Google ratings - our proprietary system provides authentic patient feedback analysis
                   </p>
-                  <div className="bg-teal-accent/10 border border-teal-accent/30 rounded-lg p-6 mb-8">
+                  <div className="bg-teal-accent/5 border border-teal-accent/30 rounded-lg p-6 mb-8">
                     <h4 className="text-teal-accent font-bold text-lg mb-2">Platform Superiority</h4>
-                    <p className="text-white text-sm">
+                    <p className="text-gray-700 text-sm">
                       While Google ratings can be easily manipulated through fake reviews, paid comments, and bot-generated content, 
                       our AI-powered sentiment analysis provides genuine insights into patient experiences with 94.2% accuracy in detecting fraudulent reviews.
                     </p>
@@ -144,18 +144,18 @@ const HowItWorksSection = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {sentimentFeatures.map((feature, index) => (
                     <div key={index} className="text-center">
-                      <div className="bg-blue-500/20 p-4 rounded-lg mb-4">
-                        <h4 className="text-white font-semibold mb-2">{feature.title}</h4>
-                        <p className="text-gray-300 text-sm">{feature.description}</p>
+                      <div className="bg-blue-500/10 p-4 rounded-lg mb-4 border border-blue-500/20">
+                        <h4 className="text-gray-900 font-semibold mb-2">{feature.title}</h4>
+                        <p className="text-gray-600 text-sm">{feature.description}</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 <div className="mt-8 text-center">
-                  <div className="bg-gray-800/50 rounded-lg p-6">
-                    <h4 className="text-white font-semibold mb-3">Why This Matters for International Patients</h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                    <h4 className="text-gray-900 font-semibold mb-3">Why This Matters for International Patients</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">
                       When seeking dental care across borders, authentic patient feedback is crucial for safety and quality assurance. 
                       Our sentiment analysis ensures you're making decisions based on genuine patient experiences, not manipulated ratings.
                     </p>

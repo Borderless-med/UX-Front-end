@@ -58,8 +58,8 @@ export default {
 				},
 				'neutral-gray': '#6B7280',
 				'cta-red': '#C53030',
-				'dark-bg': '#1a1f2e',
-				'dark-card': '#2a3441',
+				'light-bg': '#ffffff',
+				'light-card': '#f8fafc',
 				'teal-accent': '#4A90A4',
 				'success-green': '#10B981',
 				sidebar: {
