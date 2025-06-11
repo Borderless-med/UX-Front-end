@@ -26,7 +26,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg z-50 border-b border-gray-200">
+    <nav className="fixed top-0 left-0 right-0 bg-dark-bg/95 backdrop-blur-md shadow-lg z-50 border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -40,7 +40,7 @@ const Navigation = () => {
               <Link
                 to="/"
                 className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Home
@@ -48,7 +48,7 @@ const Navigation = () => {
               <Link
                 to="/compare"
                 className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/compare' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/compare' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Compare Prices
@@ -56,7 +56,7 @@ const Navigation = () => {
               <Link
                 to="/clinics"
                 className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/clinics' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/clinics' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Find Clinics
@@ -64,7 +64,7 @@ const Navigation = () => {
               <Link
                 to="/how-it-works"
                 className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/how-it-works' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/how-it-works' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 How It Works
@@ -72,7 +72,7 @@ const Navigation = () => {
               <Link
                 to="/qa"
                 className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/qa' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/qa' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Q&A
@@ -94,7 +94,7 @@ const Navigation = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-text-gray hover:text-teal-accent"
+              className="text-gray-300 hover:text-teal-accent"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -104,12 +104,12 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-dark-bg border-t border-gray-700">
               <Link
                 to="/"
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Home
@@ -118,7 +118,7 @@ const Navigation = () => {
                 to="/compare"
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/compare' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/compare' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Compare Prices
@@ -127,7 +127,7 @@ const Navigation = () => {
                 to="/clinics"
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/clinics' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/clinics' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Find Clinics
@@ -136,7 +136,7 @@ const Navigation = () => {
                 to="/how-it-works"
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/how-it-works' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/how-it-works' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 How It Works
@@ -145,7 +145,7 @@ const Navigation = () => {
                 to="/qa"
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/qa' ? 'text-teal-accent' : 'text-text-gray hover:text-teal-accent'
+                  location.pathname === '/qa' ? 'text-teal-accent' : 'text-gray-300 hover:text-teal-accent'
                 }`}
               >
                 Q&A

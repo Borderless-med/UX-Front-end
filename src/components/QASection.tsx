@@ -60,34 +60,34 @@ const QASection = () => {
   ];
 
   return (
-    <section id="qa" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section id="qa" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-bg">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-text-dark mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-text-gray">
+          <p className="text-lg text-gray-300">
             Addressing the top concerns of Singapore residents
           </p>
         </div>
 
         <div className="space-y-4">
           {questions.map((item, index) => (
-            <Card key={index} className="bg-white border-gray-200 hover:border-teal-accent transition-all duration-300 shadow-sm hover:shadow-md">
+            <Card key={index} className="bg-dark-card border-gray-600 hover:border-teal-accent transition-all duration-300">
               <CardContent className="p-0">
                 <Button
                   variant="ghost"
-                  className="w-full p-6 text-left justify-between hover:bg-gray-50"
+                  className="w-full p-6 text-left justify-between hover:bg-transparent"
                   onClick={() => toggleQuestion(index)}
                 >
-                  <span className="text-text-dark font-medium">{item.question}</span>
+                  <span className="text-white font-medium">{item.question}</span>
                   <span className="text-teal-accent text-xl">
                     {openQuestions.has(index) ? '−' : '+'}
                   </span>
                 </Button>
                 {openQuestions.has(index) && (
                   <div className="px-6 pb-6">
-                    <p className="text-text-gray leading-relaxed">{item.answer}</p>
+                    <p className="text-gray-300 leading-relaxed">{item.answer}</p>
                   </div>
                 )}
               </CardContent>

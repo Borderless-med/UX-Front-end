@@ -1,4 +1,1 @@
-export default defineConfig({
-  base: '/sg-smile-saver/',  // Must match your repo name exactly
-  plugins: [react()]
-})
+/// <reference types="vite/client" />
