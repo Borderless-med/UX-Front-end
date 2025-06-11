@@ -876,11 +876,18 @@ const ClinicsSection = () => {
                               (credentialFilter === 'specialist' && (clinic.credentials.includes('MDS') || clinic.credentials.includes('Specialist'))) ||
                               (credentialFilter === 'all');
 
-    // Location filter
+    // Updated Location filter to match distance options
     const matchesLocation = !locationFilter || 
-                           (locationFilter === 'near-ciq' && clinic.distance <= 5) ||
-                           (locationFilter === 'city-center' && clinic.distance <= 10) ||
-                           (locationFilter === 'all');
+                           (locationFilter === 'all') ||
+                           (locationFilter === '0-2km' && clinic.distance <= 2) ||
+                           (locationFilter === '2-5km' && clinic.distance > 2 && clinic.distance <= 5) ||
+                           (locationFilter === '5-10km' && clinic.distance > 5 && clinic.distance <= 10) ||
+                           (locationFilter === '10-15km' && clinic.distance > 10 && clinic.distance <= 15) ||
+                           (locationFilter === '15km+' && clinic.distance > 15) ||
+                           (locationFilter === 'causeway-area' && clinic.distance <= 3) ||
+                           (locationFilter === 'city-center' && clinic.distance <= 8) ||
+                           (locationFilter === 'taman-sentosa' && clinic.address.toLowerCase().includes('sentosa')) ||
+                           (locationFilter === 'skudai' && clinic.address.toLowerCase().includes('skudai'));
 
     return matchesTreatment && matchesRating && matchesDistance && matchesSentiment && 
            matchesReviews && matchesCredentials && matchesLocation;
@@ -993,12 +1000,19 @@ const ClinicsSection = () => {
                 <Label className="text-white mb-2 block">Location Preference</Label>
                 <Select onValueChange={setLocationFilter} value={locationFilter}>
                   <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
-                    <SelectValue placeholder="All Locations" />
+                    <SelectValue placeholder="Distance from CIQ" />
                   </SelectTrigger>
                   <SelectContent className="bg-dark-card border-gray-600">
-                    <SelectItem value="all" className="text-white">All Locations</SelectItem>
-                    <SelectItem value="near-ciq" className="text-white">Near CIQ (≤5km)</SelectItem>
-                    <SelectItem value="city-center" className="text-white">City Center (≤10km)</SelectItem>
+                    <SelectItem value="all" className="text-white">Any Distance</SelectItem>
+                    <SelectItem value="0-2km" className="text-white">Within 2km from CIQ</SelectItem>
+                    <SelectItem value="2-5km" className="text-white">2-5km from CIQ</SelectItem>
+                    <SelectItem value="5-10km" className="text-white">5-10km from CIQ</SelectItem>
+                    <SelectItem value="10-15km" className="text-white">10-15km from CIQ</SelectItem>
+                    <SelectItem value="15km+" className="text-white">15km+ from CIQ</SelectItem>
+                    <SelectItem value="causeway-area" className="text-white">Near Causeway Bridge</SelectItem>
+                    <SelectItem value="city-center" className="text-white">JB City Center</SelectItem>
+                    <SelectItem value="taman-sentosa" className="text-white">Taman Sentosa Area</SelectItem>
+                    <SelectItem value="skudai" className="text-white">Skudai Area</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
