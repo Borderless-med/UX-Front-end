@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Building2, Shield, Star, Clock, MapPin, MessageSquare, TrendingUp, Calendar } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -925,22 +924,22 @@ const ClinicsSection = () => {
   };
 
   return (
-    <section id="clinics" className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-card">
+    <section id="clinics" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-blue-dark mb-4">
             Find Your Perfect Clinic
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-neutral-gray max-w-2xl mx-auto">
             Filter and compare 37 verified dental clinics to find the best match for your needs
           </p>
         </div>
 
         {/* Advanced Filters */}
-        <Card className="mb-8 bg-dark-bg border-gray-600">
+        <Card className="mb-8 bg-light-card border-blue-light">
           <CardHeader>
-            <CardTitle className="text-white text-xl">Filter Clinics</CardTitle>
-            <CardDescription className="text-gray-300">
+            <CardTitle className="text-blue-dark text-xl">Filter Clinics</CardTitle>
+            <CardDescription className="text-neutral-gray">
               Customize your search criteria to find the perfect clinic
             </CardDescription>
           </CardHeader>
@@ -948,14 +947,14 @@ const ClinicsSection = () => {
             {/* Row 1: Treatment Type and User Ratings */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label className="text-white mb-2 block">Treatment Type</Label>
+                <Label className="text-blue-dark mb-2 block">Treatment Type</Label>
                 <Select onValueChange={setSelectedTreatment} value={selectedTreatment}>
-                  <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                     <SelectValue placeholder="All Treatments" />
                   </SelectTrigger>
-                  <SelectContent className="bg-dark-card border-gray-600">
+                  <SelectContent className="bg-white border-blue-light">
                     {treatments.map((treatment) => (
-                      <SelectItem key={treatment} value={treatment} className="text-white">
+                      <SelectItem key={treatment} value={treatment} className="text-blue-dark">
                         {treatment}
                       </SelectItem>
                     ))}
@@ -964,17 +963,17 @@ const ClinicsSection = () => {
               </div>
 
               <div>
-                <Label className="text-white mb-2 block">Minimum Rating</Label>
+                <Label className="text-blue-dark mb-2 block">Minimum Rating</Label>
                 <Select onValueChange={setSelectedRating} value={selectedRating}>
-                  <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                     <SelectValue placeholder="Any Rating" />
                   </SelectTrigger>
-                  <SelectContent className="bg-dark-card border-gray-600">
-                    <SelectItem value="4.9" className="text-white">4.9+ Stars</SelectItem>
-                    <SelectItem value="4.8" className="text-white">4.8+ Stars</SelectItem>
-                    <SelectItem value="4.7" className="text-white">4.7+ Stars</SelectItem>
-                    <SelectItem value="4.5" className="text-white">4.5+ Stars</SelectItem>
-                    <SelectItem value="4.0" className="text-white">4.0+ Stars</SelectItem>
+                  <SelectContent className="bg-white border-blue-light">
+                    <SelectItem value="4.9" className="text-blue-dark">4.9+ Stars</SelectItem>
+                    <SelectItem value="4.8" className="text-blue-dark">4.8+ Stars</SelectItem>
+                    <SelectItem value="4.7" className="text-blue-dark">4.7+ Stars</SelectItem>
+                    <SelectItem value="4.5" className="text-blue-dark">4.5+ Stars</SelectItem>
+                    <SelectItem value="4.0" className="text-blue-dark">4.0+ Stars</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -983,36 +982,36 @@ const ClinicsSection = () => {
             {/* Row 2: Professional Credentials and Location */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label className="text-white mb-2 block">Professional Credentials</Label>
+                <Label className="text-blue-dark mb-2 block">Professional Credentials</Label>
                 <Select onValueChange={setCredentialFilter} value={credentialFilter}>
-                  <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                     <SelectValue placeholder="All Credentials" />
                   </SelectTrigger>
-                  <SelectContent className="bg-dark-card border-gray-600">
-                    <SelectItem value="all" className="text-white">All Credentials</SelectItem>
-                    <SelectItem value="mdc-registered" className="text-white">MDC Registered</SelectItem>
-                    <SelectItem value="specialist" className="text-white">Specialist (MDS)</SelectItem>
+                  <SelectContent className="bg-white border-blue-light">
+                    <SelectItem value="all" className="text-blue-dark">All Credentials</SelectItem>
+                    <SelectItem value="mdc-registered" className="text-blue-dark">MDC Registered</SelectItem>
+                    <SelectItem value="specialist" className="text-blue-dark">Specialist (MDS)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label className="text-white mb-2 block">Location Preference</Label>
+                <Label className="text-blue-dark mb-2 block">Location Preference</Label>
                 <Select onValueChange={setLocationFilter} value={locationFilter}>
-                  <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                     <SelectValue placeholder="Distance from CIQ" />
                   </SelectTrigger>
-                  <SelectContent className="bg-dark-card border-gray-600">
-                    <SelectItem value="all" className="text-white">Any Distance</SelectItem>
-                    <SelectItem value="0-2km" className="text-white">Within 2km from CIQ</SelectItem>
-                    <SelectItem value="2-5km" className="text-white">2-5km from CIQ</SelectItem>
-                    <SelectItem value="5-10km" className="text-white">5-10km from CIQ</SelectItem>
-                    <SelectItem value="10-15km" className="text-white">10-15km from CIQ</SelectItem>
-                    <SelectItem value="15km+" className="text-white">15km+ from CIQ</SelectItem>
-                    <SelectItem value="causeway-area" className="text-white">Near Causeway Bridge</SelectItem>
-                    <SelectItem value="city-center" className="text-white">JB City Center</SelectItem>
-                    <SelectItem value="taman-sentosa" className="text-white">Taman Sentosa Area</SelectItem>
-                    <SelectItem value="skudai" className="text-white">Skudai Area</SelectItem>
+                  <SelectContent className="bg-white border-blue-light">
+                    <SelectItem value="all" className="text-blue-dark">Any Distance</SelectItem>
+                    <SelectItem value="0-2km" className="text-blue-dark">Within 2km from CIQ</SelectItem>
+                    <SelectItem value="2-5km" className="text-blue-dark">2-5km from CIQ</SelectItem>
+                    <SelectItem value="5-10km" className="text-blue-dark">5-10km from CIQ</SelectItem>
+                    <SelectItem value="10-15km" className="text-blue-dark">10-15km from CIQ</SelectItem>
+                    <SelectItem value="15km+" className="text-blue-dark">15km+ from CIQ</SelectItem>
+                    <SelectItem value="causeway-area" className="text-blue-dark">Near Causeway Bridge</SelectItem>
+                    <SelectItem value="city-center" className="text-blue-dark">JB City Center</SelectItem>
+                    <SelectItem value="taman-sentosa" className="text-blue-dark">Taman Sentosa Area</SelectItem>
+                    <SelectItem value="skudai" className="text-blue-dark">Skudai Area</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1021,7 +1020,7 @@ const ClinicsSection = () => {
             {/* Row 3: Distance and AI Sentiment */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label className="text-white mb-4 block">
+                <Label className="text-blue-dark mb-4 block">
                   Max Distance from CIQ: {maxDistance} km
                 </Label>
                 <Slider
@@ -1035,16 +1034,16 @@ const ClinicsSection = () => {
               </div>
 
               <div>
-                <Label className="text-white mb-2 block">AI Sentiment Analysis</Label>
+                <Label className="text-blue-dark mb-2 block">AI Sentiment Analysis</Label>
                 <Select onValueChange={setSentimentFilter} value={sentimentFilter}>
-                  <SelectTrigger className="bg-dark-bg border-gray-600 text-white">
+                  <SelectTrigger className="bg-white border-blue-light text-blue-dark">
                     <SelectValue placeholder="All Sentiments" />
                   </SelectTrigger>
-                  <SelectContent className="bg-dark-card border-gray-600">
-                    <SelectItem value="all" className="text-white">All Sentiments</SelectItem>
-                    <SelectItem value="excellent" className="text-white">😊 Excellent (95%+)</SelectItem>
-                    <SelectItem value="good" className="text-white">😐 Good (85-95%)</SelectItem>
-                    <SelectItem value="average" className="text-white">😔 Average (70-85%)</SelectItem>
+                  <SelectContent className="bg-white border-blue-light">
+                    <SelectItem value="all" className="text-blue-dark">All Sentiments</SelectItem>
+                    <SelectItem value="excellent" className="text-blue-dark">😊 Excellent (95%+)</SelectItem>
+                    <SelectItem value="good" className="text-blue-dark">😐 Good (85-95%)</SelectItem>
+                    <SelectItem value="average" className="text-blue-dark">😔 Average (70-85%)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1053,7 +1052,7 @@ const ClinicsSection = () => {
             {/* Row 4: Number of Reviews */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label className="text-white mb-4 block">
+                <Label className="text-blue-dark mb-4 block">
                   Minimum Reviews: {minReviews}
                 </Label>
                 <Slider
@@ -1070,7 +1069,7 @@ const ClinicsSection = () => {
                 <Button 
                   onClick={resetFilters}
                   variant="outline" 
-                  className="border-teal-accent text-teal-accent hover:bg-teal-accent hover:text-white w-full"
+                  className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white w-full"
                 >
                   Reset All Filters
                 </Button>
@@ -1081,18 +1080,18 @@ const ClinicsSection = () => {
 
         {/* Results Summary */}
         <div className="mb-6">
-          <p className="text-gray-300">
-            Found <span className="text-teal-accent font-semibold">{filteredClinics.length}</span> clinics matching your criteria
+          <p className="text-neutral-gray">
+            Found <span className="text-blue-primary font-semibold">{filteredClinics.length}</span> clinics matching your criteria
           </p>
         </div>
 
         {/* Clinic Results */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredClinics.map((clinic) => (
-            <Card key={clinic.id} className="bg-dark-bg border-gray-600 hover:border-teal-accent transition-all duration-300 cursor-pointer">
+            <Card key={clinic.id} className="bg-white border-blue-light hover:border-blue-primary transition-all duration-300 cursor-pointer">
               <CardHeader>
                 <div className="flex justify-between items-start mb-2">
-                  <CardTitle className="text-white text-lg flex items-center gap-2">
+                  <CardTitle className="text-blue-dark text-lg flex items-center gap-2">
                     {clinic.name}
                     {getCredentialStatus(clinic.mdaLicense) === 'Verified' && 
                       <Shield className="h-4 w-4 text-success-green" />}
@@ -1102,18 +1101,18 @@ const ClinicsSection = () => {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="text-white font-semibold">{clinic.rating || 'N/A'}</span>
-                    <span className="text-gray-400">({clinic.reviews} reviews)</span>
+                    <span className="text-blue-dark font-semibold">{clinic.rating || 'N/A'}</span>
+                    <span className="text-neutral-gray">({clinic.reviews} reviews)</span>
                   </div>
                   
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-300">{clinic.distance} km from CIQ</span>
+                    <MapPin className="h-4 w-4 text-neutral-gray" />
+                    <span className="text-neutral-gray">{clinic.distance} km from CIQ</span>
                   </div>
                   
                   <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-300">
+                    <TrendingUp className="h-4 w-4 text-neutral-gray" />
+                    <span className="text-neutral-gray">
                       Sentiment: {getSentimentIcon(clinic.sentiment)} {clinic.sentiment}% ({getSentimentLabel(clinic.sentiment)})
                     </span>
                   </div>
@@ -1123,19 +1122,19 @@ const ClinicsSection = () => {
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-gray-400 text-sm">Dentist:</p>
-                    <p className="text-white text-sm">{clinic.dentist}</p>
+                    <p className="text-neutral-gray text-sm">Dentist:</p>
+                    <p className="text-blue-dark text-sm">{clinic.dentist}</p>
                   </div>
                   
                   <div>
-                    <p className="text-gray-400 text-sm">Address:</p>
-                    <p className="text-gray-300 text-sm">{clinic.address}</p>
+                    <p className="text-neutral-gray text-sm">Address:</p>
+                    <p className="text-neutral-gray text-sm">{clinic.address}</p>
                   </div>
                   
                   <div>
-                    <p className="text-gray-400 text-sm">MDA License:</p>
+                    <p className="text-neutral-gray text-sm">MDA License:</p>
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-300 text-sm">{clinic.mdaLicense}</span>
+                      <span className="text-neutral-gray text-sm">{clinic.mdaLicense}</span>
                       <Badge 
                         variant="outline" 
                         className={`text-xs ${
@@ -1152,18 +1151,18 @@ const ClinicsSection = () => {
                   </div>
                   
                   <div>
-                    <p className="text-gray-400 text-sm">Available Treatments:</p>
+                    <p className="text-neutral-gray text-sm">Available Treatments:</p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {clinic.treatments.dentalImplant && <Badge variant="outline" className="border-gray-600 text-gray-300 text-xs">Implants</Badge>}
-                      {clinic.treatments.braces && <Badge variant="outline" className="border-gray-600 text-gray-300 text-xs">Braces</Badge>}
-                      {clinic.treatments.rootCanal && <Badge variant="outline" className="border-gray-600 text-gray-300 text-xs">Root Canal</Badge>}
-                      {clinic.treatments.teethWhitening && <Badge variant="outline" className="border-gray-600 text-gray-300 text-xs">Whitening</Badge>}
+                      {clinic.treatments.dentalImplant && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Implants</Badge>}
+                      {clinic.treatments.braces && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Braces</Badge>}
+                      {clinic.treatments.rootCanal && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Root Canal</Badge>}
+                      {clinic.treatments.teethWhitening && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Whitening</Badge>}
                     </div>
                   </div>
                   
                   <div className="flex gap-2 mt-4">
                     <Button 
-                      className="flex-1 bg-teal-accent hover:bg-teal-accent/80 text-white"
+                      className="flex-1 bg-blue-primary hover:bg-blue-dark text-white"
                       onClick={() => {
                         const element = document.getElementById('waitlist');
                         if (element) {
@@ -1174,7 +1173,7 @@ const ClinicsSection = () => {
                       <Calendar className="h-4 w-4 mr-2" />
                       Book Appointment
                     </Button>
-                    <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700">
+                    <Button variant="outline" className="border-blue-light text-blue-primary hover:bg-blue-light">
                       View Details
                     </Button>
                   </div>
@@ -1186,14 +1185,14 @@ const ClinicsSection = () => {
 
         {/* No Results Message */}
         {filteredClinics.length === 0 && (
-          <Card className="bg-dark-bg border-gray-600 text-center py-12">
+          <Card className="bg-light-card border-blue-light text-center py-12">
             <CardContent>
-              <p className="text-gray-300 text-lg mb-4">No clinics match your current criteria</p>
-              <p className="text-gray-400 mb-6">Try adjusting your filters to see more results</p>
+              <p className="text-blue-dark text-lg mb-4">No clinics match your current criteria</p>
+              <p className="text-neutral-gray mb-6">Try adjusting your filters to see more results</p>
               <Button 
                 onClick={resetFilters}
                 variant="outline" 
-                className="border-teal-accent text-teal-accent hover:bg-teal-accent hover:text-white"
+                className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
               >
                 Reset All Filters
               </Button>
