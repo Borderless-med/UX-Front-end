@@ -37,7 +37,7 @@ const Navigation = () => {
               <img 
                 src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
                 alt="TrustMedAI" 
-                className="h-6 w-auto mt-0.5"
+                className="h-10 w-auto mt-0.5"
               />
             </div>
           </div>
