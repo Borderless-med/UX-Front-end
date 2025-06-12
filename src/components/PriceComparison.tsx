@@ -60,7 +60,6 @@ const PriceComparison = () => {
       savings: '2800 - 5500',
       percentage: '70%'
     },
-    // New procedures from the uploaded image
     {
       procedure: 'Composite Veneers',
       sgPrice: '163 - 327',
@@ -120,7 +119,7 @@ const PriceComparison = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white py-8">
+    <div className="min-h-screen bg-white py-8 pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-blue-dark mb-4">
