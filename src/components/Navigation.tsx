@@ -47,40 +47,50 @@ const Navigation = () => {
             <div className="ml-10 flex items-baseline space-x-8">
               <Link
                 to="/"
-                className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`transition-all duration-200 font-medium ${
+                  location.pathname === '/' 
+                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary text-base'
                 }`}
               >
                 Home
               </Link>
               <Link
                 to="/compare"
-                className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/compare' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`transition-all duration-200 font-medium ${
+                  location.pathname === '/compare' 
+                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary text-base'
                 }`}
               >
                 Compare Prices
               </Link>
               <Link
                 to="/clinics"
-                className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/clinics' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`transition-all duration-200 font-medium ${
+                  location.pathname === '/clinics' 
+                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary text-base'
                 }`}
               >
                 Find Clinics
               </Link>
               <Link
                 to="/how-it-works"
-                className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/how-it-works' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`transition-all duration-200 font-medium ${
+                  location.pathname === '/how-it-works' 
+                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary text-base'
                 }`}
               >
                 How It Works
               </Link>
               <Link
                 to="/qa"
-                className={`transition-colors duration-200 font-medium ${
-                  location.pathname === '/qa' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`transition-all duration-200 font-medium ${
+                  location.pathname === '/qa' 
+                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary text-base'
                 }`}
               >
                 Q&A
@@ -116,8 +126,10 @@ const Navigation = () => {
               <Link
                 to="/"
                 onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
                 }`}
               >
                 Home
@@ -125,8 +137,10 @@ const Navigation = () => {
               <Link
                 to="/compare"
                 onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/compare' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/compare' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
                 }`}
               >
                 Compare Prices
@@ -134,8 +148,10 @@ const Navigation = () => {
               <Link
                 to="/clinics"
                 onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/clinics' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/clinics' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
                 }`}
               >
                 Find Clinics
@@ -143,8 +159,10 @@ const Navigation = () => {
               <Link
                 to="/how-it-works"
                 onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/how-it-works' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/how-it-works' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
                 }`}
               >
                 How It Works
@@ -152,8 +170,10 @@ const Navigation = () => {
               <Link
                 to="/qa"
                 onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-colors duration-200 font-medium ${
-                  location.pathname === '/qa' ? 'text-blue-primary' : 'text-blue-dark hover:text-blue-primary'
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/qa' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
                 }`}
               >
                 Q&A
