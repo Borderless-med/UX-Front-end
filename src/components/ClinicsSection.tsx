@@ -13,13 +13,13 @@ import { clinics } from '@/data/clinics';
 
 const ClinicsSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTreatment, setSelectedTreatment] = useState('');
-  const [selectedRating, setSelectedRating] = useState('');
+  const [selectedTreatment, setSelectedTreatment] = useState('all');
+  const [selectedRating, setSelectedRating] = useState('all');
   const [maxDistance, setMaxDistance] = useState(110);
-  const [sentimentFilter, setSentimentFilter] = useState('');
+  const [sentimentFilter, setSentimentFilter] = useState('all');
   const [minReviews, setMinReviews] = useState(0);
-  const [credentialFilter, setCredentialFilter] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
+  const [credentialFilter, setCredentialFilter] = useState('all');
+  const [locationFilter, setLocationFilter] = useState('all');
   const [sortBy, setSortBy] = useState('distance');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
@@ -68,34 +68,31 @@ const ClinicsSection = () => {
       clinic.address.toLowerCase().includes(searchTerm.toLowerCase());
 
     // Treatment filter
-    const matchesTreatment = !selectedTreatment || 
+    const matchesTreatment = selectedTreatment === 'all' || 
       clinic.treatments[selectedTreatment as keyof typeof clinic.treatments];
 
     // Rating filter
-    const matchesRating = !selectedRating || clinic.rating >= parseFloat(selectedRating);
+    const matchesRating = selectedRating === 'all' || clinic.rating >= parseFloat(selectedRating);
     
     // Distance filter
     const matchesDistance = clinic.distance <= maxDistance;
     
     // Sentiment filter
-    const matchesSentiment = !sentimentFilter || 
+    const matchesSentiment = sentimentFilter === 'all' || 
                            (sentimentFilter === 'excellent' && clinic.sentiment >= 95) ||
                            (sentimentFilter === 'good' && clinic.sentiment >= 85 && clinic.sentiment < 95) ||
-                           (sentimentFilter === 'average' && clinic.sentiment >= 70 && clinic.sentiment < 85) ||
-                           (sentimentFilter === 'all');
+                           (sentimentFilter === 'average' && clinic.sentiment >= 70 && clinic.sentiment < 85);
     
     // Reviews filter
     const matchesReviews = clinic.reviews >= minReviews;
     
     // Credential filter
-    const matchesCredentials = !credentialFilter || 
+    const matchesCredentials = credentialFilter === 'all' || 
                               (credentialFilter === 'mdc-registered' && clinic.mdaLicense.includes('MDC-')) ||
-                              (credentialFilter === 'specialist' && (clinic.credentials.includes('MDS') || clinic.credentials.includes('Specialist'))) ||
-                              (credentialFilter === 'all');
+                              (credentialFilter === 'specialist' && (clinic.credentials.includes('MDS') || clinic.credentials.includes('Specialist')));
 
     // Location filter
-    const matchesLocation = !locationFilter || 
-                           (locationFilter === 'all') ||
+    const matchesLocation = locationFilter === 'all' ||
                            (locationFilter === '0-2km' && clinic.distance <= 2) ||
                            (locationFilter === '2-5km' && clinic.distance > 2 && clinic.distance <= 5) ||
                            (locationFilter === '5-10km' && clinic.distance > 5 && clinic.distance <= 10) ||
@@ -143,13 +140,13 @@ const ClinicsSection = () => {
 
   const resetFilters = () => {
     setSearchTerm('');
-    setSelectedTreatment('');
-    setSelectedRating('');
+    setSelectedTreatment('all');
+    setSelectedRating('all');
     setMaxDistance(110);
-    setSentimentFilter('');
+    setSentimentFilter('all');
     setMinReviews(0);
-    setCredentialFilter('');
-    setLocationFilter('');
+    setCredentialFilter('all');
+    setLocationFilter('all');
     setSortBy('distance');
   };
 
@@ -191,7 +188,7 @@ const ClinicsSection = () => {
                     <SelectValue placeholder="All Treatments" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-blue-light max-h-60 overflow-y-auto">
-                    <SelectItem value="" className="text-blue-dark">All Treatments</SelectItem>
+                    <SelectItem value="all" className="text-blue-dark">All Treatments</SelectItem>
                     {Object.entries(treatmentCategories).map(([category, treatments]) => (
                       <div key={category}>
                         <div className="px-2 py-1 text-xs font-semibold text-neutral-gray bg-light-card">
@@ -215,7 +212,7 @@ const ClinicsSection = () => {
                     <SelectValue placeholder="Any Rating" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-blue-light">
-                    <SelectItem value="" className="text-blue-dark">Any Rating</SelectItem>
+                    <SelectItem value="all" className="text-blue-dark">Any Rating</SelectItem>
                     <SelectItem value="4.9" className="text-blue-dark">4.9+ Stars</SelectItem>
                     <SelectItem value="4.8" className="text-blue-dark">4.8+ Stars</SelectItem>
                     <SelectItem value="4.7" className="text-blue-dark">4.7+ Stars</SelectItem>
@@ -287,7 +284,7 @@ const ClinicsSection = () => {
                         <SelectValue placeholder="All Sentiments" />
                       </SelectTrigger>
                       <SelectContent className="bg-white border-blue-light">
-                        <SelectItem value="" className="text-blue-dark">All Sentiments</SelectItem>
+                        <SelectItem value="all" className="text-blue-dark">All Sentiments</SelectItem>
                         <SelectItem value="excellent" className="text-blue-dark">😊 Excellent (95%+)</SelectItem>
                         <SelectItem value="good" className="text-blue-dark">😐 Good (85-95%)</SelectItem>
                         <SelectItem value="average" className="text-blue-dark">😔 Average (70-85%)</SelectItem>
@@ -302,7 +299,7 @@ const ClinicsSection = () => {
                         <SelectValue placeholder="All Credentials" />
                       </SelectTrigger>
                       <SelectContent className="bg-white border-blue-light">
-                        <SelectItem value="" className="text-blue-dark">All Credentials</SelectItem>
+                        <SelectItem value="all" className="text-blue-dark">All Credentials</SelectItem>
                         <SelectItem value="mdc-registered" className="text-blue-dark">MDC Registered</SelectItem>
                         <SelectItem value="specialist" className="text-blue-dark">Specialist (MDS)</SelectItem>
                       </SelectContent>
@@ -316,7 +313,7 @@ const ClinicsSection = () => {
                         <SelectValue placeholder="Any Distance" />
                       </SelectTrigger>
                       <SelectContent className="bg-white border-blue-light">
-                        <SelectItem value="" className="text-blue-dark">Any Distance</SelectItem>
+                        <SelectItem value="all" className="text-blue-dark">Any Distance</SelectItem>
                         <SelectItem value="0-2km" className="text-blue-dark">Within 2km</SelectItem>
                         <SelectItem value="2-5km" className="text-blue-dark">2-5km</SelectItem>
                         <SelectItem value="5-10km" className="text-blue-dark">5-10km</SelectItem>
