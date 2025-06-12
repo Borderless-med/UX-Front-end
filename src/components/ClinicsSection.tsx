@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Building2, Shield, Star, Clock, MapPin, MessageSquare, TrendingUp, Calendar, Search } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +19,7 @@ const ClinicsSection = () => {
   const [minReviews, setMinReviews] = useState(0);
   const [credentialFilter, setCredentialFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
+  const [townshipFilter, setTownshipFilter] = useState('all');
   const [sortBy, setSortBy] = useState('distance');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
@@ -58,6 +58,9 @@ const ClinicsSection = () => {
       { key: 'oralCancerScreening', label: 'Oral Cancer Screening' }
     ]
   };
+
+  // Get unique townships for the filter
+  const uniqueTownships = [...new Set(clinics.map(clinic => clinic.township))].sort();
 
   // Filter clinics based on search and filter criteria
   const filteredClinics = clinics.filter(clinic => {
@@ -100,8 +103,11 @@ const ClinicsSection = () => {
                            (locationFilter === '15-25km' && clinic.distance > 15 && clinic.distance <= 25) ||
                            (locationFilter === '25km+' && clinic.distance > 25);
 
+    // Township filter
+    const matchesTownship = townshipFilter === 'all' || clinic.township === townshipFilter;
+
     return matchesSearch && matchesTreatment && matchesRating && matchesDistance && 
-           matchesSentiment && matchesReviews && matchesCredentials && matchesLocation;
+           matchesSentiment && matchesReviews && matchesCredentials && matchesLocation && matchesTownship;
   });
 
   // Sort filtered clinics
@@ -111,6 +117,8 @@ const ClinicsSection = () => {
         return b.rating - a.rating;
       case 'sentiment':
         return b.sentiment - a.sentiment;
+      case 'reviews':
+        return b.reviews - a.reviews;
       case 'distance':
       default:
         return a.distance - b.distance;
@@ -147,6 +155,7 @@ const ClinicsSection = () => {
     setMinReviews(0);
     setCredentialFilter('all');
     setLocationFilter('all');
+    setTownshipFilter('all');
     setSortBy('distance');
   };
 
@@ -180,7 +189,7 @@ const ClinicsSection = () => {
             </div>
 
             {/* Basic Filters Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <Label className="text-blue-dark mb-2 block">Treatment Needed</Label>
                 <Select onValueChange={setSelectedTreatment} value={selectedTreatment}>
@@ -223,6 +232,23 @@ const ClinicsSection = () => {
               </div>
 
               <div>
+                <Label className="text-blue-dark mb-2 block">Township</Label>
+                <Select onValueChange={setTownshipFilter} value={townshipFilter}>
+                  <SelectTrigger className="bg-white border-blue-light text-blue-dark">
+                    <SelectValue placeholder="All Townships" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-blue-light max-h-60 overflow-y-auto">
+                    <SelectItem value="all" className="text-blue-dark">All Townships</SelectItem>
+                    {uniqueTownships.map((township) => (
+                      <SelectItem key={township} value={township} className="text-blue-dark">
+                        {township}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
                 <Label className="text-blue-dark mb-2 block">Sort By</Label>
                 <Select onValueChange={setSortBy} value={sortBy}>
                   <SelectTrigger className="bg-white border-blue-light text-blue-dark">
@@ -232,6 +258,7 @@ const ClinicsSection = () => {
                     <SelectItem value="distance" className="text-blue-dark">Distance from CIQ</SelectItem>
                     <SelectItem value="rating" className="text-blue-dark">Highest Rating</SelectItem>
                     <SelectItem value="sentiment" className="text-blue-dark">Best Sentiment</SelectItem>
+                    <SelectItem value="reviews" className="text-blue-dark">Number of Reviews</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -346,7 +373,7 @@ const ClinicsSection = () => {
             {searchTerm && <span> matching "{searchTerm}"</span>}
           </p>
           <p className="text-sm text-neutral-gray">
-            Sorted by {sortBy === 'distance' ? 'Distance' : sortBy === 'rating' ? 'Rating' : 'Sentiment'}
+            Sorted by {sortBy === 'distance' ? 'Distance' : sortBy === 'rating' ? 'Rating' : sortBy === 'sentiment' ? 'Sentiment' : 'Number of Reviews'}
           </p>
         </div>
 

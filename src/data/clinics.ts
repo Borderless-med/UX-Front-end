@@ -12,6 +12,7 @@ export const clinics: Clinic[] = [
     sentiment: 96,
     mdaLicense: 'MDC-2023-JHR-045',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Taman Kebun Teh',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -48,6 +49,7 @@ export const clinics: Clinic[] = [
     sentiment: 85,
     mdaLicense: 'Pending',
     credentials: 'MDC Pending',
+    township: 'Pasir Gudang',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -84,6 +86,7 @@ export const clinics: Clinic[] = [
     sentiment: 85,
     mdaLicense: 'MDC-2021-JHR-112',
     credentials: 'MDC Registered; BDS; MFDS RCS; Likely MDA Member',
+    township: 'Pulai Mutiara',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -120,6 +123,7 @@ export const clinics: Clinic[] = [
     sentiment: 79.9,
     mdaLicense: 'MDC-2019-JHR-087',
     credentials: 'MDC Registered; DDS; Likely MDA Member',
+    township: 'Molek',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -156,6 +160,7 @@ export const clinics: Clinic[] = [
     sentiment: 96,
     mdaLicense: 'MDC-2022-JHR-033',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Indah',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -192,6 +197,7 @@ export const clinics: Clinic[] = [
     sentiment: 87.4,
     mdaLicense: 'MDC-2023-JHR-078',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Molek',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -228,6 +234,7 @@ export const clinics: Clinic[] = [
     sentiment: 100,
     mdaLicense: 'MDC-2024-JHR-055',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Mutiara Emas',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -264,6 +271,7 @@ export const clinics: Clinic[] = [
     sentiment: 92,
     mdaLicense: 'MDC-2022-JHR-089',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Setia Indah',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -300,6 +308,7 @@ export const clinics: Clinic[] = [
     sentiment: 95,
     mdaLicense: 'MDC-2021-JHR-156',
     credentials: 'MDC Registered; BDS; MDS Specialist; Likely MDA Member',
+    township: 'Austin Heights',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -336,6 +345,7 @@ export const clinics: Clinic[] = [
     sentiment: 88,
     mdaLicense: 'MDC-2023-JHR-201',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Desa Tebrau',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -372,6 +382,7 @@ export const clinics: Clinic[] = [
     sentiment: 91,
     mdaLicense: 'MDC-2022-JHR-078',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Sutera Utama',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -408,6 +419,7 @@ export const clinics: Clinic[] = [
     sentiment: 89,
     mdaLicense: 'MDC-2021-JHR-234',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
+    township: 'Harmony',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -438,10 +450,11 @@ export const clinics: Clinic[] = [
 // Generate the remaining clinics programmatically to reach 101 total
 const generateRemainingClinics = () => {
   const additionalClinics: Clinic[] = [];
-  const areas = [
+  const townships = [
     'Taman Sentosa', 'Taman Daya', 'Taman Johor Jaya', 'Taman Pelangi', 
     'Taman Century', 'Taman Ungku Tun Aminah', 'Taman Sri Tebrau',
-    'Taman Bukit Indah', 'Taman Nusa Bestari', 'Taman Sutera'
+    'Taman Bukit Indah', 'Taman Nusa Bestari', 'Taman Sutera',
+    'Mount Austin', 'Tebrau', 'Skudai', 'Kulai', 'Senai'
   ];
   
   const dentistNames = [
@@ -451,7 +464,7 @@ const generateRemainingClinics = () => {
   ];
 
   for (let i = 13; i <= 101; i++) {
-    const areaIndex = (i - 13) % areas.length;
+    const townshipIndex = (i - 13) % townships.length;
     const dentistIndex = (i - 13) % dentistNames.length;
     const distance = Math.round((Math.random() * 50 + 1) * 10) / 10;
     const rating = Math.round((Math.random() * 1 + 4) * 10) / 10;
@@ -460,8 +473,8 @@ const generateRemainingClinics = () => {
     
     additionalClinics.push({
       id: i,
-      name: `Klinik Pergigian ${areas[areaIndex]} ${i}`,
-      address: `${10 + i} Jalan ${areas[areaIndex]} ${Math.floor(i/10)}/${i % 10}`,
+      name: `Klinik Pergigian ${townships[townshipIndex]} ${i}`,
+      address: `${10 + i} Jalan ${townships[townshipIndex]} ${Math.floor(i/10)}/${i % 10}`,
       dentist: `${dentistNames[dentistIndex]} (BDS)`,
       rating: rating,
       reviews: reviews,
@@ -469,6 +482,7 @@ const generateRemainingClinics = () => {
       sentiment: sentiment,
       mdaLicense: `MDC-${2020 + (i % 5)}-JHR-${String(i).padStart(3, '0')}`,
       credentials: 'MDC Registered; BDS; Likely MDA Member',
+      township: townships[townshipIndex],
       treatments: {
         toothFilling: true,
         rootCanal: Math.random() > 0.2,

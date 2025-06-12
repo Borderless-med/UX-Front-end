@@ -10,6 +10,7 @@ export interface Clinic {
   sentiment: number;
   mdaLicense: string;
   credentials: string;
+  township: string;
   treatments: {
     toothFilling: boolean;
     rootCanal: boolean;
