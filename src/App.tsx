@@ -9,6 +9,8 @@ import Compare from "./pages/Compare";
 import Clinics from "./pages/Clinics";
 import HowItWorks from "./pages/HowItWorks";
 import QA from "./pages/QA";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +27,8 @@ const App = () => (
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/qa" element={<QA />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

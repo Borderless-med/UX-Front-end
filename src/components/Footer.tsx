@@ -1,4 +1,6 @@
 
+import { Link } from 'react-router-dom';
+
 const Footer = () => {
   return (
     <footer className="bg-gray-50 text-gray-700 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
@@ -52,7 +54,14 @@ const Footer = () => {
           
           <div className="space-y-4">
             <div className="text-sm text-gray-500 text-center">
-              © 2024 SG-JB Dental. Launching August 2025. | Privacy Policy | Terms of Service
+              © 2024 SG-JB Dental. Launching August 2025. | 
+              <Link to="/privacy-policy" className="hover:text-blue-600 transition-colors mx-1">
+                Privacy Policy
+              </Link>
+              | 
+              <Link to="/terms-of-service" className="hover:text-blue-600 transition-colors mx-1">
+                Terms of Service
+              </Link>
             </div>
             
             <div className="text-xs sm:text-sm text-gray-500 leading-relaxed italic">
