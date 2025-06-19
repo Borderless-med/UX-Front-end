@@ -26,11 +26,11 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg">Quick Links</h3>
             <ul className="space-y-2 sm:space-y-2">
-              <li><a href="/" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Home</a></li>
-              <li><a href="/compare" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Compare Prices</a></li>
-              <li><a href="/clinics" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Find Clinics</a></li>
-              <li><a href="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">How It Works</a></li>
-              <li><a href="/qa" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Q&A</a></li>
+              <li><Link to="/" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Home</Link></li>
+              <li><Link to="/compare" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Compare Prices</Link></li>
+              <li><Link to="/clinics" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Find Clinics</Link></li>
+              <li><Link to="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">How It Works</Link></li>
+              <li><Link to="/qa" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Q&A</Link></li>
             </ul>
           </div>
           
@@ -64,7 +64,7 @@ const Footer = () => {
               </Link>
             </div>
             
-            <div className="text-xs sm:text-sm text-gray-500 leading-relaxed italic">
+            <div className="text-xs italic text-gray-500 leading-relaxed">
               <p className="mb-2">
                 <strong>DIRECTORY DISCLAIMER:</strong> The information provided on SG Smile Saver regarding dental clinics in Johor Bahru is compiled from publicly available sources for informational purposes only. We make no representation or warranty regarding the accuracy, completeness, or currency of this information. Listing of a dental clinic on this platform does not imply any business relationship, partnership, or endorsement between SG Smile Saver and the listed clinic. We have not verified the credentials, qualifications, or services of these clinics. Users are advised to conduct their own due diligence and directly contact clinics to verify all information before making any decisions. SG Smile Saver is not responsible for any outcomes resulting from interactions between users and listed clinics. Clinic owners who wish to update their information or have their listing removed may contact us at [your contact information].
               </p>
