@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -6,6 +5,8 @@ const Footer = () => {
     <footer className="bg-gray-50 text-gray-700 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+          
+          
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="mb-4">
               <span className="text-xl sm:text-2xl font-bold text-blue-600">SG-JB Dental</span>
