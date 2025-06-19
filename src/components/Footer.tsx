@@ -1,6 +1,5 @@
 
 import { Link } from 'react-router-dom';
-import LegalFooter from './LegalFooter';
 
 const Footer = () => {
   return (
@@ -55,14 +54,27 @@ const Footer = () => {
               </p>
             </div>
             
-            <div className="text-sm text-gray-500 text-center">
+            <div className="text-sm text-gray-500 text-center mb-4">
               © 2024 SG-JB Dental. Launching August 2025.
+            </div>
+            
+            {/* Legal Links Section */}
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-1 text-sm text-gray-600">
+              <Link to="/directory-disclaimer" className="hover:text-blue-600 transition-colors px-2 py-1">
+                Directory Disclaimer
+              </Link>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <Link to="/privacy-policy" className="hover:text-blue-600 transition-colors px-2 py-1">
+                Privacy Policy
+              </Link>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <Link to="/terms-of-service" className="hover:text-blue-600 transition-colors px-2 py-1">
+                Terms of Service
+              </Link>
             </div>
           </div>
         </div>
       </div>
-      
-      <LegalFooter />
     </footer>
   );
 };

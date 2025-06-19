@@ -11,6 +11,7 @@ import HowItWorks from "./pages/HowItWorks";
 import QA from "./pages/QA";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import DirectoryDisclaimer from "./pages/DirectoryDisclaimer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,7 +30,7 @@ const App = () => (
           <Route path="/qa" element={<QA />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
