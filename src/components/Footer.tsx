@@ -55,7 +55,7 @@ const Footer = () => {
               © 2024 SG-JB Dental. Launching August 2025. | Privacy Policy | Terms of Service
             </div>
             
-            <div className="text-xs sm:text-sm text-gray-500 leading-relaxed">
+            <div className="text-xs sm:text-sm text-gray-500 leading-relaxed italic">
               <p className="mb-2">
                 <strong>DIRECTORY DISCLAIMER:</strong> The information provided on SG Smile Saver regarding dental clinics in Johor Bahru is compiled from publicly available sources for informational purposes only. We make no representation or warranty regarding the accuracy, completeness, or currency of this information. Listing of a dental clinic on this platform does not imply any business relationship, partnership, or endorsement between SG Smile Saver and the listed clinic. We have not verified the credentials, qualifications, or services of these clinics. Users are advised to conduct their own due diligence and directly contact clinics to verify all information before making any decisions. SG Smile Saver is not responsible for any outcomes resulting from interactions between users and listed clinics. Clinic owners who wish to update their information or have their listing removed may contact us at [your contact information].
               </p>
