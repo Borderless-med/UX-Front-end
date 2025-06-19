@@ -1,6 +1,7 @@
 
 import Navigation from '@/components/Navigation';
 import HowItWorksSection from '@/components/HowItWorksSection';
+import Footer from '@/components/Footer';
 
 const HowItWorks = () => {
   return (
@@ -9,6 +10,7 @@ const HowItWorks = () => {
       <div className="pt-16">
         <HowItWorksSection />
       </div>
+      <Footer />
     </div>
   );
 };

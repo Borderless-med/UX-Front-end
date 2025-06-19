@@ -1,6 +1,7 @@
 
 import Navigation from '@/components/Navigation';
 import QASection from '@/components/QASection';
+import Footer from '@/components/Footer';
 
 const QA = () => {
   return (
@@ -9,6 +10,7 @@ const QA = () => {
       <div className="pt-16">
         <QASection />
       </div>
+      <Footer />
     </div>
   );
 };

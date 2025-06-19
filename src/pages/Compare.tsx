@@ -1,6 +1,7 @@
 
 import Navigation from '@/components/Navigation';
 import PriceComparison from '@/components/PriceComparison';
+import Footer from '@/components/Footer';
 
 const Compare = () => {
   return (
@@ -9,6 +10,7 @@ const Compare = () => {
       <div className="pt-16">
         <PriceComparison />
       </div>
+      <Footer />
     </div>
   );
 };
