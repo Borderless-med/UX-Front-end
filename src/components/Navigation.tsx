@@ -63,7 +63,7 @@ const Navigation = () => {
                     : 'text-blue-dark hover:text-blue-primary text-base'
                 }`}
               >
-                Compare Prices
+                Compare
               </Link>
               <Link
                 to="/clinics"
@@ -73,7 +73,7 @@ const Navigation = () => {
                     : 'text-blue-dark hover:text-blue-primary text-base'
                 }`}
               >
-                Find Clinics
+                Clinics
               </Link>
               <Link
                 to="/how-it-works"
@@ -85,29 +85,17 @@ const Navigation = () => {
               >
                 How It Works
               </Link>
-              <Link
-                to="/qa"
-                className={`transition-all duration-200 font-medium ${
-                  location.pathname === '/qa' 
-                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
-                    : 'text-blue-dark hover:text-blue-primary text-base'
-                }`}
-              >
-                Q&A
-              </Link>
-              
-              {/* Partner with Us Button */}
-              <Link 
-                to="/partner-application"
-                className="border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-4 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61]"
-              >
-                Partner with Us
-              </Link>
             </div>
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* CTA Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link 
+              to="/partner-application"
+              className="bg-blue-accent hover:bg-blue-primary text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200"
+            >
+              Partner with Us
+            </Link>
             <Button 
               onClick={scrollToWaitlist}
               className="bg-blue-primary hover:bg-blue-accent text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200"
@@ -151,7 +139,7 @@ const Navigation = () => {
                     : 'text-blue-dark hover:text-blue-primary'
                 }`}
               >
-                Compare Prices
+                Compare
               </Link>
               <Link
                 to="/clinics"
@@ -162,7 +150,7 @@ const Navigation = () => {
                     : 'text-blue-dark hover:text-blue-primary'
                 }`}
               >
-                Find Clinics
+                Clinics
               </Link>
               <Link
                 to="/how-it-works"
@@ -175,33 +163,24 @@ const Navigation = () => {
               >
                 How It Works
               </Link>
-              <Link
-                to="/qa"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
-                  location.pathname === '/qa' 
-                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
-                    : 'text-blue-dark hover:text-blue-primary'
-                }`}
-              >
-                Q&A
-              </Link>
               
-              {/* Partner with Us Button - Mobile */}
-              <Link 
-                to="/partner-application"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-full text-left border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-3 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61] mt-2 block"
-              >
-                Partner with Us
-              </Link>
-              
-              <Button 
-                onClick={scrollToWaitlist}
-                className="w-full bg-blue-primary hover:bg-blue-accent text-white font-medium mt-4"
-              >
-                Get Early Access
-              </Button>
+              {/* Mobile CTA Buttons */}
+              <div className="pt-4 space-y-3">
+                <Link 
+                  to="/partner-application"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-full bg-blue-accent hover:bg-blue-primary text-white font-medium px-3 py-2 rounded-lg transition-colors duration-200 block text-center"
+                >
+                  Partner with Us
+                </Link>
+                
+                <Button 
+                  onClick={scrollToWaitlist}
+                  className="w-full bg-blue-primary hover:bg-blue-accent text-white font-medium"
+                >
+                  Get Early Access
+                </Button>
+              </div>
             </div>
           </div>
         )}
