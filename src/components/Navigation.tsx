@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -95,6 +94,11 @@ const Navigation = () => {
               >
                 Q&A
               </Link>
+              
+              {/* Partner with Us Button */}
+              <button className="border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-4 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61]">
+                Partner with Us
+              </button>
             </div>
           </div>
 
@@ -178,6 +182,15 @@ const Navigation = () => {
               >
                 Q&A
               </Link>
+              
+              {/* Partner with Us Button - Mobile */}
+              <button 
+                onClick={() => setIsMenuOpen(false)}
+                className="w-full text-left border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-3 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61] mt-2"
+              >
+                Partner with Us
+              </button>
+              
               <Button 
                 onClick={scrollToWaitlist}
                 className="w-full bg-blue-primary hover:bg-blue-accent text-white font-medium mt-4"
