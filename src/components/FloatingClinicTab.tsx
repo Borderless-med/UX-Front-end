@@ -18,7 +18,7 @@ const FloatingClinicTab = () => {
   }, []);
 
   const scrollToApplySection = () => {
-    const applySection = document.getElementById('apply-clinic') || document.getElementById('waitlist');
+    const applySection = document.getElementById('waitlist');
     if (applySection) {
       applySection.scrollIntoView({ behavior: 'smooth' });
     }
