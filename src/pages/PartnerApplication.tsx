@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ArrowLeft, Building2, Send, CheckCircle } from 'lucide-react';
@@ -10,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface PartnerFormData {
   clinicName: string;
@@ -47,16 +47,51 @@ const PartnerApplication = () => {
   const onSubmit = async (data: PartnerFormData) => {
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Partner application submitted:', data);
-      setIsSubmitted(true);
-      setIsLoading(false);
+    try {
+      console.log('Submitting partner application:', data);
+      
+      const { error } = await supabase
+        .from('partner_applications')
+        .insert([
+          {
+            clinic_name: data.clinicName,
+            contact_name: data.contactName,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            city: data.city,
+            registration_number: data.registrationNumber,
+            services: data.services,
+            experience: data.experience,
+            why_join: data.whyJoin,
+          }
+        ]);
+
+      if (error) {
+        console.error('Error submitting application:', error);
+        toast({
+          title: "Submission Failed",
+          description: "There was an error submitting your application. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        console.log('Application submitted successfully');
+        setIsSubmitted(true);
+        toast({
+          title: "Application Submitted!",
+          description: "We'll review your application and get back to you within 5 business days.",
+        });
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
       toast({
-        title: "Application Submitted!",
-        description: "We'll review your application and get back to you within 5 business days.",
+        title: "Submission Failed",
+        description: "There was an unexpected error. Please try again.",
+        variant: "destructive",
       });
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSubmitted) {

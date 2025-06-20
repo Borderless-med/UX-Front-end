@@ -9,7 +9,99 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      "Clinic  Detail": {
+        Row: {
+          City: string | null
+          "Clinic Addrress": string | null
+          "Clinic Name": string | null
+          created_at: string
+          "Dentist Name": string | null
+          Email: string | null
+          id: number
+          "MDC Registration": string | null
+          "Phone number": number | null
+          "Reasons to Join Us": string | null
+          "Services offered": string | null
+          "Years of Experience": string | null
+        }
+        Insert: {
+          City?: string | null
+          "Clinic Addrress"?: string | null
+          "Clinic Name"?: string | null
+          created_at?: string
+          "Dentist Name"?: string | null
+          Email?: string | null
+          id?: number
+          "MDC Registration"?: string | null
+          "Phone number"?: number | null
+          "Reasons to Join Us"?: string | null
+          "Services offered"?: string | null
+          "Years of Experience"?: string | null
+        }
+        Update: {
+          City?: string | null
+          "Clinic Addrress"?: string | null
+          "Clinic Name"?: string | null
+          created_at?: string
+          "Dentist Name"?: string | null
+          Email?: string | null
+          id?: number
+          "MDC Registration"?: string | null
+          "Phone number"?: number | null
+          "Reasons to Join Us"?: string | null
+          "Services offered"?: string | null
+          "Years of Experience"?: string | null
+        }
+        Relationships: []
+      }
+      partner_applications: {
+        Row: {
+          address: string | null
+          city: string | null
+          clinic_name: string | null
+          contact_name: string | null
+          created_at: string | null
+          email: string | null
+          experience: string | null
+          id: string
+          phone: string | null
+          registration_number: string | null
+          services: string | null
+          updated_at: string | null
+          why_join: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          clinic_name?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          experience?: string | null
+          id?: string
+          phone?: string | null
+          registration_number?: string | null
+          services?: string | null
+          updated_at?: string | null
+          why_join?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          clinic_name?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          email?: string | null
+          experience?: string | null
+          id?: string
+          phone?: string | null
+          registration_number?: string | null
+          services?: string | null
+          updated_at?: string | null
+          why_join?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
