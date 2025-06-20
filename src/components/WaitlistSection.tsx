@@ -1,20 +1,43 @@
+
 import { useState } from 'react';
-import { Mail, Send, CheckCircle } from 'lucide-react';
+import { Mail, Send, CheckCircle, User, Phone } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const WaitlistSection = () => {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    mobile: ''
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !email.includes('@')) {
+    // Validation
+    if (!formData.name.trim()) {
+      toast({
+        title: "Name Required",
+        description: "Please enter your name.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.email || !formData.email.includes('@')) {
       toast({
         title: "Invalid Email",
         description: "Please enter a valid email address.",
@@ -25,15 +48,35 @@ const WaitlistSection = () => {
 
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Insert data into Supabase
+      const { error } = await supabase
+        .from('waitlist_signups')
+        .insert({
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          mobile: formData.mobile.trim() || null
+        });
+
+      if (error) {
+        throw error;
+      }
+
       setIsSubmitted(true);
-      setIsLoading(false);
       toast({
         title: "Successfully Joined!",
         description: "You're now on our waitlist. We'll notify you when we launch.",
       });
-    }, 1000);
+    } catch (error) {
+      console.error('Error submitting waitlist signup:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error joining the waitlist. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSubmitted) {
@@ -82,14 +125,44 @@ const WaitlistSection = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Input
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full text-lg p-6 border-2 border-blue-light bg-white text-blue-dark focus:border-blue-primary"
-                  required
-                />
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    className="w-full text-lg p-6 pl-12 border-2 border-blue-light bg-white text-blue-dark focus:border-blue-primary"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className="w-full text-lg p-6 pl-12 border-2 border-blue-light bg-white text-blue-dark focus:border-blue-primary"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="tel"
+                    placeholder="Enter your mobile number (optional)"
+                    value={formData.mobile}
+                    onChange={(e) => handleInputChange('mobile', e.target.value)}
+                    className="w-full text-lg p-6 pl-12 border-2 border-blue-light bg-white text-blue-dark focus:border-blue-primary"
+                  />
+                </div>
               </div>
               
               <Button 
