@@ -15,16 +15,16 @@ const SubmissionSuccess = () => {
             </div>
             <h3 className="text-2xl font-bold text-success-green">Application Submitted!</h3>
           </div>
-          <p className="text-neutral-gray text-lg mb-6">
+          <p className="text-gray-800 text-lg mb-6 font-medium">
             Thank you for your interest in partnering with us. We'll review your application and contact you within 5 business days.
           </p>
           <div className="bg-blue-light p-4 rounded-lg border border-blue-light mb-6">
-            <p className="text-sm text-blue-primary font-medium">
+            <p className="text-sm text-blue-dark font-semibold">
               Next steps: Our team will verify your clinic credentials and reach out to discuss partnership details.
             </p>
           </div>
           <Link to="/">
-            <Button className="bg-blue-primary hover:bg-blue-accent text-white">
+            <Button className="bg-blue-primary hover:bg-blue-accent text-white font-semibold">
               Return to Home
             </Button>
           </Link>

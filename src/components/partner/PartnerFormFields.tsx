@@ -2,6 +2,7 @@
 import { UseFormReturn } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface PartnerFormData {
   clinicName: string;
@@ -29,11 +30,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           name="clinicName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Clinic Name *</FormLabel>
+              <FormLabel className="text-gray-800 font-semibold">Clinic Name *</FormLabel>
               <FormControl>
-                <Input placeholder="Your Dental Clinic" {...field} required />
+                <Input placeholder="Your Dental Clinic" {...field} required className="text-gray-900 placeholder:text-gray-500" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 font-medium" />
             </FormItem>
           )}
         />
@@ -43,11 +44,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           name="contactName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contact Person *</FormLabel>
+              <FormLabel className="text-gray-800 font-semibold">Contact Person *</FormLabel>
               <FormControl>
-                <Input placeholder="Dr. John Smith" {...field} required />
+                <Input placeholder="Dr. John Smith" {...field} required className="text-gray-900 placeholder:text-gray-500" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 font-medium" />
             </FormItem>
           )}
         />
@@ -59,11 +60,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address *</FormLabel>
+              <FormLabel className="text-gray-800 font-semibold">Email Address *</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="clinic@example.com" {...field} required />
+                <Input type="email" placeholder="clinic@example.com" {...field} required className="text-gray-900 placeholder:text-gray-500" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 font-medium" />
             </FormItem>
           )}
         />
@@ -73,11 +74,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone Number *</FormLabel>
+              <FormLabel className="text-gray-800 font-semibold">Phone Number *</FormLabel>
               <FormControl>
-                <Input placeholder="+60 12 345 6789" {...field} required />
+                <Input placeholder="+60 12 345 6789" {...field} required className="text-gray-900 placeholder:text-gray-500" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 font-medium" />
             </FormItem>
           )}
         />
@@ -88,11 +89,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
         name="address"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Clinic Address *</FormLabel>
+            <FormLabel className="text-gray-800 font-semibold">Clinic Address *</FormLabel>
             <FormControl>
-              <Input placeholder="123 Medical Center, Johor Bahru" {...field} required />
+              <Input placeholder="123 Medical Center, Johor Bahru" {...field} required className="text-gray-900 placeholder:text-gray-500" />
             </FormControl>
-            <FormMessage />
+            <FormMessage className="text-red-600 font-medium" />
           </FormItem>
         )}
       />
@@ -103,11 +104,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           name="city"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>City *</FormLabel>
+              <FormLabel className="text-gray-800 font-semibold">City *</FormLabel>
               <FormControl>
-                <Input placeholder="Johor Bahru" {...field} required />
+                <Input placeholder="Johor Bahru" {...field} required className="text-gray-900 placeholder:text-gray-500" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 font-medium" />
             </FormItem>
           )}
         />
@@ -117,11 +118,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           name="registrationNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>MDC Registration Number *</FormLabel>
+              <FormLabel className="text-gray-800 font-semibold">MDC Registration Number *</FormLabel>
               <FormControl>
-                <Input placeholder="MDC123456" {...field} required />
+                <Input placeholder="MDC123456" {...field} required className="text-gray-900 placeholder:text-gray-500" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 font-medium" />
             </FormItem>
           )}
         />
@@ -132,11 +133,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
         name="services"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Services Offered *</FormLabel>
+            <FormLabel className="text-gray-800 font-semibold">Services Offered *</FormLabel>
             <FormControl>
-              <Input placeholder="General Dentistry, Orthodontics, Dental Implants, etc." {...field} required />
+              <Textarea placeholder="General Dentistry, Orthodontics, Dental Implants, etc." {...field} required className="text-gray-900 placeholder:text-gray-500 min-h-[100px]" />
             </FormControl>
-            <FormMessage />
+            <FormMessage className="text-red-600 font-medium" />
           </FormItem>
         )}
       />
@@ -146,11 +147,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
         name="experience"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Years of Experience *</FormLabel>
+            <FormLabel className="text-gray-800 font-semibold">Years of Experience *</FormLabel>
             <FormControl>
-              <Input placeholder="10 years" {...field} required />
+              <Input placeholder="10 years" {...field} required className="text-gray-900 placeholder:text-gray-500" />
             </FormControl>
-            <FormMessage />
+            <FormMessage className="text-red-600 font-medium" />
           </FormItem>
         )}
       />
@@ -160,11 +161,11 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
         name="whyJoin"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Why do you want to join our network? *</FormLabel>
+            <FormLabel className="text-gray-800 font-semibold">Why do you want to join our network? *</FormLabel>
             <FormControl>
-              <Input placeholder="Tell us about your motivation to serve Singapore patients..." {...field} required />
+              <Textarea placeholder="Tell us about your motivation to serve Singapore patients..." {...field} required className="text-gray-900 placeholder:text-gray-500 min-h-[120px]" />
             </FormControl>
-            <FormMessage />
+            <FormMessage className="text-red-600 font-medium" />
           </FormItem>
         )}
       />
