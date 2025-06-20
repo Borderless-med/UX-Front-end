@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -189,10 +190,7 @@ const Navigation = () => {
               {/* Partner with Us Button - Mobile */}
               <Link 
                 to="/partner-application"
-                onClick={() => {
-                  scrollToPartnerForm();
-                  setIsMenuOpen(false);
-                }}
+                onClick={() => setIsMenuOpen(false)}
                 className="w-full text-left border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-3 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61] mt-2 block"
               >
                 Partner with Us
