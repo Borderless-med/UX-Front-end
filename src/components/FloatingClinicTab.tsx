@@ -33,17 +33,20 @@ const FloatingClinicTab = () => {
           onClick={navigateToPartnerApplication}
           onMouseEnter={() => setIsExpanded(true)}
           onMouseLeave={() => setIsExpanded(false)}
-          className="group bg-[#FF6F61] hover:bg-[#FF6F61]/90 text-white rounded-full shadow-lg transition-all duration-300 flex items-center"
+          className="group bg-[#FF6F61] hover:bg-[#FF6F61]/90 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:scale-105"
           style={{
-            width: isExpanded ? 'auto' : '64px',
-            height: '64px',
-            paddingLeft: '16px',
-            paddingRight: isExpanded ? '20px' : '16px',
+            width: isExpanded ? 'auto' : '80px',
+            height: '80px',
+            paddingLeft: '20px',
+            paddingRight: isExpanded ? '24px' : '20px',
           }}
         >
-          <Handshake size={32} className="text-white flex-shrink-0" />
+          <Handshake 
+            size={isExpanded ? 40 : 36} 
+            className="text-white flex-shrink-0 transition-all duration-300" 
+          />
           <span
-            className={`ml-3 whitespace-nowrap font-medium transition-all duration-300 ${
+            className={`ml-4 whitespace-nowrap font-semibold text-lg transition-all duration-300 ${
               isExpanded ? 'opacity-100 max-w-xs' : 'opacity-0 max-w-0 overflow-hidden'
             }`}
           >
@@ -56,10 +59,10 @@ const FloatingClinicTab = () => {
       <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
         <button
           onClick={navigateToPartnerApplication}
-          className="bg-[#FF6F61] hover:bg-[#FF6F61]/90 text-white rounded-full shadow-lg transition-all duration-300 flex items-center px-4 py-3"
+          className="bg-[#FF6F61] hover:bg-[#FF6F61]/90 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center px-6 py-4 transform hover:scale-105"
         >
-          <Handshake size={32} className="text-white mr-2" />
-          <span className="font-medium whitespace-nowrap">Clinics: Join Now</span>
+          <Handshake size={40} className="text-white mr-3" />
+          <span className="font-semibold text-lg whitespace-nowrap">Clinics: Join Now</span>
         </button>
       </div>
     </>
