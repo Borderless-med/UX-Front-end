@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +12,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import DirectoryDisclaimer from "./pages/DirectoryDisclaimer";
 import NotFound from "./pages/NotFound";
+import PartnerApplication from "./pages/PartnerApplication";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +28,7 @@ const App = () => (
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/qa" element={<QA />} />
+          <Route path="/partner-application" element={<PartnerApplication />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />

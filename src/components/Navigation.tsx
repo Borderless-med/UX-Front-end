@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,15 +16,6 @@ const Navigation = () => {
   };
 
   const scrollToWaitlist = () => {
-    // If not on home page, navigate to home first
-    if (location.pathname !== '/') {
-      window.location.href = '/#waitlist';
-    } else {
-      scrollToSection('waitlist');
-    }
-  };
-
-  const scrollToPartnerForm = () => {
     // If not on home page, navigate to home first
     if (location.pathname !== '/') {
       window.location.href = '/#waitlist';
@@ -106,12 +96,12 @@ const Navigation = () => {
               </Link>
               
               {/* Partner with Us Button */}
-              <button 
-                onClick={scrollToPartnerForm}
+              <Link 
+                to="/partner-application"
                 className="border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-4 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61]"
               >
                 Partner with Us
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -197,15 +187,16 @@ const Navigation = () => {
               </Link>
               
               {/* Partner with Us Button - Mobile */}
-              <button 
+              <Link 
+                to="/partner-application"
                 onClick={() => {
                   scrollToPartnerForm();
                   setIsMenuOpen(false);
                 }}
-                className="w-full text-left border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-3 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61] mt-2"
+                className="w-full text-left border-2 border-[#FF6F61] text-[#FF6F61] font-medium px-3 py-2 rounded-lg transition-colors duration-200 hover:border-white hover:text-white hover:bg-[#FF6F61] mt-2 block"
               >
                 Partner with Us
-              </button>
+              </Link>
               
               <Button 
                 onClick={scrollToWaitlist}

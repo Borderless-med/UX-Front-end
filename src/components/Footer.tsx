@@ -1,15 +1,7 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const Footer = () => {
-  const scrollToClinicForm = () => {
-    const clinicForm = document.getElementById('clinic-form') || document.getElementById('waitlist');
-    if (clinicForm) {
-      clinicForm.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <footer className="bg-gray-50 text-gray-700">
       <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
@@ -25,13 +17,14 @@ const Footer = () => {
             </div>
             
             <div className="flex items-start">
-              <Button
-                onClick={scrollToClinicForm}
-                variant="outline"
-                className="bg-transparent border-[#FF6F61] text-[#FF6F61] hover:bg-[#FF6F61] hover:text-white transition-colors"
-              >
-                Apply as Clinic
-              </Button>
+              <Link to="/partner-application">
+                <Button
+                  variant="outline"
+                  className="bg-transparent border-[#FF6F61] text-[#FF6F61] hover:bg-[#FF6F61] hover:text-white transition-colors"
+                >
+                  Apply as Clinic
+                </Button>
+              </Link>
             </div>
           </div>
 

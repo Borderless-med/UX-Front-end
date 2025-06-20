@@ -1,10 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { Handshake } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const FloatingClinicTab = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,11 +19,8 @@ const FloatingClinicTab = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToApplySection = () => {
-    const applySection = document.getElementById('waitlist');
-    if (applySection) {
-      applySection.scrollIntoView({ behavior: 'smooth' });
-    }
+  const navigateToPartnerApplication = () => {
+    navigate('/partner-application');
   };
 
   if (!isVisible) return null;
@@ -31,7 +30,7 @@ const FloatingClinicTab = () => {
       {/* Desktop Version - Right Corner */}
       <div className="hidden md:block fixed right-6 top-1/2 -translate-y-1/2 z-50 animate-slide-in-right">
         <button
-          onClick={scrollToApplySection}
+          onClick={navigateToPartnerApplication}
           onMouseEnter={() => setIsExpanded(true)}
           onMouseLeave={() => setIsExpanded(false)}
           className="group bg-[#FF6F61] hover:bg-[#FF6F61]/90 text-white rounded-full shadow-lg transition-all duration-300 flex items-center"
@@ -56,7 +55,7 @@ const FloatingClinicTab = () => {
       {/* Mobile Version - Bottom Center */}
       <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
         <button
-          onClick={scrollToApplySection}
+          onClick={navigateToPartnerApplication}
           className="bg-[#FF6F61] hover:bg-[#FF6F61]/90 text-white rounded-full shadow-lg transition-all duration-300 flex items-center px-4 py-3"
         >
           <Handshake size={32} className="text-white mr-2" />
