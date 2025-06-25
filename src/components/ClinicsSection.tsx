@@ -188,7 +188,7 @@ const ClinicsSection = () => {
                 <p className="text-xs text-blue-700/80 leading-relaxed">
                   This platform does not provide medical advice or establish practitioner-patient relationships. 
                   <span 
-                    className="ml-2 inline-flex items-center gap-1 bg-amber-100 border border-amber-300 rounded-md px-3 py-1 text-sm text-amber-800 hover:bg-amber-200 hover:border-amber-400 cursor-pointer font-semibold transition-all duration-200 shadow-sm"
+                    className="ml-2 inline-flex items-center gap-1 bg-blue-200/80 border border-blue-400/60 rounded-md px-3 py-1.5 text-sm text-blue-900 hover:bg-blue-300/70 hover:border-blue-500/70 cursor-pointer font-semibold transition-all duration-200 shadow-sm"
                     onClick={() => window.open('/directory-disclaimer', '_blank')}
                   >
                     <ExternalLink className="h-3 w-3" />
