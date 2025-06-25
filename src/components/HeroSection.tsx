@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Shield, Users, MapPin, DollarSign, X } from 'lucide-react';
+import { Users, MapPin, DollarSign, X } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -97,14 +97,8 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-20">
-            <Card className="p-6 text-center bg-blue-50 border-blue-200 hover:shadow-lg transition-shadow">
-              <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <div className="text-2xl font-bold text-gray-900 mb-2">MDC Verified</div>
-              <div className="text-sm text-gray-600">Malaysian Dental Council Registered Clinics</div>
-            </Card>
-            
+          {/* Trust Indicators - Updated to 3 columns */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             <Card className="p-6 text-center bg-green-50 border-green-200 hover:shadow-lg transition-shadow">
               <Users className="w-12 h-12 text-green-600 mx-auto mb-4" />
               <div className="text-2xl font-bold text-gray-900 mb-2">5,000+</div>
