@@ -1,11 +1,18 @@
+
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 
 const Footer = () => {
   return (
     <footer className="bg-gray-50 text-gray-700">
       <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
         <div className="max-w-7xl mx-auto">
+          {/* Medical Disclaimer Section - Added */}
+          <div className="mb-8 sm:mb-12">
+            <MedicalDisclaimer variant="compact" />
+          </div>
+
           {/* New Clinic Partners Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12 pb-6 sm:pb-8 border-b border-gray-200">
             <div>
@@ -55,6 +62,7 @@ const Footer = () => {
                 <li><Link to="/clinics" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Find Clinics</Link></li>
                 <li><Link to="/how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">How It Works</Link></li>
                 <li><Link to="/qa" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Q&A</Link></li>
+                <li><Link to="/medical-disclaimer" className="text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base py-1 block">Medical Disclaimer</Link></li>
               </ul>
             </div>
             
@@ -84,6 +92,10 @@ const Footer = () => {
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-1 text-sm text-gray-600">
               <Link to="/directory-disclaimer" className="hover:text-blue-600 transition-colors px-2 py-1">
                 Directory Disclaimer
+              </Link>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <Link to="/medical-disclaimer" className="hover:text-blue-600 transition-colors px-2 py-1">
+                Medical Disclaimer
               </Link>
               <span className="hidden sm:inline text-gray-400">|</span>
               <Link to="/privacy-policy" className="hover:text-blue-600 transition-colors px-2 py-1">

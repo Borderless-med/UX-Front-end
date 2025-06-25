@@ -13,6 +13,7 @@ import QA from "./pages/QA";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import DirectoryDisclaimer from "./pages/DirectoryDisclaimer";
+import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import NotFound from "./pages/NotFound";
 import PartnerApplication from "./pages/PartnerApplication";
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
+            <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

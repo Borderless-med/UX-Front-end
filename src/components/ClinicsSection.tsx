@@ -12,6 +12,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from '@/components/auth/AuthModal';
 import AuthStatus from '@/components/auth/AuthStatus';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import { clinics } from '@/data/clinics';
 
 const ClinicsSection = () => {
@@ -157,14 +158,20 @@ const ClinicsSection = () => {
           </p>
         </div>
 
-        {/* Legal Disclaimer Banner */}
+        {/* Medical Disclaimer - Enhanced */}
+        <div className="mb-8">
+          <MedicalDisclaimer variant="banner" className="mb-4" />
+        </div>
+
+        {/* Legal Disclaimer Banner - Updated */}
         <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <div className="flex items-start gap-3">
             <MessageSquare className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm text-yellow-800 font-medium mb-2">
-                <strong>Important Disclaimer:</strong> Information compiled from publicly available sources. 
-                Listing does not imply endorsement or professional relationship.
+                <strong>Directory Disclaimer:</strong> Information compiled from publicly available sources. 
+                Listing does not imply endorsement, professional relationship, or recommendation. 
+                This platform does not provide medical advice or establish practitioner-patient relationships.
               </p>
               <Button 
                 variant="outline" 

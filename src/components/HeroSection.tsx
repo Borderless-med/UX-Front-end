@@ -1,8 +1,10 @@
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Users, MapPin, DollarSign, X } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -78,6 +80,11 @@ const HeroSection = () => {
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
               Join thousands of smart Singapore patients who've discovered quality, affordable dental care in Johor Bahru
             </p>
+
+            {/* Medical Disclaimer - Added */}
+            <div className="mb-8 max-w-4xl mx-auto">
+              <MedicalDisclaimer variant="banner" />
+            </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
