@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from '@/components/auth/AuthModal';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
+import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
@@ -83,6 +83,8 @@ const ClinicsSection = () => {
         </div>
 
         <MedicalDisclaimer variant="important-disclaimer" />
+
+        <DisclaimerSection onOptOutClick={handleOptOutClick} />
 
         {/* Search & Filter Clinics Section */}
         <div className="mb-8">
