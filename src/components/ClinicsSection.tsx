@@ -19,7 +19,7 @@ const ClinicsSection = () => {
   const [ratingFilter, setRatingFilter] = useState<number>(0);
   const [distanceRange, setDistanceRange] = useState<number[]>([0, 50]);
   const [sortBy, setSortBy] = useState<string>('rating');
-  const [showFilters, setShowFilters] = useState(false);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(true);
   const navigate = useNavigate();
 
   // Get unique townships
@@ -136,58 +136,6 @@ const ClinicsSection = () => {
             Browse our comprehensive directory of dental clinics in Johor Bahru. 
             Find information about services, locations, and contact details to help you make informed decisions.
           </p>
-          
-          {/* Search Bar */}
-          <div className="relative max-w-md mx-auto mb-8">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-gray h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Search clinics or areas..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full border-blue-light focus:border-blue-primary"
-            />
-          </div>
-
-          {/* Filter Toggle and Sort */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-6">
-            <Collapsible open={showFilters} onOpenChange={setShowFilters}>
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
-                >
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-                  <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-                </Button>
-              </CollapsibleTrigger>
-            </Collapsible>
-
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="rating">Highest Rated</SelectItem>
-                <SelectItem value="distance">Nearest First</SelectItem>
-                <SelectItem value="reviews">Most Reviews</SelectItem>
-                <SelectItem value="name">Name A-Z</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {activeFiltersCount > 0 && (
-              <Button
-                onClick={clearAllFilters}
-                variant="ghost"
-                size="sm"
-                className="text-blue-primary hover:text-blue-dark"
-              >
-                <X className="h-4 w-4 mr-1" />
-                Clear All
-              </Button>
-            )}
-          </div>
 
           {/* Opt Out Button */}
           <div className="mb-8">
@@ -201,98 +149,218 @@ const ClinicsSection = () => {
           </div>
         </div>
 
+        {/* Search & Filter Clinics Section */}
+        <div className="mb-8">
+          <Card className="p-6 border-blue-light bg-white shadow-sm">
+            <h2 className="text-xl font-semibold text-blue-dark mb-6 text-center">Search & Filter Clinics</h2>
+            
+            {/* Search Bar */}
+            <div className="relative max-w-md mx-auto mb-6">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-gray h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Search clinics or areas..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full border-blue-light focus:border-blue-primary"
+              />
+            </div>
+
+            {/* Main Filter Row - Always Visible */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {/* Treatment Needed */}
+              <div>
+                <label className="block text-sm font-medium text-blue-dark mb-2">Treatment Needed</label>
+                <Select 
+                  value={selectedTreatments.length > 0 ? selectedTreatments[0] : ""} 
+                  onValueChange={(value) => {
+                    if (value) {
+                      setSelectedTreatments([value]);
+                    } else {
+                      setSelectedTreatments([]);
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any Treatment" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Any Treatment</SelectItem>
+                    {treatmentOptions.map((treatment) => (
+                      <SelectItem key={treatment.key} value={treatment.key}>
+                        {treatment.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Minimum Rating */}
+              <div>
+                <label className="block text-sm font-medium text-blue-dark mb-2">Minimum Rating</label>
+                <Select value={ratingFilter.toString()} onValueChange={(value) => setRatingFilter(Number(value))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Any Rating</SelectItem>
+                    <SelectItem value="4">4+ Stars</SelectItem>
+                    <SelectItem value="4.5">4.5+ Stars</SelectItem>
+                    <SelectItem value="4.8">4.8+ Stars</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Township */}
+              <div>
+                <label className="block text-sm font-medium text-blue-dark mb-2">Township</label>
+                <Select 
+                  value={selectedTownships.length > 0 ? selectedTownships[0] : ""} 
+                  onValueChange={(value) => {
+                    if (value) {
+                      setSelectedTownships([value]);
+                    } else {
+                      setSelectedTownships([]);
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any Area" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Any Area</SelectItem>
+                    {townships.map((township) => (
+                      <SelectItem key={township} value={township}>
+                        {township}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Sort By */}
+              <div>
+                <label className="block text-sm font-medium text-blue-dark mb-2">Sort By</label>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rating">Highest Rated</SelectItem>
+                    <SelectItem value="distance">Nearest First</SelectItem>
+                    <SelectItem value="reviews">Most Reviews</SelectItem>
+                    <SelectItem value="name">Name A-Z</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Advanced Filters Toggle */}
+            <div className="flex justify-center items-center gap-4">
+              <Collapsible open={showAdvancedFilters} onOpenChange={setShowAdvancedFilters}>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
+                  >
+                    {showAdvancedFilters ? 'Hide' : 'Show'} Advanced Filters
+                    <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${showAdvancedFilters ? 'rotate-180' : ''}`} />
+                  </Button>
+                </CollapsibleTrigger>
+              </Collapsible>
+
+              {activeFiltersCount > 0 && (
+                <Button
+                  onClick={clearAllFilters}
+                  variant="ghost"
+                  size="sm"
+                  className="text-blue-primary hover:text-blue-dark"
+                >
+                  <X className="h-4 w-4 mr-1" />
+                  Clear All ({activeFiltersCount})
+                </Button>
+              )}
+            </div>
+
+            {/* Advanced Filters Panel */}
+            <Collapsible open={showAdvancedFilters} onOpenChange={setShowAdvancedFilters}>
+              <CollapsibleContent className="mt-6">
+                <div className="border-t border-blue-light pt-6">
+                  <h3 className="text-lg font-medium text-blue-dark mb-4">Advanced Filters</h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Multiple Treatment Selection */}
+                    <div>
+                      <h4 className="font-medium text-blue-dark mb-3">Multiple Treatments</h4>
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {treatmentOptions.map((treatment) => (
+                          <div key={treatment.key} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`adv-${treatment.key}`}
+                              checked={selectedTreatments.includes(treatment.key)}
+                              onCheckedChange={(checked) => 
+                                handleTreatmentChange(treatment.key, checked as boolean)
+                              }
+                            />
+                            <label 
+                              htmlFor={`adv-${treatment.key}`} 
+                              className="text-sm text-neutral-gray cursor-pointer"
+                            >
+                              {treatment.label}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Multiple Township Selection */}
+                    <div>
+                      <h4 className="font-medium text-blue-dark mb-3">Multiple Areas</h4>
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {townships.map((township) => (
+                          <div key={township} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`adv-${township}`}
+                              checked={selectedTownships.includes(township)}
+                              onCheckedChange={(checked) => 
+                                handleTownshipChange(township, checked as boolean)
+                              }
+                            />
+                            <label 
+                              htmlFor={`adv-${township}`} 
+                              className="text-sm text-neutral-gray cursor-pointer"
+                            >
+                              {township}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Distance Filter */}
+                    <div>
+                      <h4 className="font-medium text-blue-dark mb-3">
+                        Distance: {distanceRange[0]}-{distanceRange[1]}km
+                      </h4>
+                      <Slider
+                        value={distanceRange}
+                        onValueChange={setDistanceRange}
+                        max={50}
+                        min={0}
+                        step={1}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+        </div>
+
         {/* Medical Disclaimer - Positioned prominently but elegantly */}
         <div className="mb-8">
           <MedicalDisclaimer variant="banner" className="max-w-5xl mx-auto" />
         </div>
-
-        {/* Advanced Filters Panel - Fixed collapsible functionality */}
-        <Collapsible open={showFilters} onOpenChange={setShowFilters}>
-          <CollapsibleContent className="mb-8">
-            <Card className="p-6 border-blue-light bg-white shadow-sm">
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Treatment Filters */}
-                <div>
-                  <h3 className="font-semibold text-blue-dark mb-3">Treatments</h3>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {treatmentOptions.map((treatment) => (
-                      <div key={treatment.key} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={treatment.key}
-                          checked={selectedTreatments.includes(treatment.key)}
-                          onCheckedChange={(checked) => 
-                            handleTreatmentChange(treatment.key, checked as boolean)
-                          }
-                        />
-                        <label 
-                          htmlFor={treatment.key} 
-                          className="text-sm text-neutral-gray cursor-pointer"
-                        >
-                          {treatment.label}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Location Filters */}
-                <div>
-                  <h3 className="font-semibold text-blue-dark mb-3">Areas</h3>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {townships.map((township) => (
-                      <div key={township} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={township}
-                          checked={selectedTownships.includes(township)}
-                          onCheckedChange={(checked) => 
-                            handleTownshipChange(township, checked as boolean)
-                          }
-                        />
-                        <label 
-                          htmlFor={township} 
-                          className="text-sm text-neutral-gray cursor-pointer"
-                        >
-                          {township}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Rating Filter */}
-                <div>
-                  <h3 className="font-semibold text-blue-dark mb-3">Minimum Rating</h3>
-                  <Select value={ratingFilter.toString()} onValueChange={(value) => setRatingFilter(Number(value))}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0">Any Rating</SelectItem>
-                      <SelectItem value="4">4+ Stars</SelectItem>
-                      <SelectItem value="4.5">4.5+ Stars</SelectItem>
-                      <SelectItem value="4.8">4.8+ Stars</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Distance Filter */}
-                <div>
-                  <h3 className="font-semibold text-blue-dark mb-3">
-                    Distance: {distanceRange[0]}-{distanceRange[1]}km
-                  </h3>
-                  <Slider
-                    value={distanceRange}
-                    onValueChange={setDistanceRange}
-                    max={50}
-                    min={0}
-                    step={1}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-            </Card>
-          </CollapsibleContent>
-        </Collapsible>
 
         {/* Results Count */}
         <div className="mb-6 text-center">
