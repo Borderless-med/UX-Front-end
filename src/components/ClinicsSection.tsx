@@ -97,14 +97,18 @@ const ClinicsSection = () => {
               />
             </div>
             
-            {/* Enhanced Rating Source Disclaimer */}
-            <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100/40 rounded-lg border border-blue-200/60 shadow-sm">
-              <div className="flex items-start gap-3">
-                <Info className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5 drop-shadow-sm" />
-                <p className="text-sm text-blue-800 font-medium leading-relaxed">
-                  <span className="font-semibold">Google Rating Information:</span> All ratings and reviews displayed are sourced from Google. 
-                  These reflect public feedback and may not represent the complete picture of each clinic's services.
-                </p>
+            {/* Enhanced Google Rating Source Disclaimer - Neutral gray styling for informational content */}
+            <div className="mb-4">
+              <div className="bg-gradient-to-r from-gray-100 to-gray-200/80 border-l-4 border-gray-400 rounded-r-lg px-6 py-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-300/70 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <Info className="h-5 w-5 text-gray-600 drop-shadow-md" />
+                  </div>
+                  <div className="text-sm text-gray-800 leading-relaxed font-medium">
+                    <span className="font-bold text-gray-900">Google Rating Information:</span> All ratings and reviews displayed are sourced from Google. 
+                    These reflect public feedback and may not represent the complete picture of each clinic's services.
+                  </div>
+                </div>
               </div>
             </div>
             
