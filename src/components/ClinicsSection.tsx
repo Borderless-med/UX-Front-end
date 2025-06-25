@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Building2, Shield, Star, Clock, MapPin, MessageSquare, Calendar, Search, Lock, Info, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -158,9 +157,11 @@ const ClinicsSection = () => {
           </p>
         </div>
 
-        {/* Medical Disclaimer - Consistent Professional Style */}
+        {/* Medical Disclaimer - 3D Button Effect */}
         <div className="mb-6">
-          <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4">
+          <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4 shadow-lg transform transition-all duration-200 hover:shadow-xl hover:transform hover:translate-y-[-2px] active:translate-y-[1px] active:shadow-md cursor-default" style={{
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+          }}>
             <div className="flex items-start gap-3">
               <Info className="h-4 w-4 text-blue-600/70 flex-shrink-0 mt-0.5" />
               <div className="space-y-1">
@@ -175,9 +176,11 @@ const ClinicsSection = () => {
           </div>
         </div>
 
-        {/* Directory Disclaimer - Matching Professional Style with Prominent Opt-out Box */}
+        {/* Directory Disclaimer - 3D Button Effect with Blue Accent Opt-out Box */}
         <div className="mb-8">
-          <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4">
+          <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4 shadow-lg transform transition-all duration-200 hover:shadow-xl hover:transform hover:translate-y-[-2px] active:translate-y-[1px] active:shadow-md cursor-default" style={{
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+          }}>
             <div className="flex items-start gap-3">
               <MessageSquare className="h-4 w-4 text-blue-600/70 flex-shrink-0 mt-0.5" />
               <div className="space-y-1">
@@ -188,8 +191,11 @@ const ClinicsSection = () => {
                 <p className="text-xs text-blue-700/80 leading-relaxed">
                   This platform does not provide medical advice or establish practitioner-patient relationships. 
                   <span 
-                    className="ml-2 inline-flex items-center gap-1 bg-blue-200/80 border border-blue-400/60 rounded-md px-3 py-1.5 text-sm text-blue-900 hover:bg-blue-300/70 hover:border-blue-500/70 cursor-pointer font-semibold transition-all duration-200 shadow-sm"
+                    className="ml-2 inline-flex items-center gap-1 bg-blue-accent text-white rounded-md px-3 py-1.5 text-sm hover:bg-blue-accent/90 cursor-pointer font-semibold transition-all duration-200 shadow-md transform hover:shadow-lg hover:translate-y-[-1px] active:translate-y-[1px] active:shadow-sm"
                     onClick={() => window.open('/directory-disclaimer', '_blank')}
+                    style={{
+                      boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                    }}
                   >
                     <ExternalLink className="h-3 w-3" />
                     Opt-out or report issues
