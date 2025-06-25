@@ -1,6 +1,7 @@
 
-import { Star, MapPin, Phone, Clock } from 'lucide-react';
+import { Star, MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 import { getSpecialties } from '../utils/clinicFilterUtils';
 import PractitionerDetails from './PractitionerDetails';
 
@@ -66,7 +67,7 @@ const ClinicCard = ({
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <div>
             <p className="text-xs text-neutral-gray">Distance</p>
             <p className="text-sm font-medium text-success-green">{clinic.distance}km away</p>
@@ -83,6 +84,20 @@ const ClinicCard = ({
           onSignInClick={onSignInClick}
           onViewDetails={onViewPractitionerDetails}
         />
+
+        {/* Clinic Opt-out Section - Positioned at bottom for easy discovery */}
+        <div className="border-t border-gray-100 pt-3 mt-4">
+          <div className="flex justify-between items-center text-xs text-gray-500">
+            <span>Clinic owner?</span>
+            <Link
+              to={`/opt-out-report?clinic=${encodeURIComponent(clinic.name)}&clinicId=${clinic.id}`}
+              className="text-orange-600 hover:text-orange-700 underline flex items-center gap-1 transition-colors"
+            >
+              <ExternalLink className="h-3 w-3" />
+              Remove listing
+            </Link>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

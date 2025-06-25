@@ -82,7 +82,7 @@ const Footer = () => {
               © 2024 SG-JB Dental. Launching August 2025.
             </div>
             
-            {/* Legal Links Section */}
+            {/* Legal Links Section - Enhanced with prominent Opt-out link */}
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-1 text-sm text-gray-600">
               <Link to="/directory-disclaimer" className="hover:text-blue-600 transition-colors px-2 py-1">
                 Directory Disclaimer
@@ -98,6 +98,13 @@ const Footer = () => {
               <span className="hidden sm:inline text-gray-400">|</span>
               <Link to="/terms-of-service" className="hover:text-blue-600 transition-colors px-2 py-1">
                 Terms of Service
+              </Link>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <Link 
+                to="/opt-out-report" 
+                className="hover:text-blue-600 transition-colors px-2 py-1 font-medium text-orange-600 hover:text-orange-700"
+              >
+                Opt-out
               </Link>
             </div>
           </div>

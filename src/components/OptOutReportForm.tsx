@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSearchParams } from 'react-router-dom';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle } from 'lucide-react';
 
 const formSchema = z.object({
   requestType: z.enum(['opt_out', 'incorrect_info', 'technical_issue', 'other']),
@@ -27,6 +28,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const OptOutReportForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
 
   const form = useForm<FormData>({
@@ -42,11 +44,29 @@ const OptOutReportForm = () => {
     },
   });
 
+  // Pre-populate form with URL parameters if provided
+  useEffect(() => {
+    const clinicName = searchParams.get('clinic');
+    const clinicId = searchParams.get('clinicId');
+    
+    if (clinicName || clinicId) {
+      form.setValue('clinicName', clinicName || '');
+      form.setValue('clinicId', clinicId || '');
+      form.setValue('requestType', 'opt_out');
+      
+      // Pre-populate description for clinic-specific requests
+      if (clinicName) {
+        form.setValue('description', `I am requesting the removal of ${clinicName} from the SG-JB Dental directory. I am the clinic owner/authorized representative and would like this listing to be removed from all search results and directory pages.`);
+      }
+    }
+  }, [searchParams, form]);
+
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase
+      // Insert the opt-out request
+      const { error: insertError } = await supabase
         .from('opt_out_reports')
         .insert({
           request_type: data.requestType,
@@ -58,13 +78,29 @@ const OptOutReportForm = () => {
           description: data.description,
         });
 
-      if (error) {
-        throw error;
+      if (insertError) {
+        throw insertError;
+      }
+
+      // Call edge function to send confirmation email
+      const { error: emailError } = await supabase.functions.invoke('send-opt-out-confirmation', {
+        body: {
+          email: data.email,
+          name: data.name,
+          requestType: data.requestType,
+          clinicName: data.clinicName,
+        },
+      });
+
+      if (emailError) {
+        console.warn('Email confirmation failed:', emailError);
+        // Don't throw here - the request was still submitted successfully
       }
 
       toast({
         title: "Request Submitted Successfully",
         description: "We've received your request and will review it within 2-3 business days. You'll receive an email confirmation shortly.",
+        duration: 6000,
       });
 
       form.reset();
@@ -87,12 +123,25 @@ const OptOutReportForm = () => {
     { value: 'other', label: 'Other Request' },
   ];
 
+  const isClinicSpecificRequest = searchParams.get('clinic') || searchParams.get('clinicId');
+
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle className="text-xl font-semibold text-blue-dark">
-          Submit Your Request
+          {isClinicSpecificRequest ? 'Remove Clinic Listing' : 'Submit Your Request'}
         </CardTitle>
+        {isClinicSpecificRequest && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
+            <div className="flex items-start gap-2">
+              <CheckCircle className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium">Clinic Information Pre-filled</p>
+                <p>We've automatically filled in the clinic details. Please review and complete the remaining fields.</p>
+              </div>
+            </div>
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -103,7 +152,7 @@ const OptOutReportForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-blue-dark font-medium">Request Type *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select the type of request" />
@@ -174,7 +223,11 @@ const OptOutReportForm = () => {
                   <FormItem>
                     <FormLabel className="text-blue-dark font-medium">Clinic Name (If applicable)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter clinic name" {...field} />
+                      <Input 
+                        placeholder="Enter clinic name" 
+                        {...field}
+                        className={isClinicSpecificRequest ? "bg-blue-50 border-blue-200" : ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -188,7 +241,11 @@ const OptOutReportForm = () => {
                   <FormItem>
                     <FormLabel className="text-blue-dark font-medium">Clinic ID (If known)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter clinic ID" {...field} />
+                      <Input 
+                        placeholder="Enter clinic ID" 
+                        {...field}
+                        className={isClinicSpecificRequest ? "bg-blue-50 border-blue-200" : ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -220,6 +277,15 @@ const OptOutReportForm = () => {
                 You'll receive an email confirmation and updates on the status of your request.
               </p>
             </div>
+
+            {isClinicSpecificRequest && (
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <p className="text-sm text-orange-800">
+                  <strong>PDPA Compliance:</strong> As a clinic owner, you have the right to request removal of your listing. 
+                  This request will be processed in compliance with Malaysian data protection regulations.
+                </p>
+              </div>
+            )}
 
             <Button
               type="submit"
