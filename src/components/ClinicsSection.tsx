@@ -97,15 +97,15 @@ const ClinicsSection = () => {
               />
             </div>
             
-            {/* Enhanced Google Rating Source Disclaimer - Neutral gray styling for informational content */}
+            {/* Enhanced Google Rating Source Disclaimer - Now matching blue styling with enhanced 3D effects */}
             <div className="mb-4">
-              <div className="bg-gradient-to-r from-gray-100 to-gray-200/80 border-l-4 border-gray-400 rounded-r-lg px-6 py-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-300/70 backdrop-blur-sm">
-                <div className="flex items-start gap-4">
+              <div className="bg-gradient-to-br from-blue-100 via-blue-150 to-blue-200/90 border-l-4 border-blue-500 rounded-r-lg px-6 py-5 shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-300/70 backdrop-blur-sm relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none after:absolute after:top-0 after:left-0 after:right-0 after:h-px after:bg-white/40">
+                <div className="flex items-start gap-4 relative z-10">
                   <div className="flex-shrink-0 mt-0.5">
-                    <Info className="h-5 w-5 text-gray-600 drop-shadow-md" />
+                    <Info className="h-5 w-5 text-blue-700 drop-shadow-lg filter" style={{ filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))' }} />
                   </div>
-                  <div className="text-sm text-gray-800 leading-relaxed font-medium">
-                    <span className="font-bold text-gray-900">Google Rating Information:</span> All ratings and reviews displayed are sourced from Google. 
+                  <div className="text-sm text-blue-900 leading-relaxed font-medium" style={{ textShadow: '0 1px 2px rgba(59, 130, 246, 0.1)' }}>
+                    <span className="font-bold text-blue-800">Google Rating Information:</span> All ratings and reviews displayed are sourced from Google. 
                     These reflect public feedback and may not represent the complete picture of each clinic's services.
                   </div>
                 </div>

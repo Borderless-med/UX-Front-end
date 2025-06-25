@@ -67,6 +67,8 @@ export default {
 				'blue-accent': '#2563EB',
 				'blue-light': '#DBEAFE',
 				'blue-dark': '#1E40AF',
+				'blue-150': '#E0F2FE',
+				'orange-75': '#FFF7ED',
 				'success-green': '#10B981',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
