@@ -174,7 +174,7 @@ const ClinicsSection = () => {
           </div>
         </div>
 
-        {/* Directory Disclaimer - Matching Professional Style with Inline Opt-out */}
+        {/* Directory Disclaimer - Matching Professional Style with Prominent Opt-out Box */}
         <div className="mb-8">
           <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4">
             <div className="flex items-start gap-3">
@@ -187,10 +187,10 @@ const ClinicsSection = () => {
                 <p className="text-xs text-blue-700/80 leading-relaxed">
                   This platform does not provide medical advice or establish practitioner-patient relationships. 
                   <span 
-                    className="ml-1 text-blue-600/90 hover:text-blue-700 underline cursor-pointer font-medium"
+                    className="ml-1 inline-block bg-blue-100/80 border border-blue-200/60 rounded-md px-2 py-0.5 text-blue-700 hover:bg-blue-200/70 hover:border-blue-300/70 cursor-pointer font-medium transition-all duration-200"
                     onClick={() => window.open('/directory-disclaimer', '_blank')}
                   >
-                    Opt-out or report issues.
+                    Opt-out or report issues
                   </span>
                 </p>
               </div>
