@@ -203,7 +203,7 @@ const ClinicsSection = () => {
           <MedicalDisclaimer variant="banner" className="max-w-5xl mx-auto" />
         </div>
 
-        {/* Advanced Filters Panel */}
+        {/* Advanced Filters Panel - Restored to full functionality */}
         <Collapsible open={showFilters} onOpenChange={setShowFilters}>
           <CollapsibleContent className="mb-8">
             <Card className="p-6 border-blue-light">
@@ -388,7 +388,7 @@ const ClinicsSection = () => {
           <MedicalDisclaimer variant="subtle" className="max-w-5xl mx-auto" />
         </div>
 
-        {/* Directory Disclaimer Section */}
+        {/* Directory Disclaimer Section - Restored to original position and format */}
         <div className="mt-8 bg-gradient-to-r from-blue-50/60 to-blue-100/40 p-8 rounded-xl border border-blue-200/30 shadow-sm">
           <div className="max-w-4xl mx-auto">
             <h3 className="text-xl font-semibold text-blue-dark mb-4 text-center">Directory Information Notice</h3>
