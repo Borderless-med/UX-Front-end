@@ -54,6 +54,51 @@ export type Database = {
         }
         Relationships: []
       }
+      opt_out_reports: {
+        Row: {
+          admin_notes: string | null
+          clinic_id: string | null
+          clinic_name: string | null
+          created_at: string
+          description: string
+          email: string
+          id: string
+          name: string
+          phone: string | null
+          request_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          clinic_id?: string | null
+          clinic_name?: string | null
+          created_at?: string
+          description: string
+          email: string
+          id?: string
+          name: string
+          phone?: string | null
+          request_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          clinic_id?: string | null
+          clinic_name?: string | null
+          created_at?: string
+          description?: string
+          email?: string
+          id?: string
+          name?: string
+          phone?: string | null
+          request_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       partner_applications: {
         Row: {
           address: string | null

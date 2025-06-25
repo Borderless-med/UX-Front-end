@@ -17,6 +17,7 @@ import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import NotFound from "./pages/NotFound";
 import PartnerApplication from "./pages/PartnerApplication";
 import ConfirmWhatsApp from "./pages/ConfirmWhatsApp";
+import OptOutReport from "./pages/OptOutReport";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/qa" element={<QA />} />
             <Route path="/partner-application" element={<PartnerApplication />} />
+            <Route path="/opt-out-report" element={<OptOutReport />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
