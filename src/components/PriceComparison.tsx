@@ -2,7 +2,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import PriceComparisonTable from './PriceComparisonTable';
 import StatsCards from './StatsCards';
-import ImportantNotes from './ImportantNotes';
+import MedicalDisclaimer from './MedicalDisclaimer';
 import { proceduresData } from '@/data/proceduresData';
 
 const PriceComparison = () => {
@@ -36,7 +36,7 @@ const PriceComparison = () => {
         </div>
 
         <div className="mt-8">
-          <ImportantNotes />
+          <MedicalDisclaimer variant="important-disclaimer" />
         </div>
       </div>
     </div>

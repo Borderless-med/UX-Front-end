@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Users, MapPin, DollarSign, X } from 'lucide-react';
@@ -119,7 +120,7 @@ const HeroSection = () => {
             </Card>
           </div>
 
-          {/* Medical Disclaimer - Updated to use important-disclaimer variant */}
+          {/* Important Disclaimer - Standardized */}
           <div className="mb-20 max-w-4xl mx-auto">
             <MedicalDisclaimer variant="important-disclaimer" />
           </div>

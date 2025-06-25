@@ -4,13 +4,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from '@/components/auth/AuthModal';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
 import ClinicSearchBar from './clinic/search/ClinicSearchBar';
 import ResultsCount from './clinic/search/ResultsCount';
 import UserStatusDisplay from './clinic/display/UserStatusDisplay';
-import DisclaimerSection from './clinic/display/DisclaimerSection';
 import ClinicMainFilters from './clinic/filters/ClinicMainFilters';
 import ClinicAdvancedFilters from './clinic/filters/ClinicAdvancedFilters';
 import FilterControls from './clinic/filters/FilterControls';
@@ -82,7 +82,7 @@ const ClinicsSection = () => {
           </p>
         </div>
 
-        <DisclaimerSection onOptOutClick={handleOptOutClick} />
+        <MedicalDisclaimer variant="important-disclaimer" />
 
         {/* Search & Filter Clinics Section */}
         <div className="mb-8">
