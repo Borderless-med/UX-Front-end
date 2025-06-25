@@ -1,18 +1,12 @@
 
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 
 const Footer = () => {
   return (
     <footer className="bg-gray-50 text-gray-700">
       <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
         <div className="max-w-7xl mx-auto">
-          {/* Medical Disclaimer Section - Improved styling */}
-          <div className="mb-8 sm:mb-12">
-            <MedicalDisclaimer variant="compact" />
-          </div>
-
           {/* New Clinic Partners Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12 pb-6 sm:pb-8 border-b border-gray-200">
             <div>
