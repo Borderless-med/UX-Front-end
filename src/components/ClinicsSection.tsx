@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { clinics } from '@/data/clinics';
 import { useNavigate } from 'react-router-dom';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 
 const ClinicsSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -68,6 +69,11 @@ const ClinicsSection = () => {
               Opt Out or Report Issue
             </Button>
           </div>
+        </div>
+
+        {/* Medical Disclaimer - Positioned prominently but elegantly */}
+        <div className="mb-10">
+          <MedicalDisclaimer variant="banner" className="max-w-5xl mx-auto" />
         </div>
 
         {/* Clinics Grid */}
@@ -145,14 +151,43 @@ const ClinicsSection = () => {
           </div>
         )}
 
-        {/* Directory Information Notice */}
-        <div className="mt-12 bg-blue-light/10 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold text-blue-dark mb-3">Directory Information Notice</h3>
-          <p className="text-sm text-neutral-gray leading-relaxed">
-            The information provided in this directory is compiled from publicly available sources for informational purposes only. 
-            We make no representation or warranty regarding the accuracy, completeness, or currency of this information. 
-            Users are advised to verify all details directly with clinics before making any decisions.
-          </p>
+        {/* Enhanced Directory Information Notice */}
+        <div className="mt-16">
+          <MedicalDisclaimer variant="subtle" className="max-w-5xl mx-auto" />
+        </div>
+
+        {/* Directory Disclaimer Section */}
+        <div className="mt-8 bg-gradient-to-r from-blue-50/60 to-blue-100/40 p-8 rounded-xl border border-blue-200/30 shadow-sm">
+          <div className="max-w-4xl mx-auto">
+            <h3 className="text-xl font-semibold text-blue-dark mb-4 text-center">Directory Information Notice</h3>
+            <div className="space-y-4 text-sm text-blue-800/90 leading-relaxed">
+              <p>
+                <strong>Information Accuracy:</strong> The information provided in this directory is compiled from 
+                publicly available sources for informational purposes only. We make no representation or warranty 
+                regarding the accuracy, completeness, or currency of this information.
+              </p>
+              <p>
+                <strong>User Responsibility:</strong> Users are advised to verify all details directly with clinics 
+                before making any decisions. This includes confirming practitioner credentials, treatment costs, 
+                operating hours, and clinic policies.
+              </p>
+              <p>
+                <strong>No Endorsement:</strong> Listing of a dental clinic does not imply any business relationship, 
+                partnership, or endorsement. We have not verified the credentials or services of these clinics.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-blue-200/40 text-center">
+              <p className="text-xs text-blue-700/80">
+                For corrections or removal requests, please use our{' '}
+                <button 
+                  onClick={handleOptOutClick}
+                  className="text-blue-primary hover:text-blue-dark underline font-medium"
+                >
+                  opt-out form
+                </button>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
