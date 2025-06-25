@@ -158,31 +158,35 @@ const ClinicsSection = () => {
           </p>
         </div>
 
-        {/* Medical Disclaimer - Enhanced */}
+        {/* Medical Disclaimer - Professional Integration */}
         <div className="mb-8">
-          <MedicalDisclaimer variant="banner" className="mb-4" />
+          <MedicalDisclaimer variant="subtle" className="mb-4" />
         </div>
 
-        {/* Legal Disclaimer Banner - Updated */}
-        <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <div className="flex items-start gap-3">
-            <MessageSquare className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-yellow-800 font-medium mb-2">
-                <strong>Directory Disclaimer:</strong> Information compiled from publicly available sources. 
-                Listing does not imply endorsement, professional relationship, or recommendation. 
-                This platform does not provide medical advice or establish practitioner-patient relationships.
-              </p>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-yellow-600 text-yellow-700 hover:bg-yellow-100"
-                onClick={() => window.open('/directory-disclaimer', '_blank')}
-              >
-                Opt-out or Report Issues
-              </Button>
-            </div>
-          </div>
+        {/* Directory Disclaimer - Professional Card Style */}
+        <div className="mb-8">
+          <Card className="bg-blue-50/30 border-blue-200/40 shadow-sm">
+            <CardContent className="p-5">
+              <div className="flex items-start gap-3">
+                <MessageSquare className="h-5 w-5 text-blue-600/70 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm text-blue-800/90 font-medium mb-2 leading-relaxed">
+                    <strong>Directory Disclaimer:</strong> Information compiled from publicly available sources. 
+                    Listing does not imply endorsement, professional relationship, or recommendation. 
+                    This platform does not provide medical advice or establish practitioner-patient relationships.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-blue-600/60 text-blue-700/90 hover:bg-blue-100/60 hover:border-blue-700"
+                    onClick={() => window.open('/directory-disclaimer', '_blank')}
+                  >
+                    Opt-out or Report Issues
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Authentication Status */}
