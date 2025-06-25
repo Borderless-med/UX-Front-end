@@ -1,9 +1,9 @@
+
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from '@/components/auth/AuthModal';
-import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
@@ -81,8 +81,6 @@ const ClinicsSection = () => {
             Search and filter through 101 verified dental clinics across Johor to find the best match for your needs
           </p>
         </div>
-
-        <MedicalDisclaimer variant="important-disclaimer" />
 
         <DisclaimerSection onOptOutClick={handleOptOutClick} />
 
