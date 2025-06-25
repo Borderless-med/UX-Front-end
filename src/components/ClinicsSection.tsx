@@ -151,15 +151,18 @@ const ClinicsSection = () => {
 
           {/* Filter Toggle and Sort */}
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-6">
-            <Button
-              onClick={() => setShowFilters(!showFilters)}
-              variant="outline"
-              className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-              <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-            </Button>
+            <Collapsible open={showFilters} onOpenChange={setShowFilters}>
+              <CollapsibleTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+                  <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                </Button>
+              </CollapsibleTrigger>
+            </Collapsible>
 
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-48">
@@ -203,10 +206,10 @@ const ClinicsSection = () => {
           <MedicalDisclaimer variant="banner" className="max-w-5xl mx-auto" />
         </div>
 
-        {/* Advanced Filters Panel - Restored to full functionality */}
+        {/* Advanced Filters Panel - Fixed collapsible functionality */}
         <Collapsible open={showFilters} onOpenChange={setShowFilters}>
           <CollapsibleContent className="mb-8">
-            <Card className="p-6 border-blue-light">
+            <Card className="p-6 border-blue-light bg-white shadow-sm">
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Treatment Filters */}
                 <div>
