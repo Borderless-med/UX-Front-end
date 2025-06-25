@@ -104,25 +104,40 @@ export type Database = {
       }
       waitlist_signups: {
         Row: {
+          confirmation_sent_at: string | null
+          confirmation_token: string | null
+          consent_timestamp: string | null
           created_at: string
+          double_optin_confirmed: boolean
           email: string
           id: string
           mobile: string | null
           name: string
+          whatsapp_consent: boolean
         }
         Insert: {
+          confirmation_sent_at?: string | null
+          confirmation_token?: string | null
+          consent_timestamp?: string | null
           created_at?: string
+          double_optin_confirmed?: boolean
           email: string
           id?: string
           mobile?: string | null
           name: string
+          whatsapp_consent?: boolean
         }
         Update: {
+          confirmation_sent_at?: string | null
+          confirmation_token?: string | null
+          consent_timestamp?: string | null
           created_at?: string
+          double_optin_confirmed?: boolean
           email?: string
           id?: string
           mobile?: string | null
           name?: string
+          whatsapp_consent?: boolean
         }
         Relationships: []
       }

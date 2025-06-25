@@ -16,6 +16,7 @@ import DirectoryDisclaimer from "./pages/DirectoryDisclaimer";
 import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import NotFound from "./pages/NotFound";
 import PartnerApplication from "./pages/PartnerApplication";
+import ConfirmWhatsApp from "./pages/ConfirmWhatsApp";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
             <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
+            <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
