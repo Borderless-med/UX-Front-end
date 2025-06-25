@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Search, MapPin, Phone, Clock, Star, Filter, X, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { clinics } from '@/data/clinics';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import AuthModal from '@/components/auth/AuthModal';
 
 const ClinicsSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,7 +22,9 @@ const ClinicsSection = () => {
   const [minReviews, setMinReviews] = useState<number>(0);
   const [sortBy, setSortBy] = useState<string>('distance');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   // Get unique townships
   const townships = [...new Set(clinics.map(clinic => clinic.township))].sort();
@@ -95,6 +98,10 @@ const ClinicsSection = () => {
 
   const handleOptOutClick = () => {
     navigate('/opt-out-report');
+  };
+
+  const handleSignInClick = () => {
+    setShowAuthModal(true);
   };
 
   const handleTreatmentChange = (treatment: string, checked: boolean) => {
@@ -189,10 +196,21 @@ const ClinicsSection = () => {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-blue-dark">Search & Filter Clinics</h2>
               <div className="text-sm text-blue-600">
-                Sign in to view detailed clinic information{' '}
-                <Button variant="outline" size="sm" className="ml-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white">
-                  Sign In
-                </Button>
+                {!isAuthenticated ? (
+                  <>
+                    Sign in to view detailed clinic information{' '}
+                    <Button 
+                      onClick={handleSignInClick}
+                      variant="outline" 
+                      size="sm" 
+                      className="ml-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                    >
+                      Sign In
+                    </Button>
+                  </>
+                ) : (
+                  <span className="text-green-600">✓ Signed in - Full details available</span>
+                )}
               </div>
             </div>
             
@@ -462,9 +480,35 @@ const ClinicsSection = () => {
                     </div>
                   </div>
 
-                  <div className="mt-4">
-                    <p className="text-xs text-neutral-gray mb-1">Dentist: {clinic.dentist}</p>
-                    <p className="text-xs text-neutral-gray">MDA License: {clinic.mdaLicense}</p>
+                  {/* PDPA Compliant Practitioner Information */}
+                  <div className="mt-4 pt-4 border-t border-blue-light/30">
+                    {isAuthenticated ? (
+                      <>
+                        <p className="text-xs text-neutral-gray mb-1">Dentist: {clinic.dentist}</p>
+                        <p className="text-xs text-neutral-gray">MDA License: {clinic.mdaLicense}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-xs text-blue-600 mb-1">
+                          Dentist Name Available - 
+                          <button 
+                            onClick={handleSignInClick}
+                            className="ml-1 underline hover:text-blue-dark"
+                          >
+                            Sign in to view
+                          </button>
+                        </p>
+                        <p className="text-xs text-blue-600">
+                          MDA License Available - 
+                          <button 
+                            onClick={handleSignInClick}
+                            className="ml-1 underline hover:text-blue-dark"
+                          >
+                            Sign in to view
+                          </button>
+                        </p>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -487,6 +531,13 @@ const ClinicsSection = () => {
             )}
           </div>
         )}
+
+        {/* Authentication Modal */}
+        <AuthModal 
+          isOpen={showAuthModal} 
+          onClose={() => setShowAuthModal(false)} 
+          defaultTab="login"
+        />
       </div>
     </section>
   );
