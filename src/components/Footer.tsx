@@ -1,8 +1,11 @@
 
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useCookieConsent } from '@/contexts/CookieConsentContext';
 
 const Footer = () => {
+  const { setShowPreferences } = useCookieConsent();
+
   return (
     <footer className="bg-gray-50 text-gray-700">
       <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
@@ -82,7 +85,7 @@ const Footer = () => {
               © 2024 SG-JB Dental. Launching August 2025.
             </div>
             
-            {/* Legal Links Section - Enhanced with prominent Opt-out link */}
+            {/* Legal Links Section - Enhanced with Cookie Management */}
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-1 text-sm text-gray-600">
               <Link to="/directory-disclaimer" className="hover:text-blue-600 transition-colors px-2 py-1">
                 Directory Disclaimer
@@ -99,6 +102,17 @@ const Footer = () => {
               <Link to="/terms-of-service" className="hover:text-blue-600 transition-colors px-2 py-1">
                 Terms of Service
               </Link>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <Link to="/cookie-policy" className="hover:text-blue-600 transition-colors px-2 py-1">
+                Cookie Policy
+              </Link>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <button 
+                onClick={() => setShowPreferences(true)}
+                className="hover:text-blue-600 transition-colors px-2 py-1 font-medium text-blue-600 hover:text-blue-700"
+              >
+                Manage Cookies
+              </button>
               <span className="hidden sm:inline text-gray-400">|</span>
               <Link 
                 to="/opt-out-report" 
