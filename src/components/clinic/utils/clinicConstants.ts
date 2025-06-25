@@ -13,7 +13,7 @@ export const treatmentOptions = [
 ];
 
 export const credentialOptions = [
-  { key: 'mda', label: 'MDA Registered' },
+  { key: 'mda', label: 'Licensed Practitioners' },
   { key: 'specialist', label: 'Specialist Qualifications' },
   { key: 'experience', label: '5+ Years Experience' }
 ];
