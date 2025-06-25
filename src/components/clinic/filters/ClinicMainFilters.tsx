@@ -54,15 +54,15 @@ const ClinicMainFilters = ({
         </Select>
       </div>
 
-      {/* Minimum Rating */}
+      {/* Minimum Google Rating */}
       <div>
-        <label className="block text-sm font-medium text-blue-dark mb-2">Minimum Rating</label>
+        <label className="block text-sm font-medium text-blue-dark mb-2">Minimum Google Rating</label>
         <Select value={ratingFilter.toString()} onValueChange={(value) => onRatingChange(Number(value))}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="0">Any Rating</SelectItem>
+            <SelectItem value="0">Any Google Rating</SelectItem>
             <SelectItem value="4">4+ Stars</SelectItem>
             <SelectItem value="4.5">4.5+ Stars</SelectItem>
             <SelectItem value="4.8">4.8+ Stars</SelectItem>
@@ -106,8 +106,8 @@ const ClinicMainFilters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="distance">Distance from CIQ</SelectItem>
-            <SelectItem value="rating">Highest Rated</SelectItem>
-            <SelectItem value="reviews">Most Reviews</SelectItem>
+            <SelectItem value="rating">Highest Google Rating</SelectItem>
+            <SelectItem value="reviews">Most Google Reviews</SelectItem>
             <SelectItem value="name">Name A-Z</SelectItem>
           </SelectContent>
         </Select>

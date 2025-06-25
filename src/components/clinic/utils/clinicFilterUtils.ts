@@ -28,13 +28,13 @@ export const filterClinics = (
     const matchesTownship = selectedTownships.length === 0 || 
       selectedTownships.includes(clinic.township);
 
-    // Rating filter
+    // Google rating filter
     const matchesRating = clinic.rating >= ratingFilter;
 
     // Distance filter
     const matchesDistance = clinic.distance <= maxDistance;
 
-    // Reviews filter
+    // Google reviews filter
     const matchesReviews = clinic.reviews >= minReviews;
 
     return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance && matchesReviews;
@@ -45,11 +45,11 @@ export const sortClinics = (clinics: Clinic[], sortBy: string) => {
   return [...clinics].sort((a, b) => {
     switch (sortBy) {
       case 'rating':
-        return b.rating - a.rating;
+        return b.rating - a.rating; // Sort by Google rating (highest first)
       case 'distance':
         return a.distance - b.distance;
       case 'reviews':
-        return b.reviews - a.reviews;
+        return b.reviews - a.reviews; // Sort by Google reviews count (most first)
       case 'name':
         return a.name.localeCompare(b.name);
       default:

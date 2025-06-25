@@ -96,6 +96,14 @@ const ClinicsSection = () => {
               />
             </div>
             
+            {/* Rating Source Disclaimer */}
+            <div className="mb-4 p-3 bg-blue-light/10 rounded-lg border border-blue-light">
+              <p className="text-sm text-neutral-gray">
+                <span className="font-medium">Rating Information:</span> All ratings and reviews displayed are sourced from Google. 
+                These reflect public feedback and may not represent the complete picture of each clinic's services.
+              </p>
+            </div>
+            
             <ClinicSearchBar
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}

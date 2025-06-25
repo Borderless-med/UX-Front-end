@@ -24,9 +24,14 @@ const ClinicCard = ({
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
           <h3 className="text-lg font-semibold text-blue-dark">{clinic.name}</h3>
-          <div className="flex items-center">
-            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            <span className="text-sm text-neutral-gray ml-1">{clinic.rating}</span>
+          <div className="flex items-center text-right">
+            <div className="flex flex-col">
+              <div className="flex items-center">
+                <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                <span className="text-sm font-medium text-blue-dark">{clinic.rating}</span>
+              </div>
+              <span className="text-xs text-neutral-gray">Google Rating</span>
+            </div>
           </div>
         </div>
         
@@ -67,7 +72,7 @@ const ClinicCard = ({
             <p className="text-sm font-medium text-success-green">{clinic.distance}km away</p>
           </div>
           <div>
-            <p className="text-xs text-neutral-gray">Reviews</p>
+            <p className="text-xs text-neutral-gray">Google Reviews</p>
             <p className="text-sm font-medium text-blue-dark">{clinic.reviews} reviews</p>
           </div>
         </div>

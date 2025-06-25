@@ -4,7 +4,9 @@ export interface Clinic {
   name: string;
   address: string;
   dentist: string;
+  /** Google rating from 0-5 stars */
   rating: number;
+  /** Number of Google reviews */
   reviews: number;
   distance: number;
   sentiment: number;
