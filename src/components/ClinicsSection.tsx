@@ -107,7 +107,7 @@ const ClinicsSection = () => {
   // Enhanced practitioner details viewing with audit logging
   const handleViewPractitionerDetails = async (clinic: typeof clinics[0]) => {
     if (isAuthenticated) {
-      await logDataAccess('practitioner_details', clinic.id, clinic.dentist);
+      await logDataAccess('practitioner_details', clinic.id.toString(), clinic.dentist);
     }
   };
 
