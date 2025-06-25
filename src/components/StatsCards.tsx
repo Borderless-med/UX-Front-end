@@ -14,9 +14,9 @@ const StatsCards = () => {
       
       <Card className="bg-blue-light/20 border-blue-light">
         <CardContent className="p-6 text-center">
-          <h3 className="text-lg font-semibold text-blue-dark mb-2">Quality Assurance</h3>
-          <p className="text-2xl font-bold text-blue-primary">100%</p>
-          <p className="text-sm text-neutral-gray mt-2">Verified clinics with international standards</p>
+          <h3 className="text-lg font-semibold text-blue-dark mb-2">Directory Coverage</h3>
+          <p className="text-2xl font-bold text-blue-primary">100+</p>
+          <p className="text-sm text-neutral-gray mt-2">Clinic listings with comprehensive information</p>
         </CardContent>
       </Card>
       

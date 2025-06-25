@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,43 +19,43 @@ const QASection = () => {
   const questions = [
     {
       question: 'Is Malaysian dental quality comparable to Singapore?',
-      answer: 'Yes, many Malaysian dental clinics maintain international standards. Our verification system ensures all partner clinics meet MDA-SOC cross certification standards with verified credentials.'
+      answer: 'Many Malaysian dental clinics maintain professional standards. Our directory includes general information about clinic facilities and available services to help you make informed decisions.'
     },
     {
       question: 'What if I need follow-up care?',
-      answer: 'Our platform includes guaranteed revisit scheduling with traffic-aware timing and 24/7 support coordination for seamless follow-up appointments.'
+      answer: 'Our platform includes follow-up scheduling coordination with traffic-aware timing and 24/7 support for seamless appointment management.'
     },
     {
       question: 'How are payments handled?',
-      answer: 'We offer secure payment processing with transparent pricing, no hidden fees, and flexible payment options including installment plans for major treatments.'
+      answer: 'We provide information about secure payment processing options with transparent pricing details and available payment methods for various treatments.'
     },
     {
       question: 'Are there communication barriers?',
-      answer: 'All verified clinics have English and Mandarin speaking staff certified through our verification process to ensure clear communication throughout your treatment.'
+      answer: 'Our directory includes information about language capabilities at listed clinics, with many offering English and Mandarin speaking staff.'
     },
     {
       question: 'What about emergency situations?',
-      answer: 'We provide 24/7 emergency hotline support and have established protocols with partner clinics for urgent dental situations and medical evacuations if needed.'
+      answer: 'We provide 24/7 emergency hotline support and general information about emergency protocols available at partner clinics.'
     },
     {
-      question: 'How can I verify clinic hygiene standards?',
-      answer: 'Our verification process includes on-site hygiene scoring and certification protocol compliance checks. All partner clinics maintain detailed hygiene records available for review.'
+      question: 'How can I verify clinic standards?',
+      answer: 'Our directory includes available information about clinic facilities and general hygiene practices. We recommend verifying all details directly with clinics.'
     },
     {
       question: 'Are the dentists properly qualified?',
-      answer: 'All dentists in our network undergo credential verification including education background, continuing education records, and specialization certifications through our AI verification system.'
+      answer: 'Our directory includes available information about dentist qualifications, education background, and specializations based on publicly available information.'
     },
     {
       question: 'What about travel complications and traffic delays?',
-      answer: 'Our smart scheduling system uses real-time traffic data and automatically adjusts appointment times for causeway delays. We also provide travel tips and alternative route suggestions.'
+      answer: 'Our smart scheduling system uses real-time traffic data and provides travel tips and alternative route suggestions for causeway crossings.'
     },
     {
       question: 'Are there hidden costs I should know about?',
-      answer: 'Our transparent pricing guarantee ensures all costs are disclosed upfront. We provide detailed breakdowns of all fees including consultation, treatment, and any additional services.'
+      answer: 'Our platform provides available pricing information to help with cost transparency. We recommend confirming all costs directly with clinics before treatment.'
     },
     {
       question: 'Will my insurance cover treatments in Malaysia?',
-      answer: 'Coverage varies by insurance provider. We can provide detailed receipts and documentation needed for insurance claims, and help you understand your coverage options.'
+      answer: 'Coverage varies by insurance provider. We can provide general guidance on documentation needed for insurance claims and help you understand available options.'
     }
   ];
 

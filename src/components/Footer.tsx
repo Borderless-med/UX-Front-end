@@ -67,12 +67,12 @@ const Footer = () => {
             </div>
             
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg">Trust & Safety</h3>
+              <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg">Directory Information</h3>
               <ul className="space-y-2">
-                <li className="text-gray-600 text-sm sm:text-base">✓ MDC Registered Clinics</li>
-                <li className="text-gray-600 text-sm sm:text-base">✓ International Standards</li>
-                <li className="text-gray-600 text-sm sm:text-base">✓ Transparent Pricing</li>
-                <li className="text-gray-600 text-sm sm:text-base">✓ Patient Reviews Verified</li>
+                <li className="text-gray-600 text-sm sm:text-base">• Directory Listings</li>
+                <li className="text-gray-600 text-sm sm:text-base">• Information Collection</li>
+                <li className="text-gray-600 text-sm sm:text-base">• Transparent Pricing</li>
+                <li className="text-gray-600 text-sm sm:text-base">• Patient Reviews Available</li>
               </ul>
             </div>
           </div>

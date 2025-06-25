@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -5,14 +6,14 @@ const HowItWorksSection = () => {
   const steps = [
     {
       number: 1,
-      title: 'AI Verification',
-      description: 'Our system verifies clinic credentials through MDA license verification and credential analysis with 98.7% match accuracy',
+      title: 'Directory Search',
+      description: 'Our system searches directory listings through information collection and data analysis for comprehensive clinic information',
       color: 'bg-blue-600'
     },
     {
       number: 2,
       title: 'Smart Matching',
-      description: 'Priority clinic matching based on your treatment needs, location preferences, and quality requirements',
+      description: 'Priority clinic matching based on your treatment needs, location preferences, and available information',
       color: 'bg-blue-600'
     },
     {
@@ -29,29 +30,29 @@ const HowItWorksSection = () => {
     }
   ];
 
-  const verificationFeatures = [
+  const informationFeatures = [
     {
-      title: 'MDA License Verification',
-      description: 'Cross-check with Malaysian dental board registrations'
+      title: 'Directory Information Collection',
+      description: 'Cross-reference with available dental board listings'
     },
     {
-      title: 'Credential Analysis',
-      description: 'Continuing education records and specialization verification'
+      title: 'Credential Information',
+      description: 'Education records and specialization information gathering'
     },
     {
-      title: 'Facility Inspection',
-      description: 'Hygiene scoring and certification protocol compliance'
+      title: 'Facility Information',
+      description: 'General information collection and available facility details'
     },
     {
-      title: 'Patient Safety',
-      description: 'Emergency procedures and medical evacuation protocols'
+      title: 'Patient Safety Information',
+      description: 'General safety procedures and available emergency information'
     }
   ];
 
   const sentimentFeatures = [
     {
-      title: 'Fake Review Detection',
-      description: 'Advanced algorithms identify bot-generated and paid reviews with 94.2% accuracy'
+      title: 'Review Pattern Analysis',
+      description: 'Advanced algorithms identify potential inauthentic reviews with 94.2% accuracy'
     },
     {
       title: 'Linguistic Analysis',
@@ -63,7 +64,7 @@ const HowItWorksSection = () => {
     },
     {
       title: 'Confidence Scoring',
-      description: 'Each review gets a confidence score based on authenticity, detail level, and verification status'
+      description: 'Each review gets a confidence score based on authenticity, detail level, and available information'
     }
   ];
 
@@ -97,24 +98,24 @@ const HowItWorksSection = () => {
         {/* Detailed Features with Tabs */}
         <Card className="bg-light-card border-gray-200 shadow-sm">
           <CardContent className="p-8">
-            <Tabs defaultValue="verification" className="w-full">
+            <Tabs defaultValue="information" className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-gray-100 border-gray-200">
-                <TabsTrigger value="verification" className="text-gray-700 data-[state=active]:bg-teal-accent data-[state=active]:text-white">
-                  AI Verification System
+                <TabsTrigger value="information" className="text-gray-700 data-[state=active]:bg-teal-accent data-[state=active]:text-white">
+                  Directory Information System
                 </TabsTrigger>
                 <TabsTrigger value="sentiment" className="text-gray-700 data-[state=active]:bg-teal-accent data-[state=active]:text-white">
-                  Sentiment Analysis
+                  Review Analysis
                 </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="verification" className="mt-8">
+              <TabsContent value="information" className="mt-8">
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">AI Verification System</h3>
-                  <p className="text-gray-600">Our advanced verification process ensures every partner clinic meets the highest standards</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Directory Information System</h3>
+                  <p className="text-gray-600">Our information collection process gathers comprehensive clinic details from available sources</p>
                 </div>
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {verificationFeatures.map((feature, index) => (
+                  {informationFeatures.map((feature, index) => (
                     <div key={index} className="text-center">
                       <div className="bg-teal-accent/10 p-4 rounded-lg mb-4 border border-teal-accent/20">
                         <h4 className="text-gray-900 font-semibold mb-2">{feature.title}</h4>
@@ -127,15 +128,15 @@ const HowItWorksSection = () => {
 
               <TabsContent value="sentiment" className="mt-8">
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Advanced Sentiment Analysis</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Advanced Review Analysis</h3>
                   <p className="text-gray-600 mb-6">
-                    Beyond simple Google ratings - our proprietary system provides authentic patient feedback analysis
+                    Beyond simple ratings - our proprietary system provides authentic patient feedback analysis
                   </p>
                   <div className="bg-teal-accent/5 border border-teal-accent/30 rounded-lg p-6 mb-8">
-                    <h4 className="text-teal-accent font-bold text-lg mb-2">Platform Superiority</h4>
+                    <h4 className="text-teal-accent font-bold text-lg mb-2">Platform Advantage</h4>
                     <p className="text-gray-700 text-sm">
-                      While Google ratings can be easily manipulated through fake reviews, paid comments, and bot-generated content, 
-                      our AI-powered sentiment analysis provides genuine insights into patient experiences with 94.2% accuracy in detecting fraudulent reviews.
+                      While standard ratings can be manipulated through inauthentic reviews, paid comments, and automated content, 
+                      our review analysis provides genuine insights into patient experiences with 94.2% accuracy in detecting potentially fraudulent reviews.
                     </p>
                   </div>
                 </div>
@@ -155,8 +156,8 @@ const HowItWorksSection = () => {
                   <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                     <h4 className="text-gray-900 font-semibold mb-3">Why This Matters for International Patients</h4>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      When seeking dental care across borders, authentic patient feedback is crucial for safety and quality assurance. 
-                      Our sentiment analysis ensures you're making decisions based on genuine patient experiences, not manipulated ratings.
+                      When seeking dental care across borders, authentic patient feedback is crucial for safety and quality assessment. 
+                      Our review analysis helps you make decisions based on genuine patient experiences rather than manipulated ratings.
                     </p>
                   </div>
                 </div>

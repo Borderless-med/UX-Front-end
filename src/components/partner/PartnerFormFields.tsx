@@ -118,9 +118,9 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           name="registrationNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-800 font-semibold">MDC Registration Number *</FormLabel>
+              <FormLabel className="text-gray-800 font-semibold">Registration Information *</FormLabel>
               <FormControl>
-                <Input placeholder="MDC123456" {...field} required className="text-gray-900 placeholder:text-gray-500" />
+                <Input placeholder="Professional Registration Details" {...field} required className="text-gray-900 placeholder:text-gray-500" />
               </FormControl>
               <FormMessage className="text-red-600 font-medium" />
             </FormItem>
