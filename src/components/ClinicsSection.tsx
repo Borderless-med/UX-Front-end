@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { Building2, Shield, Star, Clock, MapPin, MessageSquare, Calendar, Search, Lock, Info } from 'lucide-react';
+import { Building2, Shield, Star, Clock, MapPin, MessageSquare, Calendar, Search, Lock, Info, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -187,9 +188,10 @@ const ClinicsSection = () => {
                 <p className="text-xs text-blue-700/80 leading-relaxed">
                   This platform does not provide medical advice or establish practitioner-patient relationships. 
                   <span 
-                    className="ml-1 inline-block bg-blue-100/80 border border-blue-200/60 rounded-md px-2 py-0.5 text-blue-700 hover:bg-blue-200/70 hover:border-blue-300/70 cursor-pointer font-medium transition-all duration-200"
+                    className="ml-2 inline-flex items-center gap-1 bg-amber-100 border border-amber-300 rounded-md px-3 py-1 text-sm text-amber-800 hover:bg-amber-200 hover:border-amber-400 cursor-pointer font-semibold transition-all duration-200 shadow-sm"
                     onClick={() => window.open('/directory-disclaimer', '_blank')}
                   >
+                    <ExternalLink className="h-3 w-3" />
                     Opt-out or report issues
                   </span>
                 </p>
