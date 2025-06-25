@@ -120,9 +120,9 @@ const HeroSection = () => {
             </Card>
           </div>
 
-          {/* Important Disclaimer - Standardized */}
+          {/* Important Disclaimer - Fixed */}
           <div className="mb-20 max-w-4xl mx-auto">
-            <MedicalDisclaimer variant="important-disclaimer" />
+            <MedicalDisclaimer variant="banner" />
           </div>
 
           {/* Social Proof Section */}

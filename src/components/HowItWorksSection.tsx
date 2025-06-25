@@ -81,9 +81,9 @@ const HowItWorksSection = () => {
           </p>
         </div>
 
-        {/* Standardized Important Disclaimer */}
+        {/* Standardized Important Disclaimer - Fixed */}
         <div className="mb-12">
-          <MedicalDisclaimer variant="important-disclaimer" />
+          <MedicalDisclaimer variant="banner" />
         </div>
 
         {/* Process Steps */}

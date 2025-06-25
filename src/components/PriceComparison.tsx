@@ -36,7 +36,7 @@ const PriceComparison = () => {
         </div>
 
         <div className="mt-8">
-          <MedicalDisclaimer variant="important-disclaimer" />
+          <MedicalDisclaimer variant="banner" />
         </div>
       </div>
     </div>
