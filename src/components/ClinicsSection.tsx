@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Building2, Shield, Star, Clock, MapPin, MessageSquare, Calendar, Search, Lock, Info } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -175,27 +174,25 @@ const ClinicsSection = () => {
           </div>
         </div>
 
-        {/* Directory Disclaimer - Matching Professional Style */}
+        {/* Directory Disclaimer - Matching Professional Style with Inline Opt-out */}
         <div className="mb-8">
           <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4">
             <div className="flex items-start gap-3">
               <MessageSquare className="h-4 w-4 text-blue-600/70 flex-shrink-0 mt-0.5" />
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <p className="text-sm text-blue-800/90 font-medium leading-relaxed">
                   <strong>Directory Disclaimer:</strong> Information compiled from publicly available sources. 
                   Listing does not imply endorsement, professional relationship, or recommendation.
                 </p>
-                <p className="text-xs text-blue-700/80 leading-relaxed mb-3">
-                  This platform does not provide medical advice or establish practitioner-patient relationships.
+                <p className="text-xs text-blue-700/80 leading-relaxed">
+                  This platform does not provide medical advice or establish practitioner-patient relationships. 
+                  <span 
+                    className="ml-1 text-blue-600/90 hover:text-blue-700 underline cursor-pointer font-medium"
+                    onClick={() => window.open('/directory-disclaimer', '_blank')}
+                  >
+                    Opt-out or report issues.
+                  </span>
                 </p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-blue-600/60 text-blue-700/90 hover:bg-blue-100/60 hover:border-blue-700"
-                  onClick={() => window.open('/directory-disclaimer', '_blank')}
-                >
-                  Opt-out or Report Issues
-                </Button>
               </div>
             </div>
           </div>
