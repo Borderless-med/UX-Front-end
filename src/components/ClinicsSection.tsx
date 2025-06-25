@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { Building2, Shield, Star, Clock, MapPin, MessageSquare, TrendingUp, Calendar, Search, Lock } from 'lucide-react';
+import { Building2, Shield, Star, Clock, MapPin, MessageSquare, Calendar, Search, Lock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,6 @@ const ClinicsSection = () => {
   const [selectedTreatment, setSelectedTreatment] = useState('all');
   const [selectedRating, setSelectedRating] = useState('all');
   const [maxDistance, setMaxDistance] = useState(110);
-  const [sentimentFilter, setSentimentFilter] = useState('all');
   const [minReviews, setMinReviews] = useState(0);
   const [credentialFilter, setCredentialFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
@@ -85,12 +85,6 @@ const ClinicsSection = () => {
     // Distance filter
     const matchesDistance = clinic.distance <= maxDistance;
     
-    // Sentiment filter
-    const matchesSentiment = sentimentFilter === 'all' || 
-                           (sentimentFilter === 'excellent' && clinic.sentiment >= 95) ||
-                           (sentimentFilter === 'good' && clinic.sentiment >= 85 && clinic.sentiment < 95) ||
-                           (sentimentFilter === 'average' && clinic.sentiment >= 70 && clinic.sentiment < 85);
-    
     // Reviews filter
     const matchesReviews = clinic.reviews >= minReviews;
     
@@ -112,7 +106,7 @@ const ClinicsSection = () => {
     const matchesTownship = townshipFilter === 'all' || clinic.township === townshipFilter;
 
     return matchesSearch && matchesTreatment && matchesRating && matchesDistance && 
-           matchesSentiment && matchesReviews && matchesCredentials && matchesLocation && matchesTownship;
+           matchesReviews && matchesCredentials && matchesLocation && matchesTownship;
   });
 
   // Sort filtered clinics
@@ -120,8 +114,6 @@ const ClinicsSection = () => {
     switch (sortBy) {
       case 'rating':
         return b.rating - a.rating;
-      case 'sentiment':
-        return b.sentiment - a.sentiment;
       case 'reviews':
         return b.reviews - a.reviews;
       case 'distance':
@@ -129,20 +121,6 @@ const ClinicsSection = () => {
         return a.distance - b.distance;
     }
   });
-
-  const getSentimentIcon = (score: number) => {
-    if (score >= 95) return '😊';
-    if (score >= 85) return '😐';
-    if (score >= 70) return '😔';
-    return '😟';
-  };
-
-  const getSentimentLabel = (score: number) => {
-    if (score >= 95) return 'Excellent';
-    if (score >= 85) return 'Good';
-    if (score >= 70) return 'Average';
-    return 'Below Average';
-  };
 
   const getCredentialStatus = (license: string) => {
     if (license.includes('Expired')) return 'Expired';
@@ -156,7 +134,6 @@ const ClinicsSection = () => {
     setSelectedTreatment('all');
     setSelectedRating('all');
     setMaxDistance(110);
-    setSentimentFilter('all');
     setMinReviews(0);
     setCredentialFilter('all');
     setLocationFilter('all');
@@ -292,7 +269,6 @@ const ClinicsSection = () => {
                   <SelectContent className="bg-white border-blue-light">
                     <SelectItem value="distance" className="text-blue-dark">Distance from CIQ</SelectItem>
                     <SelectItem value="rating" className="text-blue-dark">Highest Rating</SelectItem>
-                    <SelectItem value="sentiment" className="text-blue-dark">Best Sentiment</SelectItem>
                     <SelectItem value="reviews" className="text-blue-dark">Number of Reviews</SelectItem>
                   </SelectContent>
                 </Select>
@@ -339,21 +315,6 @@ const ClinicsSection = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label className="text-blue-dark mb-2 block">AI Sentiment</Label>
-                    <Select onValueChange={setSentimentFilter} value={sentimentFilter}>
-                      <SelectTrigger className="bg-white border-blue-light text-blue-dark">
-                        <SelectValue placeholder="All Sentiments" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-blue-light">
-                        <SelectItem value="all" className="text-blue-dark">All Sentiments</SelectItem>
-                        <SelectItem value="excellent" className="text-blue-dark">😊 Excellent (95%+)</SelectItem>
-                        <SelectItem value="good" className="text-blue-dark">😐 Good (85-95%)</SelectItem>
-                        <SelectItem value="average" className="text-blue-dark">😔 Average (70-85%)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
                   <div>
                     <Label className="text-blue-dark mb-2 block">Credentials</Label>
                     <Select onValueChange={setCredentialFilter} value={credentialFilter}>
@@ -408,7 +369,7 @@ const ClinicsSection = () => {
             {searchTerm && <span> matching "{searchTerm}"</span>}
           </p>
           <p className="text-sm text-neutral-gray">
-            Sorted by {sortBy === 'distance' ? 'Distance' : sortBy === 'rating' ? 'Rating' : sortBy === 'sentiment' ? 'Sentiment' : 'Number of Reviews'}
+            Sorted by {sortBy === 'distance' ? 'Distance' : sortBy === 'rating' ? 'Rating' : 'Number of Reviews'}
           </p>
         </div>
 
@@ -436,31 +397,42 @@ const ClinicsSection = () => {
                     <MapPin className="h-4 w-4 text-neutral-gray" />
                     <span className="text-neutral-gray">{clinic.distance} km from CIQ</span>
                   </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-neutral-gray" />
-                    <span className="text-neutral-gray">
-                      Sentiment: {getSentimentIcon(clinic.sentiment)} {clinic.sentiment}% ({getSentimentLabel(clinic.sentiment)})
-                    </span>
-                  </div>
                 </div>
               </CardHeader>
               
               <CardContent>
                 <div className="space-y-3">
+                  {/* Public Information - Always Visible */}
+                  <div>
+                    <p className="text-neutral-gray text-sm">Address:</p>
+                    <p className="text-neutral-gray text-sm">{clinic.address}</p>
+                  </div>
+                  
+                  <div>
+                    <p className="text-neutral-gray text-sm">Available Treatments:</p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {clinic.treatments.dentalImplant && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Implants</Badge>}
+                      {clinic.treatments.braces && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Braces</Badge>}
+                      {clinic.treatments.compositeVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Composite Veneers</Badge>}
+                      {clinic.treatments.porcelainVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Porcelain Veneers</Badge>}
+                      {clinic.treatments.teethWhitening && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Whitening</Badge>}
+                      {clinic.treatments.tmjTreatment && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">TMJ</Badge>}
+                    </div>
+                  </div>
+
                   {/* Protected Information - Requires Authentication */}
                   {!isAuthenticated ? (
                     <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
                       <div className="flex items-center gap-2 mb-3">
                         <Lock className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Sign in to view detailed information</span>
+                        <span className="text-sm font-medium text-gray-700">Sign in to view dentist details</span>
                       </div>
                       <Button 
                         onClick={handleAuthRequired}
                         size="sm"
                         className="w-full bg-blue-primary hover:bg-blue-dark text-white"
                       >
-                        View Dentist Details & Credentials
+                        View Dentist Name & License
                       </Button>
                     </div>
                   ) : (
@@ -468,11 +440,6 @@ const ClinicsSection = () => {
                       <div>
                         <p className="text-neutral-gray text-sm">Dentist:</p>
                         <p className="text-blue-dark text-sm">{clinic.dentist}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-neutral-gray text-sm">Address:</p>
-                        <p className="text-neutral-gray text-sm">{clinic.address}</p>
                       </div>
                       
                       <div>
@@ -493,38 +460,26 @@ const ClinicsSection = () => {
                           </Badge>
                         </div>
                       </div>
-                      
-                      <div>
-                        <p className="text-neutral-gray text-sm">Available Treatments:</p>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {clinic.treatments.dentalImplant && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Implants</Badge>}
-                          {clinic.treatments.braces && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Braces</Badge>}
-                          {clinic.treatments.compositeVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Composite Veneers</Badge>}
-                          {clinic.treatments.porcelainVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Porcelain Veneers</Badge>}
-                          {clinic.treatments.teethWhitening && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Whitening</Badge>}
-                          {clinic.treatments.tmjTreatment && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">TMJ</Badge>}
-                        </div>
-                      </div>
-                      
-                      <div className="flex gap-2 mt-4">
-                        <Button 
-                          className="flex-1 bg-blue-primary hover:bg-blue-dark text-white"
-                          onClick={() => {
-                            const element = document.getElementById('waitlist');
-                            if (element) {
-                              element.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }}
-                        >
-                          <Calendar className="h-4 w-4 mr-2" />
-                          Book Appointment
-                        </Button>
-                        <Button variant="outline" className="border-blue-light text-blue-primary hover:bg-blue-light">
-                          View Details
-                        </Button>
-                      </div>
                     </>
                   )}
+                  
+                  <div className="flex gap-2 mt-4">
+                    <Button 
+                      className="flex-1 bg-blue-primary hover:bg-blue-dark text-white"
+                      onClick={() => {
+                        const element = document.getElementById('waitlist');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                    >
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Book Appointment
+                    </Button>
+                    <Button variant="outline" className="border-blue-light text-blue-primary hover:bg-blue-light">
+                      View Details
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
