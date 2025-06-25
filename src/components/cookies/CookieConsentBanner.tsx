@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Cookie, Settings, X } from 'lucide-react';
+import { Cookie, X } from 'lucide-react';
 import { useCookieConsent } from '@/contexts/CookieConsentContext';
+import ConsentActions from './components/ConsentActions';
 
 const CookieConsentBanner = () => {
   const { 
@@ -33,29 +33,12 @@ const CookieConsentBanner = () => {
                 to accept below, or manage your preferences at any time.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={acceptAll}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
-                >
-                  Accept All Cookies
-                </Button>
-                <Button 
-                  onClick={acceptEssentialOnly}
-                  variant="outline"
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  Essential Only
-                </Button>
-                <Button 
-                  onClick={() => setShowPreferences(true)}
-                  variant="outline"
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  <Settings className="h-4 w-4 mr-2" />
-                  Manage Cookies
-                </Button>
-              </div>
+              <ConsentActions
+                onAcceptAll={acceptAll}
+                onEssentialOnly={acceptEssentialOnly}
+                onManagePreferences={() => setShowPreferences(true)}
+                variant="banner"
+              />
               
               <p className="text-xs text-gray-500 mt-3">
                 By clicking "Accept All", you agree to our use of cookies. 
