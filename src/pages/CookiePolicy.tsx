@@ -5,9 +5,16 @@ import { Cookie, Settings, Clock, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useCookieConsent } from '@/contexts/CookieConsentContext';
+import { useEffect } from 'react';
 
 const CookiePolicy = () => {
   const { setShowPreferences } = useCookieConsent();
+
+  useEffect(() => {
+    console.log('Cookie Policy page loaded successfully');
+    // Add visual indicator that page loaded
+    document.title = 'Cookie Policy - SG-JB Dental';
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -16,6 +23,10 @@ const CookiePolicy = () => {
       <div className="pt-32 px-4 sm:px-6 lg:px-8 py-16">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
+            {/* Add visual indicator */}
+            <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-600">✓ Cookie Policy Page Loaded</p>
+            </div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
               Cookie Policy
             </h1>
@@ -37,7 +48,10 @@ const CookiePolicy = () => {
                 You can manage your cookie preferences at any time by clicking the button below.
               </p>
               <Button 
-                onClick={() => setShowPreferences(true)}
+                onClick={() => {
+                  console.log('Cookie preferences button clicked');
+                  setShowPreferences(true);
+                }}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Settings className="h-4 w-4 mr-2" />

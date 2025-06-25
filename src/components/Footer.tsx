@@ -6,6 +6,10 @@ import { useCookieConsent } from '@/contexts/CookieConsentContext';
 const Footer = () => {
   const { setShowPreferences } = useCookieConsent();
 
+  const handleCookiePolicyClick = () => {
+    console.log('Cookie Policy link clicked in footer');
+  };
+
   return (
     <footer className="bg-gray-50 text-gray-700">
       <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
@@ -103,12 +107,19 @@ const Footer = () => {
                 Terms of Service
               </Link>
               <span className="hidden sm:inline text-gray-400">|</span>
-              <Link to="/cookie-policy" className="hover:text-blue-600 transition-colors px-2 py-1">
+              <Link 
+                to="/cookie-policy" 
+                onClick={handleCookiePolicyClick}
+                className="hover:text-blue-600 transition-colors px-2 py-1"
+              >
                 Cookie Policy
               </Link>
               <span className="hidden sm:inline text-gray-400">|</span>
               <button 
-                onClick={() => setShowPreferences(true)}
+                onClick={() => {
+                  console.log('Manage Cookies button clicked');
+                  setShowPreferences(true);
+                }}
                 className="hover:text-blue-600 transition-colors px-2 py-1 font-medium text-blue-600 hover:text-blue-700"
               >
                 Manage Cookies
