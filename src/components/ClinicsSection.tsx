@@ -1,28 +1,118 @@
 
 import { useState } from 'react';
-import { Search, MapPin, Phone, Clock, Star, ExternalLink } from 'lucide-react';
+import { Search, MapPin, Phone, Clock, Star, Filter, X, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { clinics } from '@/data/clinics';
 import { useNavigate } from 'react-router-dom';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 
 const ClinicsSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
+  const [selectedTownships, setSelectedTownships] = useState<string[]>([]);
+  const [ratingFilter, setRatingFilter] = useState<number>(0);
+  const [distanceRange, setDistanceRange] = useState<number[]>([0, 50]);
+  const [sortBy, setSortBy] = useState<string>('rating');
+  const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
-  // Filter clinics based on search term
-  const filteredClinics = clinics.filter(clinic =>
-    clinic.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    clinic.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    clinic.dentist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    clinic.township.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Get unique townships
+  const townships = [...new Set(clinics.map(clinic => clinic.township))].sort();
+
+  // Treatment options with labels
+  const treatmentOptions = [
+    { key: 'dentalImplant', label: 'Dental Implants' },
+    { key: 'braces', label: 'Braces/Orthodontics' },
+    { key: 'rootCanal', label: 'Root Canal' },
+    { key: 'teethWhitening', label: 'Teeth Whitening' },
+    { key: 'gumTreatment', label: 'Gum Treatment' },
+    { key: 'wisdomTooth', label: 'Wisdom Tooth Extraction' },
+    { key: 'dentalCrown', label: 'Dental Crown' },
+    { key: 'toothFilling', label: 'Tooth Filling' },
+    { key: 'compositeVeneers', label: 'Composite Veneers' },
+    { key: 'porcelainVeneers', label: 'Porcelain Veneers' }
+  ];
+
+  // Filter and sort clinics
+  const filteredClinics = clinics
+    .filter(clinic => {
+      // Text search
+      const matchesSearch = 
+        clinic.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        clinic.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        clinic.dentist.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        clinic.township.toLowerCase().includes(searchTerm.toLowerCase());
+
+      // Treatment filter
+      const matchesTreatments = selectedTreatments.length === 0 || 
+        selectedTreatments.some(treatment => 
+          clinic.treatments[treatment as keyof typeof clinic.treatments]
+        );
+
+      // Township filter
+      const matchesTownship = selectedTownships.length === 0 || 
+        selectedTownships.includes(clinic.township);
+
+      // Rating filter
+      const matchesRating = clinic.rating >= ratingFilter;
+
+      // Distance filter
+      const matchesDistance = clinic.distance >= distanceRange[0] && clinic.distance <= distanceRange[1];
+
+      return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'rating':
+          return b.rating - a.rating;
+        case 'distance':
+          return a.distance - b.distance;
+        case 'reviews':
+          return b.reviews - a.reviews;
+        case 'name':
+          return a.name.localeCompare(b.name);
+        default:
+          return 0;
+      }
+    });
 
   const handleOptOutClick = () => {
     navigate('/opt-out-report');
   };
+
+  const handleTreatmentChange = (treatment: string, checked: boolean) => {
+    if (checked) {
+      setSelectedTreatments([...selectedTreatments, treatment]);
+    } else {
+      setSelectedTreatments(selectedTreatments.filter(t => t !== treatment));
+    }
+  };
+
+  const handleTownshipChange = (township: string, checked: boolean) => {
+    if (checked) {
+      setSelectedTownships([...selectedTownships, township]);
+    } else {
+      setSelectedTownships(selectedTownships.filter(t => t !== township));
+    }
+  };
+
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setSelectedTreatments([]);
+    setSelectedTownships([]);
+    setRatingFilter(0);
+    setDistanceRange([0, 50]);
+    setSortBy('rating');
+  };
+
+  const activeFiltersCount = selectedTreatments.length + selectedTownships.length + 
+    (ratingFilter > 0 ? 1 : 0) + (distanceRange[0] > 0 || distanceRange[1] < 50 ? 1 : 0);
 
   // Helper function to get basic specialties based on treatments
   const getSpecialties = (clinic: typeof clinics[0]) => {
@@ -59,6 +149,43 @@ const ClinicsSection = () => {
             />
           </div>
 
+          {/* Filter Toggle and Sort */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-6">
+            <Button
+              onClick={() => setShowFilters(!showFilters)}
+              variant="outline"
+              className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+              <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+            </Button>
+
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="rating">Highest Rated</SelectItem>
+                <SelectItem value="distance">Nearest First</SelectItem>
+                <SelectItem value="reviews">Most Reviews</SelectItem>
+                <SelectItem value="name">Name A-Z</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {activeFiltersCount > 0 && (
+              <Button
+                onClick={clearAllFilters}
+                variant="ghost"
+                size="sm"
+                className="text-blue-primary hover:text-blue-dark"
+              >
+                <X className="h-4 w-4 mr-1" />
+                Clear All
+              </Button>
+            )}
+          </div>
+
           {/* Opt Out Button */}
           <div className="mb-8">
             <Button
@@ -72,12 +199,108 @@ const ClinicsSection = () => {
         </div>
 
         {/* Medical Disclaimer - Positioned prominently but elegantly */}
-        <div className="mb-10">
+        <div className="mb-8">
           <MedicalDisclaimer variant="banner" className="max-w-5xl mx-auto" />
         </div>
 
+        {/* Advanced Filters Panel */}
+        <Collapsible open={showFilters} onOpenChange={setShowFilters}>
+          <CollapsibleContent className="mb-8">
+            <Card className="p-6 border-blue-light">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Treatment Filters */}
+                <div>
+                  <h3 className="font-semibold text-blue-dark mb-3">Treatments</h3>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {treatmentOptions.map((treatment) => (
+                      <div key={treatment.key} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={treatment.key}
+                          checked={selectedTreatments.includes(treatment.key)}
+                          onCheckedChange={(checked) => 
+                            handleTreatmentChange(treatment.key, checked as boolean)
+                          }
+                        />
+                        <label 
+                          htmlFor={treatment.key} 
+                          className="text-sm text-neutral-gray cursor-pointer"
+                        >
+                          {treatment.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Location Filters */}
+                <div>
+                  <h3 className="font-semibold text-blue-dark mb-3">Areas</h3>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {townships.map((township) => (
+                      <div key={township} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={township}
+                          checked={selectedTownships.includes(township)}
+                          onCheckedChange={(checked) => 
+                            handleTownshipChange(township, checked as boolean)
+                          }
+                        />
+                        <label 
+                          htmlFor={township} 
+                          className="text-sm text-neutral-gray cursor-pointer"
+                        >
+                          {township}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Rating Filter */}
+                <div>
+                  <h3 className="font-semibold text-blue-dark mb-3">Minimum Rating</h3>
+                  <Select value={ratingFilter.toString()} onValueChange={(value) => setRatingFilter(Number(value))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">Any Rating</SelectItem>
+                      <SelectItem value="4">4+ Stars</SelectItem>
+                      <SelectItem value="4.5">4.5+ Stars</SelectItem>
+                      <SelectItem value="4.8">4.8+ Stars</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Distance Filter */}
+                <div>
+                  <h3 className="font-semibold text-blue-dark mb-3">
+                    Distance: {distanceRange[0]}-{distanceRange[1]}km
+                  </h3>
+                  <Slider
+                    value={distanceRange}
+                    onValueChange={setDistanceRange}
+                    max={50}
+                    min={0}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            </Card>
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* Results Count */}
+        <div className="mb-6 text-center">
+          <p className="text-neutral-gray">
+            Showing {filteredClinics.length} of {clinics.length} clinics
+            {activeFiltersCount > 0 && ` with ${activeFiltersCount} active filter${activeFiltersCount > 1 ? 's' : ''}`}
+          </p>
+        </div>
+
         {/* Clinics Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {filteredClinics.map((clinic) => {
             const specialties = getSpecialties(clinic);
             
@@ -147,7 +370,16 @@ const ClinicsSection = () => {
         {filteredClinics.length === 0 && (
           <div className="text-center py-12">
             <p className="text-neutral-gray text-lg">No clinics found matching your search criteria.</p>
-            <p className="text-neutral-gray text-sm mt-2">Try adjusting your search terms or browse all clinics.</p>
+            <p className="text-neutral-gray text-sm mt-2">Try adjusting your search terms or clearing some filters.</p>
+            {activeFiltersCount > 0 && (
+              <Button
+                onClick={clearAllFilters}
+                variant="outline"
+                className="mt-4 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
+              >
+                Clear All Filters
+              </Button>
+            )}
           </div>
         )}
 
