@@ -10,16 +10,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { clinics } from '@/data/clinics';
 import { useNavigate } from 'react-router-dom';
-import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 
 const ClinicsSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
   const [selectedTownships, setSelectedTownships] = useState<string[]>([]);
   const [ratingFilter, setRatingFilter] = useState<number>(0);
-  const [distanceRange, setDistanceRange] = useState<number[]>([0, 50]);
-  const [sortBy, setSortBy] = useState<string>('rating');
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [distanceRange, setDistanceRange] = useState<number[]>([0, 110]);
+  const [maxDistance, setMaxDistance] = useState<number>(110);
+  const [minReviews, setMinReviews] = useState<number>(0);
+  const [sortBy, setSortBy] = useState<string>('distance');
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(true);
   const navigate = useNavigate();
 
   // Get unique townships
@@ -37,6 +38,13 @@ const ClinicsSection = () => {
     { key: 'toothFilling', label: 'Tooth Filling' },
     { key: 'compositeVeneers', label: 'Composite Veneers' },
     { key: 'porcelainVeneers', label: 'Porcelain Veneers' }
+  ];
+
+  // Credentials options
+  const credentialOptions = [
+    { key: 'mda', label: 'MDA Registered' },
+    { key: 'specialist', label: 'Specialist Qualifications' },
+    { key: 'experience', label: '5+ Years Experience' }
   ];
 
   // Filter and sort clinics
@@ -63,9 +71,12 @@ const ClinicsSection = () => {
       const matchesRating = clinic.rating >= ratingFilter;
 
       // Distance filter
-      const matchesDistance = clinic.distance >= distanceRange[0] && clinic.distance <= distanceRange[1];
+      const matchesDistance = clinic.distance <= maxDistance;
 
-      return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance;
+      // Reviews filter
+      const matchesReviews = clinic.reviews >= minReviews;
+
+      return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance && matchesReviews;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -107,12 +118,14 @@ const ClinicsSection = () => {
     setSelectedTreatments([]);
     setSelectedTownships([]);
     setRatingFilter(0);
-    setDistanceRange([0, 50]);
-    setSortBy('rating');
+    setDistanceRange([0, 110]);
+    setMaxDistance(110);
+    setMinReviews(0);
+    setSortBy('distance');
   };
 
   const activeFiltersCount = selectedTreatments.length + selectedTownships.length + 
-    (ratingFilter > 0 ? 1 : 0) + (distanceRange[0] > 0 || distanceRange[1] < 50 ? 1 : 0);
+    (ratingFilter > 0 ? 1 : 0) + (maxDistance < 110 ? 1 : 0) + (minReviews > 0 ? 1 : 0);
 
   // Helper function to get basic specialties based on treatments
   const getSpecialties = (clinic: typeof clinics[0]) => {
@@ -130,36 +143,65 @@ const ClinicsSection = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-blue-dark mb-4">
-            Directory Listings
+            Find Your Perfect Clinic
           </h1>
           <p className="text-lg text-neutral-gray mb-8 max-w-3xl mx-auto">
-            Browse our comprehensive directory of dental clinics in Johor Bahru. 
-            Find information about services, locations, and contact details to help you make informed decisions.
+            Search and filter through 101 verified dental clinics across Johor to find the best match for your needs
           </p>
+        </div>
 
-          {/* Opt Out Button */}
-          <div className="mb-8">
-            <Button
-              onClick={handleOptOutClick}
-              variant="outline"
-              className="border-[#FF6F61] text-[#FF6F61] hover:bg-[#FF6F61] hover:text-white"
-            >
-              Opt Out or Report Issue
-            </Button>
+        {/* First Disclaimer */}
+        <div className="mb-6">
+          <div className="bg-blue-50/30 border-l-4 border-blue-200/40 rounded-r-lg px-6 py-4">
+            <div className="flex items-start gap-3">
+              <div className="text-sm text-blue-800/90 leading-relaxed">
+                <strong>Important:</strong> This platform provides general information only and does not constitute dental advice. 
+                No professional relationship is created with listed practitioners. Always consult qualified dental professionals.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Second Disclaimer with Opt-out Button */}
+        <div className="mb-8">
+          <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4">
+            <div className="flex justify-between items-start">
+              <div className="text-sm text-blue-800/90 leading-relaxed flex-1 mr-4">
+                <strong>Directory Disclaimer:</strong> Information compiled from publicly available sources. 
+                Listing does not imply endorsement, professional relationship, or recommendation. 
+                This platform does not provide medical advice or establish practitioner-patient relationships.
+              </div>
+              <Button
+                onClick={handleOptOutClick}
+                variant="outline"
+                size="sm"
+                className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white flex-shrink-0"
+              >
+                Opt-out or report issues
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Search & Filter Clinics Section */}
         <div className="mb-8">
           <Card className="p-6 border-blue-light bg-white shadow-sm">
-            <h2 className="text-xl font-semibold text-blue-dark mb-6 text-center">Search & Filter Clinics</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-blue-dark">Search & Filter Clinics</h2>
+              <div className="text-sm text-blue-600">
+                Sign in to view detailed clinic information{' '}
+                <Button variant="outline" size="sm" className="ml-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white">
+                  Sign In
+                </Button>
+              </div>
+            </div>
             
             {/* Search Bar */}
             <div className="relative max-w-md mx-auto mb-6">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-gray h-4 w-4" />
               <Input
                 type="text"
-                placeholder="Search clinics or areas..."
+                placeholder="Search by clinic name, dentist, or location..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 w-full border-blue-light focus:border-blue-primary"
@@ -172,9 +214,9 @@ const ClinicsSection = () => {
               <div>
                 <label className="block text-sm font-medium text-blue-dark mb-2">Treatment Needed</label>
                 <Select 
-                  value={selectedTreatments.length > 0 ? selectedTreatments[0] : "any"} 
+                  value={selectedTreatments.length > 0 ? selectedTreatments[0] : "all"} 
                   onValueChange={(value) => {
-                    if (value === "any") {
+                    if (value === "all") {
                       setSelectedTreatments([]);
                     } else {
                       setSelectedTreatments([value]);
@@ -182,10 +224,10 @@ const ClinicsSection = () => {
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Any Treatment" />
+                    <SelectValue placeholder="All Treatments" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="any">Any Treatment</SelectItem>
+                    <SelectItem value="all">All Treatments</SelectItem>
                     {treatmentOptions.map((treatment) => (
                       <SelectItem key={treatment.key} value={treatment.key}>
                         {treatment.label}
@@ -215,9 +257,9 @@ const ClinicsSection = () => {
               <div>
                 <label className="block text-sm font-medium text-blue-dark mb-2">Township</label>
                 <Select 
-                  value={selectedTownships.length > 0 ? selectedTownships[0] : "any"} 
+                  value={selectedTownships.length > 0 ? selectedTownships[0] : "all"} 
                   onValueChange={(value) => {
-                    if (value === "any") {
+                    if (value === "all") {
                       setSelectedTownships([]);
                     } else {
                       setSelectedTownships([value]);
@@ -225,10 +267,10 @@ const ClinicsSection = () => {
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Any Area" />
+                    <SelectValue placeholder="All Townships" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="any">Any Area</SelectItem>
+                    <SelectItem value="all">All Townships</SelectItem>
                     {townships.map((township) => (
                       <SelectItem key={township} value={township}>
                         {township}
@@ -246,8 +288,8 @@ const ClinicsSection = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="distance">Distance from CIQ</SelectItem>
                     <SelectItem value="rating">Highest Rated</SelectItem>
-                    <SelectItem value="distance">Nearest First</SelectItem>
                     <SelectItem value="reviews">Most Reviews</SelectItem>
                     <SelectItem value="name">Name A-Z</SelectItem>
                   </SelectContent>
@@ -283,64 +325,66 @@ const ClinicsSection = () => {
             {showAdvancedFilters && (
               <div className="mt-6 border-t border-blue-light pt-6">
                 <h3 className="text-lg font-medium text-blue-dark mb-4">Advanced Filters</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {/* Multiple Treatment Selection */}
-                  <div>
-                    <h4 className="font-medium text-blue-dark mb-3">Multiple Treatments</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {treatmentOptions.map((treatment) => (
-                        <div key={treatment.key} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`adv-${treatment.key}`}
-                            checked={selectedTreatments.includes(treatment.key)}
-                            onCheckedChange={(checked) => 
-                              handleTreatmentChange(treatment.key, checked as boolean)
-                            }
-                          />
-                          <label 
-                            htmlFor={`adv-${treatment.key}`} 
-                            className="text-sm text-neutral-gray cursor-pointer"
-                          >
-                            {treatment.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Multiple Township Selection */}
-                  <div>
-                    <h4 className="font-medium text-blue-dark mb-3">Multiple Areas</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {townships.map((township) => (
-                        <div key={township} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`adv-${township}`}
-                            checked={selectedTownships.includes(township)}
-                            onCheckedChange={(checked) => 
-                              handleTownshipChange(township, checked as boolean)
-                            }
-                          />
-                          <label 
-                            htmlFor={`adv-${township}`} 
-                            className="text-sm text-neutral-gray cursor-pointer"
-                          >
-                            {township}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Distance Filter */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {/* Max Distance from CIQ */}
                   <div>
                     <h4 className="font-medium text-blue-dark mb-3">
-                      Distance: {distanceRange[0]}-{distanceRange[1]}km
+                      Max Distance from CIQ: {maxDistance}km
+                    </h4>
+                    <Slider
+                      value={[maxDistance]}
+                      onValueChange={(value) => setMaxDistance(value[0])}
+                      max={110}
+                      min={0}
+                      step={1}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Minimum Reviews */}
+                  <div>
+                    <h4 className="font-medium text-blue-dark mb-3">
+                      Minimum Reviews: {minReviews}
+                    </h4>
+                    <Slider
+                      value={[minReviews]}
+                      onValueChange={(value) => setMinReviews(value[0])}
+                      max={500}
+                      min={0}
+                      step={10}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Credentials */}
+                  <div>
+                    <h4 className="font-medium text-blue-dark mb-3">Credentials</h4>
+                    <div className="space-y-2">
+                      {credentialOptions.map((credential) => (
+                        <div key={credential.key} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={credential.key}
+                          />
+                          <label 
+                            htmlFor={credential.key} 
+                            className="text-sm text-neutral-gray cursor-pointer"
+                          >
+                            {credential.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Distance Range */}
+                  <div>
+                    <h4 className="font-medium text-blue-dark mb-3">
+                      Distance Range: {distanceRange[0]}-{distanceRange[1]}km
                     </h4>
                     <Slider
                       value={distanceRange}
                       onValueChange={setDistanceRange}
-                      max={50}
+                      max={110}
                       min={0}
                       step={1}
                       className="w-full"
@@ -350,11 +394,6 @@ const ClinicsSection = () => {
               </div>
             )}
           </Card>
-        </div>
-
-        {/* Medical Disclaimer - Positioned prominently but elegantly */}
-        <div className="mb-8">
-          <MedicalDisclaimer variant="banner" className="max-w-5xl mx-auto" />
         </div>
 
         {/* Results Count */}
@@ -448,45 +487,6 @@ const ClinicsSection = () => {
             )}
           </div>
         )}
-
-        {/* Enhanced Directory Information Notice */}
-        <div className="mt-16">
-          <MedicalDisclaimer variant="subtle" className="max-w-5xl mx-auto" />
-        </div>
-
-        {/* Directory Disclaimer Section - Restored to original position and format */}
-        <div className="mt-8 bg-gradient-to-r from-blue-50/60 to-blue-100/40 p-8 rounded-xl border border-blue-200/30 shadow-sm">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-xl font-semibold text-blue-dark mb-4 text-center">Directory Information Notice</h3>
-            <div className="space-y-4 text-sm text-blue-800/90 leading-relaxed">
-              <p>
-                <strong>Information Accuracy:</strong> The information provided in this directory is compiled from 
-                publicly available sources for informational purposes only. We make no representation or warranty 
-                regarding the accuracy, completeness, or currency of this information.
-              </p>
-              <p>
-                <strong>User Responsibility:</strong> Users are advised to verify all details directly with clinics 
-                before making any decisions. This includes confirming practitioner credentials, treatment costs, 
-                operating hours, and clinic policies.
-              </p>
-              <p>
-                <strong>No Endorsement:</strong> Listing of a dental clinic does not imply any business relationship, 
-                partnership, or endorsement. We have not verified the credentials or services of these clinics.
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-blue-200/40 text-center">
-              <p className="text-xs text-blue-700/80">
-                For corrections or removal requests, please use our{' '}
-                <button 
-                  onClick={handleOptOutClick}
-                  className="text-blue-primary hover:text-blue-dark underline font-medium"
-                >
-                  opt-out form
-                </button>
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
