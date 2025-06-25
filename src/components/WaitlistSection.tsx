@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Mail, Send, CheckCircle, User, Phone } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -55,8 +54,8 @@ const WaitlistSection = () => {
 
     if (!formData.whatsappConsent) {
       toast({
-        title: "Consent Required",
-        description: "Please consent to receive WhatsApp messages to continue.",
+        title: "WhatsApp Consent Required",
+        description: "Please provide explicit consent to receive WhatsApp messages to join our waitlist.",
         variant: "destructive",
       });
       return;
@@ -237,39 +236,67 @@ const WaitlistSection = () => {
                 </div>
               </div>
 
-              {/* WhatsApp Consent Section */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-4">
-                <div className="text-sm text-green-800">
-                  <h4 className="font-semibold mb-2">WhatsApp Communication</h4>
-                  <p className="mb-2">We'll send you:</p>
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li>Appointment reminders and confirmations</li>
-                    <li>New clinic partner announcements</li>
-                    <li>Platform feature updates</li>
-                    <li>Exclusive early access invitations</li>
-                  </ul>
-                  <p className="mt-2 font-medium">Frequency: No more than 4 messages per month</p>
+              {/* PDPA-Compliant WhatsApp Consent Section */}
+              <div className="bg-gradient-to-br from-green-50 to-blue-50 border-2 border-green-200 rounded-xl p-6 space-y-4 shadow-sm">
+                <div className="text-sm text-gray-700">
+                  <h4 className="font-bold text-gray-900 mb-3 text-base">📱 WhatsApp Communication Consent</h4>
+                  
+                  <div className="bg-white/70 rounded-lg p-4 mb-4 border border-green-100">
+                    <p className="font-semibold text-green-800 mb-2">What you'll receive:</p>
+                    <ul className="list-disc pl-5 space-y-1 text-green-700">
+                      <li>Appointment reminders and confirmations</li>
+                      <li>New verified clinic partner announcements</li>
+                      <li>Platform feature updates and improvements</li>
+                      <li>Exclusive early access invitations and offers</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-white/50 rounded-lg p-3 border border-green-100">
+                    <div>
+                      <p className="font-semibold text-gray-800">Message Frequency:</p>
+                      <p className="text-gray-700">Maximum 4 messages per month</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800">Data Retention:</p>
+                      <p className="text-gray-700">Until you opt out or service ends</p>
+                    </div>
+                  </div>
                 </div>
                 
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="whatsapp-consent"
-                    checked={formData.whatsappConsent}
-                    onCheckedChange={(checked) => handleInputChange('whatsappConsent', checked as boolean)}
-                    className="mt-1"
-                    required
-                  />
-                  <label htmlFor="whatsapp-consent" className="text-sm text-green-800 leading-relaxed">
-                    I consent to receive WhatsApp messages from <strong>SG Smile Saver</strong> about dental referral services. 
-                    I understand I can opt out at any time. View our{' '}
-                    <a 
-                      href="/privacy-policy" 
-                      target="_blank" 
-                      className="text-blue-primary hover:underline font-medium"
-                    >
-                      Privacy Policy
-                    </a>.
-                  </label>
+                <div className="border-t border-green-200 pt-4">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox 
+                      id="whatsapp-consent"
+                      checked={formData.whatsappConsent}
+                      onCheckedChange={(checked) => handleInputChange('whatsappConsent', checked as boolean)}
+                      className="mt-1 border-2 border-green-400 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500"
+                    />
+                    <label htmlFor="whatsapp-consent" className="text-sm text-gray-800 leading-relaxed cursor-pointer">
+                      <span className="font-bold text-green-800">I explicitly consent</span> to receive WhatsApp messages from{' '}
+                      <strong>SG Smile Saver</strong> about dental referral services as described above.
+                      <br />
+                      <span className="text-xs text-gray-600 mt-2 block">
+                        ✓ I understand this consent is voluntary and I can withdraw it at any time<br />
+                        ✓ I can opt out by messaging "STOP" or contacting{' '}
+                        <a href="mailto:privacy@sgsmile.com" className="text-blue-600 hover:underline font-medium">
+                          privacy@sgsmile.com
+                        </a><br />
+                        ✓ I have read our{' '}
+                        <a 
+                          href="/privacy-policy" 
+                          target="_blank" 
+                          className="text-blue-600 hover:underline font-medium"
+                        >
+                          Privacy Policy
+                        </a> and understand how my data will be used
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div className="text-xs text-gray-500 bg-white/60 rounded-lg p-3 border border-green-100">
+                  <p className="font-medium">Important:</p>
+                  <p>WhatsApp consent is required to join our waitlist as we use WhatsApp for priority communications about clinic availability and exclusive offers. Your consent includes agreement to our data processing practices for marketing purposes.</p>
                 </div>
               </div>
               
@@ -281,19 +308,19 @@ const WaitlistSection = () => {
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    Joining...
+                    Processing Consent...
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
                     <Send className="h-5 w-5" />
-                    Join Waitlist
+                    Join Waitlist with WhatsApp Consent
                   </div>
                 )}
               </Button>
             </form>
 
             <div className="mt-8 p-6 bg-blue-primary/20 rounded-lg border border-blue-primary/30">
-              <h4 className="font-semibold text-blue-dark mb-3">What you'll get:</h4>
+              <h4 className="font-semibold text-blue-dark mb-3">What you'll get as a waitlist member:</h4>
               <ul className="text-neutral-gray space-y-2">
                 <li>✓ Early access to price comparisons</li>
                 <li>✓ Priority booking with verified clinics</li>
