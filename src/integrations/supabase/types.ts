@@ -54,6 +54,75 @@ export type Database = {
         }
         Relationships: []
       }
+      consent_logs: {
+        Row: {
+          consent_details: Json | null
+          consent_status: boolean
+          consent_timestamp: string | null
+          consent_type: string
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consent_details?: Json | null
+          consent_status: boolean
+          consent_timestamp?: string | null
+          consent_type: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consent_details?: Json | null
+          consent_status?: boolean
+          consent_timestamp?: string | null
+          consent_type?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      data_access_audit: {
+        Row: {
+          access_timestamp: string | null
+          accessed_data_type: string
+          clinic_id: string | null
+          id: string
+          ip_address: string | null
+          practitioner_name: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_timestamp?: string | null
+          accessed_data_type: string
+          clinic_id?: string | null
+          id?: string
+          ip_address?: string | null
+          practitioner_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_timestamp?: string | null
+          accessed_data_type?: string
+          clinic_id?: string | null
+          id?: string
+          ip_address?: string | null
+          practitioner_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       opt_out_reports: {
         Row: {
           admin_notes: string | null
@@ -96,6 +165,42 @@ export type Database = {
           request_type?: string
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      opt_out_requests: {
+        Row: {
+          created_at: string | null
+          id: string
+          notes: string | null
+          processed_by: string | null
+          processed_date: string | null
+          reason: string | null
+          request_date: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          processed_by?: string | null
+          processed_date?: string | null
+          reason?: string | null
+          request_date?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          processed_by?: string | null
+          processed_date?: string | null
+          reason?: string | null
+          request_date?: string | null
+          status?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -147,6 +252,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          created_at: string | null
+          email_domain: string | null
+          full_name: string
+          id: string
+          is_verified: boolean | null
+          organization: string | null
+          purpose_of_use: string
+          updated_at: string | null
+          user_category: Database["public"]["Enums"]["user_category"]
+          verification_date: string | null
+          verification_method: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_domain?: string | null
+          full_name: string
+          id: string
+          is_verified?: boolean | null
+          organization?: string | null
+          purpose_of_use: string
+          updated_at?: string | null
+          user_category?: Database["public"]["Enums"]["user_category"]
+          verification_date?: string | null
+          verification_method?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_domain?: string | null
+          full_name?: string
+          id?: string
+          is_verified?: boolean | null
+          organization?: string | null
+          purpose_of_use?: string
+          updated_at?: string | null
+          user_category?: Database["public"]["Enums"]["user_category"]
+          verification_date?: string | null
+          verification_method?: string | null
+        }
+        Relationships: []
+      }
       waitlist_signups: {
         Row: {
           confirmation_sent_at: string | null
@@ -191,10 +338,39 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      audit_data_access: {
+        Args: {
+          p_user_id: string
+          p_data_type: string
+          p_clinic_id?: string
+          p_practitioner_name?: string
+          p_ip_address?: string
+          p_user_agent?: string
+        }
+        Returns: string
+      }
+      has_valid_consent: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
+      log_consent: {
+        Args: {
+          p_user_id: string
+          p_consent_type: string
+          p_consent_status: boolean
+          p_ip_address?: string
+          p_user_agent?: string
+          p_consent_details?: Json
+        }
+        Returns: string
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_category:
+        | "patient"
+        | "healthcare_professional"
+        | "clinic_admin"
+        | "approved_partner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -309,6 +485,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_category: [
+        "patient",
+        "healthcare_professional",
+        "clinic_admin",
+        "approved_partner",
+      ],
+    },
   },
 } as const

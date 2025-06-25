@@ -23,29 +23,27 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/compare" element={<Compare />} />
-            <Route path="/clinics" element={<Clinics />} />
-            <Route path="/how-it-works" element={<HowItWorks />} />
-            <Route path="/qa" element={<QA />} />
-            <Route path="/partner-application" element={<PartnerApplication />} />
-            <Route path="/opt-out-report" element={<OptOutReport />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
-            <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
-            <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/compare" element={<Compare />} />
+          <Route path="/clinics" element={<Clinics />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/qa" element={<QA />} />
+          <Route path="/partner-application" element={<PartnerApplication />} />
+          <Route path="/opt-out-report" element={<OptOutReport />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
+          <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
+          <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 

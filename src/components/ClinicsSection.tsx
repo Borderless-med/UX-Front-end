@@ -24,7 +24,7 @@ const ClinicsSection = () => {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userProfile, logDataAccess } = useAuth();
 
   // Get unique townships
   const townships = [...new Set(clinics.map(clinic => clinic.township))].sort();
@@ -104,6 +104,13 @@ const ClinicsSection = () => {
     setShowAuthModal(true);
   };
 
+  // Enhanced practitioner details viewing with audit logging
+  const handleViewPractitionerDetails = async (clinic: typeof clinics[0]) => {
+    if (isAuthenticated) {
+      await logDataAccess('practitioner_details', clinic.id, clinic.dentist);
+    }
+  };
+
   const handleTreatmentChange = (treatment: string, checked: boolean) => {
     if (checked) {
       setSelectedTreatments([...selectedTreatments, treatment]);
@@ -143,6 +150,43 @@ const ClinicsSection = () => {
     if (clinic.treatments.teethWhitening) specialties.push('Cosmetic Dentistry');
     if (clinic.treatments.gumTreatment) specialties.push('Periodontics');
     return specialties.slice(0, 3); // Show max 3 specialties
+  };
+
+  // Get user status display
+  const getUserStatusDisplay = () => {
+    if (!isAuthenticated) {
+      return (
+        <div className="text-sm text-blue-600">
+          Sign in to view detailed clinic information{' '}
+          <Button 
+            onClick={handleSignInClick}
+            variant="outline" 
+            size="sm" 
+            className="ml-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+          >
+            Sign In
+          </Button>
+        </div>
+      );
+    }
+
+    const categoryLabels = {
+      patient: 'Patient Account',
+      healthcare_professional: 'Healthcare Professional',
+      clinic_admin: 'Clinic Administrator',
+      approved_partner: 'Approved Partner'
+    };
+
+    return (
+      <div className="text-sm">
+        <span className="text-green-600">✓ Signed in</span>
+        {userProfile && (
+          <span className="text-blue-600 ml-2">
+            ({categoryLabels[userProfile.user_category]} - Full details available)
+          </span>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -195,23 +239,7 @@ const ClinicsSection = () => {
           <Card className="p-6 border-blue-light bg-white shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-blue-dark">Search & Filter Clinics</h2>
-              <div className="text-sm text-blue-600">
-                {!isAuthenticated ? (
-                  <>
-                    Sign in to view detailed clinic information{' '}
-                    <Button 
-                      onClick={handleSignInClick}
-                      variant="outline" 
-                      size="sm" 
-                      className="ml-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
-                    >
-                      Sign In
-                    </Button>
-                  </>
-                ) : (
-                  <span className="text-green-600">✓ Signed in - Full details available</span>
-                )}
-              </div>
+              {getUserStatusDisplay()}
             </div>
             
             {/* Search Bar */}
@@ -483,10 +511,10 @@ const ClinicsSection = () => {
                   {/* PDPA Compliant Practitioner Information */}
                   <div className="mt-4 pt-4 border-t border-blue-light/30">
                     {isAuthenticated ? (
-                      <>
+                      <div onClick={() => handleViewPractitionerDetails(clinic)}>
                         <p className="text-xs text-neutral-gray mb-1">Dentist: {clinic.dentist}</p>
                         <p className="text-xs text-neutral-gray">MDA License: {clinic.mdaLicense}</p>
-                      </>
+                      </div>
                     ) : (
                       <>
                         <p className="text-xs text-blue-600 mb-1">
