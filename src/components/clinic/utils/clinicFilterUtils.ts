@@ -1,5 +1,6 @@
 
 import { clinics } from '@/data/clinics';
+import { Clinic } from '@/types/clinic';
 
 export const filterClinics = (
   searchTerm: string,
@@ -40,7 +41,7 @@ export const filterClinics = (
   });
 };
 
-export const sortClinics = (clinics: typeof clinics, sortBy: string) => {
+export const sortClinics = (clinics: Clinic[], sortBy: string) => {
   return [...clinics].sort((a, b) => {
     switch (sortBy) {
       case 'rating':
@@ -57,7 +58,7 @@ export const sortClinics = (clinics: typeof clinics, sortBy: string) => {
   });
 };
 
-export const getSpecialties = (clinic: typeof clinics[0]) => {
+export const getSpecialties = (clinic: Clinic) => {
   const specialties = [];
   if (clinic.treatments.dentalImplant) specialties.push('Dental Implants');
   if (clinic.treatments.braces) specialties.push('Orthodontics');
