@@ -8,7 +8,7 @@ const Footer = () => {
     <footer className="bg-gray-50 text-gray-700">
       <div className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
         <div className="max-w-7xl mx-auto">
-          {/* Medical Disclaimer Section - Added */}
+          {/* Medical Disclaimer Section - Improved styling */}
           <div className="mb-8 sm:mb-12">
             <MedicalDisclaimer variant="compact" />
           </div>

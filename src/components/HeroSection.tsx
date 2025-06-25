@@ -81,11 +81,6 @@ const HeroSection = () => {
               Join thousands of smart Singapore patients who've discovered quality, affordable dental care in Johor Bahru
             </p>
 
-            {/* Medical Disclaimer - Added */}
-            <div className="mb-8 max-w-4xl mx-auto">
-              <MedicalDisclaimer variant="banner" />
-            </div>
-
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Button 
@@ -104,8 +99,8 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Trust Indicators - Updated to 3 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+          {/* Trust Indicators */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <Card className="p-6 text-center bg-green-50 border-green-200 hover:shadow-lg transition-shadow">
               <Users className="w-12 h-12 text-green-600 mx-auto mb-4" />
               <div className="text-2xl font-bold text-gray-900 mb-2">5,000+</div>
@@ -123,6 +118,11 @@ const HeroSection = () => {
               <div className="text-2xl font-bold text-gray-900 mb-2">50-70%</div>
               <div className="text-sm text-gray-600">Average Savings vs Singapore Prices</div>
             </Card>
+          </div>
+
+          {/* Medical Disclaimer - Repositioned after trust indicators */}
+          <div className="mb-20 max-w-4xl mx-auto">
+            <MedicalDisclaimer variant="subtle" />
           </div>
 
           {/* Social Proof Section */}
