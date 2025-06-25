@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Building2, Shield, Star, Clock, MapPin, MessageSquare, TrendingUp, Calendar, Search } from 'lucide-react';
+import { Building2, Shield, Star, Clock, MapPin, MessageSquare, TrendingUp, Calendar, Search, Lock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,14 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useAuth } from '@/contexts/AuthContext';
+import AuthModal from '@/components/auth/AuthModal';
+import AuthStatus from '@/components/auth/AuthStatus';
 import { clinics } from '@/data/clinics';
 
 const ClinicsSection = () => {
+  const { isAuthenticated } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTreatment, setSelectedTreatment] = useState('all');
   const [selectedRating, setSelectedRating] = useState('all');
@@ -159,6 +164,10 @@ const ClinicsSection = () => {
     setSortBy('distance');
   };
 
+  const handleAuthRequired = () => {
+    setShowAuthModal(true);
+  };
+
   return (
     <section id="clinics" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -169,6 +178,32 @@ const ClinicsSection = () => {
           <p className="text-lg text-neutral-gray max-w-2xl mx-auto">
             Search and filter through 101 verified dental clinics across Johor to find the best match for your needs
           </p>
+        </div>
+
+        {/* Legal Disclaimer Banner */}
+        <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="flex items-start gap-3">
+            <MessageSquare className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-yellow-800 font-medium mb-2">
+                <strong>Important Disclaimer:</strong> Information compiled from publicly available sources. 
+                Listing does not imply endorsement or professional relationship.
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-yellow-600 text-yellow-700 hover:bg-yellow-100"
+                onClick={() => window.open('/directory-disclaimer', '_blank')}
+              >
+                Opt-out or Report Issues
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Authentication Status */}
+        <div className="mb-6 flex justify-end">
+          <AuthStatus onLoginClick={handleAuthRequired} />
         </div>
 
         {/* Search and Basic Filters */}
@@ -413,64 +448,83 @@ const ClinicsSection = () => {
               
               <CardContent>
                 <div className="space-y-3">
-                  <div>
-                    <p className="text-neutral-gray text-sm">Dentist:</p>
-                    <p className="text-blue-dark text-sm">{clinic.dentist}</p>
-                  </div>
-                  
-                  <div>
-                    <p className="text-neutral-gray text-sm">Address:</p>
-                    <p className="text-neutral-gray text-sm">{clinic.address}</p>
-                  </div>
-                  
-                  <div>
-                    <p className="text-neutral-gray text-sm">MDA License:</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-neutral-gray text-sm">{clinic.mdaLicense}</span>
-                      <Badge 
-                        variant="outline" 
-                        className={`text-xs ${
-                          getCredentialStatus(clinic.mdaLicense) === 'Verified' 
-                            ? 'border-success-green text-success-green' 
-                            : getCredentialStatus(clinic.mdaLicense) === 'Pending'
-                            ? 'border-yellow-500 text-yellow-500'
-                            : 'border-red-500 text-red-500'
-                        }`}
+                  {/* Protected Information - Requires Authentication */}
+                  {!isAuthenticated ? (
+                    <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Lock className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm font-medium text-gray-700">Sign in to view detailed information</span>
+                      </div>
+                      <Button 
+                        onClick={handleAuthRequired}
+                        size="sm"
+                        className="w-full bg-blue-primary hover:bg-blue-dark text-white"
                       >
-                        {getCredentialStatus(clinic.mdaLicense)}
-                      </Badge>
+                        View Dentist Details & Credentials
+                      </Button>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <p className="text-neutral-gray text-sm">Available Treatments:</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {clinic.treatments.dentalImplant && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Implants</Badge>}
-                      {clinic.treatments.braces && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Braces</Badge>}
-                      {clinic.treatments.compositeVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Composite Veneers</Badge>}
-                      {clinic.treatments.porcelainVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Porcelain Veneers</Badge>}
-                      {clinic.treatments.teethWhitening && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Whitening</Badge>}
-                      {clinic.treatments.tmjTreatment && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">TMJ</Badge>}
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-2 mt-4">
-                    <Button 
-                      className="flex-1 bg-blue-primary hover:bg-blue-dark text-white"
-                      onClick={() => {
-                        const element = document.getElementById('waitlist');
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Book Appointment
-                    </Button>
-                    <Button variant="outline" className="border-blue-light text-blue-primary hover:bg-blue-light">
-                      View Details
-                    </Button>
-                  </div>
+                  ) : (
+                    <>
+                      <div>
+                        <p className="text-neutral-gray text-sm">Dentist:</p>
+                        <p className="text-blue-dark text-sm">{clinic.dentist}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-neutral-gray text-sm">Address:</p>
+                        <p className="text-neutral-gray text-sm">{clinic.address}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-neutral-gray text-sm">MDA License:</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-neutral-gray text-sm">{clinic.mdaLicense}</span>
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              getCredentialStatus(clinic.mdaLicense) === 'Verified' 
+                                ? 'border-success-green text-success-green' 
+                                : getCredentialStatus(clinic.mdaLicense) === 'Pending'
+                                ? 'border-yellow-500 text-yellow-500'
+                                : 'border-red-500 text-red-500'
+                            }`}
+                          >
+                            {getCredentialStatus(clinic.mdaLicense)}
+                          </Badge>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-neutral-gray text-sm">Available Treatments:</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {clinic.treatments.dentalImplant && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Implants</Badge>}
+                          {clinic.treatments.braces && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Braces</Badge>}
+                          {clinic.treatments.compositeVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Composite Veneers</Badge>}
+                          {clinic.treatments.porcelainVeneers && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Porcelain Veneers</Badge>}
+                          {clinic.treatments.teethWhitening && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">Whitening</Badge>}
+                          {clinic.treatments.tmjTreatment && <Badge variant="outline" className="border-blue-light text-blue-primary text-xs">TMJ</Badge>}
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2 mt-4">
+                        <Button 
+                          className="flex-1 bg-blue-primary hover:bg-blue-dark text-white"
+                          onClick={() => {
+                            const element = document.getElementById('waitlist');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }}
+                        >
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Book Appointment
+                        </Button>
+                        <Button variant="outline" className="border-blue-light text-blue-primary hover:bg-blue-light">
+                          View Details
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -494,6 +548,12 @@ const ClinicsSection = () => {
           </Card>
         )}
       </div>
+
+      {/* Authentication Modal */}
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
     </section>
   );
 };
