@@ -15,6 +15,7 @@ import ClinicMainFilters from './clinic/filters/ClinicMainFilters';
 import ClinicAdvancedFilters from './clinic/filters/ClinicAdvancedFilters';
 import FilterControls from './clinic/filters/FilterControls';
 import ClinicGrid from './clinic/display/ClinicGrid';
+import { Info } from 'lucide-react';
 
 const ClinicsSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -96,12 +97,15 @@ const ClinicsSection = () => {
               />
             </div>
             
-            {/* Rating Source Disclaimer */}
-            <div className="mb-4 p-3 bg-blue-light/10 rounded-lg border border-blue-light">
-              <p className="text-sm text-neutral-gray">
-                <span className="font-medium">Rating Information:</span> All ratings and reviews displayed are sourced from Google. 
-                These reflect public feedback and may not represent the complete picture of each clinic's services.
-              </p>
+            {/* Enhanced Rating Source Disclaimer */}
+            <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100/40 rounded-lg border border-blue-200/60 shadow-sm">
+              <div className="flex items-start gap-3">
+                <Info className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5 drop-shadow-sm" />
+                <p className="text-sm text-blue-800 font-medium leading-relaxed">
+                  <span className="font-semibold">Google Rating Information:</span> All ratings and reviews displayed are sourced from Google. 
+                  These reflect public feedback and may not represent the complete picture of each clinic's services.
+                </p>
+              </div>
             </div>
             
             <ClinicSearchBar
