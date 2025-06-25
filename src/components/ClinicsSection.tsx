@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Building2, Shield, Star, Clock, MapPin, MessageSquare, Calendar, Search, Lock } from 'lucide-react';
+import { Building2, Shield, Star, Clock, MapPin, MessageSquare, Calendar, Search, Lock, Info } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -158,35 +158,47 @@ const ClinicsSection = () => {
           </p>
         </div>
 
-        {/* Medical Disclaimer - Professional Integration */}
-        <div className="mb-8">
-          <MedicalDisclaimer variant="subtle" className="mb-4" />
+        {/* Medical Disclaimer - Consistent Professional Style */}
+        <div className="mb-6">
+          <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4">
+            <div className="flex items-start gap-3">
+              <Info className="h-4 w-4 text-blue-600/70 flex-shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-sm text-blue-800/90 font-medium leading-relaxed">
+                  <strong>Important:</strong> This platform provides general information only and does not constitute dental advice.
+                </p>
+                <p className="text-xs text-blue-700/80 leading-relaxed">
+                  No professional relationship is created with listed practitioners. Always consult qualified dental professionals.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Directory Disclaimer - Professional Card Style */}
+        {/* Directory Disclaimer - Matching Professional Style */}
         <div className="mb-8">
-          <Card className="bg-blue-50/30 border-blue-200/40 shadow-sm">
-            <CardContent className="p-5">
-              <div className="flex items-start gap-3">
-                <MessageSquare className="h-5 w-5 text-blue-600/70 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm text-blue-800/90 font-medium mb-2 leading-relaxed">
-                    <strong>Directory Disclaimer:</strong> Information compiled from publicly available sources. 
-                    Listing does not imply endorsement, professional relationship, or recommendation. 
-                    This platform does not provide medical advice or establish practitioner-patient relationships.
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="border-blue-600/60 text-blue-700/90 hover:bg-blue-100/60 hover:border-blue-700"
-                    onClick={() => window.open('/directory-disclaimer', '_blank')}
-                  >
-                    Opt-out or Report Issues
-                  </Button>
-                </div>
+          <div className="bg-gray-50/50 border border-gray-200/40 rounded-lg px-5 py-4">
+            <div className="flex items-start gap-3">
+              <MessageSquare className="h-4 w-4 text-blue-600/70 flex-shrink-0 mt-0.5" />
+              <div className="space-y-2">
+                <p className="text-sm text-blue-800/90 font-medium leading-relaxed">
+                  <strong>Directory Disclaimer:</strong> Information compiled from publicly available sources. 
+                  Listing does not imply endorsement, professional relationship, or recommendation.
+                </p>
+                <p className="text-xs text-blue-700/80 leading-relaxed mb-3">
+                  This platform does not provide medical advice or establish practitioner-patient relationships.
+                </p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-blue-600/60 text-blue-700/90 hover:bg-blue-100/60 hover:border-blue-700"
+                  onClick={() => window.open('/directory-disclaimer', '_blank')}
+                >
+                  Opt-out or Report Issues
+                </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Authentication Status */}
