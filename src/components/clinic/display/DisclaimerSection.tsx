@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Info, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 
 interface DisclaimerSectionProps {
   onOptOutClick: () => void;
@@ -9,22 +9,24 @@ interface DisclaimerSectionProps {
 const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
   return (
     <>
-      {/* First Disclaimer - Enhanced rich blue styling with prominent 3D effects */}
+      {/* Google Reviews & Rating Information Box */}
       <div className="mb-6">
-        <div className="bg-gradient-to-br from-blue-100 via-blue-150 to-blue-200/90 border-l-4 border-blue-500 rounded-r-lg px-6 py-5 shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-300/70 backdrop-blur-sm relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none after:absolute after:top-0 after:left-0 after:right-0 after:h-px after:bg-white/40">
+        <div className="bg-gradient-to-br from-green-50 via-green-75 to-emerald-100/90 border-l-4 border-green-500 rounded-r-lg px-6 py-5 shadow-xl hover:shadow-2xl transition-all duration-300 border border-green-300/70 backdrop-blur-sm relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none after:absolute after:top-0 after:left-0 after:right-0 after:h-px after:bg-white/40">
           <div className="flex items-start gap-4 relative z-10">
             <div className="flex-shrink-0 mt-0.5">
-              <Info className="h-5 w-5 text-blue-700 drop-shadow-lg filter" style={{ filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))' }} />
+              <svg className="h-5 w-5 text-green-700 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
             </div>
-            <div className="text-sm text-blue-900 leading-relaxed font-medium" style={{ textShadow: '0 1px 2px rgba(59, 130, 246, 0.1)' }}>
-              <strong className="text-blue-800 font-bold">Important:</strong> This platform provides general information only and does not constitute dental advice. 
-              No professional relationship is created with listed practitioners. Always consult qualified dental professionals.
+            <div className="text-sm text-green-900 leading-relaxed font-medium" style={{ textShadow: '0 1px 2px rgba(34, 197, 94, 0.1)' }}>
+              <strong className="text-green-800 font-bold">Google Reviews & Ratings:</strong> Clinic ratings and reviews are sourced from Google Business listings. 
+              We display publicly available Google ratings to help users make informed decisions about dental care providers in Johor Bahru.
             </div>
           </div>
         </div>
       </div>
 
-      {/* Second Disclaimer - Enhanced with warm orange/amber styling and prominent 3D effects */}
+      {/* Directory Disclaimer - Enhanced with warm orange/amber styling and prominent 3D effects */}
       <div className="mb-8">
         <div className="bg-gradient-to-br from-orange-50 via-orange-75 to-amber-100/90 border-l-4 border-orange-400 rounded-r-lg px-6 py-5 shadow-xl hover:shadow-2xl transition-all duration-300 border border-orange-200/70 backdrop-blur-sm relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none after:absolute after:top-0 after:left-0 after:right-0 after:h-px after:bg-white/40">
           <div className="flex justify-between items-start gap-6 relative z-10">
