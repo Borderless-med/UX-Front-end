@@ -10,14 +10,8 @@ const ImportantNotes = () => {
             <Info className="h-5 w-5 text-blue-700 drop-shadow-lg filter" style={{ filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))' }} />
           </div>
           <div className="text-sm text-blue-900 leading-relaxed font-medium" style={{ textShadow: '0 1px 2px rgba(59, 130, 246, 0.1)' }}>
-            <strong className="text-blue-800 font-bold">Important Disclaimer:</strong>
-            <ul className="mt-2 space-y-1 ml-2">
-              <li>• Prices are estimates and may vary based on clinic, complexity, and individual cases</li>
-              <li>• Singapore prices reflect private clinic rates; public healthcare options may be different</li>
-              <li>• All partner clinics in JB are verified for quality and safety standards</li>
-              <li>• Travel costs and time should be factored into overall treatment planning</li>
-              <li>• Consultation fees and follow-up visits may apply separately</li>
-            </ul>
+            <strong className="text-blue-800 font-bold">Important Disclaimer:</strong> This platform provides general information only and does not constitute dental advice. 
+            No professional relationship is created with listed practitioners. Always consult qualified dental professionals.
           </div>
         </div>
       </div>
