@@ -1,5 +1,5 @@
 
-import { Star, MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
+import { Star, MapPin, Phone, Clock, ExternalLink, Globe } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { getSpecialServices } from '../utils/clinicFilterUtils';
@@ -24,14 +24,27 @@ const ClinicCard = ({
     <Card className="bg-light-card border-blue-light hover:border-blue-primary transition-all duration-300 hover:shadow-lg">
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-lg font-semibold text-blue-dark">{clinic.name}</h3>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-blue-dark mb-1">{clinic.name}</h3>
+            {clinic.websiteUrl && (
+              <a 
+                href={clinic.websiteUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm text-blue-primary hover:text-blue-dark transition-colors"
+              >
+                <Globe className="h-3 w-3 mr-1" />
+                Visit Website
+              </a>
+            )}
+          </div>
           <div className="flex items-center text-right">
             <div className="flex flex-col">
               <div className="flex items-center">
                 <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
                 <span className="text-sm font-medium text-blue-dark">{clinic.rating}</span>
               </div>
-              <span className="text-xs text-neutral-gray">Google Rating</span>
+              <span className="text-xs text-neutral-gray">({clinic.reviews} reviews)</span>
             </div>
           </div>
         </div>

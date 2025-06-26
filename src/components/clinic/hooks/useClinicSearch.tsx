@@ -1,8 +1,10 @@
 
 import { useMemo } from 'react';
 import { filterClinics, sortClinics } from '../utils/clinicFilterUtils';
+import { Clinic } from '@/types/clinic';
 
 interface UseClinicSearchProps {
+  clinics: Clinic[];
   searchTerm: string;
   selectedTreatments: string[];
   selectedTownships: string[];
@@ -13,6 +15,7 @@ interface UseClinicSearchProps {
 }
 
 export const useClinicSearch = ({
+  clinics,
   searchTerm,
   selectedTreatments,
   selectedTownships,
@@ -23,6 +26,7 @@ export const useClinicSearch = ({
 }: UseClinicSearchProps) => {
   const filteredAndSortedClinics = useMemo(() => {
     const filtered = filterClinics(
+      clinics,
       searchTerm,
       selectedTreatments,
       selectedTownships,
@@ -32,7 +36,7 @@ export const useClinicSearch = ({
     );
     
     return sortClinics(filtered, sortBy);
-  }, [searchTerm, selectedTreatments, selectedTownships, ratingFilter, maxDistance, minReviews, sortBy]);
+  }, [clinics, searchTerm, selectedTreatments, selectedTownships, ratingFilter, maxDistance, minReviews, sortBy]);
 
   return { filteredAndSortedClinics };
 };

@@ -54,6 +54,123 @@ export type Database = {
         }
         Relationships: []
       }
+      clinics_data: {
+        Row: {
+          address: string | null
+          alveoplasty: boolean | null
+          bone_grafting: boolean | null
+          braces: boolean | null
+          composite_veneers: boolean | null
+          created_at: string | null
+          credentials: string | null
+          crown_lengthening: boolean | null
+          dental_bonding: boolean | null
+          dental_crown: boolean | null
+          dental_implant: boolean | null
+          dentist: string | null
+          distance: number | null
+          enamel_shaping: boolean | null
+          frenectomy: boolean | null
+          gingivectomy: boolean | null
+          gum_treatment: boolean | null
+          id: number
+          inlays_onlays: boolean | null
+          mda_license: string | null
+          name: string
+          oral_cancer_screening: boolean | null
+          porcelain_veneers: boolean | null
+          rating: number | null
+          reviews: number | null
+          root_canal: boolean | null
+          sentiment: number | null
+          sinus_lift: boolean | null
+          sleep_apnea_appliances: boolean | null
+          teeth_whitening: boolean | null
+          tmj_treatment: boolean | null
+          tooth_filling: boolean | null
+          township: string | null
+          updated_at: string | null
+          website_url: string | null
+          wisdom_tooth: boolean | null
+        }
+        Insert: {
+          address?: string | null
+          alveoplasty?: boolean | null
+          bone_grafting?: boolean | null
+          braces?: boolean | null
+          composite_veneers?: boolean | null
+          created_at?: string | null
+          credentials?: string | null
+          crown_lengthening?: boolean | null
+          dental_bonding?: boolean | null
+          dental_crown?: boolean | null
+          dental_implant?: boolean | null
+          dentist?: string | null
+          distance?: number | null
+          enamel_shaping?: boolean | null
+          frenectomy?: boolean | null
+          gingivectomy?: boolean | null
+          gum_treatment?: boolean | null
+          id?: number
+          inlays_onlays?: boolean | null
+          mda_license?: string | null
+          name: string
+          oral_cancer_screening?: boolean | null
+          porcelain_veneers?: boolean | null
+          rating?: number | null
+          reviews?: number | null
+          root_canal?: boolean | null
+          sentiment?: number | null
+          sinus_lift?: boolean | null
+          sleep_apnea_appliances?: boolean | null
+          teeth_whitening?: boolean | null
+          tmj_treatment?: boolean | null
+          tooth_filling?: boolean | null
+          township?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+          wisdom_tooth?: boolean | null
+        }
+        Update: {
+          address?: string | null
+          alveoplasty?: boolean | null
+          bone_grafting?: boolean | null
+          braces?: boolean | null
+          composite_veneers?: boolean | null
+          created_at?: string | null
+          credentials?: string | null
+          crown_lengthening?: boolean | null
+          dental_bonding?: boolean | null
+          dental_crown?: boolean | null
+          dental_implant?: boolean | null
+          dentist?: string | null
+          distance?: number | null
+          enamel_shaping?: boolean | null
+          frenectomy?: boolean | null
+          gingivectomy?: boolean | null
+          gum_treatment?: boolean | null
+          id?: number
+          inlays_onlays?: boolean | null
+          mda_license?: string | null
+          name?: string
+          oral_cancer_screening?: boolean | null
+          porcelain_veneers?: boolean | null
+          rating?: number | null
+          reviews?: number | null
+          root_canal?: boolean | null
+          sentiment?: number | null
+          sinus_lift?: boolean | null
+          sleep_apnea_appliances?: boolean | null
+          teeth_whitening?: boolean | null
+          tmj_treatment?: boolean | null
+          tooth_filling?: boolean | null
+          township?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+          wisdom_tooth?: boolean | null
+        }
+        Relationships: []
+      }
       consent_logs: {
         Row: {
           consent_details: Json | null

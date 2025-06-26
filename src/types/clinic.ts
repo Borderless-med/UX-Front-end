@@ -13,6 +13,7 @@ export interface Clinic {
   mdaLicense: string;
   credentials: string;
   township: string;
+  websiteUrl?: string;
   treatments: {
     toothFilling: boolean;
     rootCanal: boolean;

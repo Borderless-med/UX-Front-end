@@ -1,9 +1,9 @@
 
-import { clinics } from '@/data/clinics';
 import { Clinic } from '@/types/clinic';
 import { basicServices, specialServicesLabels } from './clinicConstants';
 
 export const filterClinics = (
+  clinics: Clinic[],
   searchTerm: string,
   selectedTreatments: string[],
   selectedTownships: string[],
@@ -82,6 +82,6 @@ export const getSpecialServices = (clinic: Clinic) => {
   return specialServices.slice(0, 4); // Show max 4 special services
 };
 
-export const getUniqueTownships = () => {
+export const getUniqueTownships = (clinics: Clinic[]) => {
   return [...new Set(clinics.map(clinic => clinic.township))].sort();
 };

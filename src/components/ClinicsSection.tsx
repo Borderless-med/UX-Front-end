@@ -3,12 +3,13 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Info } from 'lucide-react';
+import { Info, Loader2 } from 'lucide-react';
 import AuthModal from '@/components/auth/AuthModal';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
+import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 import ClinicSearchBar from './clinic/search/ClinicSearchBar';
 import ResultsCount from './clinic/search/ResultsCount';
 import UserStatusDisplay from './clinic/display/UserStatusDisplay';
@@ -21,6 +22,7 @@ const ClinicsSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, userProfile, logDataAccess } = useAuth();
+  const { clinics, loading, error } = useSupabaseClinics();
 
   const {
     searchTerm,
@@ -46,6 +48,7 @@ const ClinicsSection = () => {
   } = useClinicFilters();
 
   const { filteredAndSortedClinics } = useClinicSearch({
+    clinics,
     searchTerm,
     selectedTreatments,
     selectedTownships,
@@ -55,7 +58,7 @@ const ClinicsSection = () => {
     sortBy
   });
 
-  const townships = getUniqueTownships();
+  const townships = getUniqueTownships(clinics);
 
   const handleOptOutClick = () => {
     navigate('/opt-out-report');
@@ -71,6 +74,32 @@ const ClinicsSection = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-primary" />
+            <span className="ml-2 text-lg text-neutral-gray">Loading clinics...</span>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center py-12">
+            <p className="text-red-600 text-lg">Error loading clinics: {error}</p>
+            <p className="text-neutral-gray text-sm mt-2">Please try refreshing the page.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -79,7 +108,7 @@ const ClinicsSection = () => {
             Find Your Perfect Clinic
           </h1>
           <p className="text-lg text-neutral-gray mb-8 max-w-3xl mx-auto">
-            Search and filter through 101 verified dental clinics across Johor to find the best match for your needs
+            Search and filter through {clinics.length} verified dental clinics across Johor to find the best match for your needs
           </p>
         </div>
 
@@ -153,6 +182,7 @@ const ClinicsSection = () => {
 
         <ResultsCount
           filteredCount={filteredAndSortedClinics.length}
+          totalCount={clinics.length}
           activeFiltersCount={activeFiltersCount}
         />
 
