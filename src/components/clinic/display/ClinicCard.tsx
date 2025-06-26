@@ -24,6 +24,15 @@ const ClinicCard = ({
   const [showClaimModal, setShowClaimModal] = useState(false);
   const specialServices = getSpecialServices(clinic);
 
+  // Debug log for clinic data
+  console.log(`ClinicCard rendering clinic ${clinic.id}:`, {
+    name: clinic.name,
+    address: clinic.address,
+    rating: clinic.rating,
+    reviews: clinic.reviews,
+    websiteUrl: clinic.websiteUrl
+  });
+
   // Check if MDA license looks valid (not "Pending" or "Not available")
   const hasValidMDALicense = clinic.mdaLicense && 
     !clinic.mdaLicense.toLowerCase().includes('pending') && 
@@ -41,9 +50,9 @@ const ClinicCard = ({
                   <UserCheck className="h-4 w-4 text-green-600" />
                 )}
               </div>
-              {clinic.websiteUrl && (
+              {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && (
                 <a 
-                  href={clinic.websiteUrl} 
+                  href={clinic.websiteUrl.startsWith('http') ? clinic.websiteUrl : `https://${clinic.websiteUrl}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-sm text-blue-primary hover:text-blue-dark transition-colors"
@@ -57,7 +66,7 @@ const ClinicCard = ({
               <div className="flex flex-col">
                 <div className="flex items-center">
                   <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                  <span className="text-sm font-medium text-blue-dark">{clinic.rating}</span>
+                  <span className="text-sm font-medium text-blue-dark">{clinic.rating.toFixed(1)}</span>
                 </div>
                 <span className="text-xs text-neutral-gray">({clinic.reviews} reviews)</span>
               </div>

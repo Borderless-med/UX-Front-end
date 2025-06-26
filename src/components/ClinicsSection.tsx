@@ -24,6 +24,12 @@ const ClinicsSection = () => {
   const { isAuthenticated, userProfile, logDataAccess } = useAuth();
   const { clinics, loading, error } = useSupabaseClinics();
 
+  // Debug: Log the clinic data source
+  console.log('ClinicsSection - Clinic data from database:', clinics.length, 'clinics loaded');
+  if (clinics.length > 0) {
+    console.log('Sample clinic data:', clinics[0]);
+  }
+
   const {
     searchTerm,
     setSearchTerm,
@@ -83,7 +89,7 @@ const ClinicsSection = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-blue-primary" />
-            <span className="ml-2 text-lg text-neutral-gray">Loading clinics...</span>
+            <span className="ml-2 text-lg text-neutral-gray">Loading clinics from database...</span>
           </div>
         </div>
       </section>
@@ -95,7 +101,7 @@ const ClinicsSection = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
-            <p className="text-red-600 text-lg">Error loading clinics: {error}</p>
+            <p className="text-red-600 text-lg">Error loading clinics from database: {error}</p>
             <p className="text-neutral-gray text-sm mt-2">Please try refreshing the page.</p>
           </div>
         </div>
