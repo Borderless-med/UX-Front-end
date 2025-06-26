@@ -192,7 +192,7 @@ const ClinicCard = ({
 
           {/* Clinic Management Section */}
           <div className="border-t border-gray-100 pt-3 mt-4 space-y-2">
-            {/* Claim Clinic Button */}
+            {/* Update My Clinic Button */}
             <div className="flex justify-center">
               <Button
                 onClick={() => setShowClaimModal(true)}
@@ -201,7 +201,7 @@ const ClinicCard = ({
                 className="text-xs border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white"
               >
                 <UserCheck className="h-3 w-3 mr-1" />
-                Claim This Clinic
+                Update My Clinic
               </Button>
             </div>
             
