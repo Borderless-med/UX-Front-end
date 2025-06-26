@@ -1,5 +1,6 @@
+
 import { Clinic } from '@/types/clinic';
-import { basicServices, specialServicesLabels } from './clinicConstants';
+import { basicServices, specialServicesLabels, treatmentCategories } from './clinicConstants';
 
 export const filterClinics = (
   clinics: Clinic[],
@@ -19,9 +20,9 @@ export const filterClinics = (
       clinic.dentist.toLowerCase().includes(searchTerm.toLowerCase()) ||
       clinic.township.toLowerCase().includes(searchTerm.toLowerCase());
 
-    // Treatment filter
+    // Treatment filter - clinic must have ALL selected treatments
     const matchesTreatments = selectedTreatments.length === 0 || 
-      selectedTreatments.some(treatment => 
+      selectedTreatments.every(treatment => 
         clinic.treatments[treatment as keyof typeof clinic.treatments]
       );
 
@@ -76,12 +77,33 @@ export const sortClinics = (clinics: Clinic[], sortBy: string) => {
 
 export const getSpecialties = (clinic: Clinic) => {
   const specialties = [];
-  if (clinic.treatments.dentalImplant) specialties.push('Dental Implants');
-  if (clinic.treatments.braces) specialties.push('Orthodontics');
-  if (clinic.treatments.rootCanal) specialties.push('Endodontics');
-  if (clinic.treatments.teethWhitening) specialties.push('Cosmetic Dentistry');
-  if (clinic.treatments.gumTreatment) specialties.push('Periodontics');
-  return specialties.slice(0, 3); // Show max 3 specialties
+  
+  // Check for major specialties based on advanced treatments
+  if (clinic.treatments.dentalImplant || clinic.treatments.boneGrafting || clinic.treatments.sinusLift) {
+    specialties.push('Implant Dentistry');
+  }
+  
+  if (clinic.treatments.braces) {
+    specialties.push('Orthodontics');
+  }
+  
+  if (clinic.treatments.rootCanal) {
+    specialties.push('Endodontics');
+  }
+  
+  if (clinic.treatments.porcelainVeneers || clinic.treatments.compositeVeneers || clinic.treatments.teethWhitening) {
+    specialties.push('Cosmetic Dentistry');
+  }
+  
+  if (clinic.treatments.gumTreatment || clinic.treatments.gingivectomy) {
+    specialties.push('Periodontics');
+  }
+  
+  if (clinic.treatments.tmjTreatment || clinic.treatments.sleepApneaAppliances) {
+    specialties.push('TMJ/Sleep Therapy');
+  }
+  
+  return specialties.slice(0, 2); // Show max 2 main specialties
 };
 
 export const getSpecialServices = (clinic: Clinic) => {
@@ -94,9 +116,25 @@ export const getSpecialServices = (clinic: Clinic) => {
     }
   });
   
-  return specialServices.slice(0, 4); // Show max 4 special services
+  return specialServices.slice(0, 6); // Show max 6 special services
 };
 
 export const getUniqueTownships = (clinics: Clinic[]) => {
   return [...new Set(clinics.map(clinic => clinic.township))].sort();
+};
+
+export const getTreatmentsByCategory = (clinic: Clinic) => {
+  const categorizedTreatments: Record<string, string[]> = {};
+  
+  Object.entries(treatmentCategories).forEach(([categoryKey, category]) => {
+    const categoryTreatments = category.treatments.filter(treatment => 
+      clinic.treatments[treatment as keyof typeof clinic.treatments]
+    ).map(treatment => specialServicesLabels[treatment as keyof typeof specialServicesLabels]);
+    
+    if (categoryTreatments.length > 0) {
+      categorizedTreatments[category.label] = categoryTreatments;
+    }
+  });
+  
+  return categorizedTreatments;
 };

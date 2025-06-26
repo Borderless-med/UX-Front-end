@@ -1,49 +1,31 @@
 
-export const treatmentOptions = [
-  { key: 'dentalImplant', label: 'Dental Implants' },
-  { key: 'braces', label: 'Braces/Orthodontics' },
-  { key: 'rootCanal', label: 'Root Canal' },
-  { key: 'teethWhitening', label: 'Teeth Whitening' },
-  { key: 'gumTreatment', label: 'Gum Treatment' },
-  { key: 'wisdomTooth', label: 'Wisdom Tooth Extraction' },
-  { key: 'dentalCrown', label: 'Dental Crown' },
-  { key: 'toothFilling', label: 'Tooth Filling' },
-  { key: 'compositeVeneers', label: 'Composite Veneers' },
-  { key: 'porcelainVeneers', label: 'Porcelain Veneers' }
-];
-
-export const credentialOptions = [
-  { key: 'mda', label: 'Licensed Practitioners' },
-  { key: 'specialist', label: 'Specialist Qualifications' },
-  { key: 'experience', label: '5+ Years Experience' }
-];
-
-export const categoryLabels = {
-  patient: 'Patient Account',
-  healthcare_professional: 'Healthcare Professional',
-  clinic_admin: 'Clinic Administrator',
-  approved_partner: 'Approved Partner'
-};
-
-// Define basic services that all clinics offer
+// Treatment categories and labels for the clinic directory
 export const basicServices = [
   'toothFilling',
-  'rootCanal', 
-  'dentalCrown',
+  'dentalCrown', 
   'teethWhitening',
-  'braces',
-  'wisdomTooth',
-  'gumTreatment'
+  'wisdomTooth'
 ];
 
-// Special services mapping with user-friendly labels
 export const specialServicesLabels = {
-  dentalImplant: 'Dental Implants',
+  // Basic treatments
+  toothFilling: 'Tooth Filling',
+  rootCanal: 'Root Canal',
+  dentalCrown: 'Dental Crown',
+  dentalImplant: 'Dental Implant',
+  teethWhitening: 'Teeth Whitening',
+  braces: 'Braces/Orthodontics',
+  wisdomTooth: 'Wisdom Tooth Extraction',
+  gumTreatment: 'Gum Treatment',
+  
+  // Cosmetic treatments
   compositeVeneers: 'Composite Veneers',
   porcelainVeneers: 'Porcelain Veneers',
   dentalBonding: 'Dental Bonding',
-  inlaysOnlays: 'Inlays/Onlays',
   enamelShaping: 'Enamel Shaping',
+  
+  // Advanced treatments
+  inlaysOnlays: 'Inlays/Onlays',
   gingivectomy: 'Gingivectomy',
   boneGrafting: 'Bone Grafting',
   sinusLift: 'Sinus Lift',
@@ -54,3 +36,60 @@ export const specialServicesLabels = {
   oralCancerScreening: 'Oral Cancer Screening',
   alveoplasty: 'Alveoplasty'
 };
+
+export const treatmentCategories = {
+  basic: {
+    label: 'Basic Treatments',
+    treatments: [
+      'toothFilling',
+      'dentalCrown',
+      'teethWhitening',
+      'wisdomTooth',
+      'gumTreatment'
+    ]
+  },
+  restorative: {
+    label: 'Restorative',
+    treatments: [
+      'rootCanal',
+      'dentalImplant',
+      'inlaysOnlays',
+      'dentalBonding'
+    ]
+  },
+  cosmetic: {
+    label: 'Cosmetic',
+    treatments: [
+      'compositeVeneers',
+      'porcelainVeneers',
+      'enamelShaping'
+    ]
+  },
+  orthodontic: {
+    label: 'Orthodontic',
+    treatments: [
+      'braces'
+    ]
+  },
+  surgical: {
+    label: 'Surgical',
+    treatments: [
+      'gingivectomy',
+      'boneGrafting',
+      'sinusLift',
+      'frenectomy',
+      'crownLengthening',
+      'alveoplasty'
+    ]
+  },
+  specialized: {
+    label: 'Specialized',
+    treatments: [
+      'tmjTreatment',
+      'sleepApneaAppliances',
+      'oralCancerScreening'
+    ]
+  }
+};
+
+export const allTreatments = Object.keys(specialServicesLabels);

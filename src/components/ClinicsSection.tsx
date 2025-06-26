@@ -178,6 +178,10 @@ const ClinicsSection = () => {
           filteredCount={filteredAndSortedClinics.length}
           totalCount={clinics.length}
           activeFiltersCount={activeFiltersCount}
+          selectedTreatments={selectedTreatments}
+          selectedTownships={selectedTownships}
+          ratingFilter={ratingFilter}
+          mdaLicenseFilter={mdaLicenseFilter}
         />
 
         <ClinicGrid

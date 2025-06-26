@@ -1,12 +1,11 @@
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { X, Star, Award } from 'lucide-react';
-import { treatmentOptions } from '../utils/clinicConstants';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronDown, ChevronUp, Star, MapPin, Shield, X } from 'lucide-react';
+import { treatmentCategories, specialServicesLabels } from '../utils/clinicConstants';
 
 interface ClinicMainFiltersProps {
   selectedTreatments: string[];
@@ -35,140 +34,109 @@ const ClinicMainFilters = ({
   mdaLicenseFilter,
   onMdaLicenseFilterChange
 }: ClinicMainFiltersProps) => {
-  const [treatmentInput, setTreatmentInput] = useState('');
-  const [townshipInput, setTownshipInput] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['basic']);
 
-  const handleTreatmentSelect = (treatmentKey: string) => {
-    if (!selectedTreatments.includes(treatmentKey)) {
-      onTreatmentChange([...selectedTreatments, treatmentKey]);
-    }
-    setTreatmentInput('');
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
   };
 
-  const handleTreatmentRemove = (treatmentKey: string) => {
-    onTreatmentChange(selectedTreatments.filter(t => t !== treatmentKey));
+  const toggleTreatment = (treatment: string) => {
+    const newTreatments = selectedTreatments.includes(treatment)
+      ? selectedTreatments.filter(t => t !== treatment)
+      : [...selectedTreatments, treatment];
+    onTreatmentChange(newTreatments);
   };
 
-  const handleTownshipSelect = (township: string) => {
-    if (!selectedTownships.includes(township)) {
-      onTownshipChange([...selectedTownships, township]);
-    }
-    setTownshipInput('');
+  const removeTreatment = (treatment: string) => {
+    onTreatmentChange(selectedTreatments.filter(t => t !== treatment));
   };
-
-  const handleTownshipRemove = (township: string) => {
-    onTownshipChange(selectedTownships.filter(t => t !== township));
-  };
-
-  const filteredTreatments = treatmentOptions.filter(
-    treatment => 
-      treatment.label.toLowerCase().includes(treatmentInput.toLowerCase()) &&
-      !selectedTreatments.includes(treatment.key)
-  );
-
-  const filteredTownships = townships.filter(
-    township => 
-      township.toLowerCase().includes(townshipInput.toLowerCase()) &&
-      !selectedTownships.includes(township)
-  );
 
   return (
     <div className="space-y-6">
-      {/* Treatments Filter */}
+      {/* Treatment Filters */}
       <div>
-        <Label className="text-sm font-medium text-blue-dark mb-2 block">
-          Filter by Treatments
-        </Label>
+        <h4 className="text-sm font-medium text-blue-dark mb-3 flex items-center">
+          <Shield className="h-4 w-4 mr-2" />
+          Treatment Services
+        </h4>
+        
+        {/* Selected Treatments Display */}
+        {selectedTreatments.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-1">
+            {selectedTreatments.map(treatment => (
+              <Badge 
+                key={treatment} 
+                variant="secondary" 
+                className="bg-blue-primary/10 text-blue-primary hover:bg-blue-primary/20 cursor-pointer"
+                onClick={() => removeTreatment(treatment)}
+              >
+                {specialServicesLabels[treatment as keyof typeof specialServicesLabels]}
+                <X className="h-3 w-3 ml-1" />
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        {/* Treatment Categories */}
         <div className="space-y-2">
-          <Input
-            placeholder="Search treatments..."
-            value={treatmentInput}
-            onChange={(e) => setTreatmentInput(e.target.value)}
-            className="border-blue-light focus:border-blue-primary"
-          />
-          {treatmentInput && filteredTreatments.length > 0 && (
-            <div className="border border-blue-light rounded-md bg-white shadow-sm max-h-40 overflow-y-auto">
-              {filteredTreatments.slice(0, 5).map((treatment) => (
-                <button
-                  key={treatment.key}
-                  onClick={() => handleTreatmentSelect(treatment.key)}
-                  className="w-full text-left px-3 py-2 hover:bg-blue-light/20 text-sm"
+          {Object.entries(treatmentCategories).map(([categoryKey, category]) => (
+            <Collapsible 
+              key={categoryKey}
+              open={expandedCategories.includes(categoryKey)}
+              onOpenChange={() => toggleCategory(categoryKey)}
+            >
+              <CollapsibleTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-between p-2 h-auto text-left hover:bg-blue-light/20"
                 >
-                  {treatment.label}
-                </button>
-              ))}
-            </div>
-          )}
-          {selectedTreatments.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {selectedTreatments.map((treatmentKey) => {
-                const treatment = treatmentOptions.find(t => t.key === treatmentKey);
-                return (
-                  <Badge key={treatmentKey} variant="secondary" className="bg-blue-light/20 text-blue-primary">
-                    {treatment?.label}
-                    <X 
-                      className="h-3 w-3 ml-1 cursor-pointer" 
-                      onClick={() => handleTreatmentRemove(treatmentKey)}
-                    />
-                  </Badge>
-                );
-              })}
-            </div>
-          )}
+                  <span className="text-sm font-medium">{category.label}</span>
+                  {expandedCategories.includes(categoryKey) ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 pl-4">
+                  {category.treatments.map(treatment => (
+                    <label 
+                      key={treatment}
+                      className="flex items-center space-x-2 cursor-pointer hover:bg-blue-light/10 p-1 rounded"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedTreatments.includes(treatment)}
+                        onChange={() => toggleTreatment(treatment)}
+                        className="rounded border-gray-300 text-blue-primary focus:ring-blue-primary"
+                      />
+                      <span className="text-sm text-neutral-gray">
+                        {specialServicesLabels[treatment as keyof typeof specialServicesLabels]}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          ))}
         </div>
       </div>
 
-      {/* Location and Rating Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Township Filter */}
-        <div>
-          <Label className="text-sm font-medium text-blue-dark mb-2 block">
-            Filter by Township
-          </Label>
-          <div className="space-y-2">
-            <Input
-              placeholder="Search townships..."
-              value={townshipInput}
-              onChange={(e) => setTownshipInput(e.target.value)}
-              className="border-blue-light focus:border-blue-primary"
-            />
-            {townshipInput && filteredTownships.length > 0 && (
-              <div className="border border-blue-light rounded-md bg-white shadow-sm max-h-32 overflow-y-auto">
-                {filteredTownships.slice(0, 5).map((township) => (
-                  <button
-                    key={township}
-                    onClick={() => handleTownshipSelect(township)}
-                    className="w-full text-left px-3 py-2 hover:bg-blue-light/20 text-sm"
-                  >
-                    {township}
-                  </button>
-                ))}
-              </div>
-            )}
-            {selectedTownships.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {selectedTownships.map((township) => (
-                  <Badge key={township} variant="secondary" className="bg-blue-light/20 text-blue-primary">
-                    {township}
-                    <X 
-                      className="h-3 w-3 ml-1 cursor-pointer" 
-                      onClick={() => handleTownshipRemove(township)}
-                    />
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
+      {/* Main Filter Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Rating Filter */}
         <div>
-          <Label className="text-sm font-medium text-blue-dark mb-2 block flex items-center gap-1">
-            <Star className="h-4 w-4" />
+          <label className="block text-sm font-medium text-blue-dark mb-2 flex items-center">
+            <Star className="h-4 w-4 mr-1" />
             Minimum Rating
-          </Label>
+          </label>
           <Select value={ratingFilter.toString()} onValueChange={(value) => onRatingChange(Number(value))}>
-            <SelectTrigger className="border-blue-light focus:border-blue-primary">
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -180,41 +148,63 @@ const ClinicMainFilters = ({
           </Select>
         </div>
 
+        {/* Township Filter */}
+        <div>
+          <label className="block text-sm font-medium text-blue-dark mb-2 flex items-center">
+            <MapPin className="h-4 w-4 mr-1" />
+            Location
+          </label>
+          <Select 
+            value={selectedTownships.length === 1 ? selectedTownships[0] : ''} 
+            onValueChange={(value) => onTownshipChange(value ? [value] : [])}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Any Location" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Any Location</SelectItem>
+              {townships.map(township => (
+                <SelectItem key={township} value={township}>{township}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* MDA License Filter */}
         <div>
-          <Label className="text-sm font-medium text-blue-dark mb-2 block flex items-center gap-1">
-            <Award className="h-4 w-4" />
-            MDA License Status
-          </Label>
+          <label className="block text-sm font-medium text-blue-dark mb-2 flex items-center">
+            <Shield className="h-4 w-4 mr-1" />
+            License Status
+          </label>
           <Select value={mdaLicenseFilter} onValueChange={onMdaLicenseFilterChange}>
-            <SelectTrigger className="border-blue-light focus:border-blue-primary">
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Clinics</SelectItem>
-              <SelectItem value="verified">Verified MDA License</SelectItem>
+              <SelectItem value="verified">Verified License</SelectItem>
               <SelectItem value="pending">Pending Verification</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      </div>
 
-      {/* Sort Options */}
-      <div>
-        <Label className="text-sm font-medium text-blue-dark mb-2 block">
-          Sort Results
-        </Label>
-        <Select value={sortBy} onValueChange={onSortChange}>
-          <SelectTrigger className="border-blue-light focus:border-blue-primary max-w-xs">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="distance">Distance (Nearest First)</SelectItem>
-            <SelectItem value="rating">Rating (Highest First)</SelectItem>
-            <SelectItem value="reviews">Reviews (Most First)</SelectItem>
-            <SelectItem value="name">Name (A-Z)</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Sort By */}
+        <div>
+          <label className="block text-sm font-medium text-blue-dark mb-2">
+            Sort By
+          </label>
+          <Select value={sortBy} onValueChange={onSortChange}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="distance">Distance</SelectItem>
+              <SelectItem value="rating">Rating</SelectItem>
+              <SelectItem value="reviews">Reviews Count</SelectItem>
+              <SelectItem value="name">Name</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );
