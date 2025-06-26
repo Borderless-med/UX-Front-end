@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Info, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import AuthModal from '@/components/auth/AuthModal';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
@@ -110,23 +109,6 @@ const ClinicsSection = () => {
           <p className="text-lg text-neutral-gray mb-8 max-w-3xl mx-auto">
             Search and filter through {clinics.length} verified dental clinics across Johor to find the best match for your needs
           </p>
-        </div>
-
-        {/* Basic Services Notice */}
-        <div className="mb-8">
-          <Card className="border-blue-light bg-blue-light/10">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <Info className="h-5 w-5 text-blue-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="text-sm font-medium text-blue-dark mb-1">Basic Services Available at All Clinics</h3>
-                  <p className="text-sm text-neutral-gray">
-                    Generally, all clinics offer basic services such as <strong>Tooth Filling, Root Canal, Crown, Whitening, Braces, Wisdom Tooth Removal, and Gum Treatment</strong>.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
 
         <DisclaimerSection onOptOutClick={handleOptOutClick} />
