@@ -9,7 +9,8 @@ interface DisclaimerSectionProps {
 }
 
 const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isDataSourcesExpanded, setIsDataSourcesExpanded] = useState(false);
+  const [isDirectoryPolicyExpanded, setIsDirectoryPolicyExpanded] = useState(false);
   const currentDate = new Date().toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: 'long' 
@@ -43,73 +44,51 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
             </div>
           </div>
 
-          {/* Action Bar */}
-          <div className="flex items-center justify-between pt-2 border-t border-blue-200/40">
-            <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
-              <CollapsibleTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-blue-700 hover:text-blue-800 hover:bg-blue-100/50 p-2 h-auto"
-                >
-                  <Info className="h-4 w-4 mr-2" />
-                  <span className="text-xs font-medium">
-                    {isExpanded ? 'Hide Details' : 'View Data Sources & Full Disclaimers'}
-                  </span>
-                  {isExpanded ? (
-                    <ChevronUp className="h-3 w-3 ml-2" />
-                  ) : (
-                    <ChevronDown className="h-3 w-3 ml-2" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              
-              {/* Secondary Tier - Expandable Detailed Information */}
-              <CollapsibleContent className="mt-4">
-                <div className="bg-white/60 rounded-md border border-blue-200/30 p-4">
-                  {/* Side-by-Side Legal Sections Grid */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Data Sources & Attribution Section */}
-                    <div className="border-l-3 border-green-400/40 pl-3">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Data Sources & Attribution</h4>
-                      <div className="space-y-2">
-                        <p className="text-xs text-gray-700 leading-relaxed">
-                          <strong>Treatment Offerings:</strong> Sourced from public listings and may not reflect all current services. 
-                          Please confirm directly with the clinic before booking appointments.
-                        </p>
-                        <p className="text-xs text-gray-700 leading-relaxed">
-                          <strong>Google Ratings:</strong> As of {currentDate}, sourced from Google Business listings. 
-                          <a 
-                            href="https://support.google.com/business/answer/3474050" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-700 underline ml-1 inline-flex items-center gap-1"
-                          >
-                            View Google's rating policy
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        </p>
-                      </div>
-                    </div>
+          {/* Action Bar with Two Separate Collapsible Sections */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2 border-t border-blue-200/40">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              {/* Data Sources Collapsible */}
+              <Collapsible open={isDataSourcesExpanded} onOpenChange={setIsDataSourcesExpanded}>
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-blue-700 hover:text-blue-800 hover:bg-blue-100/50 p-2 h-auto"
+                  >
+                    <Info className="h-4 w-4 mr-2" />
+                    <span className="text-xs font-medium">
+                      {isDataSourcesExpanded ? 'Hide Data Sources' : 'Data Sources'}
+                    </span>
+                    {isDataSourcesExpanded ? (
+                      <ChevronUp className="h-3 w-3 ml-2" />
+                    ) : (
+                      <ChevronDown className="h-3 w-3 ml-2" />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+              </Collapsible>
 
-                    {/* Directory Policy Section */}
-                    <div className="border-l-3 border-orange-400/40 pl-3">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Directory Policy</h4>
-                      <div className="space-y-2">
-                        <p className="text-xs text-gray-700 leading-relaxed">
-                          <strong>Verification Status:</strong> We have not verified the credentials, qualifications, or services of these clinics. 
-                          Users must conduct their own due diligence when selecting healthcare providers.
-                        </p>
-                        <p className="text-xs text-gray-700 leading-relaxed">
-                          <strong>Liability:</strong> Information compiled from publicly available sources. 
-                          Listing does not imply endorsement or professional relationship with our platform.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
+              {/* Directory Policy Collapsible */}
+              <Collapsible open={isDirectoryPolicyExpanded} onOpenChange={setIsDirectoryPolicyExpanded}>
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-blue-700 hover:text-blue-800 hover:bg-blue-100/50 p-2 h-auto"
+                  >
+                    <Info className="h-4 w-4 mr-2" />
+                    <span className="text-xs font-medium">
+                      {isDirectoryPolicyExpanded ? 'Hide Directory Policy' : 'Directory Policy'}
+                    </span>
+                    {isDirectoryPolicyExpanded ? (
+                      <ChevronUp className="h-3 w-3 ml-2" />
+                    ) : (
+                      <ChevronDown className="h-3 w-3 ml-2" />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+              </Collapsible>
+            </div>
 
             <Button
               onClick={onOptOutClick}
@@ -120,6 +99,56 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
               Opt-out or Report
             </Button>
           </div>
+
+          {/* Data Sources Expandable Content */}
+          <Collapsible open={isDataSourcesExpanded} onOpenChange={setIsDataSourcesExpanded}>
+            <CollapsibleContent className="mt-4">
+              <div className="bg-white/60 rounded-md border border-blue-200/30 p-4">
+                <div className="border-l-3 border-green-400/40 pl-3">
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Data Sources & Attribution</h4>
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong>Treatment Offerings:</strong> Sourced from public listings and may not reflect all current services. 
+                      Please confirm directly with the clinic before booking appointments.
+                    </p>
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong>Google Ratings:</strong> As of {currentDate}, sourced from Google Business listings. 
+                      <a 
+                        href="https://support.google.com/business/answer/3474050" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-700 underline ml-1 inline-flex items-center gap-1"
+                      >
+                        View Google's rating policy
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
+          {/* Directory Policy Expandable Content */}
+          <Collapsible open={isDirectoryPolicyExpanded} onOpenChange={setIsDirectoryPolicyExpanded}>
+            <CollapsibleContent className="mt-4">
+              <div className="bg-white/60 rounded-md border border-blue-200/30 p-4">
+                <div className="border-l-3 border-orange-400/40 pl-3">
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Directory Policy</h4>
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong>Verification Status:</strong> We have not verified the credentials, qualifications, or services of these clinics. 
+                      Users must conduct their own due diligence when selecting healthcare providers.
+                    </p>
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong>Liability:</strong> Information compiled from publicly available sources. 
+                      Listing does not imply endorsement or professional relationship with our platform.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
       </div>
     </div>
