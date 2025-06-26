@@ -38,7 +38,7 @@ const ClinicCard = ({
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-lg font-semibold text-blue-dark">{clinic.name}</h3>
                 {hasValidMDALicense && (
-                  <UserCheck className="h-4 w-4 text-green-600" title="MDA Licensed" />
+                  <UserCheck className="h-4 w-4 text-green-600" />
                 )}
               </div>
               {clinic.websiteUrl && (

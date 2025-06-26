@@ -54,6 +54,62 @@ export type Database = {
         }
         Relationships: []
       }
+      clinic_claims: {
+        Row: {
+          additional_credentials: string | null
+          clinic_id: number | null
+          clinic_name: string
+          contact_email: string
+          contact_phone: string | null
+          created_at: string
+          dentist_name: string | null
+          id: string
+          operating_hours: string | null
+          status: string
+          updated_at: string
+          verification_notes: string | null
+          website_url: string | null
+        }
+        Insert: {
+          additional_credentials?: string | null
+          clinic_id?: number | null
+          clinic_name: string
+          contact_email: string
+          contact_phone?: string | null
+          created_at?: string
+          dentist_name?: string | null
+          id?: string
+          operating_hours?: string | null
+          status?: string
+          updated_at?: string
+          verification_notes?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          additional_credentials?: string | null
+          clinic_id?: number | null
+          clinic_name?: string
+          contact_email?: string
+          contact_phone?: string | null
+          created_at?: string
+          dentist_name?: string | null
+          id?: string
+          operating_hours?: string | null
+          status?: string
+          updated_at?: string
+          verification_notes?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinic_claims_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinics_data: {
         Row: {
           address: string | null
