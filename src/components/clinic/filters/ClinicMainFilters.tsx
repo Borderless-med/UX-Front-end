@@ -55,6 +55,14 @@ const ClinicMainFilters = ({
     onTreatmentChange(selectedTreatments.filter(t => t !== treatment));
   };
 
+  const handleTownshipChange = (value: string) => {
+    if (value === 'all') {
+      onTownshipChange([]);
+    } else {
+      onTownshipChange([value]);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Treatment Filters */}
@@ -155,14 +163,14 @@ const ClinicMainFilters = ({
             Location
           </label>
           <Select 
-            value={selectedTownships.length === 1 ? selectedTownships[0] : ''} 
-            onValueChange={(value) => onTownshipChange(value ? [value] : [])}
+            value={selectedTownships.length === 1 ? selectedTownships[0] : 'all'} 
+            onValueChange={handleTownshipChange}
           >
             <SelectTrigger>
               <SelectValue placeholder="Any Location" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any Location</SelectItem>
+              <SelectItem value="all">Any Location</SelectItem>
               {townships.map(township => (
                 <SelectItem key={township} value={township}>{township}</SelectItem>
               ))}
