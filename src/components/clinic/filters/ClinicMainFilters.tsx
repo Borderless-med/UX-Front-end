@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronUp, Star, MapPin, Shield, X } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Star, MapPin, Shield, X, ChevronDown } from 'lucide-react';
 import { treatmentCategories, specialServicesLabels } from '../utils/clinicConstants';
 
 interface ClinicMainFiltersProps {
@@ -34,16 +34,6 @@ const ClinicMainFilters = ({
   mdaLicenseFilter,
   onMdaLicenseFilterChange
 }: ClinicMainFiltersProps) => {
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['basic']);
-
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
-  };
-
   const toggleTreatment = (treatment: string) => {
     const newTreatments = selectedTreatments.includes(treatment)
       ? selectedTreatments.filter(t => t !== treatment)
@@ -61,6 +51,11 @@ const ClinicMainFilters = ({
     } else {
       onTownshipChange([value]);
     }
+  };
+
+  const getCategoryActiveCount = (categoryKey: string) => {
+    const category = treatmentCategories[categoryKey as keyof typeof treatmentCategories];
+    return category.treatments.filter(treatment => selectedTreatments.includes(treatment)).length;
   };
 
   return (
@@ -89,49 +84,57 @@ const ClinicMainFilters = ({
           </div>
         )}
 
-        {/* Treatment Categories */}
-        <div className="space-y-2">
-          {Object.entries(treatmentCategories).map(([categoryKey, category]) => (
-            <Collapsible 
-              key={categoryKey}
-              open={expandedCategories.includes(categoryKey)}
-              onOpenChange={() => toggleCategory(categoryKey)}
-            >
-              <CollapsibleTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-between p-2 h-auto text-left hover:bg-blue-light/20"
+        {/* Horizontal Treatment Category Dropdowns */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+          {Object.entries(treatmentCategories).map(([categoryKey, category]) => {
+            const activeCount = getCategoryActiveCount(categoryKey);
+            return (
+              <DropdownMenu key={categoryKey}>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-between text-xs px-2 py-2 h-auto min-h-[2.5rem] relative"
+                  >
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{category.label}</span>
+                      {activeCount > 0 && (
+                        <span className="text-xs text-blue-primary">
+                          {activeCount} selected
+                        </span>
+                      )}
+                    </div>
+                    <ChevronDown className="h-3 w-3 ml-1 flex-shrink-0" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  className="w-56 max-h-64 overflow-y-auto bg-white border shadow-lg z-50"
+                  align="start"
                 >
-                  <span className="text-sm font-medium">{category.label}</span>
-                  {expandedCategories.includes(categoryKey) ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 pl-4">
                   {category.treatments.map(treatment => (
-                    <label 
+                    <DropdownMenuItem
                       key={treatment}
-                      className="flex items-center space-x-2 cursor-pointer hover:bg-blue-light/10 p-1 rounded"
+                      className="flex items-center space-x-2 cursor-pointer p-2"
+                      onSelect={(e) => {
+                        e.preventDefault();
+                        toggleTreatment(treatment);
+                      }}
                     >
                       <input
                         type="checkbox"
                         checked={selectedTreatments.includes(treatment)}
                         onChange={() => toggleTreatment(treatment)}
                         className="rounded border-gray-300 text-blue-primary focus:ring-blue-primary"
+                        onClick={(e) => e.stopPropagation()}
                       />
                       <span className="text-sm text-neutral-gray">
                         {specialServicesLabels[treatment as keyof typeof specialServicesLabels]}
                       </span>
-                    </label>
+                    </DropdownMenuItem>
                   ))}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          })}
         </div>
       </div>
 
