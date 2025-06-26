@@ -66,38 +66,46 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
               
               {/* Secondary Tier - Expandable Detailed Information */}
               <CollapsibleContent className="mt-4">
-                <div className="bg-white/60 rounded-md border border-blue-200/30 p-4 space-y-4">
-                  {/* Data Sources & Attribution */}
-                  <div className="border-l-3 border-green-400/40 pl-3">
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Data Sources & Attribution</h4>
-                    <div className="space-y-2">
-                      <p className="text-xs text-gray-700 leading-relaxed">
-                        <strong>Treatment Offerings:</strong> Sourced from public listings and may not reflect all current services. 
-                        Please confirm directly with the clinic before booking appointments.
-                      </p>
-                      <p className="text-xs text-gray-700 leading-relaxed">
-                        <strong>Google Ratings:</strong> As of {currentDate}, sourced from Google Business listings. 
-                        <a 
-                          href="https://support.google.com/business/answer/3474050" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-700 underline ml-1 inline-flex items-center gap-1"
-                        >
-                          View Google's rating policy
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      </p>
+                <div className="bg-white/60 rounded-md border border-blue-200/30 p-4">
+                  {/* Side-by-Side Legal Sections Grid */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Data Sources & Attribution Section */}
+                    <div className="border-l-3 border-green-400/40 pl-3">
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Data Sources & Attribution</h4>
+                      <div className="space-y-2">
+                        <p className="text-xs text-gray-700 leading-relaxed">
+                          <strong>Treatment Offerings:</strong> Sourced from public listings and may not reflect all current services. 
+                          Please confirm directly with the clinic before booking appointments.
+                        </p>
+                        <p className="text-xs text-gray-700 leading-relaxed">
+                          <strong>Google Ratings:</strong> As of {currentDate}, sourced from Google Business listings. 
+                          <a 
+                            href="https://support.google.com/business/answer/3474050" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-700 underline ml-1 inline-flex items-center gap-1"
+                          >
+                            View Google's rating policy
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Directory Policy */}
-                  <div className="border-l-3 border-orange-400/40 pl-3">
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Directory Policy</h4>
-                    <p className="text-xs text-gray-700 leading-relaxed">
-                      Information compiled from publicly available sources. Listing does not imply endorsement or professional relationship. 
-                      We have not verified the credentials, qualifications, or services of these clinics. 
-                      Users must conduct their own due diligence when selecting healthcare providers.
-                    </p>
+                    {/* Directory Policy Section */}
+                    <div className="border-l-3 border-orange-400/40 pl-3">
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Directory Policy</h4>
+                      <div className="space-y-2">
+                        <p className="text-xs text-gray-700 leading-relaxed">
+                          <strong>Verification Status:</strong> We have not verified the credentials, qualifications, or services of these clinics. 
+                          Users must conduct their own due diligence when selecting healthcare providers.
+                        </p>
+                        <p className="text-xs text-gray-700 leading-relaxed">
+                          <strong>Liability:</strong> Information compiled from publicly available sources. 
+                          Listing does not imply endorsement or professional relationship with our platform.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CollapsibleContent>
