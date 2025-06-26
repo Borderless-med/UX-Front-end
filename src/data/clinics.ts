@@ -1,3 +1,4 @@
+
 import { Clinic } from '../types/clinic';
 
 export const clinics: Clinic[] = [
@@ -13,6 +14,7 @@ export const clinics: Clinic[] = [
     mdaLicense: 'MDC-2023-JHR-045',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
     township: 'Taman Kebun Teh',
+    websiteUrl: 'https://medinidentalgroup.com/klinik-pergigian-pearl-johor-bahru/',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -50,6 +52,7 @@ export const clinics: Clinic[] = [
     mdaLicense: 'Pending',
     credentials: 'MDC Pending',
     township: 'Pasir Gudang',
+    websiteUrl: 'https://uni-dental-pasir-gudang.localo.site/?utm_source=google_profile&utm_campaign=localo&utm_medium=mainlink',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -87,6 +90,7 @@ export const clinics: Clinic[] = [
     mdaLicense: 'MDC-2021-JHR-112',
     credentials: 'MDC Registered; BDS; MFDS RCS; Likely MDA Member',
     township: 'Pulai Mutiara',
+    websiteUrl: 'https://kpsouthern.my/',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -124,6 +128,7 @@ export const clinics: Clinic[] = [
     mdaLicense: 'MDC-2019-JHR-087',
     credentials: 'MDC Registered; DDS; Likely MDA Member',
     township: 'Molek',
+    websiteUrl: 'http://www.drcheongdental.com/',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -161,6 +166,7 @@ export const clinics: Clinic[] = [
     mdaLicense: 'MDC-2022-JHR-033',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
     township: 'Indah',
+    websiteUrl: 'http://www.facebook.com/medinidentalbukitindah',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -198,6 +204,7 @@ export const clinics: Clinic[] = [
     mdaLicense: 'MDC-2023-JHR-078',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
     township: 'Molek',
+    websiteUrl: 'https://annadentalclinic.com.my/',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -235,6 +242,7 @@ export const clinics: Clinic[] = [
     mdaLicense: 'MDC-2024-JHR-055',
     credentials: 'MDC Registered; BDS; Likely MDA Member',
     township: 'Mutiara Emas',
+    websiteUrl: 'https://deluxedental.com.my/',
     treatments: {
       toothFilling: true,
       rootCanal: true,
@@ -463,9 +471,104 @@ const generateRemainingClinics = () => {
     'Dr. Mohamed Amin', 'Dr. Jessica Wong', 'Dr. Ravi Shankar', 'Dr. Noor Azlin'
   ];
 
+  // Website URLs for the remaining clinics based on the provided data
+  const websiteUrls = [
+    'https://www.medinidentalgroup.com/',
+    'https://www.facebook.com/tdentaljb',
+    'https://smileheritage.com.my/',
+    'http://www.addadental.com/',
+    'https://www.toothland.com.my/',
+    null, // N/A
+    'https://www.facebook.com/tdentaljb',
+    'https://www.facebook.com/dentalpavilion/',
+    'https://gigichun.com/find-us/gigichun-jb/',
+    'https://www.facebook.com/klinikpergigianazura/',
+    null, // N/A
+    null, // N/A
+    'https://klinikgigipasirgudang.com/',
+    'https://www.asiaadental.com.my/',
+    'https://www.amimdentaldamansaraaliff.com/',
+    'https://www.facebook.com/alphadentalksl/',
+    'https://www.facebook.com/dentalpavilion/',
+    'https://www.qcaredentalclinic.com/',
+    'http://www.addadental.com/',
+    'https://dentallegacybdo.com/',
+    'http://www.tiewdental.com/?utm_source=GBP&utm_medium=GBP&utm_campaign=GBP',
+    'https://www.facebook.com/AlphaDental.MountAustin',
+    'http://www.austindentalgroup.com.my/',
+    'https://www.amimdentaldamansaraaliff.com/',
+    null, // N/A
+    'http://www.facebook.com/klinikpergigianrazi',
+    'http://www.eedentalclinic.com.my/',
+    'https://prodentalspecialistsgroup.com/',
+    'https://summerdental.my/',
+    'https://instagram.com/whitedentaljb?igshid=OGQ5ZDc2ODk2ZA==',
+    'http://www.loudental.com/',
+    'http://www.abcdentalcenter.com.my/',
+    'https://www.jdtdental.com.my/',
+    'http://www.smiledentallounge.com/',
+    'http://dentaleclipse.com/',
+    'http://www.qandm.com.my/',
+    'http://www.qandm.com.my/',
+    'http://www.qandm.com.my/',
+    'http://www.qandm.com.my/',
+    'http://www.qandm.com.my/',
+    'https://www.qandm.com.my/',
+    'http://www.qandm.com.my/',
+    'https://www.qandm.com.my/',
+    'http://www.tiewdental.com/?utm_source=GBP&utm_medium=GBP&utm_campaign=GBP',
+    'https://www.facebook.com/hongspecialistortho/',
+    'https://mydentalhouse.setmore.com/',
+    'https://austindentalgroup.com.my/',
+    'http://www.austindentalgroup.com.my/',
+    'http://www.austindentalgroup.com.my/',
+    'http://www.austindentalgroup.com.my/',
+    'http://www.austindentalgroup.com.my/',
+    'http://www.austindentalgroup.com.my/',
+    'https://www.careplusdentaljb.com/',
+    'https://www.rinidental.com/',
+    'https://www.aobdental.com.my/',
+    'http://www.lldentalclinic.com/',
+    'https://www.facebook.com/ckdentaljb/',
+    'https://www.facebook.com/ckdentaljb/',
+    'https://www.facebook.com/ckdentaljb/',
+    'https://www.facebook.com/PCDental81750',
+    null, // N/A
+    null, // N/A
+    'http://www.austindentalgroup.com.my/',
+    null, // N/A
+    'http://www.dentalwisecare.com/',
+    'https://www.toothland.com.my/',
+    'https://www.haslindadental.com.my/',
+    'https://www.dentalclinicclosetome.my/place/ding-dental-surgery-johor-bahru',
+    'https://m.facebook.com/pages/Klinik-Pergigian-Aura/285430835175714',
+    'https://linktr.ee/dentallegacykulai',
+    null, // N/A
+    'https://m.facebook.com/pages/Klinik-Pergigian-Dr-Zubaidah/115093279155073',
+    'https://www.facebook.com/lifestyledentalgaya/',
+    'https://www.facebook.com/profile.php?id=100087638123670&mibextid=ZbWKwL',
+    'https://www.asiadentalsurgeryulutiram.com/',
+    null, // N/A
+    'https://www.dentalclinicclosetome.my/place/yang-dental-surgery-johor-bahru',
+    null, // N/A
+    'https://www.careplusdentaljb.com/',
+    'https://linktr.ee/atlasdental.bp',
+    null, // N/A
+    'https://kencanadental.com/',
+    'http://www.tiewdental.com/?utm_source=GBP&utm_medium=GBP&utm_campaign=GBP',
+    'https://klinikpergigiangaura.com/',
+    'https://www.facebook.com/alphadentalecobotanic',
+    'https://www.horizondental.com.my/',
+    'https://www.sunnydental.com.my/',
+    'http://smileagedental.com/',
+    'http://www.kohdental.com.my/',
+    'http://www.loudental.com/'
+  ];
+
   for (let i = 13; i <= 101; i++) {
     const townshipIndex = (i - 13) % townships.length;
     const dentistIndex = (i - 13) % dentistNames.length;
+    const websiteUrlIndex = (i - 13);
     const distance = Math.round((Math.random() * 50 + 1) * 10) / 10;
     const rating = Math.round((Math.random() * 1 + 4) * 10) / 10;
     const reviews = Math.floor(Math.random() * 500);
@@ -483,6 +586,7 @@ const generateRemainingClinics = () => {
       mdaLicense: `MDC-${2020 + (i % 5)}-JHR-${String(i).padStart(3, '0')}`,
       credentials: 'MDC Registered; BDS; Likely MDA Member',
       township: townships[townshipIndex],
+      websiteUrl: websiteUrlIndex < websiteUrls.length ? websiteUrls[websiteUrlIndex] : null,
       treatments: {
         toothFilling: true,
         rootCanal: Math.random() > 0.2,
