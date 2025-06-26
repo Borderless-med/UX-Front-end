@@ -1,4 +1,3 @@
-
 import { Clinic } from '@/types/clinic';
 import { basicServices, specialServicesLabels } from './clinicConstants';
 
@@ -9,7 +8,8 @@ export const filterClinics = (
   selectedTownships: string[],
   ratingFilter: number,
   maxDistance: number,
-  minReviews: number
+  minReviews: number,
+  mdaLicenseFilter: string
 ) => {
   return clinics.filter(clinic => {
     // Text search
@@ -38,7 +38,22 @@ export const filterClinics = (
     // Google reviews filter
     const matchesReviews = clinic.reviews >= minReviews;
 
-    return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance && matchesReviews;
+    // MDA License filter
+    const matchesMdaLicense = (() => {
+      if (mdaLicenseFilter === 'all') return true;
+      
+      const hasValidLicense = clinic.mdaLicense && 
+        !clinic.mdaLicense.toLowerCase().includes('pending') && 
+        !clinic.mdaLicense.toLowerCase().includes('not available') &&
+        clinic.mdaLicense.trim() !== '';
+      
+      if (mdaLicenseFilter === 'verified') return hasValidLicense;
+      if (mdaLicenseFilter === 'pending') return !hasValidLicense;
+      
+      return true;
+    })();
+
+    return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance && matchesReviews && matchesMdaLicense;
   });
 };
 

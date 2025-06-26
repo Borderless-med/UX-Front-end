@@ -2,7 +2,6 @@
 import Navigation from '@/components/Navigation';
 import ClinicsSection from '@/components/ClinicsSection';
 import Footer from '@/components/Footer';
-import DataMigrationButton from '@/components/admin/DataMigrationButton';
 
 const Clinics = () => {
   return (
@@ -12,7 +11,6 @@ const Clinics = () => {
         <ClinicsSection />
       </div>
       <Footer />
-      <DataMigrationButton />
     </div>
   );
 };

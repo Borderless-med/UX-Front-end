@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
@@ -42,6 +43,8 @@ const ClinicsSection = () => {
     setSortBy,
     showAdvancedFilters,
     setShowAdvancedFilters,
+    mdaLicenseFilter,
+    setMdaLicenseFilter,
     clearAllFilters,
     activeFiltersCount
   } = useClinicFilters();
@@ -54,7 +57,8 @@ const ClinicsSection = () => {
     ratingFilter,
     maxDistance,
     minReviews,
-    sortBy
+    sortBy,
+    mdaLicenseFilter
   });
 
   const townships = getUniqueTownships(clinics);
@@ -140,6 +144,8 @@ const ClinicsSection = () => {
               townships={townships}
               sortBy={sortBy}
               onSortChange={setSortBy}
+              mdaLicenseFilter={mdaLicenseFilter}
+              onMdaLicenseFilterChange={setMdaLicenseFilter}
             />
 
             <FilterControls
