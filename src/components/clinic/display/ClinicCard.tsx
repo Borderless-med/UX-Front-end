@@ -2,7 +2,7 @@
 import { Star, MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { getSpecialties } from '../utils/clinicFilterUtils';
+import { getSpecialServices } from '../utils/clinicFilterUtils';
 import PractitionerDetails from './PractitionerDetails';
 
 interface ClinicCardProps {
@@ -18,7 +18,7 @@ const ClinicCard = ({
   onSignInClick, 
   onViewPractitionerDetails 
 }: ClinicCardProps) => {
-  const specialties = getSpecialties(clinic);
+  const specialServices = getSpecialServices(clinic);
 
   return (
     <Card className="bg-light-card border-blue-light hover:border-blue-primary transition-all duration-300 hover:shadow-lg">
@@ -54,17 +54,21 @@ const ClinicCard = ({
         </div>
 
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-blue-dark mb-2">Key Services:</h4>
-          <div className="flex flex-wrap gap-1">
-            {specialties.map((specialty, index) => (
-              <span
-                key={index}
-                className="inline-block bg-blue-light/20 text-blue-primary text-xs px-2 py-1 rounded"
-              >
-                {specialty}
-              </span>
-            ))}
-          </div>
+          <h4 className="text-sm font-medium text-blue-dark mb-2">Special Services:</h4>
+          {specialServices.length > 0 ? (
+            <div className="flex flex-wrap gap-1">
+              {specialServices.map((service, index) => (
+                <span
+                  key={index}
+                  className="inline-block bg-blue-light/20 text-blue-primary text-xs px-2 py-1 rounded"
+                >
+                  {service}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-neutral-gray italic">No special services listed</p>
+          )}
         </div>
 
         <div className="flex justify-between items-center mb-4">

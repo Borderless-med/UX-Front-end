@@ -24,3 +24,33 @@ export const categoryLabels = {
   clinic_admin: 'Clinic Administrator',
   approved_partner: 'Approved Partner'
 };
+
+// Define basic services that all clinics offer
+export const basicServices = [
+  'toothFilling',
+  'rootCanal', 
+  'dentalCrown',
+  'teethWhitening',
+  'braces',
+  'wisdomTooth',
+  'gumTreatment'
+];
+
+// Special services mapping with user-friendly labels
+export const specialServicesLabels = {
+  dentalImplant: 'Dental Implants',
+  compositeVeneers: 'Composite Veneers',
+  porcelainVeneers: 'Porcelain Veneers',
+  dentalBonding: 'Dental Bonding',
+  inlaysOnlays: 'Inlays/Onlays',
+  enamelShaping: 'Enamel Shaping',
+  gingivectomy: 'Gingivectomy',
+  boneGrafting: 'Bone Grafting',
+  sinusLift: 'Sinus Lift',
+  frenectomy: 'Frenectomy',
+  tmjTreatment: 'TMJ Treatment',
+  sleepApneaAppliances: 'Sleep Apnea Appliances',
+  crownLengthening: 'Crown Lengthening',
+  oralCancerScreening: 'Oral Cancer Screening',
+  alveoplasty: 'Alveoplasty'
+};

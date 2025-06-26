@@ -1,6 +1,7 @@
 
 import { clinics } from '@/data/clinics';
 import { Clinic } from '@/types/clinic';
+import { basicServices, specialServicesLabels } from './clinicConstants';
 
 export const filterClinics = (
   searchTerm: string,
@@ -66,6 +67,19 @@ export const getSpecialties = (clinic: Clinic) => {
   if (clinic.treatments.teethWhitening) specialties.push('Cosmetic Dentistry');
   if (clinic.treatments.gumTreatment) specialties.push('Periodontics');
   return specialties.slice(0, 3); // Show max 3 specialties
+};
+
+export const getSpecialServices = (clinic: Clinic) => {
+  const specialServices = [];
+  
+  // Check each treatment, excluding basic services
+  Object.entries(clinic.treatments).forEach(([key, value]) => {
+    if (value && !basicServices.includes(key) && specialServicesLabels[key as keyof typeof specialServicesLabels]) {
+      specialServices.push(specialServicesLabels[key as keyof typeof specialServicesLabels]);
+    }
+  });
+  
+  return specialServices.slice(0, 4); // Show max 4 special services
 };
 
 export const getUniqueTownships = () => {
