@@ -93,3 +93,24 @@ export const treatmentCategories = {
 };
 
 export const allTreatments = Object.keys(specialServicesLabels);
+
+// User category labels for authentication display
+export const categoryLabels = {
+  patient: 'Patient',
+  dentist: 'Dental Professional',
+  researcher: 'Researcher',
+  student: 'Student',
+  other: 'Other'
+};
+
+// Credential options for advanced filtering
+export const credentialOptions = [
+  { key: 'bds', label: 'BDS (Bachelor of Dental Surgery)' },
+  { key: 'mds', label: 'MDS (Master of Dental Surgery)' },
+  { key: 'fellowship', label: 'Fellowship' },
+  { key: 'specialist', label: 'Specialist Registration' },
+  { key: 'implantology', label: 'Implantology Certification' },
+  { key: 'orthodontics', label: 'Orthodontics Specialization' },
+  { key: 'endodontics', label: 'Endodontics Specialization' },
+  { key: 'periodontics', label: 'Periodontics Specialization' }
+];
