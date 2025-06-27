@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -57,7 +58,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
   return (
     <>
       <Card className="h-96 shadow-sm hover:shadow-md transition-shadow border-blue-light">
-        <CardContent className="p-6 h-full flex flex-col justify-between">
+        <CardContent className="p-6 h-full flex flex-col">
           {/* Header with Name/Address on Left and Google Rating on Right */}
           <div className="mb-4">
             <div className="flex items-start justify-between gap-4 mb-3">
@@ -139,31 +140,37 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
             </div>
           </div>
 
-          {/* Available Treatment Categories */}
-          {availableCategories.length > 0 && (
-            <div className="mb-4 flex-1">
-              <p className="text-sm font-medium text-blue-dark mb-2">Available Services:</p>
-              <div className="flex flex-wrap gap-1">
-                {availableCategories.slice(0, 3).map((category) => (
-                  <Badge 
-                    key={category} 
-                    variant="secondary" 
-                    className="text-xs bg-blue-primary/10 text-blue-primary"
-                  >
-                    {category}
-                  </Badge>
-                ))}
-                {availableCategories.length > 3 && (
-                  <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600">
-                    +{availableCategories.length - 3} more
-                  </Badge>
-                )}
+          {/* Available Treatment Categories - Fixed Height Section */}
+          <div className="mb-4 min-h-[80px] flex flex-col justify-start">
+            {availableCategories.length > 0 ? (
+              <>
+                <p className="text-sm font-medium text-blue-dark mb-2">Available Services:</p>
+                <div className="flex flex-wrap gap-1">
+                  {availableCategories.slice(0, 3).map((category) => (
+                    <Badge 
+                      key={category} 
+                      variant="secondary" 
+                      className="text-xs bg-blue-primary/10 text-blue-primary"
+                    >
+                      {category}
+                    </Badge>
+                  ))}
+                  {availableCategories.length > 3 && (
+                    <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600">
+                      +{availableCategories.length - 3} more
+                    </Badge>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="text-sm text-neutral-gray">
+                No specific services listed
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          {/* Action Buttons */}
-          <div className="space-y-2 mt-auto">
+          {/* Action Buttons - Fixed at Bottom with Consistent Spacing */}
+          <div className="mt-auto space-y-2">
             {/* Practitioner Details */}
             <Button
               onClick={handleViewPractitioner}
