@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -209,7 +208,7 @@ const ClinicMainFilters = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="distance">Distance</SelectItem>
+              <SelectItem value="distance">Distance from CIQ</SelectItem>
               <SelectItem value="rating">Rating</SelectItem>
               <SelectItem value="reviews">Reviews Count</SelectItem>
               <SelectItem value="name">Name</SelectItem>
