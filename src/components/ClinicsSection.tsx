@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
@@ -38,8 +39,6 @@ const ClinicsSection = () => {
     setSelectedTownships,
     ratingFilter,
     setRatingFilter,
-    distanceRange,
-    setDistanceRange,
     maxDistance,
     setMaxDistance,
     minReviews,
@@ -166,8 +165,6 @@ const ClinicsSection = () => {
                 onMaxDistanceChange={setMaxDistance}
                 minReviews={minReviews}
                 onMinReviewsChange={setMinReviews}
-                distanceRange={distanceRange}
-                onDistanceRangeChange={setDistanceRange}
               />
             )}
           </Card>

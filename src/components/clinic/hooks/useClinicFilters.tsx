@@ -6,7 +6,6 @@ export const useClinicFilters = () => {
   const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
   const [selectedTownships, setSelectedTownships] = useState<string[]>([]);
   const [ratingFilter, setRatingFilter] = useState(0);
-  const [distanceRange, setDistanceRange] = useState([50]);
   const [maxDistance, setMaxDistance] = useState(50);
   const [minReviews, setMinReviews] = useState(0);
   const [sortBy, setSortBy] = useState('distance');
@@ -18,7 +17,6 @@ export const useClinicFilters = () => {
     setSelectedTreatments([]);
     setSelectedTownships([]);
     setRatingFilter(0);
-    setDistanceRange([50]);
     setMaxDistance(50);
     setMinReviews(0);
     setSortBy('distance');
@@ -43,8 +41,6 @@ export const useClinicFilters = () => {
     setSelectedTownships,
     ratingFilter,
     setRatingFilter,
-    distanceRange,
-    setDistanceRange,
     maxDistance,
     setMaxDistance,
     minReviews,

@@ -8,22 +8,18 @@ interface ClinicAdvancedFiltersProps {
   onMaxDistanceChange: (distance: number) => void;
   minReviews: number;
   onMinReviewsChange: (reviews: number) => void;
-  distanceRange: number[];
-  onDistanceRangeChange: (range: number[]) => void;
 }
 
 const ClinicAdvancedFilters = ({
   maxDistance,
   onMaxDistanceChange,
   minReviews,
-  onMinReviewsChange,
-  distanceRange,
-  onDistanceRangeChange
+  onMinReviewsChange
 }: ClinicAdvancedFiltersProps) => {
   return (
     <div className="mt-6 border-t border-blue-light pt-6">
       <h3 className="text-lg font-medium text-blue-dark mb-4">Advanced Filters</h3>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Max Distance from CIQ */}
         <div>
           <h4 className="font-medium text-blue-dark mb-3">
@@ -72,21 +68,6 @@ const ClinicAdvancedFilters = ({
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Distance Range */}
-        <div>
-          <h4 className="font-medium text-blue-dark mb-3">
-            Distance Range: {distanceRange[0]}-{distanceRange[1]}km
-          </h4>
-          <Slider
-            value={distanceRange}
-            onValueChange={onDistanceRangeChange}
-            max={110}
-            min={0}
-            step={1}
-            className="w-full"
-          />
         </div>
       </div>
     </div>
