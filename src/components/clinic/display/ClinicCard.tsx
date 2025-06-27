@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -58,9 +59,9 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
   return (
     <>
       <Card className="h-96 shadow-sm hover:shadow-md transition-shadow border-blue-light">
-        <CardContent className="p-6 h-full flex flex-col">
-          {/* Header with Name/Address on Left and Google Rating on Right */}
-          <div className="mb-4">
+        <CardContent className="p-6 h-full grid grid-rows-[1fr_80px_auto] gap-4">
+          {/* Header Section - Fixed Height to accommodate all variations */}
+          <div className="min-h-[180px] flex flex-col justify-between">
             <div className="flex items-start justify-between gap-4 mb-3">
               {/* Left Column: Clinic Name and Address */}
               <div className="flex-1 min-w-0">
@@ -124,8 +125,8 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               </div>
             </div>
 
-            {/* License Status */}
-            <div className="flex items-center justify-end mb-4">
+            {/* License Status - Fixed Height */}
+            <div className="flex items-center justify-end h-6">
               {clinic.mdaLicense && clinic.mdaLicense !== 'Pending verification' && clinic.mdaLicense !== 'Pending Application' ? (
                 <div className="flex items-center text-sm text-green-600">
                   <Shield className="h-4 w-4 mr-1" />
@@ -141,7 +142,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
           </div>
 
           {/* Available Treatment Categories - Fixed Height Section */}
-          <div className="mb-4 min-h-[80px] flex flex-col justify-start">
+          <div className="h-[80px] flex flex-col justify-start overflow-hidden">
             {availableCategories.length > 0 ? (
               <>
                 <p className="text-sm font-medium text-blue-dark mb-2">Available Services:</p>
@@ -170,7 +171,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
           </div>
 
           {/* Action Buttons - Fixed at Bottom with Consistent Spacing */}
-          <div className="mt-auto space-y-2">
+          <div className="space-y-2">
             {/* Practitioner Details */}
             <Button
               onClick={handleViewPractitioner}
@@ -215,3 +216,4 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 };
 
 export default ClinicCard;
+
