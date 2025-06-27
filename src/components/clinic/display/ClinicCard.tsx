@@ -24,13 +24,13 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
     .map(([key]) => key as keyof typeof specialServicesLabels);
 
   const handleRatingClick = () => {
-    if (clinic.googleReviewUrl) {
+    if (clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '') {
       window.open(clinic.googleReviewUrl, '_blank');
     }
   };
 
   const handleWebsiteClick = () => {
-    if (clinic.websiteUrl) {
+    if (clinic.websiteUrl && clinic.websiteUrl.trim() !== '' && clinic.websiteUrl !== 'N/A') {
       window.open(clinic.websiteUrl, '_blank');
     }
   };
@@ -44,7 +44,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
   };
 
   const formatOperatingHours = (hours: string) => {
-    if (!hours || hours === 'Not Listed') {
+    if (!hours || hours === 'Not Listed' || hours === 'Operating hours not available') {
       return 'Operating hours not available';
     }
     return hours.split('\n').map((line, index) => (
@@ -53,6 +53,9 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
       </div>
     ));
   };
+
+  const hasGoogleReviews = clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '';
+  const hasValidOperatingHours = clinic.operatingHours && clinic.operatingHours !== 'Operating hours not available';
 
   return (
     <>
@@ -70,9 +73,9 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
             {/* Rating and Reviews */}
             <div className="flex items-center justify-between mb-3">
               <div 
-                className="flex items-center cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors"
-                onClick={handleRatingClick}
-                title="Click to view Google Reviews"
+                className={`flex items-center ${hasGoogleReviews ? 'cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors' : ''}`}
+                onClick={hasGoogleReviews ? handleRatingClick : undefined}
+                title={hasGoogleReviews ? "Click to view Google Reviews" : "Google Reviews not available"}
               >
                 <div className="flex items-center">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
@@ -102,7 +105,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                     <div className="space-y-2">
                       <h4 className="font-medium text-blue-dark">Operating Hours</h4>
                       <div className="text-neutral-gray">
-                        {formatOperatingHours(clinic.operatingHours)}
+                        {hasValidOperatingHours ? formatOperatingHours(clinic.operatingHours) : 'Operating hours not available'}
                       </div>
                     </div>
                   </PopoverContent>
@@ -169,7 +172,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 
             {/* Website and Claim Buttons */}
             <div className="flex gap-2">
-              {clinic.websiteUrl && (
+              {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' && (
                 <Button
                   onClick={handleWebsiteClick}
                   variant="outline"
