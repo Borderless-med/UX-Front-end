@@ -61,16 +61,40 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
     <>
       <Card className="h-full shadow-sm hover:shadow-md transition-shadow border-blue-light">
         <CardContent className="p-6">
-          {/* Header */}
+          {/* Header with Name/Address on Left and Google Rating on Right */}
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-blue-dark mb-2 line-clamp-2">
-              {clinic.name}
-            </h3>
-            <p className="text-sm text-neutral-gray mb-3 line-clamp-2">
-              {clinic.address}
-            </p>
+            <div className="flex items-start justify-between gap-4 mb-3">
+              {/* Left Column: Clinic Name and Address */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-semibold text-blue-dark mb-2 line-clamp-2">
+                  {clinic.name}
+                </h3>
+                <p className="text-sm text-neutral-gray line-clamp-1">
+                  {clinic.address}
+                </p>
+              </div>
+              
+              {/* Right Column: Google Rating CTA Box */}
+              {hasGoogleReviews && (
+                <div 
+                  className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-2 cursor-pointer hover:from-blue-100 hover:to-blue-150 hover:border-blue-300 transition-all duration-200 shadow-sm flex-shrink-0"
+                  onClick={handleRatingClick}
+                  title="Click to view Google Reviews"
+                >
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span className="font-bold text-blue-dark text-sm">
+                      {clinic.rating.toFixed(1)}
+                    </span>
+                  </div>
+                  <div className="text-xs text-blue-600 font-medium mt-1">
+                    ({clinic.reviews} reviews)
+                  </div>
+                </div>
+              )}
+            </div>
             
-            {/* Top Section with Distance and Operating Hours */}
+            {/* Second Row: Distance and Operating Hours */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center text-sm text-neutral-gray">
                 <MapPin className="h-4 w-4 mr-1" />
@@ -101,27 +125,6 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                 </Popover>
               </div>
             </div>
-
-            {/* Google Rating Box - Separate CTA Box */}
-            {hasGoogleReviews && (
-              <div 
-                className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-3 mb-3 cursor-pointer hover:from-blue-100 hover:to-blue-150 hover:border-blue-300 transition-all duration-200 shadow-sm"
-                onClick={handleRatingClick}
-                title="Click to view Google Reviews"
-              >
-                <div className="flex items-center justify-center">
-                  <div className="flex items-center">
-                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400 mr-2" />
-                    <span className="font-bold text-blue-dark text-lg">
-                      {clinic.rating.toFixed(1)}
-                    </span>
-                    <span className="text-sm text-blue-600 ml-2 font-medium">
-                      ({clinic.reviews} Google Reviews)
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* License Status */}
             <div className="flex items-center justify-end mb-4">
