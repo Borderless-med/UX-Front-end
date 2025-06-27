@@ -2,7 +2,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import PriceComparisonTable from './PriceComparisonTable';
 import StatsCards from './StatsCards';
-import MedicalDisclaimer from './MedicalDisclaimer';
 import PricingBookingDisclaimer from './PricingBookingDisclaimer';
 import { proceduresData } from '@/data/proceduresData';
 
@@ -18,11 +17,6 @@ const PriceComparison = () => {
             Compare dental treatment costs between Singapore and Johor Bahru. 
             All prices are in Singapore Dollars (S$).
           </p>
-        </div>
-
-        {/* Important Disclaimer - Standardized */}
-        <div className="mb-8">
-          <MedicalDisclaimer variant="banner" />
         </div>
 
         <Card className="shadow-lg border border-blue-light">

@@ -1,7 +1,5 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 
 const HowItWorksSection = () => {
   const steps = [
@@ -79,11 +77,6 @@ const HowItWorksSection = () => {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Step-by-step process for safe, affordable dental care
           </p>
-        </div>
-
-        {/* Standardized Important Disclaimer - Fixed */}
-        <div className="mb-12">
-          <MedicalDisclaimer variant="banner" />
         </div>
 
         {/* Process Steps */}
