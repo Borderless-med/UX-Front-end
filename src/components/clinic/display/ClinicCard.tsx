@@ -1,5 +1,4 @@
 
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -58,17 +57,17 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 
   return (
     <>
-      <Card className="h-96 shadow-sm hover:shadow-md transition-shadow border-blue-light">
-        <CardContent className="p-6 h-full grid grid-rows-[1fr_80px_auto] gap-4">
-          {/* Header Section - Fixed Height to accommodate all variations */}
-          <div className="min-h-[180px] flex flex-col justify-between">
+      <Card className="h-[520px] shadow-sm hover:shadow-md transition-shadow border-blue-light">
+        <CardContent className="p-6 h-full grid grid-rows-[1fr_90px_auto] gap-4">
+          {/* Header Section - Expanded Height to accommodate all variations */}
+          <div className="min-h-[220px] flex flex-col justify-between">
             <div className="flex items-start justify-between gap-4 mb-3">
               {/* Left Column: Clinic Name and Address */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-blue-dark mb-2 line-clamp-2">
+                <h3 className="text-lg font-semibold text-blue-dark mb-2 leading-tight">
                   {clinic.name}
                 </h3>
-                <p className="text-sm text-neutral-gray line-clamp-2">
+                <p className="text-sm text-neutral-gray leading-relaxed">
                   {clinic.address}
                 </p>
               </div>
@@ -126,7 +125,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
             </div>
 
             {/* License Status - Fixed Height */}
-            <div className="flex items-center justify-end h-6">
+            <div className="flex items-center justify-end h-8 mt-2">
               {clinic.mdaLicense && clinic.mdaLicense !== 'Pending verification' && clinic.mdaLicense !== 'Pending Application' ? (
                 <div className="flex items-center text-sm text-green-600">
                   <Shield className="h-4 w-4 mr-1" />
@@ -141,13 +140,13 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
             </div>
           </div>
 
-          {/* Available Treatment Categories - Fixed Height Section */}
-          <div className="h-[80px] flex flex-col justify-start overflow-hidden">
+          {/* Available Treatment Categories - Increased Height Section */}
+          <div className="h-[90px] flex flex-col justify-start overflow-hidden">
             {availableCategories.length > 0 ? (
               <>
                 <p className="text-sm font-medium text-blue-dark mb-2">Available Services:</p>
                 <div className="flex flex-wrap gap-1">
-                  {availableCategories.slice(0, 3).map((category) => (
+                  {availableCategories.slice(0, 4).map((category) => (
                     <Badge 
                       key={category} 
                       variant="secondary" 
@@ -156,9 +155,9 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                       {category}
                     </Badge>
                   ))}
-                  {availableCategories.length > 3 && (
+                  {availableCategories.length > 4 && (
                     <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600">
-                      +{availableCategories.length - 3} more
+                      +{availableCategories.length - 4} more
                     </Badge>
                   )}
                 </div>
@@ -170,12 +169,12 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
             )}
           </div>
 
-          {/* Action Buttons - Fixed at Bottom with Consistent Spacing */}
-          <div className="space-y-2">
+          {/* Action Buttons - Fixed at Bottom with Proper Spacing */}
+          <div className="space-y-3 pb-2">
             {/* Practitioner Details */}
             <Button
               onClick={handleViewPractitioner}
-              className="w-full bg-blue-primary hover:bg-blue-primary/90 text-white flex items-center justify-center"
+              className="w-full bg-blue-primary hover:bg-blue-primary/90 text-white flex items-center justify-center text-sm py-2.5"
             >
               <UserCheck className="h-4 w-4 mr-2" />
               {isAuthenticated ? 'View Practitioner Details' : 'Sign In to View Details'}
@@ -187,7 +186,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                 <Button
                   onClick={handleWebsiteClick}
                   variant="outline"
-                  className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white flex items-center justify-center"
+                  className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white flex items-center justify-center text-sm py-2"
                 >
                   <Globe className="h-4 w-4 mr-2" />
                   Website
@@ -197,7 +196,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               <Button
                 onClick={() => setShowClaimModal(true)}
                 variant="outline"
-                className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs"
+                className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
               >
                 Update My Clinic
               </Button>
@@ -216,4 +215,3 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 };
 
 export default ClinicCard;
-
