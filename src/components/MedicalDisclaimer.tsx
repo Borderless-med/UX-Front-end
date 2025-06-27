@@ -5,12 +5,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 interface MedicalDisclaimerProps {
   variant?: 'banner' | 'card' | 'compact' | 'subtle';
   className?: string;
+  fullWidth?: boolean;
 }
 
-const MedicalDisclaimer = ({ variant = 'card', className = '' }: MedicalDisclaimerProps) => {
+const MedicalDisclaimer = ({ variant = 'card', className = '', fullWidth = false }: MedicalDisclaimerProps) => {
   if (variant === 'banner') {
     return (
-      <div className={`bg-blue-50/30 border-l-4 border-blue-200/40 rounded-r-lg px-6 py-4 ${className}`}>
+      <div className={`bg-blue-50/30 border-l-4 border-blue-200/40 rounded-r-lg ${fullWidth ? 'px-0' : 'px-6'} py-4 ${className}`}>
         <div className="flex items-start gap-3">
           <Info className="h-4 w-4 text-blue-600/80 flex-shrink-0 mt-1" />
           <div className="space-y-2">
