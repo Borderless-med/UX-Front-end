@@ -11,12 +11,17 @@ const Index = () => {
   return (
     <div className="min-h-screen font-inter bg-white text-gray-900">
       <Navigation />
-      <HeroSection />
       
-      {/* Important Disclaimer - Standardized */}
-      <section className="py-8">
-        <MedicalDisclaimer variant="banner" fullWidth={true} />
-      </section>
+      {/* Important Disclaimer - Properly positioned at top */}
+      <div className="pt-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <MedicalDisclaimer variant="banner" />
+          </div>
+        </div>
+      </div>
+      
+      <HeroSection />
       
       {/* Add Pricing & Booking Disclaimer */}
       <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
