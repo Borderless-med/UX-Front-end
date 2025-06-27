@@ -8,10 +8,10 @@ import { proceduresData } from '@/data/proceduresData';
 
 const PriceComparison = () => {
   return (
-    <div className="min-h-screen bg-white py-8 pt-24">
+    <div className="min-h-screen bg-white py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-dark mb-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-blue-dark mb-4">
             Dental Price Comparison
           </h1>
           <p className="text-lg text-neutral-gray max-w-2xl mx-auto">

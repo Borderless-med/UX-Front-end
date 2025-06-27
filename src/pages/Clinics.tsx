@@ -19,7 +19,7 @@ const Clinics = () => {
       </div>
       
       {/* Reduced spacer for visual separation */}
-      <div className="py-8"></div>
+      <div className="py-4"></div>
       
       <div className="pt-6">
         <ClinicsSection />

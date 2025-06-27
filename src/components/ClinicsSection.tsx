@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
@@ -85,7 +86,7 @@ const ClinicsSection = () => {
 
   if (loading) {
     return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-blue-primary" />
@@ -98,7 +99,7 @@ const ClinicsSection = () => {
 
   if (error) {
     return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-6 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
             <p className="text-red-600 text-lg">Error loading clinics from database: {error}</p>
@@ -110,10 +111,10 @@ const ClinicsSection = () => {
   }
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-6 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-blue-dark mb-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-blue-dark mb-4">
             Find Your Perfect Clinic
           </h1>
           <p className="text-lg text-neutral-gray mb-8 max-w-3xl mx-auto">
