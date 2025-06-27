@@ -28,7 +28,7 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
             {/* Left Column - Data Sources & Directory Policy */}
             <div className="space-y-3">
               <div>
-                <h4 className="text-xs font-semibold text-blue-900 mb-1">Data Sources & Directory Policy</h4>
+                <h4 className="text-xs font-semibold text-blue-900 mb-2">Data Sources & Directory Policy</h4>
                 <div className="space-y-1">
                   <p className="text-xs text-blue-800/90 leading-tight">
                     <strong>Treatment & Ratings:</strong> Sourced from public listings and Google Business (as of {currentDate}). 
@@ -53,7 +53,7 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
             {/* Right Column - No Endorsement & Liability */}
             <div className="space-y-3">
               <div>
-                <h4 className="text-xs font-semibold text-blue-900 mb-1">No Endorsement & Liability</h4>
+                <h4 className="text-xs font-semibold text-blue-900 mb-2">No Endorsement & Liability</h4>
                 <div className="space-y-1">
                   <p className="text-xs text-blue-800/90 leading-tight">
                     Listing does not imply endorsement, professional relationship, or guarantee of quality. 
@@ -68,8 +68,8 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
             </div>
           </div>
 
-          {/* Action Bar - Reduced padding */}
-          <div className="flex justify-end pt-2 border-t border-blue-200/40">
+          {/* Action Bar - Removed top padding */}
+          <div className="flex justify-end border-t border-blue-200/40">
             <Button
               onClick={onOptOutClick}
               variant="outline"
