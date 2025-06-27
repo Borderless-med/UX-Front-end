@@ -1,12 +1,13 @@
+
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Star, MapPin, Globe, Clock, Shield, UserCheck, AlertCircle } from 'lucide-react';
 import { Clinic } from '@/types/clinic';
 import ClaimClinicModal from '../ClaimClinicModal';
 import { useState } from 'react';
 import { getAvailableCategories } from '../utils/clinicFilterUtils';
+import ClinicCardHeader from './ClinicCardHeader';
+import ClinicCardInfo from './ClinicCardInfo';
+import ClinicCardServices from './ClinicCardServices';
+import ClinicCardActions from './ClinicCardActions';
 
 interface ClinicCardProps {
   clinic: Clinic;
@@ -20,18 +21,6 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 
   const availableCategories = getAvailableCategories(clinic);
 
-  const handleRatingClick = () => {
-    if (clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '') {
-      window.open(clinic.googleReviewUrl, '_blank');
-    }
-  };
-
-  const handleWebsiteClick = () => {
-    if (clinic.websiteUrl && clinic.websiteUrl.trim() !== '' && clinic.websiteUrl !== 'N/A') {
-      window.open(clinic.websiteUrl, '_blank');
-    }
-  };
-
   const handleViewPractitioner = () => {
     if (isAuthenticated) {
       onViewPractitionerDetails(clinic);
@@ -40,170 +29,28 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
     }
   };
 
-  const formatOperatingHours = (hours: string) => {
-    if (!hours || hours === 'Not Listed' || hours === 'Operating hours not available') {
-      return 'Operating hours not available';
-    }
-    return hours.split('\n').map((line, index) => (
-      <div key={index} className="text-sm">
-        {line.trim()}
-      </div>
-    ));
-  };
-
-  const hasGoogleReviews = clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '';
-  const hasValidOperatingHours = clinic.operatingHours && clinic.operatingHours !== 'Operating hours not available';
-
   return (
     <>
       <Card className="h-[520px] shadow-sm hover:shadow-md transition-shadow border-blue-light">
         <CardContent className="p-6 h-full grid grid-rows-[1fr_90px_auto] gap-4">
           {/* Header Section - Expanded Height to accommodate all variations */}
           <div className="min-h-[220px] flex flex-col justify-between">
-            <div className="flex items-start justify-between gap-4 mb-3">
-              {/* Left Column: Clinic Name and Address */}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-blue-dark mb-2 leading-tight">
-                  {clinic.name}
-                </h3>
-                <p className="text-sm text-neutral-gray leading-relaxed">
-                  {clinic.address}
-                </p>
-              </div>
-              
-              {/* Right Column: Google Rating CTA Box */}
-              {hasGoogleReviews && (
-                <div 
-                  className="bg-gradient-to-r from-blue-light to-blue-150 border border-blue-light rounded-lg p-2 cursor-pointer hover:from-blue-150 hover:to-blue-secondary/20 hover:border-blue-secondary/30 transition-all duration-200 shadow-sm flex-shrink-0"
-                  onClick={handleRatingClick}
-                  title="Click to view Google Reviews"
-                >
-                  <div className="text-sm text-blue-primary font-medium mb-1">
-                    Google Review
-                  </div>
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span className="font-bold text-blue-dark text-sm">
-                      {clinic.rating.toFixed(1)}
-                    </span>
-                  </div>
-                  <div className="text-sm text-blue-primary font-medium mt-1">
-                    ({clinic.reviews} reviews)
-                  </div>
-                </div>
-              )}
-            </div>
+            <ClinicCardHeader clinic={clinic} />
             
-            {/* Second Row: Distance and Operating Hours */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center text-sm text-neutral-gray">
-                <MapPin className="h-4 w-4 mr-1" />
-                <span>{clinic.distance.toFixed(1)}km from CIQ</span>
-              </div>
-              
-              {/* Operating Hours */}
-              <div className="flex items-center">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="p-1 h-auto hover:bg-gray-50"
-                      title="View operating hours"
-                    >
-                      <Clock className="h-4 w-4 text-blue-primary" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-64" align="end">
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-blue-dark">Operating Hours</h4>
-                      <div className="text-neutral-gray">
-                        {hasValidOperatingHours ? formatOperatingHours(clinic.operatingHours) : 'Operating hours not available'}
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-
-            {/* License Status - Fixed Height */}
-            <div className="flex items-center justify-end h-8 mt-2">
-              {clinic.mdaLicense && clinic.mdaLicense !== 'Pending verification' && clinic.mdaLicense !== 'Pending Application' ? (
-                <div className="flex items-center text-sm text-green-600">
-                  <Shield className="h-4 w-4 mr-1" />
-                  <span>Verified</span>
-                </div>
-              ) : (
-                <div className="flex items-center text-sm text-orange-600">
-                  <AlertCircle className="h-4 w-4 mr-1" />
-                  <span>Pending Verification</span>
-                </div>
-              )}
-            </div>
+            <ClinicCardInfo clinic={clinic} />
           </div>
 
           {/* Available Treatment Categories - Increased Height Section */}
-          <div className="h-[90px] flex flex-col justify-start overflow-hidden">
-            {availableCategories.length > 0 ? (
-              <>
-                <p className="text-sm font-medium text-blue-dark mb-2">Available Services:</p>
-                <div className="flex flex-wrap gap-1">
-                  {availableCategories.slice(0, 4).map((category) => (
-                    <Badge 
-                      key={category} 
-                      variant="secondary" 
-                      className="text-xs bg-blue-primary/10 text-blue-primary"
-                    >
-                      {category}
-                    </Badge>
-                  ))}
-                  {availableCategories.length > 4 && (
-                    <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600">
-                      +{availableCategories.length - 4} more
-                    </Badge>
-                  )}
-                </div>
-              </>
-            ) : (
-              <div className="text-sm text-neutral-gray">
-                No specific services listed
-              </div>
-            )}
-          </div>
+          <ClinicCardServices availableCategories={availableCategories} />
 
           {/* Action Buttons - Fixed at Bottom with Proper Spacing */}
-          <div className="space-y-3 pb-2">
-            {/* Practitioner Details */}
-            <Button
-              onClick={handleViewPractitioner}
-              className="w-full bg-blue-primary hover:bg-blue-primary/90 text-white flex items-center justify-center text-sm py-2.5"
-            >
-              <UserCheck className="h-4 w-4 mr-2" />
-              {isAuthenticated ? 'View Practitioner Details' : 'Sign In to View Details'}
-            </Button>
-
-            {/* Website and Update Clinic Buttons */}
-            <div className="flex gap-2">
-              {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' && (
-                <Button
-                  onClick={handleWebsiteClick}
-                  variant="outline"
-                  className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white flex items-center justify-center text-sm py-2"
-                >
-                  <Globe className="h-4 w-4 mr-2" />
-                  Website
-                </Button>
-              )}
-              
-              <Button
-                onClick={() => setShowClaimModal(true)}
-                variant="outline"
-                className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
-              >
-                Update My Clinic
-              </Button>
-            </div>
-          </div>
+          <ClinicCardActions
+            clinic={clinic}
+            isAuthenticated={isAuthenticated}
+            onSignInClick={onSignInClick}
+            onViewPractitioner={handleViewPractitioner}
+            onClaimClinic={() => setShowClaimModal(true)}
+          />
         </CardContent>
       </Card>
 
