@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Users, MapPin, DollarSign, X } from 'lucide-react';
@@ -118,11 +117,6 @@ const HeroSection = () => {
               <div className="text-2xl font-bold text-gray-900 mb-2">50-70%</div>
               <div className="text-sm text-gray-600">Average Savings vs Singapore Prices</div>
             </Card>
-          </div>
-
-          {/* Important Disclaimer - Fixed */}
-          <div className="mb-20 max-w-4xl mx-auto">
-            <MedicalDisclaimer variant="banner" />
           </div>
 
           {/* Social Proof Section */}
