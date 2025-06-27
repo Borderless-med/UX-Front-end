@@ -33,8 +33,8 @@ export const filterClinics = (
     // Google rating filter
     const matchesRating = clinic.rating >= ratingFilter;
 
-    // Distance filter
-    const matchesDistance = clinic.distance <= maxDistance;
+    // Distance filter - handle null distances by treating them as "always included"
+    const matchesDistance = clinic.distance === null || clinic.distance === undefined || clinic.distance <= maxDistance;
 
     // Google reviews filter
     const matchesReviews = clinic.reviews >= minReviews;
