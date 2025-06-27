@@ -70,22 +70,11 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               {clinic.address}
             </p>
             
-            {/* Rating and Reviews */}
+            {/* Top Section with Distance and Operating Hours */}
             <div className="flex items-center justify-between mb-3">
-              <div 
-                className={`flex items-center ${hasGoogleReviews ? 'cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors' : ''}`}
-                onClick={hasGoogleReviews ? handleRatingClick : undefined}
-                title={hasGoogleReviews ? "Click to view Google Reviews" : "Google Reviews not available"}
-              >
-                <div className="flex items-center">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                  <span className="font-medium text-blue-dark">
-                    {clinic.rating.toFixed(1)}
-                  </span>
-                  <span className="text-sm text-neutral-gray ml-1">
-                    ({clinic.reviews} reviews)
-                  </span>
-                </div>
+              <div className="flex items-center text-sm text-neutral-gray">
+                <MapPin className="h-4 w-4 mr-1" />
+                <span>{clinic.distance.toFixed(1)}km from CIQ</span>
               </div>
               
               {/* Operating Hours */}
@@ -112,16 +101,30 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                 </Popover>
               </div>
             </div>
-          </div>
 
-          {/* Distance and License Status */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center text-sm text-neutral-gray">
-              <MapPin className="h-4 w-4 mr-1" />
-              <span>{clinic.distance.toFixed(1)}km from CIQ</span>
-            </div>
-            
-            <div className="flex items-center">
+            {/* Google Rating Box - Separate CTA Box */}
+            {hasGoogleReviews && (
+              <div 
+                className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-3 mb-3 cursor-pointer hover:from-blue-100 hover:to-blue-150 hover:border-blue-300 transition-all duration-200 shadow-sm"
+                onClick={handleRatingClick}
+                title="Click to view Google Reviews"
+              >
+                <div className="flex items-center justify-center">
+                  <div className="flex items-center">
+                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400 mr-2" />
+                    <span className="font-bold text-blue-dark text-lg">
+                      {clinic.rating.toFixed(1)}
+                    </span>
+                    <span className="text-sm text-blue-600 ml-2 font-medium">
+                      ({clinic.reviews} Google Reviews)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* License Status */}
+            <div className="flex items-center justify-end mb-4">
               {clinic.mdaLicense && clinic.mdaLicense !== 'Pending verification' && clinic.mdaLicense !== 'Pending Application' ? (
                 <div className="flex items-center text-sm text-green-600">
                   <Shield className="h-4 w-4 mr-1" />
