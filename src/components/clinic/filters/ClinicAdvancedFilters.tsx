@@ -35,10 +35,10 @@ const ClinicAdvancedFilters = ({
           />
         </div>
 
-        {/* Minimum Reviews */}
+        {/* Minimum Google Reviews */}
         <div>
           <h4 className="font-medium text-blue-dark mb-3">
-            Minimum Reviews: {minReviews}
+            Minimum Google Reviews: {minReviews}
           </h4>
           <Slider
             value={[minReviews]}

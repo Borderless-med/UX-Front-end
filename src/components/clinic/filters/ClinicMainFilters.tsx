@@ -144,7 +144,7 @@ const ClinicMainFilters = ({
         <div>
           <label className="block text-sm font-medium text-blue-dark mb-2 flex items-center">
             <Star className="h-4 w-4 mr-1" />
-            Minimum Rating
+            Minimum Google Rating
           </label>
           <Select value={ratingFilter.toString()} onValueChange={(value) => onRatingChange(Number(value))}>
             <SelectTrigger>
