@@ -128,11 +128,13 @@ export type Database = {
           enamel_shaping: boolean | null
           frenectomy: boolean | null
           gingivectomy: boolean | null
+          google_review_url: string | null
           gum_treatment: boolean | null
           id: number
           inlays_onlays: boolean | null
           mda_license: string | null
           name: string
+          operating_hours: string | null
           oral_cancer_screening: boolean | null
           porcelain_veneers: boolean | null
           rating: number | null
@@ -166,11 +168,13 @@ export type Database = {
           enamel_shaping?: boolean | null
           frenectomy?: boolean | null
           gingivectomy?: boolean | null
+          google_review_url?: string | null
           gum_treatment?: boolean | null
           id?: number
           inlays_onlays?: boolean | null
           mda_license?: string | null
           name: string
+          operating_hours?: string | null
           oral_cancer_screening?: boolean | null
           porcelain_veneers?: boolean | null
           rating?: number | null
@@ -204,11 +208,13 @@ export type Database = {
           enamel_shaping?: boolean | null
           frenectomy?: boolean | null
           gingivectomy?: boolean | null
+          google_review_url?: string | null
           gum_treatment?: boolean | null
           id?: number
           inlays_onlays?: boolean | null
           mda_license?: string | null
           name?: string
+          operating_hours?: string | null
           oral_cancer_screening?: boolean | null
           porcelain_veneers?: boolean | null
           rating?: number | null

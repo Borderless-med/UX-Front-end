@@ -4,16 +4,16 @@ export interface Clinic {
   name: string;
   address: string;
   dentist: string;
-  /** Google rating from 0-5 stars */
   rating: number;
-  /** Number of Google reviews */
   reviews: number;
   distance: number;
   sentiment: number;
   mdaLicense: string;
   credentials: string;
   township: string;
-  websiteUrl?: string;
+  websiteUrl: string;
+  googleReviewUrl: string;
+  operatingHours: string;
   treatments: {
     toothFilling: boolean;
     rootCanal: boolean;

@@ -44,6 +44,8 @@ export const useSupabaseClinics = () => {
             credentials: clinic.credentials || '',
             township: clinic.township || '',
             websiteUrl: clinic.website_url || '',
+            googleReviewUrl: clinic.google_review_url || '',
+            operatingHours: clinic.operating_hours || '',
             treatments: {
               toothFilling: clinic.tooth_filling || false,
               rootCanal: clinic.root_canal || false,
@@ -77,7 +79,9 @@ export const useSupabaseClinics = () => {
               address: transformed.address,
               rating: transformed.rating,
               reviews: transformed.reviews,
-              websiteUrl: transformed.websiteUrl
+              websiteUrl: transformed.websiteUrl,
+              googleReviewUrl: transformed.googleReviewUrl,
+              operatingHours: transformed.operatingHours
             });
           }
           
