@@ -75,6 +75,29 @@ export const sortClinics = (clinics: Clinic[], sortBy: string) => {
   });
 };
 
+export const getAvailableCategories = (clinic: Clinic) => {
+  const availableCategories = [];
+  
+  // Always include Basic Treatment as the first category
+  availableCategories.push('Basic Treatment');
+  
+  // Check each category to see if clinic offers any treatments in that category
+  Object.entries(treatmentCategories).forEach(([categoryKey, category]) => {
+    // Skip basic category since we already added it
+    if (categoryKey === 'basic') return;
+    
+    const hasAnyTreatmentInCategory = category.treatments.some(treatment => 
+      clinic.treatments[treatment as keyof typeof clinic.treatments]
+    );
+    
+    if (hasAnyTreatmentInCategory) {
+      availableCategories.push(category.label);
+    }
+  });
+  
+  return availableCategories;
+};
+
 export const getSpecialties = (clinic: Clinic) => {
   const specialties = [];
   

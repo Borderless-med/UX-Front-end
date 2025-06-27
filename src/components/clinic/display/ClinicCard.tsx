@@ -7,7 +7,7 @@ import { Star, MapPin, Globe, Clock, Shield, UserCheck, AlertCircle } from 'luci
 import { Clinic } from '@/types/clinic';
 import ClaimClinicModal from '../ClaimClinicModal';
 import { useState } from 'react';
-import { specialServicesLabels } from '../utils/clinicConstants';
+import { getAvailableCategories } from '../utils/clinicFilterUtils';
 
 interface ClinicCardProps {
   clinic: Clinic;
@@ -19,9 +19,7 @@ interface ClinicCardProps {
 const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitionerDetails }: ClinicCardProps) => {
   const [showClaimModal, setShowClaimModal] = useState(false);
 
-  const availableTreatments = Object.entries(clinic.treatments)
-    .filter(([_, available]) => available)
-    .map(([key]) => key as keyof typeof specialServicesLabels);
+  const availableCategories = getAvailableCategories(clinic);
 
   const handleRatingClick = () => {
     if (clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '') {
@@ -142,23 +140,23 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
             </div>
           </div>
 
-          {/* Available Treatments */}
-          {availableTreatments.length > 0 && (
+          {/* Available Treatment Categories */}
+          {availableCategories.length > 0 && (
             <div className="mb-4">
               <p className="text-sm font-medium text-blue-dark mb-2">Available Services:</p>
               <div className="flex flex-wrap gap-1">
-                {availableTreatments.slice(0, 3).map((treatment) => (
+                {availableCategories.slice(0, 3).map((category) => (
                   <Badge 
-                    key={treatment} 
+                    key={category} 
                     variant="secondary" 
                     className="text-xs bg-blue-primary/10 text-blue-primary"
                   >
-                    {specialServicesLabels[treatment]}
+                    {category}
                   </Badge>
                 ))}
-                {availableTreatments.length > 3 && (
+                {availableCategories.length > 3 && (
                   <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600">
-                    +{availableTreatments.length - 3} more
+                    +{availableCategories.length - 3} more
                   </Badge>
                 )}
               </div>
