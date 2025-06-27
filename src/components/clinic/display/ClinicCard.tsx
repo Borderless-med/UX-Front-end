@@ -67,7 +67,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                 <h3 className="text-lg font-semibold text-blue-dark mb-2 line-clamp-2">
                   {clinic.name}
                 </h3>
-                <p className="text-sm text-neutral-gray line-clamp-1">
+                <p className="text-sm text-neutral-gray line-clamp-2">
                   {clinic.address}
                 </p>
               </div>
@@ -75,17 +75,17 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               {/* Right Column: Google Rating CTA Box */}
               {hasGoogleReviews && (
                 <div 
-                  className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg p-2 cursor-pointer hover:from-gray-100 hover:to-gray-150 hover:border-gray-300 transition-all duration-200 shadow-sm flex-shrink-0"
+                  className="bg-gradient-to-r from-teal-50 to-teal-100 border border-teal-200 rounded-lg p-2 cursor-pointer hover:from-teal-100 hover:to-teal-150 hover:border-teal-300 transition-all duration-200 shadow-sm flex-shrink-0"
                   onClick={handleRatingClick}
                   title="Click to view Google Reviews"
                 >
                   <div className="flex items-center">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span className="font-bold text-gray-700 text-sm">
+                    <span className="font-bold text-teal-700 text-sm">
                       {clinic.rating.toFixed(1)}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-600 font-medium mt-1">
+                  <div className="text-xs text-teal-600 font-medium mt-1">
                     ({clinic.reviews} reviews)
                   </div>
                 </div>
