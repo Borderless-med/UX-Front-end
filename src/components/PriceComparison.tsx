@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import PriceComparisonTable from './PriceComparisonTable';
 import StatsCards from './StatsCards';
 import MedicalDisclaimer from './MedicalDisclaimer';
+import PricingBookingDisclaimer from './PricingBookingDisclaimer';
 import { proceduresData } from '@/data/proceduresData';
 
 const PriceComparison = () => {
@@ -33,6 +34,10 @@ const PriceComparison = () => {
 
         <div className="mt-8">
           <StatsCards />
+        </div>
+
+        <div className="mt-8">
+          <PricingBookingDisclaimer />
         </div>
 
         <div className="mt-8">
