@@ -15,7 +15,7 @@ const Index = () => {
       
       {/* Important Disclaimer - Standardized */}
       <section className="py-8">
-        <MedicalDisclaimer variant="banner" />
+        <MedicalDisclaimer variant="banner" className="!px-0" />
       </section>
       
       {/* Add Pricing & Booking Disclaimer */}
