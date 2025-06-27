@@ -21,6 +21,9 @@ const Index = () => {
         </div>
       </div>
       
+      {/* Empty spacer for visual separation */}
+      <div className="py-20"></div>
+      
       <HeroSection />
       
       {/* Add Pricing & Booking Disclaimer */}
