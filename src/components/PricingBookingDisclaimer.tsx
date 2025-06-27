@@ -8,7 +8,7 @@ const PricingBookingDisclaimer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-4xl mx-auto">
+    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 w-full">
       <div className="space-y-4">
         {/* Always Visible Section */}
         <div>
