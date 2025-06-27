@@ -130,7 +130,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               ) : (
                 <div className="flex items-center text-sm text-orange-600">
                   <AlertCircle className="h-4 w-4 mr-1" />
-                  <span>Pending</span>
+                  <span>Pending Verification</span>
                 </div>
               )}
             </div>
