@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -79,8 +78,8 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                   onClick={handleRatingClick}
                   title="Click to view Google Reviews"
                 >
-                  <div className="text-xs text-blue-primary font-medium mb-1">
-                    Google
+                  <div className="text-sm text-blue-primary font-medium mb-1">
+                    Google Review
                   </div>
                   <div className="flex items-center">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
@@ -88,7 +87,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                       {clinic.rating.toFixed(1)}
                     </span>
                   </div>
-                  <div className="text-xs text-blue-primary font-medium mt-1">
+                  <div className="text-sm text-blue-primary font-medium mt-1">
                     ({clinic.reviews} reviews)
                   </div>
                 </div>
