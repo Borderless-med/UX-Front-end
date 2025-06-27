@@ -43,6 +43,7 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
                       <ExternalLink className="h-2.5 w-2.5" />
                     </a>
                   </p>
+                  <div className="h-2"></div>
                   <p className="text-xs text-blue-800/90 leading-tight">
                     <strong>Verification:</strong> We have not verified credentials or services. Users must conduct due diligence when selecting providers.
                   </p>
@@ -59,6 +60,7 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
                     Listing does not imply endorsement, professional relationship, or guarantee of quality. 
                     Information compiled from publicly available sources only.
                   </p>
+                  <div className="h-2"></div>
                   <p className="text-xs text-blue-800/90 leading-tight">
                     <strong>Liability:</strong> Platform not responsible for outcomes from user interactions with listed clinics. 
                     Users are advised to verify all information independently.
