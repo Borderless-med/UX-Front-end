@@ -6,7 +6,7 @@ export const useClinicFilters = () => {
   const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
   const [selectedTownships, setSelectedTownships] = useState<string[]>([]);
   const [ratingFilter, setRatingFilter] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(50);
+  const [maxDistance, setMaxDistance] = useState(350);
   const [minReviews, setMinReviews] = useState(0);
   const [sortBy, setSortBy] = useState('distance');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
@@ -17,7 +17,7 @@ export const useClinicFilters = () => {
     setSelectedTreatments([]);
     setSelectedTownships([]);
     setRatingFilter(0);
-    setMaxDistance(50);
+    setMaxDistance(350);
     setMinReviews(0);
     setSortBy('distance');
     setMdaLicenseFilter('all');
@@ -28,7 +28,7 @@ export const useClinicFilters = () => {
     selectedTreatments.length +
     selectedTownships.length +
     (ratingFilter > 0 ? 1 : 0) +
-    (maxDistance < 50 ? 1 : 0) +
+    (maxDistance < 350 ? 1 : 0) +
     (minReviews > 0 ? 1 : 0) +
     (mdaLicenseFilter !== 'all' ? 1 : 0);
 

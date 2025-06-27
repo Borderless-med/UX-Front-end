@@ -28,7 +28,7 @@ const ClinicAdvancedFilters = ({
           <Slider
             value={[maxDistance]}
             onValueChange={(value) => onMaxDistanceChange(value[0])}
-            max={110}
+            max={350}
             min={0}
             step={1}
             className="w-full"
