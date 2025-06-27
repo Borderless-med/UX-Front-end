@@ -13,9 +13,9 @@ const Index = () => {
       <Navigation />
       
       {/* Important Disclaimer - Properly positioned at top */}
-      <div className="pt-40 px-4 sm:px-6 lg:px-8">
+      <div className="pt-28 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
+          <div className="mb-6">
             <MedicalDisclaimer variant="banner" fullWidth={true} />
           </div>
         </div>
