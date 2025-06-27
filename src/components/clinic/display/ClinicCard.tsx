@@ -97,14 +97,15 @@ const ClinicCard = ({
               )}
             </div>
             
-            {/* Rating Section */}
+            {/* Google Rating Section */}
             <div className="flex items-center text-right">
               <div className="flex flex-col">
-                <div className="flex items-center">
+                <span className="text-xs text-neutral-gray mb-1">Google Rating</span>
+                <div className="flex items-center mb-1">
                   <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
                   <span className="text-sm font-medium text-blue-dark">{clinic.rating.toFixed(1)}</span>
                 </div>
-                <span className="text-xs text-neutral-gray">({clinic.reviews} reviews)</span>
+                <span className="text-xs text-neutral-gray">({clinic.reviews} Google Reviews)</span>
               </div>
             </div>
           </div>
