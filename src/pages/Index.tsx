@@ -14,7 +14,7 @@ const Index = () => {
       <HeroSection />
       
       {/* Important Disclaimer - Standardized */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8">
+      <section className="py-8">
         <MedicalDisclaimer variant="banner" />
       </section>
       
