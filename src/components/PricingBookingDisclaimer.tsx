@@ -16,7 +16,7 @@ const PricingBookingDisclaimer = () => {
             Pricing & Booking Information
           </h3>
           <p className="text-sm text-blue-dark font-medium mb-4">
-            <strong>Important:</strong> Contact our platform team at [contact details] to verify current pricing and availability before visiting providers. All pricing shown is indicative only. We facilitate bookings and verify current rates for you. Not medical advice.
+            <strong>Important:</strong> WhatsApp us at SG-JB Dental Platform @ +65-8192 6158 to verify current pricing and availability before visiting providers. All pricing shown is indicative only. We facilitate bookings and verify current rates for you. Not medical advice.
           </p>
         </div>
 
@@ -41,7 +41,7 @@ const PricingBookingDisclaimer = () => {
               </p>
               
               <p>
-                To receive accurate, up-to-date pricing and availability—and to help us continue serving you—please contact our platform team at [contact details] before making any healthcare decisions or commitments. Direct inquiries to providers may bypass our service and jeopardize our ability to operate.
+                To receive accurate, up-to-date pricing and availability—and to help us continue serving you—please WhatsApp us at SG-JB Dental Platform @ +65-8192 6158 before making any healthcare decisions or commitments. Direct inquiries to providers may bypass our service and jeopardize our ability to operate.
               </p>
               
               <p className="font-medium">
