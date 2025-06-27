@@ -20,6 +20,11 @@ const PriceComparison = () => {
           </p>
         </div>
 
+        {/* Important Disclaimer - Standardized */}
+        <div className="mb-8">
+          <MedicalDisclaimer variant="banner" />
+        </div>
+
         <Card className="shadow-lg border border-blue-light">
           <CardHeader className="bg-blue-primary/10 border-b border-blue-light">
             <CardTitle className="text-2xl text-blue-dark">Treatment Price Comparison</CardTitle>
@@ -38,10 +43,6 @@ const PriceComparison = () => {
 
         <div className="mt-8">
           <PricingBookingDisclaimer />
-        </div>
-
-        <div className="mt-8">
-          <MedicalDisclaimer variant="banner" />
         </div>
       </div>
     </div>

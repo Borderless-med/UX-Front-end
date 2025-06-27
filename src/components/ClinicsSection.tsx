@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 import AuthModal from '@/components/auth/AuthModal';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
@@ -119,6 +119,11 @@ const ClinicsSection = () => {
           <p className="text-lg text-neutral-gray mb-8 max-w-3xl mx-auto">
             Search and filter through {clinics.length} verified dental clinics across Johor to find the best match for your needs
           </p>
+        </div>
+
+        {/* Important Disclaimer - Standardized */}
+        <div className="mb-8">
+          <MedicalDisclaimer variant="banner" />
         </div>
 
         <DisclaimerSection onOptOutClick={handleOptOutClick} />

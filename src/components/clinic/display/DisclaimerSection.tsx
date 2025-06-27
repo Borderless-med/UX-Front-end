@@ -23,19 +23,10 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
             <h3 className="text-lg font-semibold text-blue-900">Legal Disclaimers</h3>
           </div>
 
-          {/* 2x2 Grid Layout */}
+          {/* 2x2 Grid Layout - Removed Medical Notice */}
           <div className="grid md:grid-cols-2 gap-6 mb-4">
             {/* Left Column */}
             <div className="space-y-4">
-              {/* Medical Notice */}
-              <div>
-                <h4 className="text-xs font-semibold text-blue-900 mb-2">Medical Notice</h4>
-                <p className="text-xs text-blue-800/90 leading-relaxed">
-                  This platform provides general information only and does not constitute dental advice. 
-                  Always consult qualified dental professionals for diagnosis and treatment.
-                </p>
-              </div>
-
               {/* Data Sources & Attribution */}
               <div>
                 <h4 className="text-xs font-semibold text-blue-900 mb-2">Data Sources & Attribution</h4>
@@ -58,10 +49,7 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
                   </p>
                 </div>
               </div>
-            </div>
 
-            {/* Right Column */}
-            <div className="space-y-4">
               {/* No Endorsement */}
               <div>
                 <h4 className="text-xs font-semibold text-blue-900 mb-2">No Endorsement</h4>
@@ -70,7 +58,10 @@ const DisclaimerSection = ({ onOptOutClick }: DisclaimerSectionProps) => {
                   Information compiled from publicly available sources.
                 </p>
               </div>
+            </div>
 
+            {/* Right Column */}
+            <div className="space-y-4">
               {/* Directory Policy */}
               <div>
                 <h4 className="text-xs font-semibold text-blue-900 mb-2">Directory Policy</h4>
