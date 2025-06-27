@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -75,17 +74,17 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               {/* Right Column: Google Rating CTA Box */}
               {hasGoogleReviews && (
                 <div 
-                  className="bg-gradient-to-r from-teal-50 to-teal-100 border border-teal-200 rounded-lg p-2 cursor-pointer hover:from-teal-100 hover:to-teal-150 hover:border-teal-300 transition-all duration-200 shadow-sm flex-shrink-0"
+                  className="bg-gradient-to-r from-blue-light to-blue-150 border border-blue-light rounded-lg p-2 cursor-pointer hover:from-blue-150 hover:to-blue-secondary/20 hover:border-blue-secondary/30 transition-all duration-200 shadow-sm flex-shrink-0"
                   onClick={handleRatingClick}
                   title="Click to view Google Reviews"
                 >
                   <div className="flex items-center">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span className="font-bold text-teal-700 text-sm">
+                    <span className="font-bold text-blue-dark text-sm">
                       {clinic.rating.toFixed(1)}
                     </span>
                   </div>
-                  <div className="text-xs text-teal-600 font-medium mt-1">
+                  <div className="text-xs text-blue-primary font-medium mt-1">
                     ({clinic.reviews} reviews)
                   </div>
                 </div>
