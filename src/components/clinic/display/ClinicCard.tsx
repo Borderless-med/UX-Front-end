@@ -57,8 +57,8 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 
   return (
     <>
-      <Card className="h-full shadow-sm hover:shadow-md transition-shadow border-blue-light">
-        <CardContent className="p-6">
+      <Card className="h-96 shadow-sm hover:shadow-md transition-shadow border-blue-light">
+        <CardContent className="p-6 h-full flex flex-col justify-between">
           {/* Header with Name/Address on Left and Google Rating on Right */}
           <div className="mb-4">
             <div className="flex items-start justify-between gap-4 mb-3">
@@ -75,17 +75,17 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               {/* Right Column: Google Rating CTA Box */}
               {hasGoogleReviews && (
                 <div 
-                  className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-2 cursor-pointer hover:from-blue-100 hover:to-blue-150 hover:border-blue-300 transition-all duration-200 shadow-sm flex-shrink-0"
+                  className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg p-2 cursor-pointer hover:from-gray-100 hover:to-gray-150 hover:border-gray-300 transition-all duration-200 shadow-sm flex-shrink-0"
                   onClick={handleRatingClick}
                   title="Click to view Google Reviews"
                 >
                   <div className="flex items-center">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span className="font-bold text-blue-dark text-sm">
+                    <span className="font-bold text-gray-700 text-sm">
                       {clinic.rating.toFixed(1)}
                     </span>
                   </div>
-                  <div className="text-xs text-blue-600 font-medium mt-1">
+                  <div className="text-xs text-gray-600 font-medium mt-1">
                     ({clinic.reviews} reviews)
                   </div>
                 </div>
@@ -142,7 +142,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 
           {/* Available Treatment Categories */}
           {availableCategories.length > 0 && (
-            <div className="mb-4">
+            <div className="mb-4 flex-1">
               <p className="text-sm font-medium text-blue-dark mb-2">Available Services:</p>
               <div className="flex flex-wrap gap-1">
                 {availableCategories.slice(0, 3).map((category) => (
@@ -164,7 +164,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
           )}
 
           {/* Action Buttons */}
-          <div className="space-y-2">
+          <div className="space-y-2 mt-auto">
             {/* Practitioner Details */}
             <Button
               onClick={handleViewPractitioner}
@@ -174,7 +174,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
               {isAuthenticated ? 'View Practitioner Details' : 'Sign In to View Details'}
             </Button>
 
-            {/* Website and Claim Buttons */}
+            {/* Website and Update Clinic Buttons */}
             <div className="flex gap-2">
               {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' && (
                 <Button
@@ -192,7 +192,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
                 variant="outline"
                 className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs"
               >
-                Claim Clinic
+                Update My Clinic
               </Button>
             </div>
           </div>
