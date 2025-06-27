@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Star, MapPin, Phone, Clock, ExternalLink, Globe, UserCheck, Award } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -97,15 +96,17 @@ const ClinicCard = ({
               )}
             </div>
             
-            {/* Google Rating Section */}
-            <div className="flex items-center text-right">
-              <div className="flex flex-col">
-                <span className="text-xs text-neutral-gray mb-1">Google Rating</span>
-                <div className="flex items-center mb-1">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                  <span className="text-sm font-medium text-blue-dark">{clinic.rating.toFixed(1)}</span>
+            {/* Enhanced Google Rating Section */}
+            <div className="ml-4 flex-shrink-0">
+              <div className="bg-white border border-gray-100 rounded-lg p-3 shadow-sm text-center min-w-[120px]">
+                <div className="text-xs font-medium text-gray-600 mb-2">Google Rating</div>
+                <div className="flex items-center justify-center gap-1 mb-2">
+                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                  <span className="text-lg font-bold text-blue-dark">{clinic.rating.toFixed(1)}</span>
                 </div>
-                <span className="text-xs text-neutral-gray">({clinic.reviews} Google Reviews)</span>
+                <div className="text-xs text-gray-500">
+                  {clinic.reviews} Reviews
+                </div>
               </div>
             </div>
           </div>
