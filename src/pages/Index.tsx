@@ -16,7 +16,7 @@ const Index = () => {
       <div className="pt-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
-            <MedicalDisclaimer variant="banner" />
+            <MedicalDisclaimer variant="banner" fullWidth={true} />
           </div>
         </div>
       </div>
