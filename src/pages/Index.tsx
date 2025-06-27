@@ -28,7 +28,9 @@ const Index = () => {
       
       {/* Add Pricing & Booking Disclaimer */}
       <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <PricingBookingDisclaimer />
+        <div className="max-w-7xl mx-auto">
+          <PricingBookingDisclaimer />
+        </div>
       </section>
       
       <WaitlistSection />
