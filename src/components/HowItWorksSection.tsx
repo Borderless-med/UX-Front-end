@@ -22,8 +22,8 @@ const HowItWorksSection = () => {
     },
     {
       number: 3,
-      title: 'Traffic-Aware Scheduling',
-      description: 'Integrated scheduling using real-time traffic data with automatic rescheduling for causeway delays',
+      title: 'Travel Planning Support',
+      description: 'Convenient access to traffic monitoring tools like Waze, Google Maps, and OneMotoring.com to help you plan your journey and appointments effectively',
       color: 'bg-blue-600',
       hasBadge: false
     },
@@ -79,7 +79,7 @@ const HowItWorksSection = () => {
     {
       icon: '🤖',
       title: 'Intelligent Chatbot Assistant',
-      description: 'Get instant answers about treatments, booking, traffic conditions, and clinic recommendations - available 24/7',
+      description: 'Get instant answers about treatments, booking, clinic recommendations, and access to helpful travel planning resources - available 24/7',
       badge: 'Launching Q3 2025'
     },
     {

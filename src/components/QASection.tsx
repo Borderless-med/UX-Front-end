@@ -23,7 +23,7 @@ const QASection = () => {
     },
     {
       question: 'What if I need follow-up care?',
-      answer: 'Our platform includes follow-up scheduling coordination with traffic-aware timing and 24/7 support for seamless appointment management.'
+      answer: 'Our platform includes follow-up scheduling coordination and provides convenient access to traffic monitoring tools for better appointment planning, plus 24/7 support for seamless management.'
     },
     {
       question: 'How are payments handled?',
@@ -47,7 +47,7 @@ const QASection = () => {
     },
     {
       question: 'What about travel complications and traffic delays?',
-      answer: 'Our smart scheduling system uses real-time traffic data and provides travel tips and alternative route suggestions for causeway crossings.'
+      answer: 'We provide direct links to traffic monitoring tools (Waze, Google Maps, OneMotoring.com) and general travel tips to help you plan your causeway crossings effectively.'
     },
     {
       question: 'Are there hidden costs I should know about?',
