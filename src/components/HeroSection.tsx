@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Users, X, Star } from 'lucide-react';
@@ -113,6 +114,41 @@ const HeroSection = () => {
             </Card>
           </div>
 
+          {/* Revolutionary AI Features Section */}
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-8 mb-12 max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Revolutionary AI Features Launching Soon
+              </h2>
+              <p className="text-lg text-gray-600">
+                Experience the future of dental tourism with intelligent assistance
+              </p>
+            </div>
+            
+            <div className="flex flex-col md:flex-row gap-6 mb-8">
+              <div className="flex-1 bg-white/70 rounded-lg p-6 border border-blue-100">
+                <div className="text-2xl mb-3">🤖</div>
+                <h3 className="font-semibold text-gray-900 mb-2">24/7 AI Dental Assistant</h3>
+                <p className="text-gray-600">Instant booking, recommendations, and answers</p>
+              </div>
+              
+              <div className="flex-1 bg-white/70 rounded-lg p-6 border border-blue-100">
+                <div className="text-2xl mb-3">📊</div>
+                <h3 className="font-semibold text-gray-900 mb-2">Advanced Analytics Dashboard</h3>
+                <p className="text-gray-600">Real-time insights for clinic partners</p>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <Button 
+                onClick={scrollToWaitlist}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              >
+                Join Waitlist for Early Access
+              </Button>
+            </div>
+          </div>
+
           {/* Simple Testimonial */}
           <div className="bg-blue-50 rounded-xl p-8 mb-12 max-w-4xl mx-auto">
             <div className="text-center">
@@ -153,3 +189,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
