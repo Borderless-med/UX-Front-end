@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Users, X } from 'lucide-react';
+import { Users, X, Star } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -98,12 +98,18 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Single Key Trust Signal */}
-          <div className="flex justify-center mb-12">
-            <Card className="p-8 text-center bg-green-50 border-green-200 hover:shadow-lg transition-shadow max-w-sm">
+          {/* Two Key Trust Signals */}
+          <div className="flex flex-col md:flex-row gap-6 justify-center mb-12 max-w-4xl mx-auto">
+            <Card className="p-8 text-center bg-green-50 border-green-200 hover:shadow-lg transition-shadow flex-1">
               <Users className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <div className="text-3xl font-bold text-gray-900 mb-2">5,000+</div>
-              <div className="text-gray-600">Singapore Patients Treated Successfully</div>
+              <div className="text-3xl font-bold text-gray-900 mb-2">50,000+</div>
+              <div className="text-gray-600">Singaporeans Seek JB Dental Care Annually</div>
+            </Card>
+            
+            <Card className="p-8 text-center bg-blue-50 border-blue-200 hover:shadow-lg transition-shadow flex-1">
+              <Star className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+              <div className="text-3xl font-bold text-gray-900 mb-2">4.9/5</div>
+              <div className="text-gray-600">JB Clinics Rated by 500+ Singapore Patient Reviews</div>
             </Card>
           </div>
 
