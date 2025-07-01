@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
 const HowItWorksSection = () => {
   const steps = [
@@ -7,25 +8,31 @@ const HowItWorksSection = () => {
       number: 1,
       title: 'Directory Search',
       description: 'Our system searches directory listings through information collection and data analysis for comprehensive clinic information',
-      color: 'bg-blue-600'
+      color: 'bg-blue-600',
+      hasBadge: false
     },
     {
       number: 2,
-      title: 'Smart Matching',
-      description: 'Priority clinic matching based on your treatment needs, location preferences, and available information',
-      color: 'bg-blue-600'
+      title: 'Smart Matching + AI Recommendations',
+      description: 'Priority clinic matching based on your treatment needs, location preferences, and AI-powered personalized recommendations',
+      color: 'bg-blue-600',
+      hasBadge: true,
+      badgeText: 'AI Enhanced - Coming Soon'
     },
     {
       number: 3,
       title: 'Traffic-Aware Scheduling',
       description: 'Integrated scheduling using real-time traffic data with automatic rescheduling for causeway delays',
-      color: 'bg-blue-600'
+      color: 'bg-blue-600',
+      hasBadge: false
     },
     {
       number: 4,
-      title: '24/7 Support',
-      description: 'Continuous support throughout your treatment journey with emergency hotline and follow-up coordination',
-      color: 'bg-blue-600'
+      title: '24/7 Support + Intelligent Assistant',
+      description: 'Continuous support throughout your treatment journey with emergency hotline, follow-up coordination, and intelligent AI assistant for instant answers',
+      color: 'bg-blue-600',
+      hasBadge: true,
+      badgeText: 'AI Chatbot - Coming Soon'
     }
   ];
 
@@ -82,8 +89,13 @@ const HowItWorksSection = () => {
         {/* Process Steps */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {steps.map((step) => (
-            <Card key={step.number} className="bg-light-card border-gray-200 hover:border-teal-accent transition-all duration-300 shadow-sm hover:shadow-md">
+            <Card key={step.number} className="bg-light-card border-gray-200 hover:border-teal-accent transition-all duration-300 shadow-sm hover:shadow-md relative">
               <CardContent className="p-6 text-center">
+                {step.hasBadge && (
+                  <Badge className="absolute top-2 right-2 bg-blue-600 text-white text-xs hover:bg-blue-600">
+                    {step.badgeText}
+                  </Badge>
+                )}
                 <div className={`w-12 h-12 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4`}>
                   {step.number}
                 </div>
