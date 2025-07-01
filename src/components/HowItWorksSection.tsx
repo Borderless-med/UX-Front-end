@@ -17,7 +17,7 @@ const HowItWorksSection = () => {
       description: 'Priority clinic matching based on your treatment needs, location preferences, and AI-powered personalized recommendations',
       color: 'bg-blue-600',
       hasBadge: true,
-      badgeText: 'AI Enhanced - Coming Soon'
+      badgeText: 'AI Enhanced'
     },
     {
       number: 3,
@@ -32,7 +32,7 @@ const HowItWorksSection = () => {
       description: 'Continuous support throughout your treatment journey with emergency hotline, follow-up coordination, and intelligent AI assistant for instant answers',
       color: 'bg-blue-600',
       hasBadge: true,
-      badgeText: 'AI Chatbot - Coming Soon'
+      badgeText: 'AI Chatbot'
     }
   ];
 
@@ -92,7 +92,7 @@ const HowItWorksSection = () => {
             <Card key={step.number} className="bg-light-card border-gray-200 hover:border-teal-accent transition-all duration-300 shadow-sm hover:shadow-md relative">
               <CardContent className="p-6 text-center">
                 {step.hasBadge && (
-                  <Badge className="absolute top-2 right-2 bg-blue-600 text-white text-xs hover:bg-blue-600">
+                  <Badge className="absolute top-3 right-3 bg-blue-600 text-white text-xs px-2 py-1 z-10 hover:bg-blue-600 shadow-sm">
                     {step.badgeText}
                   </Badge>
                 )}
