@@ -475,6 +475,8 @@ export type Database = {
       }
       waitlist_signups: {
         Row: {
+          ai_chatbot_interest: boolean | null
+          clinic_analytics_interest: boolean | null
           confirmation_sent_at: string | null
           confirmation_token: string | null
           consent_timestamp: string | null
@@ -487,6 +489,8 @@ export type Database = {
           whatsapp_consent: boolean
         }
         Insert: {
+          ai_chatbot_interest?: boolean | null
+          clinic_analytics_interest?: boolean | null
           confirmation_sent_at?: string | null
           confirmation_token?: string | null
           consent_timestamp?: string | null
@@ -499,6 +503,8 @@ export type Database = {
           whatsapp_consent?: boolean
         }
         Update: {
+          ai_chatbot_interest?: boolean | null
+          clinic_analytics_interest?: boolean | null
           confirmation_sent_at?: string | null
           confirmation_token?: string | null
           consent_timestamp?: string | null
