@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -74,6 +75,21 @@ const HowItWorksSection = () => {
     }
   ];
 
+  const aiFeatures = [
+    {
+      icon: '🤖',
+      title: 'Intelligent Chatbot Assistant',
+      description: 'Get instant answers about treatments, booking, traffic conditions, and clinic recommendations - available 24/7',
+      badge: 'Launching Q3 2025'
+    },
+    {
+      icon: '📊',
+      title: 'Real-Time Analytics Dashboard',
+      description: 'Clinic partners receive advanced sentiment analysis and patient feedback insights to optimize their practice',
+      badge: 'Launching Q3 2025'
+    }
+  ];
+
   return (
     <section id="how-it-works" className="py-6 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -104,6 +120,35 @@ const HowItWorksSection = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* AI Technology Section */}
+        <div className="mt-16 mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
+              Powered by Advanced AI Technology
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Experience the future of dental care with our cutting-edge AI innovations
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {aiFeatures.map((feature, index) => (
+              <Card key={index} className="bg-blue-500/10 border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 shadow-sm hover:shadow-md relative">
+                <CardContent className="p-6 text-center">
+                  <Badge className="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-sm">
+                    {feature.badge}
+                  </Badge>
+                  <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Detailed Features with Tabs */}
