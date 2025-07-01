@@ -1,6 +1,7 @@
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Users, MapPin, DollarSign, X } from 'lucide-react';
+import { Users, MapPin, DollarSign, X, Bot, BarChart3 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
@@ -117,6 +118,49 @@ const HeroSection = () => {
               <div className="text-2xl font-bold text-gray-900 mb-2">50-70%</div>
               <div className="text-sm text-gray-600">Average Savings vs Singapore Prices</div>
             </Card>
+          </div>
+
+          {/* Revolutionary AI Features Banner */}
+          <div className="bg-blue-50 rounded-2xl p-8 mb-16 border border-blue-100">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Revolutionary AI Features Launching Soon
+              </h2>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+                Experience the future of dental tourism with intelligent assistance
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <Card className="p-6 bg-white hover:shadow-lg transition-shadow">
+                <div className="flex items-start space-x-4">
+                  <Bot className="w-12 h-12 text-blue-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">24/7 AI Dental Assistant</h3>
+                    <p className="text-gray-700">Instant booking, recommendations, and answers</p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className="p-6 bg-white hover:shadow-lg transition-shadow">
+                <div className="flex items-start space-x-4">
+                  <BarChart3 className="w-12 h-12 text-blue-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Advanced Analytics Dashboard</h3>
+                    <p className="text-gray-700">Real-time insights for clinic partners</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+            
+            <div className="text-center">
+              <Button 
+                onClick={scrollToWaitlist}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              >
+                Join Waitlist for Early Access
+              </Button>
+            </div>
           </div>
 
           {/* Social Proof Section */}
