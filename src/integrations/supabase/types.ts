@@ -386,6 +386,7 @@ export type Database = {
       partner_applications: {
         Row: {
           address: string | null
+          ai_chatbot_interest: boolean | null
           city: string | null
           clinic_name: string | null
           contact_name: string | null
@@ -395,12 +396,14 @@ export type Database = {
           id: string
           phone: string | null
           registration_number: string | null
+          sentiment_analysis_interest: boolean | null
           services: string | null
           updated_at: string | null
           why_join: string | null
         }
         Insert: {
           address?: string | null
+          ai_chatbot_interest?: boolean | null
           city?: string | null
           clinic_name?: string | null
           contact_name?: string | null
@@ -410,12 +413,14 @@ export type Database = {
           id?: string
           phone?: string | null
           registration_number?: string | null
+          sentiment_analysis_interest?: boolean | null
           services?: string | null
           updated_at?: string | null
           why_join?: string | null
         }
         Update: {
           address?: string | null
+          ai_chatbot_interest?: boolean | null
           city?: string | null
           clinic_name?: string | null
           contact_name?: string | null
@@ -425,6 +430,7 @@ export type Database = {
           id?: string
           phone?: string | null
           registration_number?: string | null
+          sentiment_analysis_interest?: boolean | null
           services?: string | null
           updated_at?: string | null
           why_join?: string | null

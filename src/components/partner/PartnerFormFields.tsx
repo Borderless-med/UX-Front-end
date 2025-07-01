@@ -3,6 +3,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface PartnerFormData {
   clinicName: string;
@@ -15,6 +16,8 @@ interface PartnerFormData {
   services: string;
   experience: string;
   whyJoin: string;
+  sentimentAnalysisInterest: boolean;
+  aiChatbotInterest: boolean;
 }
 
 interface PartnerFormFieldsProps {
@@ -169,6 +172,53 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           </FormItem>
         )}
       />
+
+      <div className="space-y-6">
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">AI Features Early Access (Optional)</h3>
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="sentimentAnalysisInterest"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-gray-800 font-medium">
+                      I want early access to sentiment analysis dashboard for patient insights
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="aiChatbotInterest"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-gray-800 font-medium">
+                      I'm interested in AI chatbot integration for my clinic operations
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+      </div>
     </>
   );
 };

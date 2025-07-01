@@ -18,6 +18,8 @@ interface PartnerFormData {
   services: string;
   experience: string;
   whyJoin: string;
+  sentimentAnalysisInterest: boolean;
+  aiChatbotInterest: boolean;
 }
 
 interface PartnerFormProps {
@@ -39,6 +41,8 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
       services: '',
       experience: '',
       whyJoin: '',
+      sentimentAnalysisInterest: false,
+      aiChatbotInterest: false,
     },
   });
 
@@ -60,6 +64,8 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             services: data.services,
             experience: data.experience,
             why_join: data.whyJoin,
+            sentiment_analysis_interest: data.sentimentAnalysisInterest,
+            ai_chatbot_interest: data.aiChatbotInterest,
           }
         ]);
 
