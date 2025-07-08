@@ -22,6 +22,7 @@ import NotFound from "./pages/NotFound";
 import PartnerApplication from "./pages/PartnerApplication";
 import ConfirmWhatsApp from "./pages/ConfirmWhatsApp";
 import OptOutReport from "./pages/OptOutReport";
+import TestClinicSignup from "./pages/TestClinicSignup";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/qa" element={<QA />} />
             <Route path="/partner-application" element={<PartnerApplication />} />
             <Route path="/opt-out-report" element={<OptOutReport />} />
+            <Route path="/test-clinic-signup" element={<TestClinicSignup />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
