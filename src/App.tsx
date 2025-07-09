@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
+import { SecurityProvider } from "@/contexts/SecurityContext";
 import CookieConsentBanner from "@/components/cookies/CookieConsentBanner";
 import CookiePreferences from "@/components/cookies/CookiePreferences";
 import Index from "./pages/Index";
@@ -29,31 +29,33 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <CookieConsentProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/compare" element={<Compare />} />
-            <Route path="/clinics" element={<Clinics />} />
-            <Route path="/how-it-works" element={<HowItWorks />} />
-            <Route path="/qa" element={<QA />} />
-            <Route path="/partner-application" element={<PartnerApplication />} />
-            <Route path="/opt-out-report" element={<OptOutReport />} />
-            <Route path="/test-clinic-signup" element={<TestClinicSignup />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
-            <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
-            <Route path="/cookie-policy" element={<CookiePolicy />} />
-            <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <CookieConsentBanner />
-          <CookiePreferences />
-        </BrowserRouter>
-      </CookieConsentProvider>
+      <SecurityProvider>
+        <CookieConsentProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/clinics" element={<Clinics />} />
+              <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="/qa" element={<QA />} />
+              <Route path="/partner-application" element={<PartnerApplication />} />
+              <Route path="/opt-out-report" element={<OptOutReport />} />
+              <Route path="/test-clinic-signup" element={<TestClinicSignup />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/directory-disclaimer" element={<DirectoryDisclaimer />} />
+              <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <CookieConsentBanner />
+            <CookiePreferences />
+          </BrowserRouter>
+        </CookieConsentProvider>
+      </SecurityProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

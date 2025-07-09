@@ -7,10 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/contexts/AuthContext';
-import { Loader2, Building2, CheckCircle } from 'lucide-react';
+import { useRateLimit } from '@/hooks/useRateLimit';
+import { useSecurity } from '@/contexts/SecurityContext';
+import SecurityEnhancedForm from '@/components/security/SecurityEnhancedForm';
+import { Loader2, Building2, CheckCircle, Shield } from 'lucide-react';
 
 const TestClinicSignupForm = () => {
   const { register, isLoading } = useAuth();
+  const { reportSecurityEvent } = useSecurity();
+  const rateLimit = useRateLimit({ maxAttempts: 3, windowMs: 60000, blockDurationMs: 300000 }); // 3 attempts per minute, 5-minute block
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -33,28 +39,60 @@ const TestClinicSignupForm = () => {
     e.preventDefault();
     setError('');
     
+    // Check rate limiting
+    if (!rateLimit.checkRateLimit()) {
+      const remainingTime = Math.ceil(rateLimit.getRemainingTime() / 1000);
+      setError(`Too many attempts. Please wait ${remainingTime} seconds before trying again.`);
+      reportSecurityEvent('RATE_LIMIT_EXCEEDED', { formType: 'clinic_signup', attemptsRemaining: rateLimit.attemptsRemaining });
+      return;
+    }
+    
     if (!formData.email || !formData.password || !formData.clinicName || !formData.clinicRole) {
       setError('All fields are required');
       return;
     }
 
+    // Enhanced input validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      reportSecurityEvent('INVALID_EMAIL_FORMAT', { email: formData.email });
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+
+    // Check for potential XSS attempts
+    const xssPattern = /<script|javascript:|on\w+\s*=/i;
+    const formValues = Object.values(formData);
+    if (formValues.some(value => xssPattern.test(value))) {
+      reportSecurityEvent('XSS_ATTEMPT', { formData: formData });
+      setError('Invalid input detected. Please check your entries.');
+      return;
+    }
+
     const result = await register({
-      email: formData.email,
+      email: formData.email.trim().toLowerCase(),
       password: formData.password,
-      fullName: `${formData.clinicName} Staff`, // Using clinic name as part of full name
-      organization: formData.clinicName, // Mapping clinic name to organization
-      purposeOfUse: formData.clinicRole, // Mapping clinic role to purpose of use
-      userCategory: 'clinic_admin', // Setting user category as clinic_admin
+      fullName: `${formData.clinicName.trim()} Staff`,
+      organization: formData.clinicName.trim(),
+      purposeOfUse: formData.clinicRole,
+      userCategory: 'clinic_admin',
       consentGiven: true
     });
     
     if (result.success) {
       setSuccess(true);
-      // Generate a mock user ID for display (in real scenario, this would come from the auth response)
       setUserId(`clinic-test-${Date.now()}`);
       setFormData({ email: '', password: '', clinicName: '', clinicRole: '' });
+      rateLimit.reset(); // Reset rate limit on successful submission
+      reportSecurityEvent('SUCCESSFUL_CLINIC_SIGNUP', { email: formData.email });
     } else {
       setError(result.error || 'Signup failed');
+      reportSecurityEvent('FAILED_CLINIC_SIGNUP', { email: formData.email, error: result.error });
     }
   };
 
@@ -102,6 +140,7 @@ const TestClinicSignupForm = () => {
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Building2 className="h-5 w-5 text-blue-primary" />
           Test Clinic Signup
+          <Shield className="h-4 w-4 text-green-600 ml-auto" title="Security Enhanced" />
         </CardTitle>
         <p className="text-sm text-gray-600">
           This is a test form to verify Supabase backend integration
@@ -109,16 +148,17 @@ const TestClinicSignupForm = () => {
       </CardHeader>
       
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <SecurityEnhancedForm onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="clinic@example.com"
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              disabled={isLoading}
+              disabled={isLoading || rateLimit.isBlocked}
               required
             />
           </div>
@@ -127,12 +167,14 @@ const TestClinicSignupForm = () => {
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              name="password"
               type="password"
-              placeholder="Enter password"
+              placeholder="Enter password (min 8 characters)"
               value={formData.password}
               onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-              disabled={isLoading}
+              disabled={isLoading || rateLimit.isBlocked}
               required
+              minLength={8}
             />
           </div>
 
@@ -140,12 +182,14 @@ const TestClinicSignupForm = () => {
             <Label htmlFor="clinicName">Clinic Name</Label>
             <Input
               id="clinicName"
+              name="clinicName"
               type="text"
               placeholder="ABC Dental Clinic"
               value={formData.clinicName}
               onChange={(e) => setFormData(prev => ({ ...prev, clinicName: e.target.value }))}
-              disabled={isLoading}
+              disabled={isLoading || rateLimit.isBlocked}
               required
+              maxLength={100}
             />
           </div>
 
@@ -154,7 +198,7 @@ const TestClinicSignupForm = () => {
             <Select 
               value={formData.clinicRole} 
               onValueChange={(value) => setFormData(prev => ({ ...prev, clinicRole: value }))}
-              disabled={isLoading}
+              disabled={isLoading || rateLimit.isBlocked}
               required
             >
               <SelectTrigger>
@@ -175,16 +219,29 @@ const TestClinicSignupForm = () => {
               <AlertDescription className="text-red-800">{error}</AlertDescription>
             </Alert>
           )}
+
+          {rateLimit.isBlocked && (
+            <Alert className="border-yellow-200 bg-yellow-50">
+              <AlertDescription className="text-yellow-800">
+                Rate limit exceeded. Please wait before trying again.
+              </AlertDescription>
+            </Alert>
+          )}
           
           <Button 
             type="submit"
             className="w-full bg-blue-primary hover:bg-blue-dark"
-            disabled={isLoading}
+            disabled={isLoading || rateLimit.isBlocked}
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
             Test Clinic Signup
           </Button>
-        </form>
+
+          <div className="text-xs text-gray-500 flex items-center gap-1">
+            <Shield className="h-3 w-3" />
+            Attempts remaining: {rateLimit.attemptsRemaining}/3
+          </div>
+        </SecurityEnhancedForm>
 
         <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-xs text-blue-700">
