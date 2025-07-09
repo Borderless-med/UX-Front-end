@@ -1,6 +1,5 @@
 
 import React from 'react';
-import DOMPurify from 'dompurify';
 
 interface SecurityEnhancedFormProps {
   children: React.ReactNode;
@@ -16,11 +15,16 @@ const SecurityEnhancedForm = ({ children, onSubmit, className }: SecurityEnhance
     const formData = new FormData(event.target as HTMLFormElement);
     const formEntries = Object.fromEntries(formData.entries());
     
-    // Sanitize all text inputs
+    // Basic XSS prevention - sanitize all text inputs
     const sanitizedEntries = Object.entries(formEntries).reduce((acc, [key, value]) => {
       if (typeof value === 'string') {
-        // Basic XSS prevention by sanitizing HTML
-        acc[key] = DOMPurify.sanitize(value.trim());
+        // Basic XSS prevention by removing potentially dangerous characters
+        acc[key] = value
+          .trim()
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+          .replace(/javascript:/gi, '') // Remove javascript: protocol
+          .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
+          .replace(/<[^>]*>/g, ''); // Remove all HTML tags
       } else {
         acc[key] = value;
       }

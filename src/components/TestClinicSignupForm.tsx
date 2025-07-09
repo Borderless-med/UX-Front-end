@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -140,10 +139,10 @@ const TestClinicSignupForm = () => {
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Building2 className="h-5 w-5 text-blue-primary" />
           Test Clinic Signup
-          <Shield className="h-4 w-4 text-green-600 ml-auto" title="Security Enhanced" />
+          <Shield className="h-4 w-4 text-green-600 ml-auto" />
         </CardTitle>
         <p className="text-sm text-gray-600">
-          This is a test form to verify Supabase backend integration
+          This is a test form to verify Supabase backend integration with enhanced security
         </p>
       </CardHeader>
       
