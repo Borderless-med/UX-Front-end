@@ -51,17 +51,47 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI response (replace with actual AI integration later)
-    setTimeout(() => {
+    // Call the real Vercel API
+    try {
+      const API_ENDPOINT = "https://sg-jb-chatbot-backend.vercel.app/chat";
+      
+      const response = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      const aiResponseText = data.response;
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `Thank you for your message: "${message}". I'll help you find the best dental clinics in the SG-JB area. This is a mock response - AI integration will be added in Phase 2.`,
+        text: aiResponseText,
         sender: 'ai',
         timestamp: new Date(),
       };
+
       setMessages(prev => [...prev, aiResponse]);
       setIsTyping(false);
-    }, 1500);
+
+    } catch (error) {
+      console.error('Error fetching AI response:', error);
+      
+      // Display error message to user
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'Sorry, something went wrong. Please try again.',
+        sender: 'ai',
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, errorResponse]);
+      setIsTyping(false);
+    }
   };
 
   return (
