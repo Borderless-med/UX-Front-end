@@ -337,6 +337,27 @@ export type Database = {
         }
         Relationships: []
       }
+      embeddings: {
+        Row: {
+          chunk_text: string
+          embedding: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          chunk_text: string
+          embedding?: string | null
+          id: string
+          metadata?: Json | null
+        }
+        Update: {
+          chunk_text?: string
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       opt_out_reports: {
         Row: {
           admin_notes: string | null
@@ -575,6 +596,19 @@ export type Database = {
         }
         Returns: string
       }
+      get_table_columns: {
+        Args: { p_table_name: string }
+        Returns: {
+          column_name: string
+          data_type: string
+        }[]
+      }
+      get_tables: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          table_name: string
+        }[]
+      }
       has_valid_consent: {
         Args: { p_user_id: string }
         Returns: boolean
@@ -589,6 +623,29 @@ export type Database = {
           p_consent_details?: Json
         }
         Returns: string
+      }
+      match_clinics: {
+        Args: {
+          query_embedding: string
+          p_township: string
+          match_count: number
+        }
+        Returns: {
+          id: number
+          name: string
+          address: string
+          township: string
+          rating: number
+          reviews: number
+          tooth_filling: boolean
+          root_canal: boolean
+          dental_crown: boolean
+          dental_implant: boolean
+          teeth_whitening: boolean
+          braces: boolean
+          composite_veneers: boolean
+          similarity: number
+        }[]
       }
       match_documents: {
         Args: {

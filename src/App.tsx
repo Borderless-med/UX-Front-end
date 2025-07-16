@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,7 @@ import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import { SecurityProvider } from "@/contexts/SecurityContext";
 import CookieConsentBanner from "@/components/cookies/CookieConsentBanner";
 import CookiePreferences from "@/components/cookies/CookiePreferences";
+import ChatWidget from "@/components/ChatWidget";
 import Index from "./pages/Index";
 import Compare from "./pages/Compare";
 import Clinics from "./pages/Clinics";
@@ -53,6 +55,7 @@ const App = () => (
             </Routes>
             <CookieConsentBanner />
             <CookiePreferences />
+            <ChatWidget />
           </BrowserRouter>
         </CookieConsentProvider>
       </SecurityProvider>
