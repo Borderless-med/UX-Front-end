@@ -643,7 +643,41 @@ export type Database = {
           dental_implant: boolean
           teeth_whitening: boolean
           braces: boolean
+          wisdom_tooth: boolean
+          gum_treatment: boolean
           composite_veneers: boolean
+          porcelain_veneers: boolean
+          dental_bonding: boolean
+          inlays_onlays: boolean
+          enamel_shaping: boolean
+          gingivectomy: boolean
+          bone_grafting: boolean
+          sinus_lift: boolean
+          frenectomy: boolean
+          tmj_treatment: boolean
+          sleep_apnea_appliances: boolean
+          crown_lengthening: boolean
+          oral_cancer_screening: boolean
+          alveoplasty: boolean
+          similarity: number
+        }[]
+      }
+      match_clinics_hybrid: {
+        Args: {
+          query_embedding: string
+          match_threshold: number
+          match_count: number
+          filter_township?: string
+          min_rating?: number
+          service_filter?: string
+        }
+        Returns: {
+          id: number
+          name: string
+          address: string
+          township: string
+          rating: number
+          reviews: number
           similarity: number
         }[]
       }
