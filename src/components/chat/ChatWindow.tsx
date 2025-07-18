@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   id: string;
@@ -51,21 +52,21 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     setInputMessage('');
     setIsTyping(true);
 
-    // Call the real Vercel API
     try {
-      const API_ENDPOINT = "https://sg-jb-chatbot-backend.vercel.app/chat";
+      console.log('Invoking dynamic-function with message:', message);
       
-      const response = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message }),
+      // Use Supabase edge function to route the message
+      const { data, error } = await supabase.functions.invoke('dynamic-function', {
+        body: { message: message },
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message);
       }
 
-      const data = await response.json();
+      console.log('Function response:', data);
+      
       const aiResponseText = data.response;
 
       const aiResponse: Message = {
@@ -79,7 +80,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       setIsTyping(false);
 
     } catch (error) {
-      console.error('Error fetching AI response:', error);
+      console.error('Error calling dynamic-function:', error);
       
       // Display error message to user
       const errorResponse: Message = {

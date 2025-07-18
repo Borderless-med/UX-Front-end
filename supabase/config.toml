@@ -1,1 +1,11 @@
+
 project_id = "uzppuebjzqxeavgmwtvr"
+
+[functions.dynamic-function]
+verify_jwt = false
+
+[functions.send-whatsapp-confirmation]
+verify_jwt = false
+
+[functions.confirm-whatsapp-optin]
+verify_jwt = false
