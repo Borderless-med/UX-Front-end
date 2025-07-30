@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { MessageCircle, X } from 'lucide-react';
 import ChatWindow from './chat/ChatWindow';
+import { ResizablePanelGroup, ResizablePanel } from './ui/resizable';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,9 +15,17 @@ const ChatWidget = () => {
     <>
       {/* Chat Window Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:inset-auto md:bottom-20 md:left-6 md:w-96 md:h-[500px]">
+        <div className="fixed inset-0 z-50 md:inset-auto md:bottom-20 md:left-6 md:min-w-80 md:min-h-96 md:max-w-2xl md:max-h-[80vh]">
           <div className="absolute inset-0 bg-black/50 md:hidden" onClick={toggleChat} />
-          <ChatWindow onClose={toggleChat} />
+          <ResizablePanelGroup direction="vertical" className="hidden md:flex">
+            <ResizablePanel defaultSize={100} minSize={30} maxSize={100}>
+              <ChatWindow onClose={toggleChat} />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+          {/* Mobile fallback */}
+          <div className="md:hidden h-full">
+            <ChatWindow onClose={toggleChat} />
+          </div>
         </div>
       )}
 
