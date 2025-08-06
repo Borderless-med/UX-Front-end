@@ -1,5 +1,6 @@
 
 import { User, Bot } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 interface Message {
   id: string;
@@ -32,7 +33,11 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
               : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'
           }`}
         >
-          <p className="text-sm leading-relaxed">{message.text}</p>
+          {isUser ? (
+            <p className="text-sm leading-relaxed">{message.text}</p>
+          ) : (
+            <MarkdownRenderer content={message.text} isUser={isUser} />
+          )}
         </div>
         <p className={`text-xs text-gray-500 mt-1 ${isUser ? 'text-right' : 'text-left'}`}>
           {time}
