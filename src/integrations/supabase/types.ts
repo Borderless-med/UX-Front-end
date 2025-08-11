@@ -134,6 +134,7 @@ export type Database = {
           embedding_arr: number[] | null
           enamel_shaping: boolean | null
           frenectomy: boolean | null
+          general_dentistry: boolean | null
           gingivectomy: boolean | null
           google_review_url: string | null
           gum_treatment: boolean | null
@@ -143,11 +144,19 @@ export type Database = {
           name: string
           operating_hours: string | null
           oral_cancer_screening: boolean | null
+          place_id: string | null
           porcelain_veneers: boolean | null
           rating: number | null
           reviews: number | null
           root_canal: boolean | null
           sentiment: number | null
+          sentiment_ambiance_cleanliness: number | null
+          sentiment_convenience: number | null
+          sentiment_cost_value: number | null
+          sentiment_dentist_skill: number | null
+          sentiment_overall: number | null
+          sentiment_pain_management: number | null
+          sentiment_staff_service: number | null
           sinus_lift: boolean | null
           sleep_apnea_appliances: boolean | null
           teeth_whitening: boolean | null
@@ -176,6 +185,7 @@ export type Database = {
           embedding_arr?: number[] | null
           enamel_shaping?: boolean | null
           frenectomy?: boolean | null
+          general_dentistry?: boolean | null
           gingivectomy?: boolean | null
           google_review_url?: string | null
           gum_treatment?: boolean | null
@@ -185,11 +195,19 @@ export type Database = {
           name: string
           operating_hours?: string | null
           oral_cancer_screening?: boolean | null
+          place_id?: string | null
           porcelain_veneers?: boolean | null
           rating?: number | null
           reviews?: number | null
           root_canal?: boolean | null
           sentiment?: number | null
+          sentiment_ambiance_cleanliness?: number | null
+          sentiment_convenience?: number | null
+          sentiment_cost_value?: number | null
+          sentiment_dentist_skill?: number | null
+          sentiment_overall?: number | null
+          sentiment_pain_management?: number | null
+          sentiment_staff_service?: number | null
           sinus_lift?: boolean | null
           sleep_apnea_appliances?: boolean | null
           teeth_whitening?: boolean | null
@@ -218,6 +236,7 @@ export type Database = {
           embedding_arr?: number[] | null
           enamel_shaping?: boolean | null
           frenectomy?: boolean | null
+          general_dentistry?: boolean | null
           gingivectomy?: boolean | null
           google_review_url?: string | null
           gum_treatment?: boolean | null
@@ -227,11 +246,19 @@ export type Database = {
           name?: string
           operating_hours?: string | null
           oral_cancer_screening?: boolean | null
+          place_id?: string | null
           porcelain_veneers?: boolean | null
           rating?: number | null
           reviews?: number | null
           root_canal?: boolean | null
           sentiment?: number | null
+          sentiment_ambiance_cleanliness?: number | null
+          sentiment_convenience?: number | null
+          sentiment_cost_value?: number | null
+          sentiment_dentist_skill?: number | null
+          sentiment_overall?: number | null
+          sentiment_pain_management?: number | null
+          sentiment_staff_service?: number | null
           sinus_lift?: boolean | null
           sleep_apnea_appliances?: boolean | null
           teeth_whitening?: boolean | null
@@ -681,6 +708,60 @@ export type Database = {
           similarity: number
         }[]
       }
+      match_clinics_simple: {
+        Args: { query_embedding: string; match_count: number }
+        Returns: {
+          address: string | null
+          alveoplasty: boolean | null
+          bone_grafting: boolean | null
+          braces: boolean | null
+          composite_veneers: boolean | null
+          created_at: string | null
+          credentials: string | null
+          crown_lengthening: boolean | null
+          dental_bonding: boolean | null
+          dental_crown: boolean | null
+          dental_implant: boolean | null
+          dentist: string | null
+          distance: number | null
+          embedding: string | null
+          embedding_arr: number[] | null
+          enamel_shaping: boolean | null
+          frenectomy: boolean | null
+          general_dentistry: boolean | null
+          gingivectomy: boolean | null
+          google_review_url: string | null
+          gum_treatment: boolean | null
+          id: number
+          inlays_onlays: boolean | null
+          mda_license: string | null
+          name: string
+          operating_hours: string | null
+          oral_cancer_screening: boolean | null
+          place_id: string | null
+          porcelain_veneers: boolean | null
+          rating: number | null
+          reviews: number | null
+          root_canal: boolean | null
+          sentiment: number | null
+          sentiment_ambiance_cleanliness: number | null
+          sentiment_convenience: number | null
+          sentiment_cost_value: number | null
+          sentiment_dentist_skill: number | null
+          sentiment_overall: number | null
+          sentiment_pain_management: number | null
+          sentiment_staff_service: number | null
+          sinus_lift: boolean | null
+          sleep_apnea_appliances: boolean | null
+          teeth_whitening: boolean | null
+          tmj_treatment: boolean | null
+          tooth_filling: boolean | null
+          township: string | null
+          updated_at: string | null
+          website_url: string | null
+          wisdom_tooth: boolean | null
+        }[]
+      }
       match_documents: {
         Args: {
           query_embedding: string
@@ -693,6 +774,19 @@ export type Database = {
           similarity: number
           metadata: Json
         }[]
+      }
+      update_sentiments: {
+        Args: {
+          clinic_id_to_update: number
+          s_overall: number
+          s_skill: number
+          s_pain: number
+          s_cost: number
+          s_staff: number
+          s_ambiance: number
+          s_convenience: number
+        }
+        Returns: undefined
       }
     }
     Enums: {
