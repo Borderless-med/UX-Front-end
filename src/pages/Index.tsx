@@ -1,7 +1,7 @@
 
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
-import WaitlistSection from '@/components/WaitlistSection';
+import AppointmentBookingForm from '@/components/AppointmentBookingForm';
 import Footer from '@/components/Footer';
 import FloatingClinicTab from '@/components/FloatingClinicTab';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
@@ -33,7 +33,7 @@ const Index = () => {
         </div>
       </section>
       
-      <WaitlistSection />
+      <AppointmentBookingForm />
       <Footer />
       <FloatingClinicTab />
     </div>
