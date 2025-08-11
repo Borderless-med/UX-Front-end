@@ -16,12 +16,12 @@ const Navigation = () => {
     setIsMenuOpen(false);
   };
 
-  const scrollToWaitlist = () => {
+  const scrollToBooking = () => {
     // If not on home page, navigate to home first
     if (location.pathname !== '/') {
-      window.location.href = '/#waitlist';
+      window.location.href = '/#booking';
     } else {
-      scrollToSection('waitlist');
+      scrollToSection('booking');
     }
   };
 
@@ -97,10 +97,10 @@ const Navigation = () => {
               Partner with Us
             </Link>
             <Button 
-              onClick={scrollToWaitlist}
+              onClick={scrollToBooking}
               className="bg-blue-primary hover:bg-blue-accent text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200"
             >
-              Get Early Access
+              Book Now
             </Button>
           </div>
 
@@ -175,10 +175,10 @@ const Navigation = () => {
                 </Link>
                 
                 <Button 
-                  onClick={scrollToWaitlist}
+                  onClick={scrollToBooking}
                   className="w-full bg-blue-primary hover:bg-blue-accent text-white font-medium"
                 >
-                  Get Early Access
+                  Book Now
                 </Button>
               </div>
             </div>

@@ -130,10 +130,10 @@ const ConfirmWhatsApp = () => {
               </p>
               <div className="space-y-3">
                 <Button 
-                  onClick={() => window.location.href = '/clinics#waitlist'}
+                  onClick={() => window.location.href = '/#booking'}
                   className="w-full bg-blue-primary hover:bg-blue-dark text-white"
                 >
-                  Join Waitlist Again
+                  Book Appointment
                 </Button>
                 <Button 
                   onClick={() => window.location.href = '/'}

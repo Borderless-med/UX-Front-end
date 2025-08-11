@@ -25,8 +25,8 @@ const HeroSection = () => {
     sessionStorage.setItem('clinic-banner-dismissed', 'true');
   };
 
-  const scrollToWaitlist = () => {
-    const element = document.getElementById('waitlist');
+  const scrollToBooking = () => {
+    const element = document.getElementById('booking');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -84,10 +84,10 @@ const HeroSection = () => {
             {/* Primary CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button 
-                onClick={scrollToWaitlist}
+                onClick={scrollToBooking}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
-                Get Your Free Consultation
+                Book Now
               </Button>
               <Button 
                 onClick={goToCompare}
@@ -141,10 +141,10 @@ const HeroSection = () => {
             
             <div className="text-center">
               <Button 
-                onClick={scrollToWaitlist}
+                onClick={scrollToBooking}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
-                Join Waitlist for Early Access
+                Book Now
               </Button>
             </div>
           </div>

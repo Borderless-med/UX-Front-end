@@ -44,10 +44,10 @@ const PriceComparison = () => {
               </p>
               <Button 
                 size="sm"
-                onClick={() => window.location.href = '/#waitlist'}
+                onClick={() => window.location.href = '/#booking'}
                 className="bg-blue-primary hover:bg-blue-accent text-white font-semibold px-6 py-2 rounded-lg transition-all duration-200 hover:shadow-lg"
               >
-                Get Early Access
+                Book Now
               </Button>
             </div>
           </div>
