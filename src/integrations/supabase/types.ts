@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointment_bookings: {
+        Row: {
+          booking_ref: string | null
+          clinic_location: string
+          consent_given: boolean
+          created_at: string
+          email: string
+          id: string
+          patient_name: string
+          preferred_date: string
+          status: string
+          time_slot: string
+          treatment_type: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          booking_ref?: string | null
+          clinic_location: string
+          consent_given?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          patient_name: string
+          preferred_date: string
+          status?: string
+          time_slot: string
+          treatment_type: string
+          updated_at?: string
+          whatsapp: string
+        }
+        Update: {
+          booking_ref?: string | null
+          clinic_location?: string
+          consent_given?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          patient_name?: string
+          preferred_date?: string
+          status?: string
+          time_slot?: string
+          treatment_type?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      booking_ref_counter: {
+        Row: {
+          counter: number
+          year: number
+        }
+        Insert: {
+          counter?: number
+          year: number
+        }
+        Update: {
+          counter?: number
+          year?: number
+        }
+        Relationships: []
+      }
       "Clinic  Detail": {
         Row: {
           City: string | null
@@ -621,6 +684,10 @@ export type Database = {
           p_ip_address?: string
           p_user_agent?: string
         }
+        Returns: string
+      }
+      generate_booking_ref: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       get_table_columns: {
