@@ -48,11 +48,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     const data = await response.json();
     console.log('External API response:', data);
-    
-    // Log if response seems generic
-    if (data.response && (data.response.includes("no matching clinics") || data.response.includes("unable to find"))) {
-      console.log('WARNING: External API returned generic "no results" response for message:', message);
-    }
 
     // Return the response in the expected format
     return new Response(JSON.stringify(data), {

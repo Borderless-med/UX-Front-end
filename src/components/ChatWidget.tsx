@@ -2,13 +2,8 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { MessageCircle, X, GripVertical } from 'lucide-react';
 import ChatWindow from './chat/ChatWindow';
-import { ChatContext } from '@/types/chat';
 
-interface ChatWidgetProps {
-  context?: ChatContext;
-}
-
-const ChatWidget = ({ context = "direct-chat" }: ChatWidgetProps) => {
+const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 384, height: 500 });
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -82,7 +77,7 @@ const ChatWidget = ({ context = "direct-chat" }: ChatWidgetProps) => {
               maxHeight: '80vh'
             }}
           >
-            <ChatWindow onClose={toggleChat} context={context} />
+            <ChatWindow onClose={toggleChat} />
             
             {/* Resize Handle */}
             <div 
@@ -96,7 +91,7 @@ const ChatWidget = ({ context = "direct-chat" }: ChatWidgetProps) => {
           
           {/* Mobile fullscreen */}
           <div className="md:hidden h-full">
-            <ChatWindow onClose={toggleChat} context={context} />
+            <ChatWindow onClose={toggleChat} />
           </div>
         </div>
       )}

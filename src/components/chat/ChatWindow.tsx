@@ -4,8 +4,6 @@ import { X, Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import { supabase } from '@/integrations/supabase/client';
-import { ChatContext } from '@/types/chat';
-import { getContextConfig } from '@/utils/chatContexts';
 
 interface Message {
   id: string;
@@ -16,16 +14,13 @@ interface Message {
 
 interface ChatWindowProps {
   onClose: () => void;
-  context?: ChatContext;
 }
 
-const ChatWindow = ({ onClose, context = "direct-chat" }: ChatWindowProps) => {
-  const contextConfig = getContextConfig(context);
-  
+const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: contextConfig.welcome,
+      text: "Hello! I can help you find dental clinics, compare prices, and answer questions about dental care in Singapore and Johor Bahru. What can I help you with today?",
       sender: 'ai',
       timestamp: new Date(),
     },
@@ -72,18 +67,9 @@ const ChatWindow = ({ onClose, context = "direct-chat" }: ChatWindowProps) => {
 
       console.log('Function response:', data);
       
-      let aiResponseText = data.response;
-      
-      // Check if response is a generic "no clinics found" message and improve it
-      if (aiResponseText.includes("no matching clinics") || 
-          aiResponseText.includes("unable to find any matching clinics") ||
-          aiResponseText.includes("couldn't locate any dental clinics")) {
-        aiResponseText = `I'm having trouble finding specific clinics for your request right now. You can browse all available clinics on our directory page, or try asking about specific treatments or locations. What specific dental service are you looking for?`;
-      }
-
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: aiResponseText,
+        text: data.response,
         sender: 'ai',
         timestamp: new Date(),
       };
