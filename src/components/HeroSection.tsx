@@ -38,7 +38,8 @@ const HeroSection = () => {
   };
 
   const handleAIPath = () => {
-    // Open chat widget (this would trigger the ChatWidget to open)
+    // Set AI concierge context and open chat widget
+    sessionStorage.setItem('chat-context', 'ai-concierge');
     const chatWidget = document.querySelector('[data-chat-widget]');
     if (chatWidget) {
       (chatWidget as HTMLButtonElement).click();

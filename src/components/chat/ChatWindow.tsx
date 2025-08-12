@@ -3,7 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
+import QuickReplyButtons from './QuickReplyButtons';
 import { supabase } from '@/integrations/supabase/client';
+import { ChatContext } from '@/types/chat';
+import { getContextConfig } from '@/utils/chatContexts';
 
 interface Message {
   id: string;
@@ -14,19 +17,23 @@ interface Message {
 
 interface ChatWindowProps {
   onClose: () => void;
+  context?: ChatContext;
 }
 
-const ChatWindow = ({ onClose }: ChatWindowProps) => {
+const ChatWindow = ({ onClose, context = "direct-chat" }: ChatWindowProps) => {
+  const contextConfig = getContextConfig(context);
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm your AI Concierge with advanced sentiment analysis. I'll help you find the perfect dental care by analyzing authentic reviews and providing personalized recommendations in Singapore and Johor Bahru.",
+      text: contextConfig.welcome,
       sender: 'ai',
       timestamp: new Date(),
     },
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showQuickReplies, setShowQuickReplies] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -39,6 +46,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
+
+    // Hide quick replies after first user interaction
+    setShowQuickReplies(false);
 
     // Add user message
     const userMessage: Message = {
@@ -118,8 +128,25 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-        {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
+        {messages.map((message, index) => (
+          <div key={message.id}>
+            <ChatMessage message={message} />
+            {/* Show quick replies only for the first AI message and if showQuickReplies is true */}
+            {index === 0 && message.sender === 'ai' && showQuickReplies && (
+              <div className="flex items-start space-x-2 mt-3">
+                <div className="w-8 h-8 bg-blue-primary rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-bold text-white">AI</span>
+                </div>
+                <div className="flex-1">
+                  <QuickReplyButtons
+                    buttons={contextConfig.quickReplies}
+                    onButtonClick={handleSendMessage}
+                    disabled={isTyping}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         ))}
         {isTyping && (
           <div className="flex items-center space-x-2">

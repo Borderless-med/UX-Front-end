@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
 import AppointmentBookingForm from '@/components/AppointmentBookingForm';
@@ -6,8 +7,22 @@ import Footer from '@/components/Footer';
 import FloatingClinicTab from '@/components/FloatingClinicTab';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
+import ChatWidget from '@/components/ChatWidget';
+import { ChatContext } from '@/types/chat';
 
 const Index = () => {
+  const [chatContext, setChatContext] = useState<ChatContext>("direct-chat");
+
+  // Check for stored chat context on mount
+  useEffect(() => {
+    const storedContext = sessionStorage.getItem('chat-context') as ChatContext;
+    if (storedContext) {
+      setChatContext(storedContext);
+      // Clear it after using it
+      sessionStorage.removeItem('chat-context');
+    }
+  }, []);
+
   return (
     <div className="min-h-screen font-inter bg-white text-gray-900">
       <Navigation />
@@ -33,6 +48,7 @@ const Index = () => {
       <AppointmentBookingForm />
       <Footer />
       <FloatingClinicTab />
+      <ChatWidget context={chatContext} />
     </div>
   );
 };
