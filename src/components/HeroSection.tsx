@@ -69,8 +69,8 @@ const HeroSection = () => {
           {/* Hero Header - Main Focus */}
           <div className="text-center animate-fade-in mb-12">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-none">
-              World-Class Dental Care.<br />
-              Smart Savings & <span className="text-blue-600">AI Concierge</span>.
+              World-Class Dental Care<br />
+              Smart Savings & <span className="text-blue-600">AI Concierge</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-4xl mx-auto leading-relaxed">
