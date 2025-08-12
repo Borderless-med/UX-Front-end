@@ -20,23 +20,28 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { message } = await req.json();
+    const body = await req.json();
+    const { history, message } = body;
     
-    if (!message) {
-      return new Response(JSON.stringify({ error: 'Message is required' }), {
+    // Support both new history format and legacy message format
+    if (!history && !message) {
+      return new Response(JSON.stringify({ error: 'History or message is required' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    console.log('Routing message to external API:', message);
+    console.log('Routing to external API with:', history ? 'history array' : 'single message');
     console.log('External API URL:', 'https://sg-jb-chatbot-backend.onrender.com/chat');
+
+    // Prepare the body for the external API
+    const apiBody = history ? { history } : { message };
 
     // Call the external chatbot API
     const response = await fetch('https://sg-jb-chatbot-backend.onrender.com/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: message }),
+      body: JSON.stringify(apiBody),
     });
 
     console.log('External API response status:', response.status);

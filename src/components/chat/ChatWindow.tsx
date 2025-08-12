@@ -12,6 +12,11 @@ interface Message {
   timestamp: Date;
 }
 
+interface HistoryItem {
+  role: 'user' | 'model';
+  content: string;
+}
+
 interface ChatWindowProps {
   onClose: () => void;
 }
@@ -48,16 +53,25 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInputMessage('');
     setIsTyping(true);
 
     try {
-      console.log('Invoking dynamic-function with message:', message);
+      // Convert messages to history format (exclude initial welcome message)
+      const conversationHistory: HistoryItem[] = updatedMessages
+        .filter(msg => msg.id !== '1') // Filter out welcome message
+        .map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'model',
+          content: msg.text
+        }));
+
+      console.log('Invoking dynamic-function with conversation history:', conversationHistory);
       
-      // Use Supabase edge function to route the message
+      // Use Supabase edge function to route the conversation history
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
-        body: { message: message },
+        body: { history: conversationHistory },
       });
 
       if (error) {
