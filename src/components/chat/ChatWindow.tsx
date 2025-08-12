@@ -20,7 +20,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm your dental clinic assistant. How can I help you find the perfect dental care in Singapore and Johor Bahru?",
+      text: "Hello! I'm your AI Concierge with advanced sentiment analysis. I'll help you find the perfect dental care by analyzing authentic reviews and providing personalized recommendations in Singapore and Johor Bahru.",
       sender: 'ai',
       timestamp: new Date(),
     },
@@ -104,7 +104,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             <span className="text-sm font-bold">AI</span>
           </div>
           <div>
-            <h3 className="font-semibold">Dental Assistant</h3>
+            <h3 className="font-semibold">AI Concierge</h3>
             <p className="text-xs text-blue-150">Online now</p>
           </div>
         </div>

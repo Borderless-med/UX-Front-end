@@ -100,6 +100,7 @@ const ChatWidget = () => {
       <div className="fixed bottom-6 left-6 z-50">
         <button
           onClick={toggleChat}
+          data-chat-widget
           className={`group bg-blue-primary hover:bg-blue-accent text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center transform hover:scale-105 ${
             isOpen ? 'w-12 h-12' : 'w-14 h-14'
           }`}

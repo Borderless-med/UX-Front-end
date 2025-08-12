@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Users, X, Star } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import PathwaySelection from './PathwaySelection';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -34,6 +35,18 @@ const HeroSection = () => {
 
   const goToCompare = () => {
     navigate('/compare');
+  };
+
+  const handleAIPath = () => {
+    // Open chat widget (this would trigger the ChatWidget to open)
+    const chatWidget = document.querySelector('[data-chat-widget]');
+    if (chatWidget) {
+      (chatWidget as HTMLButtonElement).click();
+    }
+  };
+
+  const handleManualPath = () => {
+    scrollToBooking();
   };
 
   return (
@@ -81,22 +94,23 @@ const HeroSection = () => {
               Experience premium dental care with AI-powered recommendations, transparent pricing, and seamless booking across Singapore & Malaysia
             </p>
 
-            {/* Primary CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button 
-                onClick={scrollToBooking}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-              >
-                Book Now
-              </Button>
-              <Button 
-                onClick={goToCompare}
-                variant="outline"
-                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-              >
-                Calculate Your Savings
-              </Button>
-            </div>
+          </div>
+
+          {/* Pathway Selection - Main CTA */}
+          <PathwaySelection 
+            onAIPath={handleAIPath}
+            onManualPath={handleManualPath}
+          />
+
+          {/* Secondary CTA */}
+          <div className="text-center mb-12">
+            <Button 
+              onClick={goToCompare}
+              variant="outline"
+              className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+            >
+              Calculate Your Savings
+            </Button>
           </div>
 
           {/* Two Key Trust Signals */}
@@ -128,8 +142,8 @@ const HeroSection = () => {
             <div className="flex flex-col md:flex-row gap-6 mb-8">
               <div className="flex-1 bg-white/70 rounded-lg p-6 border border-blue-100">
                 <div className="text-2xl mb-3">🤖</div>
-                <h3 className="font-semibold text-gray-900 mb-2">24/7 AI Dental Assistant</h3>
-                <p className="text-gray-600">Instant booking, recommendations, and answers</p>
+                <h3 className="font-semibold text-gray-900 mb-2">24/7 AI Concierge with Sentiment Analysis</h3>
+                <p className="text-gray-600">Advanced review analysis for authentic clinic recommendations</p>
               </div>
               
               <div className="flex-1 bg-white/70 rounded-lg p-6 border border-blue-100">
