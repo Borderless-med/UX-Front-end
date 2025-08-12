@@ -22,8 +22,8 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
               </div>
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Smart AI Concierge</h3>
               <p className="text-lg text-gray-700 mb-6">
-                Let our AI assistant provide personalized recommendations<br />
-                using advanced sentiment analysis
+                Get personalized clinic recommendations<br />
+                powered by AI sentiment analysis
               </p>
             </div>
             <div className="text-base text-blue-700 font-semibold">Perfect for: First-time patients, those seeking guidance</div>
