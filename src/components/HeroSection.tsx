@@ -90,9 +90,6 @@ const HeroSection = () => {
               Save 50-70% with intelligent guidance every step of the way
             </p>
             
-            <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
-              Experience premium dental care with AI-powered recommendations, transparent pricing, and seamless booking across Singapore & Malaysia
-            </p>
 
           </div>
 
