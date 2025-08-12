@@ -30,6 +30,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     console.log('Routing message to external API:', message);
+    console.log('External API URL:', 'https://sg-jb-chatbot-backend.onrender.com/chat');
 
     // Call the external chatbot API
     const response = await fetch('https://sg-jb-chatbot-backend.onrender.com/chat', {
@@ -38,6 +39,8 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({ message: message }),
     });
 
+    console.log('External API response status:', response.status);
+
     if (!response.ok) {
       console.error('External API error:', response.status, response.statusText);
       throw new Error(`External API responded with status: ${response.status}`);
@@ -45,6 +48,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     const data = await response.json();
     console.log('External API response:', data);
+    
+    // Log if response seems generic
+    if (data.response && (data.response.includes("no matching clinics") || data.response.includes("unable to find"))) {
+      console.log('WARNING: External API returned generic "no results" response for message:', message);
+    }
 
     // Return the response in the expected format
     return new Response(JSON.stringify(data), {
