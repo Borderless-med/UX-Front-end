@@ -77,10 +77,10 @@ const HeroSection = () => {
       )}
 
       {/* Simplified Hero Section */}
-      <section id="home" className="pt-6 pb-20 px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
+      <section id="home" className="pt-2 pb-20 px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
         <div className="max-w-7xl mx-auto w-full">
           {/* Hero Header - Main Focus */}
-          <div className="text-center animate-fade-in mb-12">
+          <div className="text-center animate-fade-in mb-8">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-none">
               World-Class Dental Care<br />
               Smart Savings & <span className="text-blue-600">AI Concierge</span>
