@@ -69,16 +69,17 @@ const HeroSection = () => {
           {/* Hero Header - Main Focus */}
           <div className="text-center animate-fade-in mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              World-Class Dental Care<br />
-              <span className="text-blue-600">Just Across the Causeway</span>
+              <span className="text-gray-900">World-Class Dental Care.</span><br />
+              <span className="text-blue-600">Smart Savings.</span><br />
+              <span className="text-emerald-600">AI Concierge.</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-4xl mx-auto leading-relaxed">
-              Save 50-70% Without Compromising Quality
+              Save 50-70% with intelligent guidance every step of the way
             </p>
             
             <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
-              Join thousands of smart Singapore patients who've discovered quality, affordable dental care in Johor Bahru
+              Experience premium dental care with AI-powered recommendations, transparent pricing, and seamless booking across Singapore & Malaysia
             </p>
 
             {/* Primary CTAs */}
@@ -118,10 +119,10 @@ const HeroSection = () => {
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-8 mb-12 max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Revolutionary AI Features Launching Soon
+                Revolutionary AI Features Now Live
               </h2>
               <p className="text-lg text-gray-600">
-                Experience the future of dental tourism with intelligent assistance
+                Experience intelligent dental care assistance with our AI concierge
               </p>
             </div>
             
