@@ -32,6 +32,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionAppliedFilters, setSessionAppliedFilters] = useState<Record<string, any>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -71,7 +72,10 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       
       // Use Supabase edge function to route the conversation history
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
-        body: { history: conversationHistory },
+        body: { 
+          history: conversationHistory,
+          applied_filters: sessionAppliedFilters
+        },
       });
 
       if (error) {
@@ -80,6 +84,12 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       }
 
       console.log('Function response:', data);
+      
+      // Update session applied filters if returned by API
+      if (data.applied_filters) {
+        setSessionAppliedFilters(data.applied_filters);
+        console.log('Updated session applied filters:', data.applied_filters);
+      }
       
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
