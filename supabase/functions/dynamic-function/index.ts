@@ -21,7 +21,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const body = await req.json();
-    const { history, message, applied_filters } = body;
+    const { history, message, applied_filters, candidate_pool } = body;
     
     // Support both new history format and legacy message format
     if (!history && !message) {
@@ -36,8 +36,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Prepare the body for the external API
     const apiBody = history 
-      ? { history, applied_filters: applied_filters || {} } 
-      : { message, applied_filters: applied_filters || {} };
+      ? { history, applied_filters: applied_filters || {}, candidate_pool: candidate_pool || [] } 
+      : { message, applied_filters: applied_filters || {}, candidate_pool: candidate_pool || [] };
 
     // Call the external chatbot API
     const response = await fetch('https://sg-jb-chatbot-backend.onrender.com/chat', {

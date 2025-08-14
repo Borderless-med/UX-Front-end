@@ -33,6 +33,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [sessionAppliedFilters, setSessionAppliedFilters] = useState<Record<string, any>>({});
+  const [sessionCandidatePool, setSessionCandidatePool] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -74,7 +75,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
         body: { 
           history: conversationHistory,
-          applied_filters: sessionAppliedFilters
+          applied_filters: sessionAppliedFilters,
+          candidate_pool: sessionCandidatePool
         },
       });
 
@@ -89,6 +91,12 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       if (data.applied_filters) {
         setSessionAppliedFilters(data.applied_filters);
         console.log('Updated session applied filters:', data.applied_filters);
+      }
+      
+      // Update session candidate pool if returned by API
+      if (data.candidate_pool) {
+        setSessionCandidatePool(data.candidate_pool);
+        console.log('Updated session candidate pool:', data.candidate_pool);
       }
       
       const aiResponse: Message = {
