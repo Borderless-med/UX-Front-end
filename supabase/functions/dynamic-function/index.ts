@@ -31,6 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+    console.log('=== EDGE FUNCTION DEBUG INFO ===');
     console.log('Routing to external API with:', history ? 'history array' : 'single message');
     console.log('External API URL:', 'https://sg-jb-chatbot-backend.onrender.com/chat');
     console.log('Request body structure:', { 
@@ -38,6 +39,20 @@ const handler = async (req: Request): Promise<Response> => {
       hasMessage: !!message, 
       appliedFilters: applied_filters 
     });
+    
+    if (history) {
+      console.log('History array length:', history.length);
+      console.log('History content:', history.map((item: any, index: number) => ({ 
+        index, 
+        role: item.role, 
+        content: item.content?.substring(0, 100) + '...' 
+      })));
+    }
+    
+    if (message) {
+      console.log('Single message:', message.substring(0, 100) + '...');
+    }
+    console.log('=====================================');
 
     // Prepare the body for the external API  
     const apiBody = history 

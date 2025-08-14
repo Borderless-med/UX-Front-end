@@ -69,7 +69,17 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
           content: msg.text
         }));
 
-      console.log('Invoking dynamic-function with conversation history:', conversationHistory);
+      console.log('=== CHAT DEBUG INFO ===');
+      console.log('Total messages:', updatedMessages.length);
+      console.log('All messages:', updatedMessages.map(msg => ({ id: msg.id, sender: msg.sender, text: msg.text.substring(0, 50) + '...' })));
+      console.log('Conversation history being sent:', conversationHistory);
+      console.log('Session applied filters:', sessionAppliedFilters);
+      console.log('========================');
+      
+      // Ensure history is never empty - if it is, this indicates the user's first message
+      if (conversationHistory.length === 0) {
+        console.log('WARNING: Empty conversation history detected');
+      }
       
       // Use Supabase edge function to route the conversation history
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
