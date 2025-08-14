@@ -21,7 +21,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const body = await req.json();
-    const { history, message, applied_filters, candidate_pool } = body;
+    const { history, message, applied_filters } = body;
     
     // Support both new history format and legacy message format
     if (!history && !message) {
@@ -33,11 +33,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Routing to external API with:', history ? 'history array' : 'single message');
     console.log('External API URL:', 'https://sg-jb-chatbot-backend.onrender.com/chat');
+    console.log('Request body structure:', { 
+      hasHistory: !!history, 
+      hasMessage: !!message, 
+      appliedFilters: applied_filters 
+    });
 
-    // Prepare the body for the external API
+    // Prepare the body for the external API  
     const apiBody = history 
-      ? { history, applied_filters: applied_filters || {}, candidate_pool: candidate_pool || [] } 
-      : { message, applied_filters: applied_filters || {}, candidate_pool: candidate_pool || [] };
+      ? { history, applied_filters: applied_filters || {} } 
+      : { message, applied_filters: applied_filters || {} };
 
     // Call the external chatbot API
     const response = await fetch('https://sg-jb-chatbot-backend.onrender.com/chat', {
@@ -49,15 +54,30 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('External API response status:', response.status);
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.error('External API error:', response.status, response.statusText);
-      throw new Error(`External API responded with status: ${response.status}`);
+      console.error('External API error details:', errorText);
+      
+      return new Response(JSON.stringify({ 
+        error: `External API error: ${response.status} ${response.statusText}`,
+        details: errorText 
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
     }
 
     const data = await response.json();
-    console.log('External API response:', data);
+    console.log('External API response received successfully');
+    
+    // Ensure we always return the expected structure with candidate_pool preserved
+    const formattedResult = {
+      response: data.response || 'No response from API',
+      applied_filters: data.applied_filters || {},
+      candidate_pool: data.candidate_pool || []
+    };
 
-    // Return the response in the expected format
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify(formattedResult), {
       status: 200,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
     });

@@ -75,8 +75,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
         body: { 
           history: conversationHistory,
-          applied_filters: sessionAppliedFilters,
-          candidate_pool: sessionCandidatePool
+          applied_filters: sessionAppliedFilters
         },
       });
 
