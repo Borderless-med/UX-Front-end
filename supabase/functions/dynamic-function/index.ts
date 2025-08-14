@@ -20,54 +20,39 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const body = await req.json();
-    const { history, message, applied_filters } = body;
-    
-    // Support both new history format and legacy message format
-    if (!history && !message) {
-      return new Response(JSON.stringify({ error: 'History or message is required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    }
+    const { history, applied_filters, candidate_pool } = await req.json();
 
-    console.log('=== EDGE FUNCTION DEBUG INFO ===');
-    console.log('Routing to external API with:', history ? 'history array' : 'single message');
-    console.log('External API URL:', 'https://sg-jb-chatbot-backend.onrender.com/chat');
-    console.log('Request body structure:', { 
-      hasHistory: !!history, 
-      hasMessage: !!message, 
-      appliedFilters: applied_filters 
-    });
+    console.log('=== EDGE FUNCTION RECEIVING ===');
+    console.log('History array length:', history?.length || 0);
+    console.log('Applied filters:', applied_filters);
+    console.log('Candidate pool length:', candidate_pool?.length || 0);
     
-    if (history) {
-      console.log('History array length:', history.length);
-      console.log('History content:', history.map((item: any, index: number) => ({ 
-        index, 
-        role: item.role, 
-        content: item.content?.substring(0, 100) + '...' 
-      })));
+    if (history && history.length > 0) {
+      console.log('Complete history being forwarded:', history);
+    } else {
+      console.log('WARNING: No history received or empty history');
     }
-    
-    if (message) {
-      console.log('Single message:', message.substring(0, 100) + '...');
-    }
-    console.log('=====================================');
+    console.log('================================');
 
-    // Prepare the body for the external API  
-    const apiBody = history 
-      ? { history, applied_filters: applied_filters || {} } 
-      : { message, applied_filters: applied_filters || {} };
+    // Prepare the complete body for the external API with all three variables
+    const apiBody = {
+      history: history || [],
+      applied_filters: applied_filters || {},
+      candidate_pool: candidate_pool || []
+    };
 
-    // Call the external chatbot API
+    console.log('Forwarding to external API:', apiBody);
+
     const response = await fetch('https://sg-jb-chatbot-backend.onrender.com/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(apiBody),
     });
 
     console.log('External API response status:', response.status);
-
+    
     if (!response.ok) {
       const errorText = await response.text();
       console.error('External API error:', response.status, response.statusText);
@@ -84,19 +69,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     const data = await response.json();
     console.log('External API response received successfully');
-    
-    // Ensure we always return the expected structure with candidate_pool preserved
-    const formattedResult = {
-      response: data.response || 'No response from API',
+
+    return new Response(JSON.stringify({
+      response: data.response || data.message || 'No response available',
       applied_filters: data.applied_filters || {},
       candidate_pool: data.candidate_pool || []
-    };
-
-    return new Response(JSON.stringify(formattedResult), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
-
   } catch (error) {
     console.error('Error in dynamic-function:', error);
     

@@ -45,9 +45,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   }, [messages]);
 
   const handleSendMessage = async (message: string) => {
-    if (!message.trim()) return;
+    if (!message.trim() || isTyping) return;
 
-    // Add user message
+    // Step 1: Take the user's new message and add it to the conversation
     const userMessage: Message = {
       id: Date.now().toString(),
       text: message,
@@ -61,75 +61,69 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     setIsTyping(true);
 
     try {
-      // Convert messages to history format (exclude initial welcome message)
-      const conversationHistory: HistoryItem[] = updatedMessages
-        .filter(msg => msg.id !== '1') // Filter out welcome message
+      // Step 2: Create complete history array from ALL messages (excluding welcome message)
+      const history = updatedMessages
+        .filter(msg => msg.id !== '1') // Exclude only the initial welcome message
         .map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'model',
           content: msg.text
         }));
 
-      console.log('=== CHAT DEBUG INFO ===');
-      console.log('Total messages:', updatedMessages.length);
-      console.log('All messages:', updatedMessages.map(msg => ({ id: msg.id, sender: msg.sender, text: msg.text.substring(0, 50) + '...' })));
-      console.log('Conversation history being sent:', conversationHistory);
-      console.log('Session applied filters:', sessionAppliedFilters);
-      console.log('========================');
-      
-      // Ensure history is never empty - if it is, this indicates the user's first message
-      if (conversationHistory.length === 0) {
-        console.log('WARNING: Empty conversation history detected');
-      }
-      
-      // Use Supabase edge function to route the conversation history
+      // Step 3: Create the three session variables required by backend
+      const requestBody = {
+        history: history,
+        applied_filters: sessionAppliedFilters || {},
+        candidate_pool: sessionCandidatePool || []
+      };
+
+      console.log('=== SENDING TO BACKEND ===');
+      console.log('History length:', history.length);
+      console.log('Complete request body:', requestBody);
+      console.log('==========================');
+
+      // Step 4: Call the Supabase Edge Function with all three variables
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
-        body: { 
-          history: conversationHistory,
-          applied_filters: sessionAppliedFilters
-        },
+        body: requestBody
       });
 
       if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error(error.message);
+        throw error;
       }
 
-      console.log('Function response:', data);
-      
-      // Update session applied filters if returned by API
-      if (data.applied_filters) {
-        setSessionAppliedFilters(data.applied_filters);
-        console.log('Updated session applied filters:', data.applied_filters);
-      }
-      
-      // Update session candidate pool if returned by API
-      if (data.candidate_pool) {
-        setSessionCandidatePool(data.candidate_pool);
-        console.log('Updated session candidate pool:', data.candidate_pool);
-      }
-      
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: data.response,
-        sender: 'ai',
-        timestamp: new Date(),
-      };
+      // Step 5: Parse response text, applied_filters, and candidate_pool from response
+      if (data && data.response) {
+        const aiMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: data.response,
+          sender: 'ai',
+          timestamp: new Date(),
+        };
 
-      setMessages(prev => [...prev, aiResponse]);
-      setIsTyping(false);
-
+        // Step 6: Update chat display with AI response and update session variables
+        setMessages(prev => [...prev, aiMessage]);
+        
+        // Update session state with new applied_filters and candidate_pool
+        if (data.applied_filters) {
+          setSessionAppliedFilters(data.applied_filters);
+          console.log('Updated applied_filters:', data.applied_filters);
+        }
+        if (data.candidate_pool) {
+          setSessionCandidatePool(data.candidate_pool);
+          console.log('Updated candidate_pool:', data.candidate_pool);
+        }
+      } else {
+        throw new Error('No response received from AI');
+      }
     } catch (error) {
-      console.error('Error calling dynamic-function:', error);
-      
-      // Display error message to user
-      const errorResponse: Message = {
+      console.error('Error sending message:', error);
+      const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Sorry, something went wrong. Please try again.',
+        text: 'Sorry, I encountered an error while processing your message. Please try again.',
         sender: 'ai',
         timestamp: new Date(),
       };
-      
-      setMessages(prev => [...prev, errorResponse]);
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
     }
   };
