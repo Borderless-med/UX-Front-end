@@ -34,6 +34,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [isTyping, setIsTyping] = useState(false);
   const [sessionAppliedFilters, setSessionAppliedFilters] = useState<Record<string, any>>({});
   const [sessionCandidatePool, setSessionCandidatePool] = useState<any[]>([]);
+  const [sessionBookingContext, setSessionBookingContext] = useState<Record<string, any>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -73,7 +74,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       const requestBody = {
         history: history,
         applied_filters: sessionAppliedFilters || {},
-        candidate_pool: sessionCandidatePool || []
+        candidate_pool: sessionCandidatePool || [],
+        booking_context: sessionBookingContext || {}
       };
 
       console.log('=== SENDING TO BACKEND ===');
@@ -110,6 +112,10 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         if (data.candidate_pool) {
           setSessionCandidatePool(data.candidate_pool);
           console.log('Updated candidate_pool:', data.candidate_pool);
+        }
+        if (data.booking_context) {
+          setSessionBookingContext(data.booking_context);
+          console.log('Updated booking_context:', data.booking_context);
         }
       } else {
         throw new Error('No response received from AI');

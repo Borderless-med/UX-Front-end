@@ -20,12 +20,13 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { history, applied_filters, candidate_pool } = await req.json();
+    const { history, applied_filters, candidate_pool, booking_context } = await req.json();
 
     console.log('=== EDGE FUNCTION RECEIVING ===');
     console.log('History array length:', history?.length || 0);
     console.log('Applied filters:', applied_filters);
     console.log('Candidate pool length:', candidate_pool?.length || 0);
+    console.log('Booking context:', booking_context);
     
     if (history && history.length > 0) {
       console.log('Complete history being forwarded:', history);
@@ -38,7 +39,8 @@ const handler = async (req: Request): Promise<Response> => {
     const apiBody = {
       history: history || [],
       applied_filters: applied_filters || {},
-      candidate_pool: candidate_pool || []
+      candidate_pool: candidate_pool || [],
+      booking_context: booking_context || {}
     };
 
     console.log('Forwarding to external API:', apiBody);
@@ -73,7 +75,8 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(JSON.stringify({
       response: data.response || data.message || 'No response available',
       applied_filters: data.applied_filters || {},
-      candidate_pool: data.candidate_pool || []
+      candidate_pool: data.candidate_pool || [],
+      booking_context: data.booking_context || {}
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
