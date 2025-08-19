@@ -191,16 +191,18 @@ const AppointmentBookingForm = () => {
       
       setFormData(prev => ({ ...prev, ...newFormData }));
       
-      // Auto-scroll to booking form after a short delay
+      // Auto-scroll to the form fields specifically
       setTimeout(() => {
-        const bookingSection = document.getElementById('booking');
-        if (bookingSection) {
-          bookingSection.scrollIntoView({ 
+        const formElement = document.getElementById('appointment-form') || 
+                           document.querySelector('form') ||
+                           document.getElementById('booking');
+        if (formElement) {
+          formElement.scrollIntoView({ 
             behavior: 'smooth', 
-            block: 'start' 
+            block: 'center' 
           });
         }
-      }, 500);
+      }, 1000);
       
       // Show success message about pre-filled data
       setTimeout(() => {
@@ -413,7 +415,7 @@ const AppointmentBookingForm = () => {
           </CardHeader>
 
           <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form id="appointment-form" onSubmit={handleSubmit} className="space-y-6">
               {/* Patient Name */}
               <div className="space-y-2">
                 <Label htmlFor="patient_name" className="flex items-center space-x-2">
