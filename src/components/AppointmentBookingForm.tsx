@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { Calendar, Phone, MapPin, Clock, User, Mail, Stethoscope, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -35,6 +36,9 @@ interface FormErrors {
 }
 
 const AppointmentBookingForm = () => {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  
   const [formData, setFormData] = useState<FormData>({
     patient_name: '',
     email: '',
@@ -65,6 +69,145 @@ const AppointmentBookingForm = () => {
     { value: '+65', label: '+65 (Singapore)' },
     { value: '+60', label: '+60 (Malaysia)' },
   ];
+
+  // Function to map AI treatment values to form values
+  const mapTreatmentValue = (aiValue: string): TreatmentType | '' => {
+    const mappings: Record<string, TreatmentType> = {
+      'tooth_filling': 'Tooth Filling',
+      'root_canal': 'Root Canal',
+      'dental_crown': 'Dental Crown',
+      'dental_implant': 'Dental Implant',
+      'teeth_whitening': 'Teeth Whitening',
+      'orthodontic_braces': 'Orthodontic Braces',
+      'braces': 'Orthodontic Braces',
+      'wisdom_tooth_extraction': 'Wisdom Tooth Extraction',
+      'wisdom_tooth': 'Wisdom Tooth Extraction',
+      'composite_veneers': 'Composite Veneers',
+      'porcelain_veneers': 'Porcelain Veneers',
+      'dental_bonding': 'Dental Bonding',
+      'tmj_treatment': 'TMJ Treatment'
+    };
+    
+    // Try exact match first
+    if (treatmentOptions.includes(aiValue as TreatmentType)) {
+      return aiValue as TreatmentType;
+    }
+    
+    // Try mapping
+    return mappings[aiValue.toLowerCase()] || '';
+  };
+
+  // Function to map clinic names to township values  
+  const mapClinicToTownship = (clinicName: string): string => {
+    const normalizedClinic = clinicName.toLowerCase();
+    
+    // Find exact match in townships
+    for (const township of commonTownships) {
+      if (normalizedClinic.includes(township.toLowerCase())) {
+        return township;
+      }
+    }
+    
+    // Fuzzy matching for common clinic name patterns
+    const mappings: Record<string, string> = {
+      'adda heights': 'Adda Heights',
+      'austin heights': 'Austin Heights', 
+      'kempas': 'Kempas',
+      'kulai': 'Kulai',
+      'danga bay': 'Danga Bay',
+      'bukit indah': 'Bukit Indah',
+      'permas jaya': 'Permas Jaya',
+      'taman molek': 'Taman Molek',
+      'skudai': 'Skudai'
+    };
+    
+    for (const [pattern, township] of Object.entries(mappings)) {
+      if (normalizedClinic.includes(pattern)) {
+        return township;
+      }
+    }
+    
+    return '';
+  };
+
+  // Parse URL parameters and pre-fill form
+  useEffect(() => {
+    const name = searchParams.get('name');
+    const email = searchParams.get('email'); 
+    const phone = searchParams.get('phone');
+    const treatment = searchParams.get('treatment');
+    const clinic = searchParams.get('clinic');
+    
+    console.log('=== URL PARAMETERS DETECTED ===');
+    console.log('Name:', name);
+    console.log('Email:', email);
+    console.log('Phone:', phone);
+    console.log('Treatment:', treatment);
+    console.log('Clinic:', clinic);
+    
+    if (name || email || phone || treatment || clinic) {
+      const newFormData: Partial<FormData> = {};
+      
+      if (name) {
+        newFormData.patient_name = decodeURIComponent(name);
+      }
+      
+      if (email) {
+        newFormData.email = decodeURIComponent(email);
+      }
+      
+      if (phone) {
+        const cleanPhone = decodeURIComponent(phone);
+        // Extract country code and phone number
+        if (cleanPhone.startsWith('+60')) {
+          newFormData.country_code = '+60';
+          newFormData.whatsapp = cleanPhone.replace(/^\+60\s*/, '').replace(/[-\s]/g, '');
+        } else if (cleanPhone.startsWith('+65')) {
+          newFormData.country_code = '+65';
+          newFormData.whatsapp = cleanPhone.replace(/^\+65\s*/, '').replace(/[-\s]/g, '');
+        } else {
+          // Default to +65 for Singapore
+          newFormData.country_code = '+65';
+          newFormData.whatsapp = cleanPhone.replace(/[-\s]/g, '');
+        }
+      }
+      
+      if (treatment) {
+        const mappedTreatment = mapTreatmentValue(decodeURIComponent(treatment));
+        if (mappedTreatment) {
+          newFormData.treatment_type = mappedTreatment;
+        }
+      }
+      
+      if (clinic) {
+        const mappedClinic = mapClinicToTownship(decodeURIComponent(clinic));
+        if (mappedClinic) {
+          newFormData.clinic_location = mappedClinic;
+        }
+      }
+      
+      console.log('=== MAPPED FORM DATA ===');
+      console.log('Mapped data:', newFormData);
+      
+      setFormData(prev => ({ ...prev, ...newFormData }));
+      
+      // Auto-scroll to booking form after a short delay
+      setTimeout(() => {
+        const bookingSection = document.getElementById('booking');
+        if (bookingSection) {
+          bookingSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 500);
+      
+      // Show success message about pre-filled data
+      setTimeout(() => {
+        toast.success('Form pre-filled with your information!');
+      }, 1000);
+    }
+  }, [searchParams]);
 
   // Calculate completion percentage
   useEffect(() => {

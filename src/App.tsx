@@ -25,6 +25,7 @@ import PartnerApplication from "./pages/PartnerApplication";
 import ConfirmWhatsApp from "./pages/ConfirmWhatsApp";
 import OptOutReport from "./pages/OptOutReport";
 import TestClinicSignup from "./pages/TestClinicSignup";
+import BookNow from "./pages/BookNow";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/book-now" element={<BookNow />} />
               <Route path="/compare" element={<Compare />} />
               <Route path="/clinics" element={<Clinics />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
