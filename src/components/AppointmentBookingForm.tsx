@@ -74,15 +74,26 @@ const AppointmentBookingForm = () => {
 
   // Function to format clinic name from URL parameter
   const formatClinicName = (rawName: string): string => {
-    if (!rawName) return '';
+    console.log('🔍 formatClinicName - Raw input:', rawName);
     
-    // Replace + with spaces and decode any remaining URL encoding
-    let formatted = rawName.replace(/\+/g, ' ').trim();
+    if (!rawName) {
+      console.log('❌ formatClinicName - Empty input');
+      return '';
+    }
+    
+    // First decode URL encoding (handles %20, etc.)
+    let decoded = decodeURIComponent(rawName);
+    console.log('📝 formatClinicName - After URL decode:', decoded);
+    
+    // Replace + with spaces and handle various space encodings
+    let formatted = decoded.replace(/\+/g, ' ').replace(/%20/g, ' ').trim();
+    console.log('🔧 formatClinicName - After space replacement:', formatted);
     
     // Convert to title case
     formatted = formatted
       .toLowerCase()
       .split(' ')
+      .filter(word => word.length > 0) // Remove empty strings from double spaces
       .map(word => {
         // Handle special cases
         const upperCaseWords = ['JB', 'TMJ', 'UI', 'UX'];
@@ -94,6 +105,7 @@ const AppointmentBookingForm = () => {
       })
       .join(' ');
     
+    console.log('✅ formatClinicName - Final result:', formatted);
     return formatted;
   };
 
