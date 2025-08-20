@@ -26,11 +26,8 @@ const HeroSection = () => {
     sessionStorage.setItem('clinic-banner-dismissed', 'true');
   };
 
-  const scrollToBooking = () => {
-    const element = document.getElementById('booking');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const navigateToBooking = () => {
+    navigate('/book-now');
   };
 
   const goToCompare = () => {
@@ -47,7 +44,7 @@ const HeroSection = () => {
   };
 
   const handleManualPath = () => {
-    scrollToBooking();
+    navigateToBooking();
   };
 
   return (
@@ -153,7 +150,7 @@ const HeroSection = () => {
             
             <div className="text-center">
               <Button 
-                onClick={scrollToBooking}
+                onClick={navigateToBooking}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
                 Book Now

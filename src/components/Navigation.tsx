@@ -16,13 +16,9 @@ const Navigation = () => {
     setIsMenuOpen(false);
   };
 
-  const scrollToBooking = () => {
-    // If not on home page, navigate to home first
-    if (location.pathname !== '/') {
-      window.location.href = '/#booking';
-    } else {
-      scrollToSection('booking');
-    }
+  const navigateToBooking = () => {
+    // Always navigate to the separate booking page
+    window.location.href = '/book-now';
   };
 
   return (
@@ -85,6 +81,16 @@ const Navigation = () => {
               >
                 How It Works
               </Link>
+              <Link
+                to="/book-now"
+                className={`transition-all duration-200 font-medium ${
+                  location.pathname === '/book-now' 
+                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary text-base'
+                }`}
+              >
+                Book Now
+              </Link>
             </div>
           </div>
 
@@ -97,7 +103,7 @@ const Navigation = () => {
               Partner with Us
             </Link>
             <Button 
-              onClick={scrollToBooking}
+              onClick={navigateToBooking}
               className="bg-blue-primary hover:bg-blue-accent text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200"
             >
               Book Now
@@ -164,6 +170,18 @@ const Navigation = () => {
                 How It Works
               </Link>
               
+              <Link
+                to="/book-now"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/book-now' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                }`}
+              >
+                Book Now
+              </Link>
+              
               {/* Mobile CTA Buttons */}
               <div className="pt-4 space-y-3">
                 <Link 
@@ -175,7 +193,7 @@ const Navigation = () => {
                 </Link>
                 
                 <Button 
-                  onClick={scrollToBooking}
+                  onClick={navigateToBooking}
                   className="w-full bg-blue-primary hover:bg-blue-accent text-white font-medium"
                 >
                   Book Now

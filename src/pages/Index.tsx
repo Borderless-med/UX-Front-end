@@ -33,7 +33,7 @@ const Index = () => {
         </div>
       </section>
       
-      <AppointmentBookingForm />
+      
       <Footer />
       <FloatingClinicTab />
       <ChatWidget />

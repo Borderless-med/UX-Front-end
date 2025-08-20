@@ -75,8 +75,13 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
             const handleClick = (e: React.MouseEvent) => {
               if (isInternal && href) {
                 e.preventDefault();
-                console.log('Navigating to internal link:', href);
-                navigate(href);
+                console.log('Chat link clicked - navigating to:', href);
+                try {
+                  navigate(href);
+                } catch (error) {
+                  console.error('Navigation failed, using fallback:', error);
+                  window.location.href = href;
+                }
               }
             };
             
