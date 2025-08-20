@@ -21,6 +21,32 @@ interface ChatWindowProps {
   onClose: () => void;
 }
 
+// Helper function to extract user details from message text
+const extractUserDetailsFromMessage = (messageText: string) => {
+  const details: { name?: string; email?: string; phone?: string } = {};
+  
+  // Extract name (basic pattern: "My name is [Name]" or "[Name]" at start)
+  const nameMatch = messageText.match(/(?:my name is|i am|i'm)\s+([^,.\n]+)/i) || 
+                   messageText.match(/^([A-Z][a-z]+ [A-Z][a-z]+)/);
+  if (nameMatch) {
+    details.name = nameMatch[1].trim();
+  }
+  
+  // Extract email
+  const emailMatch = messageText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if (emailMatch) {
+    details.email = emailMatch[0];
+  }
+  
+  // Extract phone (international format)
+  const phoneMatch = messageText.match(/\+\d{1,3}[\s-]?\d{2,3}[\s-]?\d{3,4}[\s-]?\d{3,4}/);
+  if (phoneMatch) {
+    details.phone = phoneMatch[0];
+  }
+  
+  return details;
+};
+
 const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -94,14 +120,39 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
       // Step 5: Parse response text, applied_filters, and candidate_pool from response
       if (data && data.response) {
+        // Step 6: Check if we need to generate a booking link
+        let finalResponseText = data.response;
+        
+        // If booking context is complete, append a booking link
+        if (data.booking_context && data.booking_context.status === 'complete') {
+          console.log('Booking context complete, generating booking link...');
+          
+          // Extract user details from the most recent user message
+          const lastUserMessage = updatedMessages[updatedMessages.length - 1];
+          const userDetails = extractUserDetailsFromMessage(lastUserMessage?.text || '');
+          
+          // Generate booking URL with parameters
+          const bookingParams = new URLSearchParams();
+          if (userDetails.name) bookingParams.set('name', userDetails.name);
+          if (userDetails.email) bookingParams.set('email', userDetails.email);
+          if (userDetails.phone) bookingParams.set('phone', userDetails.phone);
+          if (data.booking_context.clinic_name) bookingParams.set('clinic', data.booking_context.clinic_name);
+          if (data.booking_context.treatment) bookingParams.set('treatment', data.booking_context.treatment);
+          
+          const bookingUrl = `/book-now?${bookingParams.toString()}`;
+          finalResponseText += `\n\n[Click here to complete your booking →](${bookingUrl})`;
+          
+          console.log('Generated booking URL:', bookingUrl);
+        }
+
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: data.response,
+          text: finalResponseText,
           sender: 'ai',
           timestamp: new Date(),
         };
 
-        // Step 6: Update chat display with AI response and update session variables
+        // Step 7: Update chat display with AI response and update session variables
         setMessages(prev => [...prev, aiMessage]);
         
         // Update session state with new applied_filters and candidate_pool

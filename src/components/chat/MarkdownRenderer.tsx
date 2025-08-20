@@ -76,8 +76,15 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
               if (isInternal && href) {
                 e.preventDefault();
                 console.log('Chat link clicked - navigating to:', href);
+                console.log('Full href:', href);
+                
                 try {
-                  navigate(href);
+                  // Force page navigation for booking links to ensure proper loading
+                  if (href.includes('/book-now')) {
+                    window.location.href = href;
+                  } else {
+                    navigate(href);
+                  }
                 } catch (error) {
                   console.error('Navigation failed, using fallback:', error);
                   window.location.href = href;
@@ -93,7 +100,7 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
                   target: "_blank", 
                   rel: "noopener noreferrer" 
                 })}
-                className="text-primary hover:text-primary/80 underline transition-colors cursor-pointer"
+                className="text-primary hover:text-primary/80 underline transition-colors cursor-pointer font-medium"
               >
                 {children}
               </a>
