@@ -120,30 +120,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
       // Step 5: Parse response text, applied_filters, and candidate_pool from response
       if (data && data.response) {
-        // Step 6: Check if we need to generate a booking link
+        // Use the response directly (AI backend already includes booking links)
         let finalResponseText = data.response;
-        
-        // If booking context is complete, append a booking link
-        if (data.booking_context && data.booking_context.status === 'complete') {
-          console.log('Booking context complete, generating booking link...');
-          
-          // Extract user details from the most recent user message
-          const lastUserMessage = updatedMessages[updatedMessages.length - 1];
-          const userDetails = extractUserDetailsFromMessage(lastUserMessage?.text || '');
-          
-          // Generate booking URL with parameters
-          const bookingParams = new URLSearchParams();
-          if (userDetails.name) bookingParams.set('name', userDetails.name);
-          if (userDetails.email) bookingParams.set('email', userDetails.email);
-          if (userDetails.phone) bookingParams.set('phone', userDetails.phone);
-          if (data.booking_context.clinic_name) bookingParams.set('clinic', data.booking_context.clinic_name);
-          if (data.booking_context.treatment) bookingParams.set('treatment', data.booking_context.treatment);
-          
-          const bookingUrl = `/book-now?${bookingParams.toString()}`;
-          finalResponseText += `\n\n[Click here to complete your booking →](${bookingUrl})`;
-          
-          console.log('Generated booking URL:', bookingUrl);
-        }
 
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),

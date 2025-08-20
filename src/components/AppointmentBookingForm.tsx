@@ -152,18 +152,22 @@ const AppointmentBookingForm = () => {
 
   // Parse URL parameters and pre-fill form
   useEffect(() => {
+    console.log('=== FORM COMPONENT LOADED ===');
+    console.log('Current URL:', window.location.href);
+    console.log('Search params object:', Object.fromEntries(searchParams.entries()));
+    
     const name = searchParams.get('name');
     const email = searchParams.get('email'); 
     const phone = searchParams.get('phone');
     const treatment = searchParams.get('treatment');
     const clinic = searchParams.get('clinic');
     
-    console.log('=== URL PARAMETERS DETECTED ===');
+    console.log('=== RAW URL PARAMETERS ===');
     console.log('Name:', name);
     console.log('Email:', email);
     console.log('Phone:', phone);
-    console.log('Treatment:', treatment);
-    console.log('Clinic:', clinic);
+    console.log('Treatment (raw):', treatment);
+    console.log('Clinic (raw):', clinic);
     
     if (name || email || phone || treatment || clinic) {
       const newFormData: Partial<FormData> = {};
