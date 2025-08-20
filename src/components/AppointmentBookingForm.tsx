@@ -72,6 +72,31 @@ const AppointmentBookingForm = () => {
     { value: '+60', label: '+60 (Malaysia)' },
   ];
 
+  // Function to format clinic name from URL parameter
+  const formatClinicName = (rawName: string): string => {
+    if (!rawName) return '';
+    
+    // Replace + with spaces and decode any remaining URL encoding
+    let formatted = rawName.replace(/\+/g, ' ').trim();
+    
+    // Convert to title case
+    formatted = formatted
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        // Handle special cases
+        const upperCaseWords = ['JB', 'TMJ', 'UI', 'UX'];
+        if (upperCaseWords.includes(word.toUpperCase())) {
+          return word.toUpperCase();
+        }
+        // Capitalize first letter of each word
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+    
+    return formatted;
+  };
+
   // Function to map AI treatment values to form values
   const mapTreatmentValue = (aiValue: string): TreatmentType | '' => {
     if (!aiValue) return '';
@@ -221,10 +246,11 @@ const AppointmentBookingForm = () => {
       
       if (clinic) {
         const decodedClinic = decodeURIComponent(clinic);
-        // Store the exact clinic name for display
-        newFormData.preferred_clinic = decodedClinic;
+        // Format the clinic name for proper display
+        const formattedClinic = formatClinicName(decodedClinic);
+        newFormData.preferred_clinic = formattedClinic;
         
-        // Also map to township for the location dropdown
+        // Also map to township for the location dropdown using the original decoded name
         const mappedClinic = mapClinicToTownship(decodedClinic);
         if (mappedClinic) {
           newFormData.clinic_location = mappedClinic;
