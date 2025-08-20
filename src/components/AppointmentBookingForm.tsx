@@ -299,12 +299,12 @@ const AppointmentBookingForm = () => {
   // Calculate completion percentage
   useEffect(() => {
     const requiredFields = [
-      'patient_name', 'email', 'whatsapp', 'treatment_type', 
+      'patient_name', 'email', 'whatsapp', 'treatment_type', 'preferred_clinic',
       'preferred_date', 'time_slot', 'clinic_location', 'consent_given'
     ];
     
-    // Add preferred_clinic to completion if it's pre-filled
-    const fieldsToCheck = formData.preferred_clinic ? [...requiredFields, 'preferred_clinic'] : requiredFields;
+    // preferred_clinic is now always required
+    const fieldsToCheck = requiredFields;
     
     let completedFields = 0;
     fieldsToCheck.forEach(field => {
@@ -342,6 +342,10 @@ const AppointmentBookingForm = () => {
 
     if (!formData.treatment_type) {
       newErrors.treatment_type = 'Please select a treatment type';
+    }
+
+    if (!formData.preferred_clinic) {
+      newErrors.preferred_clinic = 'Please select a preferred clinic';
     }
 
     if (!formData.preferred_date) {
@@ -608,28 +612,56 @@ const AppointmentBookingForm = () => {
                  )}
                </div>
 
-               {/* Preferred Clinic Location - Read-only when pre-filled */}
-               {formData.preferred_clinic && (
-                 <div className="space-y-2">
-                    <Label className="flex items-center space-x-2">
-                      <Building2 className="w-4 h-4" />
-                      <span>Clinic Name</span>
-                    </Label>
-                   <div className="relative">
-                     <Input
-                       value={formData.preferred_clinic}
-                       disabled
-                       className="h-12 text-base bg-green-50 border-green-200 text-green-800 font-medium pr-12"
-                     />
-                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                       <CheckCircle2 className="w-5 h-5 text-green-600" />
-                     </div>
-                   </div>
-                   <p className="text-xs text-green-600 font-medium">
-                     ✓ Selected by AI assistant based on your preferences
-                   </p>
-                 </div>
-               )}
+              {/* Clinic Selection - Always visible */}
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2">
+                  <Building2 className="w-4 h-4" />
+                  <span>Preferred Clinic {formData.preferred_clinic ? '' : '*'}</span>
+                </Label>
+                
+                {formData.preferred_clinic ? (
+                  // Read-only field when pre-filled from URL
+                  <div className="relative">
+                    <Input
+                      value={formData.preferred_clinic}
+                      disabled
+                      className="h-12 text-base bg-green-50 border-green-200 text-green-800 font-medium pr-12"
+                    />
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    </div>
+                    <p className="text-xs text-green-600 font-medium mt-1">
+                      ✓ Selected by AI assistant based on your preferences
+                    </p>
+                  </div>
+                ) : (
+                  // Dropdown selection when no clinic specified
+                  <>
+                    <Select value={formData.preferred_clinic} onValueChange={(value) => handleInputChange('preferred_clinic', value)}>
+                      <SelectTrigger className={cn(
+                        "h-12 text-base",
+                        errors.preferred_clinic && "border-red-500"
+                      )}>
+                        <SelectValue placeholder="Select a clinic or 'Any clinic'" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Any clinic">Any clinic (we'll recommend the best match)</SelectItem>
+                        <SelectItem value="Adda Heights Dental Studio">Adda Heights Dental Studio</SelectItem>
+                        <SelectItem value="Klinik Pergigian Dr. Tan">Klinik Pergigian Dr. Tan</SelectItem>
+                        <SelectItem value="Smileage Dental">Smileage Dental</SelectItem>
+                        <SelectItem value="iCare Dental">iCare Dental</SelectItem>
+                        <SelectItem value="StarLight Dental">StarLight Dental</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.preferred_clinic && (
+                      <p className="text-sm text-red-600">{errors.preferred_clinic}</p>
+                    )}
+                    <p className="text-xs text-gray-500">
+                      Choose a specific clinic or let us recommend based on your treatment and location preferences
+                    </p>
+                  </>
+                )}
+              </div>
 
               {/* Preferred Date */}
               <div className="space-y-2">
