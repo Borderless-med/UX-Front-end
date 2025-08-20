@@ -65,16 +65,25 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
           ),
           
           // Links
-          a: ({ href, children }) => (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 underline transition-colors"
-            >
-              {children}
-            </a>
-          ),
+          a: ({ href, children }) => {
+            // Check if link is internal (starts with / or same domain)
+            const isInternal = href?.startsWith('/') || 
+                              (href && !href.startsWith('http://') && !href.startsWith('https://')) ||
+                              (href && href.includes(window.location.hostname));
+            
+            return (
+              <a
+                href={href}
+                {...(!isInternal && { 
+                  target: "_blank", 
+                  rel: "noopener noreferrer" 
+                })}
+                className="text-primary hover:text-primary/80 underline transition-colors"
+              >
+                {children}
+              </a>
+            );
+          },
           
           // Emphasis
           strong: ({ children }) => (
