@@ -17,6 +17,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { treatmentOptions, type TreatmentType } from '@/data/treatmentOptions';
 import { commonTownships } from '@/components/clinic/utils/clinicConstants';
 import { isDateDisabled } from '@/data/singaporeHolidays';
+import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 import { toast } from 'sonner';
 
 interface FormData {
@@ -39,6 +40,9 @@ interface FormErrors {
 const AppointmentBookingForm = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  
+  // Fetch clinic data
+  const { clinics, loading: clinicsLoading, error: clinicsError } = useSupabaseClinics();
   
   const [formData, setFormData] = useState<FormData>({
     patient_name: '',
@@ -637,27 +641,44 @@ const AppointmentBookingForm = () => {
                 ) : (
                   // Dropdown selection when no clinic specified
                   <>
-                    <Select value={formData.preferred_clinic} onValueChange={(value) => handleInputChange('preferred_clinic', value)}>
+                    {clinicsError && (
+                      <div className="text-sm text-red-600 mb-2">
+                        Error loading clinics. Please try refreshing the page.
+                      </div>
+                    )}
+                    <Select 
+                      value={formData.preferred_clinic} 
+                      onValueChange={(value) => handleInputChange('preferred_clinic', value)}
+                      disabled={clinicsLoading}
+                    >
                       <SelectTrigger className={cn(
                         "h-12 text-base",
                         errors.preferred_clinic && "border-red-500"
                       )}>
-                        <SelectValue placeholder="Select a clinic or 'Any clinic'" />
+                        <SelectValue placeholder={clinicsLoading ? "Loading clinics..." : "Select a clinic or 'Any clinic'"} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background border shadow-lg z-50 max-h-64 overflow-y-auto">
                         <SelectItem value="Any clinic">Any clinic (we'll recommend the best match)</SelectItem>
-                        <SelectItem value="Adda Heights Dental Studio">Adda Heights Dental Studio</SelectItem>
-                        <SelectItem value="Klinik Pergigian Dr. Tan">Klinik Pergigian Dr. Tan</SelectItem>
-                        <SelectItem value="Smileage Dental">Smileage Dental</SelectItem>
-                        <SelectItem value="iCare Dental">iCare Dental</SelectItem>
-                        <SelectItem value="StarLight Dental">StarLight Dental</SelectItem>
+                        {!clinicsLoading && clinics.length > 0 && (
+                          clinics
+                            .slice() // Create a copy to avoid mutating original array
+                            .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically
+                            .map((clinic) => (
+                              <SelectItem key={clinic.id} value={clinic.name}>
+                                {clinic.name}
+                              </SelectItem>
+                            ))
+                        )}
                       </SelectContent>
                     </Select>
                     {errors.preferred_clinic && (
                       <p className="text-sm text-red-600">{errors.preferred_clinic}</p>
                     )}
                     <p className="text-xs text-gray-500">
-                      Choose a specific clinic or let us recommend based on your treatment and location preferences
+                      {clinicsLoading 
+                        ? "Loading clinic options..." 
+                        : `Choose from ${clinics.length} available clinics or let us recommend the best match`
+                      }
                     </p>
                   </>
                 )}
