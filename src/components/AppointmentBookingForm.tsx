@@ -217,6 +217,8 @@ const AppointmentBookingForm = () => {
       
       console.log('=== MAPPED FORM DATA ===');
       console.log('Mapped data:', newFormData);
+      console.log('Will show preferred clinic field?', !!newFormData.preferred_clinic);
+      console.log('Treatment type mapped to:', newFormData.treatment_type);
       
       setFormData(prev => ({ ...prev, ...newFormData }));
       

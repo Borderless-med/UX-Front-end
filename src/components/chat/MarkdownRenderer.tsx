@@ -69,26 +69,51 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
           
           // Links
           a: ({ href, children }) => {
-            // Check if link is internal (starts with /)
+            // Check if link is internal (starts with /) OR is a booking link from production domain
             const isInternal = href?.startsWith('/');
+            const isBookingLink = href?.includes('sg-jb-dental.lovable.app/book-now') || href?.includes('/book-now');
             
             const handleClick = (e: React.MouseEvent) => {
-              if (isInternal && href) {
-                e.preventDefault();
-                console.log('Chat link clicked - navigating to:', href);
-                console.log('Full href:', href);
+              e.preventDefault();
+              
+              let targetPath = '';
+              
+              if (isBookingLink && href) {
+                console.log('=== BOOKING LINK CLICKED ===');
+                console.log('Original href:', href);
                 
+                // Extract just the path and parameters from full URLs
+                if (href.includes('sg-jb-dental.lovable.app/book-now')) {
+                  const url = new URL(href);
+                  targetPath = url.pathname + url.search;
+                  console.log('Extracted path from production URL:', targetPath);
+                } else if (href.startsWith('/book-now')) {
+                  targetPath = href;
+                  console.log('Using relative path:', targetPath);
+                } else {
+                  targetPath = href;
+                }
+                
+                console.log('Final target path:', targetPath);
+                
+                // Navigate to booking form with parameters
                 try {
-                  // Force page navigation for booking links to ensure proper loading
-                  if (href.includes('/book-now')) {
-                    window.location.href = href;
-                  } else {
-                    navigate(href);
-                  }
+                  navigate(targetPath);
+                } catch (error) {
+                  console.error('Navigation failed, using fallback:', error);
+                  window.location.href = targetPath;
+                }
+              } else if (isInternal && href) {
+                console.log('Internal link clicked - navigating to:', href);
+                try {
+                  navigate(href);
                 } catch (error) {
                   console.error('Navigation failed, using fallback:', error);
                   window.location.href = href;
                 }
+              } else {
+                // External link - open in new tab
+                window.open(href, '_blank', 'noopener,noreferrer');
               }
             };
             
@@ -96,10 +121,6 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
               <a
                 href={href}
                 onClick={handleClick}
-                {...(!isInternal && { 
-                  target: "_blank", 
-                  rel: "noopener noreferrer" 
-                })}
                 className="text-primary hover:text-primary/80 underline transition-colors cursor-pointer font-medium"
               >
                 {children}
