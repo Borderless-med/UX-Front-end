@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
-import { Calendar, Phone, MapPin, Clock, User, Mail, Stethoscope, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Calendar, Phone, MapPin, Clock, User, Mail, Stethoscope, CheckCircle2, AlertCircle, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,7 @@ interface FormData {
   whatsapp: string;
   country_code: string;
   treatment_type: TreatmentType | '';
+  preferred_clinic: string;
   preferred_date: Date | undefined;
   time_slot: string;
   clinic_location: string;
@@ -45,6 +46,7 @@ const AppointmentBookingForm = () => {
     whatsapp: '',
     country_code: '+65',
     treatment_type: '',
+    preferred_clinic: '',
     preferred_date: undefined,
     time_slot: '',
     clinic_location: '',
@@ -72,29 +74,47 @@ const AppointmentBookingForm = () => {
 
   // Function to map AI treatment values to form values
   const mapTreatmentValue = (aiValue: string): TreatmentType | '' => {
+    console.log('=== TREATMENT MAPPING ===');
+    console.log('Input treatment:', aiValue);
+    
     const mappings: Record<string, TreatmentType> = {
+      // Underscore format from AI
       'tooth_filling': 'Tooth Filling',
       'root_canal': 'Root Canal',
       'dental_crown': 'Dental Crown',
       'dental_implant': 'Dental Implant',
       'teeth_whitening': 'Teeth Whitening',
       'orthodontic_braces': 'Orthodontic Braces',
-      'braces': 'Orthodontic Braces',
       'wisdom_tooth_extraction': 'Wisdom Tooth Extraction',
-      'wisdom_tooth': 'Wisdom Tooth Extraction',
       'composite_veneers': 'Composite Veneers',
       'porcelain_veneers': 'Porcelain Veneers',
       'dental_bonding': 'Dental Bonding',
-      'tmj_treatment': 'TMJ Treatment'
+      'tmj_treatment': 'TMJ Treatment',
+      // Common variations
+      'braces': 'Orthodontic Braces',
+      'wisdom_tooth': 'Wisdom Tooth Extraction',
+      'filling': 'Tooth Filling',
+      'crown': 'Dental Crown',
+      'implant': 'Dental Implant',
+      'whitening': 'Teeth Whitening',
+      'veneers': 'Composite Veneers',
+      'bonding': 'Dental Bonding'
     };
     
     // Try exact match first
     if (treatmentOptions.includes(aiValue as TreatmentType)) {
+      console.log('Exact match found:', aiValue);
       return aiValue as TreatmentType;
     }
     
-    // Try mapping
-    return mappings[aiValue.toLowerCase()] || '';
+    // Try mapping with normalized input
+    const normalizedInput = aiValue.toLowerCase().trim();
+    const mapped = mappings[normalizedInput];
+    
+    console.log('Normalized input:', normalizedInput);
+    console.log('Mapped result:', mapped || 'No mapping found');
+    
+    return mapped || '';
   };
 
   // Function to map clinic names to township values  
@@ -180,7 +200,12 @@ const AppointmentBookingForm = () => {
       }
       
       if (clinic) {
-        const mappedClinic = mapClinicToTownship(decodeURIComponent(clinic));
+        const decodedClinic = decodeURIComponent(clinic);
+        // Store the exact clinic name for display
+        newFormData.preferred_clinic = decodedClinic;
+        
+        // Also map to township for the location dropdown
+        const mappedClinic = mapClinicToTownship(decodedClinic);
         if (mappedClinic) {
           newFormData.clinic_location = mappedClinic;
         }
@@ -218,8 +243,11 @@ const AppointmentBookingForm = () => {
       'preferred_date', 'time_slot', 'clinic_location', 'consent_given'
     ];
     
+    // Add preferred_clinic to completion if it's pre-filled
+    const fieldsToCheck = formData.preferred_clinic ? [...requiredFields, 'preferred_clinic'] : requiredFields;
+    
     let completedFields = 0;
-    requiredFields.forEach(field => {
+    fieldsToCheck.forEach(field => {
       if (field === 'preferred_date') {
         if (formData.preferred_date) completedFields++;
       } else if (field === 'consent_given') {
@@ -229,7 +257,7 @@ const AppointmentBookingForm = () => {
       }
     });
     
-    setCompletionPercentage((completedFields / requiredFields.length) * 100);
+    setCompletionPercentage((completedFields / fieldsToCheck.length) * 100);
   }, [formData]);
 
   // Validation function
@@ -494,31 +522,54 @@ const AppointmentBookingForm = () => {
                 )}
               </div>
 
-              {/* Treatment Type */}
-              <div className="space-y-2">
-                <Label htmlFor="treatment_type" className="flex items-center space-x-2">
-                  <Stethoscope className="w-4 h-4" />
-                  <span>Treatment Type *</span>
-                </Label>
-                <Select value={formData.treatment_type} onValueChange={(value) => handleInputChange('treatment_type', value)}>
-                  <SelectTrigger className={cn(
-                    "h-12 text-base",
-                    errors.treatment_type && "border-red-500"
-                  )}>
-                    <SelectValue placeholder="Select your treatment" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {treatmentOptions.map((treatment) => (
-                      <SelectItem key={treatment} value={treatment}>
-                        {treatment}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.treatment_type && (
-                  <p className="text-sm text-red-600">{errors.treatment_type}</p>
-                )}
-              </div>
+               {/* Treatment Type */}
+               <div className="space-y-2">
+                 <Label htmlFor="treatment_type" className="flex items-center space-x-2">
+                   <Stethoscope className="w-4 h-4" />
+                   <span>Treatment Type *</span>
+                 </Label>
+                 <Select value={formData.treatment_type} onValueChange={(value) => handleInputChange('treatment_type', value)}>
+                   <SelectTrigger className={cn(
+                     "h-12 text-base",
+                     errors.treatment_type && "border-red-500"
+                   )}>
+                     <SelectValue placeholder="Select your treatment" />
+                   </SelectTrigger>
+                   <SelectContent>
+                     {treatmentOptions.map((treatment) => (
+                       <SelectItem key={treatment} value={treatment}>
+                         {treatment}
+                       </SelectItem>
+                     ))}
+                   </SelectContent>
+                 </Select>
+                 {errors.treatment_type && (
+                   <p className="text-sm text-red-600">{errors.treatment_type}</p>
+                 )}
+               </div>
+
+               {/* Preferred Clinic Location - Read-only when pre-filled */}
+               {formData.preferred_clinic && (
+                 <div className="space-y-2">
+                   <Label className="flex items-center space-x-2">
+                     <Building2 className="w-4 h-4" />
+                     <span>Preferred Clinic Location</span>
+                   </Label>
+                   <div className="relative">
+                     <Input
+                       value={formData.preferred_clinic}
+                       disabled
+                       className="h-12 text-base bg-green-50 border-green-200 text-green-800 font-medium pr-12"
+                     />
+                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                       <CheckCircle2 className="w-5 h-5 text-green-600" />
+                     </div>
+                   </div>
+                   <p className="text-xs text-green-600 font-medium">
+                     ✓ Selected by AI assistant based on your preferences
+                   </p>
+                 </div>
+               )}
 
               {/* Preferred Date */}
               <div className="space-y-2">
