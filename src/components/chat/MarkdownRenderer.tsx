@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import { useNavigate } from 'react-router-dom';
 import 'highlight.js/styles/github.css';
 
 interface MarkdownRendererProps {
@@ -9,6 +10,8 @@ interface MarkdownRendererProps {
 }
 
 const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) => {
+  const navigate = useNavigate();
+  
   return (
     <div className={`markdown-content ${isUser ? 'user' : 'ai'}`}>
       <ReactMarkdown
@@ -66,19 +69,26 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
           
           // Links
           a: ({ href, children }) => {
-            // Check if link is internal (starts with / or same domain)
-            const isInternal = href?.startsWith('/') || 
-                              (href && !href.startsWith('http://') && !href.startsWith('https://')) ||
-                              (href && href.includes(window.location.hostname));
+            // Check if link is internal (starts with /)
+            const isInternal = href?.startsWith('/');
+            
+            const handleClick = (e: React.MouseEvent) => {
+              if (isInternal && href) {
+                e.preventDefault();
+                console.log('Navigating to internal link:', href);
+                navigate(href);
+              }
+            };
             
             return (
               <a
                 href={href}
+                onClick={handleClick}
                 {...(!isInternal && { 
                   target: "_blank", 
                   rel: "noopener noreferrer" 
                 })}
-                className="text-primary hover:text-primary/80 underline transition-colors"
+                className="text-primary hover:text-primary/80 underline transition-colors cursor-pointer"
               >
                 {children}
               </a>
