@@ -1,15 +1,17 @@
 
 import { Button } from '@/components/ui/button';
-import { Globe, UserCheck } from 'lucide-react';
+import { Globe, UserCheck, Calendar } from 'lucide-react';
 
 interface ClinicCardActionsProps {
   clinic: {
+    name: string;
     websiteUrl: string;
   };
   isAuthenticated: boolean;
   onSignInClick: () => void;
   onViewPractitioner: () => void;
   onClaimClinic: () => void;
+  onBookNow: () => void;
 }
 
 const ClinicCardActions = ({ 
@@ -17,7 +19,8 @@ const ClinicCardActions = ({
   isAuthenticated, 
   onSignInClick, 
   onViewPractitioner, 
-  onClaimClinic 
+  onClaimClinic,
+  onBookNow 
 }: ClinicCardActionsProps) => {
   const handleWebsiteClick = () => {
     if (clinic.websiteUrl && clinic.websiteUrl.trim() !== '' && clinic.websiteUrl !== 'N/A') {
@@ -27,24 +30,33 @@ const ClinicCardActions = ({
 
   return (
     <div className="space-y-3 pb-2">
-      {/* Practitioner Details */}
+      {/* Book Now - Primary CTA */}
       <Button
-        onClick={isAuthenticated ? onViewPractitioner : onSignInClick}
+        onClick={onBookNow}
         className="w-full bg-blue-primary hover:bg-blue-primary/90 text-white flex items-center justify-center text-sm py-2.5"
       >
-        <UserCheck className="h-4 w-4 mr-2" />
-        {isAuthenticated ? 'View Practitioner Details' : 'Sign In to View Details'}
+        <Calendar className="h-4 w-4 mr-2" />
+        Book Now
       </Button>
 
-      {/* Website and Update Clinic Buttons */}
+      {/* Secondary actions row */}
       <div className="flex gap-2">
+        {/* View Practitioner Details - Now secondary */}
+        <Button
+          onClick={isAuthenticated ? onViewPractitioner : onSignInClick}
+          variant="outline"
+          className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+        >
+          <UserCheck className="h-3 w-3 mr-1" />
+          {isAuthenticated ? 'Details' : 'Sign In'}
+        </Button>
         {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' && (
           <Button
             onClick={handleWebsiteClick}
             variant="outline"
-            className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white flex items-center justify-center text-sm py-2"
+            className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
           >
-            <Globe className="h-4 w-4 mr-2" />
+            <Globe className="h-3 w-3 mr-1" />
             Website
           </Button>
         )}
@@ -54,7 +66,7 @@ const ClinicCardActions = ({
           variant="outline"
           className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
         >
-          Update My Clinic
+          Update
         </Button>
       </div>
     </div>

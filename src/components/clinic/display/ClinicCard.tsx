@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Clinic } from '@/types/clinic';
 import ClaimClinicModal from '../ClaimClinicModal';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAvailableCategories } from '../utils/clinicFilterUtils';
 import ClinicCardHeader from './ClinicCardHeader';
 import ClinicCardInfo from './ClinicCardInfo';
@@ -18,6 +19,7 @@ interface ClinicCardProps {
 
 const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitionerDetails }: ClinicCardProps) => {
   const [showClaimModal, setShowClaimModal] = useState(false);
+  const navigate = useNavigate();
 
   const availableCategories = getAvailableCategories(clinic);
 
@@ -27,6 +29,11 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
     } else {
       onSignInClick();
     }
+  };
+
+  const handleBookNow = () => {
+    // Navigate to booking page with clinic name pre-filled
+    navigate(`/book-now?clinic=${encodeURIComponent(clinic.name)}`);
   };
 
   return (
@@ -50,6 +57,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
             onSignInClick={onSignInClick}
             onViewPractitioner={handleViewPractitioner}
             onClaimClinic={() => setShowClaimModal(true)}
+            onBookNow={handleBookNow}
           />
         </CardContent>
       </Card>
