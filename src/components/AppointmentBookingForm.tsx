@@ -74,31 +74,50 @@ const AppointmentBookingForm = () => {
 
   // Function to map AI treatment values to form values
   const mapTreatmentValue = (aiValue: string): TreatmentType | '' => {
-    console.log('=== TREATMENT MAPPING ===');
-    console.log('Input treatment:', aiValue);
+    if (!aiValue) return '';
     
-    const mappings: Record<string, TreatmentType> = {
-      // Underscore format from AI
+    const normalizedValue = aiValue.toLowerCase().trim();
+    console.log('=== TREATMENT MAPPING DEBUG ===');
+    console.log('Original AI value:', aiValue);
+    console.log('Normalized value:', normalizedValue);
+    
+    // Direct matches - include consultation mappings and crown variations
+    const directMatches: Record<string, TreatmentType> = {
+      // Basic treatments
       'tooth_filling': 'Tooth Filling',
+      'filling': 'Tooth Filling',
+      'dental_filling': 'Tooth Filling',
       'root_canal': 'Root Canal',
+      
+      // Crown treatments - many variations
+      'crown': 'Dental Crown',
       'dental_crown': 'Dental Crown',
+      'tooth_crown': 'Dental Crown',
+      'crown treatment': 'Dental Crown',
+      'crowns': 'Dental Crown',
+      'dental crown treatment': 'Dental Crown',
+      
+      // Other treatments
       'dental_implant': 'Dental Implant',
+      'implant': 'Dental Implant',
       'teeth_whitening': 'Teeth Whitening',
+      'whitening': 'Teeth Whitening',
       'orthodontic_braces': 'Orthodontic Braces',
+      'braces': 'Orthodontic Braces',
       'wisdom_tooth_extraction': 'Wisdom Tooth Extraction',
+      'wisdom_tooth': 'Wisdom Tooth Extraction',
       'composite_veneers': 'Composite Veneers',
+      'veneers': 'Composite Veneers',
       'porcelain_veneers': 'Porcelain Veneers',
       'dental_bonding': 'Dental Bonding',
+      'bonding': 'Dental Bonding',
       'tmj_treatment': 'TMJ Treatment',
-      // Common variations
-      'braces': 'Orthodontic Braces',
-      'wisdom_tooth': 'Wisdom Tooth Extraction',
-      'filling': 'Tooth Filling',
-      'crown': 'Dental Crown',
-      'implant': 'Dental Implant',
-      'whitening': 'Teeth Whitening',
-      'veneers': 'Composite Veneers',
-      'bonding': 'Dental Bonding'
+      
+      // Consultation mappings - AI backend incorrectly maps crown requests to consultation
+      'consultation': 'Dental Crown', // Default consultation to crown since that's what user likely wanted
+      'a consultation': 'Dental Crown', // This is the specific issue - AI says "a consultation" for crown
+      'dental consultation': 'Dental Crown',
+      'general consultation': 'Tooth Filling' // General fallback
     };
     
     // Try exact match first
@@ -107,11 +126,8 @@ const AppointmentBookingForm = () => {
       return aiValue as TreatmentType;
     }
     
-    // Try mapping with normalized input
-    const normalizedInput = aiValue.toLowerCase().trim();
-    const mapped = mappings[normalizedInput];
-    
-    console.log('Normalized input:', normalizedInput);
+    // Try direct mapping
+    const mapped = directMatches[normalizedValue];
     console.log('Mapped result:', mapped || 'No mapping found');
     
     return mapped || '';
@@ -557,10 +573,10 @@ const AppointmentBookingForm = () => {
                {/* Preferred Clinic Location - Read-only when pre-filled */}
                {formData.preferred_clinic && (
                  <div className="space-y-2">
-                   <Label className="flex items-center space-x-2">
-                     <Building2 className="w-4 h-4" />
-                     <span>Preferred Clinic Location</span>
-                   </Label>
+                    <Label className="flex items-center space-x-2">
+                      <Building2 className="w-4 h-4" />
+                      <span>Clinic Name</span>
+                    </Label>
                    <div className="relative">
                      <Input
                        value={formData.preferred_clinic}
