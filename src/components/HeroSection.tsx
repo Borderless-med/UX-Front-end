@@ -44,7 +44,7 @@ const HeroSection = () => {
   };
 
   const handleManualPath = () => {
-    navigateToBooking();
+    navigate('/clinics');
   };
 
   return (

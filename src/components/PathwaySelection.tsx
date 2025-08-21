@@ -63,28 +63,28 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
               <div className="bg-gray-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
                 <User className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Self-Service Booking</h3>
-              <p className="text-lg text-gray-700 mb-6">Browse clinics yourself, filter options, and complete the booking form independently at your own pace</p>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Browse & Compare</h3>
+              <p className="text-lg text-gray-700 mb-6">Explore our verified clinics, compare options, and book when you're ready</p>
             </div>
-            <div className="text-base text-gray-700 font-semibold">Perfect for: Experienced patients, those who prefer control</div>
+            <div className="text-base text-gray-700 font-semibold">Perfect for: Experienced patients, those who prefer to research first</div>
           </div>
           
           <div className="space-y-4 mb-8 flex-grow min-h-[200px]">
             <div className="flex items-start space-x-4">
               <CheckCircle className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
-              <span className="text-lg text-gray-700 font-medium">Full browsing control</span>
+              <span className="text-lg text-gray-700 font-medium">Browse all verified clinics</span>
             </div>
             <div className="flex items-start space-x-4">
               <CheckCircle className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
-              <span className="text-lg text-gray-700 font-medium">Advanced filtering options</span>
+              <span className="text-lg text-gray-700 font-medium">Advanced search & filtering</span>
             </div>
             <div className="flex items-start space-x-4">
               <CheckCircle className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
-              <span className="text-lg text-gray-700 font-medium">Compare at your own pace</span>
+              <span className="text-lg text-gray-700 font-medium">Compare clinics side-by-side</span>
             </div>
             <div className="flex items-start space-x-4">
               <CheckCircle className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
-              <span className="text-lg text-gray-700 font-medium">Familiar booking process</span>
+              <span className="text-lg text-gray-700 font-medium">Book directly from clinic pages</span>
             </div>
           </div>
           
@@ -92,7 +92,7 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
             onClick={onManualPath}
             className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-5 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-lg mt-auto"
           >
-            Browse & Book Directly
+            Start Browsing Clinics
           </button>
         </div>
       </div>
