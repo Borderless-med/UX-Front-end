@@ -21,11 +21,11 @@ const ClinicAdvancedFilters = ({
 }: ClinicAdvancedFiltersProps) => {
   return (
     <div className="pt-4 border-t border-sidebar-border">
-      <h3 className="text-sm font-medium text-sidebar-muted-foreground mb-4">Advanced Filters</h3>
+      <h3 className="text-lg font-medium text-sidebar-muted-foreground mb-4">Advanced Filters</h3>
       <div className="space-y-6">
         {/* Max Distance from CIQ */}
         <div>
-          <h4 className="text-sm font-medium text-sidebar-foreground mb-3">
+          <h4 className="text-base font-medium text-sidebar-foreground mb-3">
             Max Distance from CIQ: {maxDistance}km
           </h4>
           <Slider
@@ -40,7 +40,7 @@ const ClinicAdvancedFilters = ({
 
         {/* Minimum Google Reviews */}
         <div>
-          <h4 className="text-sm font-medium text-sidebar-foreground mb-3">
+          <h4 className="text-base font-medium text-sidebar-foreground mb-3">
             Minimum Google Reviews: {minReviews}
           </h4>
           <Slider

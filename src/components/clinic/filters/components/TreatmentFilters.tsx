@@ -28,7 +28,7 @@ const TreatmentFilters = ({ selectedTreatments, onTreatmentChange }: TreatmentFi
 
   return (
     <div>
-      <h4 className="text-sm font-medium text-blue-dark mb-3 flex items-center">
+      <h4 className="text-lg font-medium text-blue-dark mb-3 flex items-center">
         <Shield className="h-4 w-4 mr-2" />
         Treatment Services
       </h4>

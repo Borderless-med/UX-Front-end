@@ -86,7 +86,7 @@ const ClinicSidebar = ({
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
         <div className="flex items-center gap-2">
           <Filter className="h-5 w-5 text-sidebar-primary" />
-          <h2 className="font-semibold text-sidebar-foreground">Filters</h2>
+          <h2 className="text-lg font-semibold text-sidebar-foreground">Filters</h2>
         </div>
         {isMobile && onClose && (
           <Button
@@ -189,7 +189,7 @@ const ClinicSidebar = ({
         )}
         
         {/* Mobile sidebar */}
-        <div className={`fixed inset-y-0 left-0 w-[480px] bg-sidebar-background z-50 transform transition-transform duration-300 lg:hidden ${
+        <div className={`fixed inset-y-0 left-0 w-[540px] bg-sidebar-background z-50 transform transition-transform duration-300 lg:hidden ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           {sidebarContent}
@@ -200,7 +200,7 @@ const ClinicSidebar = ({
 
   // Desktop sidebar - always visible and sticky
   return (
-    <div className="hidden lg:block w-[480px] bg-sidebar-background border-r border-sidebar-border">
+    <div className="hidden lg:block w-[540px] bg-sidebar-background border-r border-sidebar-border">
       <div className="sticky top-0 h-screen">
         {sidebarContent}
       </div>

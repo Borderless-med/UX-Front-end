@@ -51,7 +51,7 @@ const ResultsCount = ({
     <div className="bg-white border border-blue-light rounded-lg p-4 mb-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold text-blue-dark">
+          <h3 className="text-xl font-semibold text-blue-dark">
             {filteredCount} {filteredCount === 1 ? 'Clinic' : 'Clinics'} Found
           </h3>
           {filteredCount !== totalCount && (

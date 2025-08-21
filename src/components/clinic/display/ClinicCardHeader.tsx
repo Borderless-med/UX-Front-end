@@ -21,13 +21,13 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
   const hasGoogleReviews = clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '';
 
   return (
-    <div className="flex items-start justify-between gap-4 mb-3">
+    <div className="flex items-start justify-between gap-3 mb-2">
       {/* Left Column: Clinic Name and Address */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-semibold text-blue-dark mb-2 leading-tight">
+        <h3 className="text-base font-semibold text-blue-dark mb-1 leading-tight">
           {clinic.name}
         </h3>
-        <p className="text-sm text-neutral-gray leading-relaxed">
+        <p className="text-xs text-neutral-gray leading-snug">
           {clinic.address}
         </p>
       </div>
@@ -35,7 +35,7 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
       {/* Right Column: Google Rating CTA Box */}
       {hasGoogleReviews && (
         <div 
-          className="bg-gradient-to-r from-blue-light to-blue-150 border border-blue-light rounded-lg p-2 cursor-pointer hover:from-blue-150 hover:to-blue-secondary/20 hover:border-blue-secondary/30 transition-all duration-200 shadow-sm flex-shrink-0"
+          className="bg-gradient-to-r from-blue-light to-blue-150 border border-blue-light rounded-lg p-1.5 cursor-pointer hover:from-blue-150 hover:to-blue-secondary/20 hover:border-blue-secondary/30 transition-all duration-200 shadow-sm flex-shrink-0"
           onClick={handleRatingClick}
           title="Click to view Google Reviews"
         >

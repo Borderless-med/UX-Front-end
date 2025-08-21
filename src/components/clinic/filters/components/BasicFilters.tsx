@@ -37,11 +37,11 @@ const BasicFilters = ({
     <div className="space-y-6">
       {/* Primary Filters Section */}
       <div className="space-y-4">
-        <h3 className="text-base font-semibold text-sidebar-foreground">Main Filters</h3>
+        <h3 className="text-lg font-semibold text-sidebar-foreground">Main Filters</h3>
         
         {/* Location Filter - Most Important */}
         <div>
-          <label className="block text-sm font-medium text-sidebar-foreground mb-2 flex items-center">
+          <label className="block text-base font-medium text-sidebar-foreground mb-2 flex items-center">
             <MapPin className="h-4 w-4 mr-2" />
             Location
           </label>
@@ -63,7 +63,7 @@ const BasicFilters = ({
 
         {/* Rating Filter */}
         <div>
-          <label className="block text-sm font-medium text-sidebar-foreground mb-2 flex items-center">
+          <label className="block text-base font-medium text-sidebar-foreground mb-2 flex items-center">
             <Star className="h-4 w-4 mr-2" />
             Minimum Google Rating
           </label>
@@ -83,11 +83,11 @@ const BasicFilters = ({
 
       {/* Secondary Filters Section */}
       <div className="pt-4 border-t border-sidebar-border">
-        <h4 className="text-sm font-medium text-sidebar-muted-foreground mb-4">Additional Filters</h4>
+        <h4 className="text-base font-medium text-sidebar-muted-foreground mb-4">Additional Filters</h4>
         <div className="space-y-4">
           {/* License Status Filter */}
           <div>
-            <label className="block text-sm font-medium text-sidebar-foreground mb-2 flex items-center">
+            <label className="block text-base font-medium text-sidebar-foreground mb-2 flex items-center">
               <Shield className="h-4 w-4 mr-2" />
               License Status
             </label>
@@ -105,7 +105,7 @@ const BasicFilters = ({
 
           {/* Sort By */}
           <div>
-            <label className="block text-sm font-medium text-sidebar-foreground mb-2">
+            <label className="block text-base font-medium text-sidebar-foreground mb-2">
               Sort By
             </label>
             <Select value={sortBy} onValueChange={onSortChange}>

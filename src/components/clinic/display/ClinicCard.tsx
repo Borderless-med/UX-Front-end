@@ -38,10 +38,10 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
 
   return (
     <>
-      <Card className="h-[520px] shadow-sm hover:shadow-md transition-shadow border-blue-light">
-        <CardContent className="p-6 h-full grid grid-rows-[1fr_90px_auto] gap-4">
-          {/* Header Section - Expanded Height to accommodate all variations */}
-          <div className="min-h-[220px] flex flex-col justify-between">
+      <Card className="h-[440px] shadow-sm hover:shadow-md transition-shadow border-blue-light">
+        <CardContent className="p-4 h-full grid grid-rows-[1fr_70px_auto] gap-3">
+          {/* Header Section - Optimized for compact layout */}
+          <div className="min-h-[180px] flex flex-col justify-between">
             <ClinicCardHeader clinic={clinic} />
             
             <ClinicCardInfo clinic={clinic} />
