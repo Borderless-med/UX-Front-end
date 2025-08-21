@@ -1,9 +1,11 @@
 
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronDown } from 'lucide-react';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import AuthModal from '@/components/auth/AuthModal';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
@@ -119,26 +121,31 @@ const ClinicsSection = () => {
           </p>
         </div>
 
-        {/* Compact Combined Disclaimers */}
+        {/* Compact Medical Disclaimer */}
         <div className="mb-4">
-          <div className="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg px-4 py-3">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
-                <svg className="h-4 w-4 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          <MedicalDisclaimer variant="compact" />
+        </div>
+
+        {/* Collapsible Legal Disclaimer */}
+        <div className="mb-4">
+          <Collapsible>
+            <CollapsibleTrigger className="w-full">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 hover:bg-blue-100 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <svg className="h-4 w-4 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-sm font-medium text-blue-900">Legal Disclaimers & Data Sources</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-blue-700" />
+                </div>
               </div>
-              <div className="text-sm text-blue-900 leading-relaxed">
-                <strong className="font-semibold">Important:</strong> This platform provides general information only and does not constitute dental advice. 
-                <button 
-                  onClick={handleOptOutClick}
-                  className="ml-2 text-blue-600 hover:text-blue-800 underline text-sm"
-                >
-                  Opt-out or Report
-                </button>
-              </div>
-            </div>
-          </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <DisclaimerSection onOptOutClick={handleOptOutClick} />
+            </CollapsibleContent>
+          </Collapsible>
         </div>
 
         {/* Search & Filter Clinics Section */}

@@ -10,7 +10,7 @@ const Clinics = () => {
     <div className="min-h-screen font-inter bg-white text-blue-dark">
       <Navigation />
       
-      <div className="pt-20">
+      <div className="pt-28">
         <ClinicsSection />
       </div>
 
