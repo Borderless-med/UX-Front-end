@@ -11,6 +11,7 @@ export const useClinicFilters = () => {
   const [sortBy, setSortBy] = useState('distance');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [mdaLicenseFilter, setMdaLicenseFilter] = useState('all');
+  const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]);
 
   const clearAllFilters = () => {
     setSearchTerm('');
@@ -21,6 +22,7 @@ export const useClinicFilters = () => {
     setMinReviews(0);
     setSortBy('distance');
     setMdaLicenseFilter('all');
+    setSelectedCredentials([]);
   };
 
   const activeFiltersCount = 
@@ -30,7 +32,8 @@ export const useClinicFilters = () => {
     (ratingFilter > 0 ? 1 : 0) +
     (maxDistance < 40 ? 1 : 0) +
     (minReviews > 0 ? 1 : 0) +
-    (mdaLicenseFilter !== 'all' ? 1 : 0);
+    (mdaLicenseFilter !== 'all' ? 1 : 0) +
+    selectedCredentials.length;
 
   return {
     searchTerm,
@@ -51,6 +54,8 @@ export const useClinicFilters = () => {
     setShowAdvancedFilters,
     mdaLicenseFilter,
     setMdaLicenseFilter,
+    selectedCredentials,
+    setSelectedCredentials,
     clearAllFilters,
     activeFiltersCount
   };

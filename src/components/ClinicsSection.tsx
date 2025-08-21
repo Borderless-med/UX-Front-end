@@ -49,6 +49,8 @@ const ClinicsSection = () => {
     setShowAdvancedFilters,
     mdaLicenseFilter,
     setMdaLicenseFilter,
+    selectedCredentials,
+    setSelectedCredentials,
     clearAllFilters,
     activeFiltersCount
   } = useClinicFilters();
@@ -183,6 +185,8 @@ const ClinicsSection = () => {
           onMaxDistanceChange={setMaxDistance}
           minReviews={minReviews}
           onMinReviewsChange={setMinReviews}
+          selectedCredentials={selectedCredentials}
+          onCredentialsChange={setSelectedCredentials}
           activeFiltersCount={activeFiltersCount}
           onClearAll={clearAllFilters}
           isAuthenticated={isAuthenticated}
