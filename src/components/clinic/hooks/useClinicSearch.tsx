@@ -13,6 +13,7 @@ interface UseClinicSearchProps {
   minReviews: number;
   sortBy: string;
   mdaLicenseFilter: string;
+  selectedCredentials: string[];
 }
 
 export const useClinicSearch = ({
@@ -24,7 +25,8 @@ export const useClinicSearch = ({
   maxDistance,
   minReviews,
   sortBy,
-  mdaLicenseFilter
+  mdaLicenseFilter,
+  selectedCredentials
 }: UseClinicSearchProps) => {
   const filteredAndSortedClinics = useMemo(() => {
     const filtered = filterClinics(
@@ -35,7 +37,8 @@ export const useClinicSearch = ({
       ratingFilter,
       maxDistance,
       minReviews,
-      mdaLicenseFilter
+      mdaLicenseFilter,
+      selectedCredentials
     );
     
     return sortClinics(filtered, sortBy);
@@ -48,7 +51,8 @@ export const useClinicSearch = ({
     maxDistance,
     minReviews,
     sortBy,
-    mdaLicenseFilter
+    mdaLicenseFilter,
+    selectedCredentials
   ]);
 
   return { filteredAndSortedClinics };

@@ -64,7 +64,8 @@ const ClinicsSection = () => {
     maxDistance,
     minReviews,
     sortBy,
-    mdaLicenseFilter
+    mdaLicenseFilter,
+    selectedCredentials
   });
 
   const townships = getUniqueTownships(clinics);

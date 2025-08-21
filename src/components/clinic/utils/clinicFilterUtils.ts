@@ -10,7 +10,8 @@ export const filterClinics = (
   ratingFilter: number,
   maxDistance: number,
   minReviews: number,
-  mdaLicenseFilter: string
+  mdaLicenseFilter: string,
+  selectedCredentials: string[] = []
 ) => {
   return clinics.filter(clinic => {
     // Text search
@@ -54,7 +55,10 @@ export const filterClinics = (
       return true;
     })();
 
-    return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance && matchesReviews && matchesMdaLicense;
+    // Credentials filter (for now, just return true since credentials aren't in clinic data yet)
+    const matchesCredentials = selectedCredentials.length === 0; // Will be implemented when clinic data includes credentials
+
+    return matchesSearch && matchesTreatments && matchesTownship && matchesRating && matchesDistance && matchesReviews && matchesMdaLicense && matchesCredentials;
   });
 };
 
