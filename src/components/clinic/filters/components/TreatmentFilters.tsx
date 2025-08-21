@@ -38,7 +38,7 @@ const TreatmentFilters = ({ selectedTreatments, onTreatmentChange }: TreatmentFi
         onRemoveTreatment={removeTreatment}
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {Object.entries(treatmentCategories).map(([categoryKey, category]) => {
           const activeCount = getCategoryActiveCount(categoryKey);
           return (

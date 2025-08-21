@@ -189,7 +189,7 @@ const ClinicSidebar = ({
         )}
         
         {/* Mobile sidebar */}
-        <div className={`fixed inset-y-0 left-0 w-[420px] bg-sidebar-background z-50 transform transition-transform duration-300 lg:hidden ${
+        <div className={`fixed inset-y-0 left-0 w-[480px] bg-sidebar-background z-50 transform transition-transform duration-300 lg:hidden ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           {sidebarContent}
@@ -200,7 +200,7 @@ const ClinicSidebar = ({
 
   // Desktop sidebar - always visible and sticky
   return (
-    <div className="hidden lg:block w-[420px] bg-sidebar-background border-r border-sidebar-border">
+    <div className="hidden lg:block w-[480px] bg-sidebar-background border-r border-sidebar-border">
       <div className="sticky top-0 h-screen">
         {sidebarContent}
       </div>
