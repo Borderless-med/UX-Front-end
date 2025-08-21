@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, ChevronDown } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import AuthModal from '@/components/auth/AuthModal';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
@@ -12,19 +12,17 @@ import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
 import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
-import ClinicSearchBar from './clinic/search/ClinicSearchBar';
-import ResultsCount from './clinic/search/ResultsCount';
-import UserStatusDisplay from './clinic/display/UserStatusDisplay';
-import ClinicMainFilters from './clinic/filters/ClinicMainFilters';
-import ClinicAdvancedFilters from './clinic/filters/ClinicAdvancedFilters';
-import FilterControls from './clinic/filters/FilterControls';
 import ClinicGrid from './clinic/display/ClinicGrid';
+import ClinicSidebar from './clinic/sidebar/ClinicSidebar';
+import MobileSidebarToggle from './clinic/sidebar/MobileSidebarToggle';
 
 const ClinicsSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, userProfile, logDataAccess } = useAuth();
   const { clinics, loading, error } = useSupabaseClinics();
+  const isMobile = useIsMobile();
 
   // Debug: Log the clinic data source
   console.log('ClinicsSection - Clinic data from database:', clinics.length, 'clinics loaded');
@@ -110,119 +108,119 @@ const ClinicsSection = () => {
   }
 
   return (
-    <section className="py-4 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-dark mb-2">
+    <div className="min-h-screen bg-white">
+      {/* Header with disclaimers - only on desktop */}
+      <div className="hidden lg:block py-4 px-4 sm:px-6 lg:px-8 bg-white border-b border-border">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-4">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-dark mb-2">
+              Find Your Perfect Clinic
+            </h1>
+            <p className="text-base text-neutral-gray mb-4 max-w-2xl mx-auto">
+              Search and filter through {clinics.length} verified dental clinics to find your match
+            </p>
+          </div>
+
+          {/* Compact Medical Disclaimer */}
+          <div className="mb-2">
+            <MedicalDisclaimer variant="compact" />
+          </div>
+
+          {/* Collapsible Legal Disclaimer */}
+          <div className="mb-2">
+            <Collapsible>
+              <CollapsibleTrigger className="w-full">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 hover:bg-blue-100 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <svg className="h-4 w-4 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm font-medium text-blue-900">Legal Disclaimers & Data Sources</span>
+                    </div>
+                    <ChevronDown className="h-4 w-4 text-blue-700" />
+                  </div>
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <DisclaimerSection onOptOutClick={handleOptOutClick} />
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile header */}
+      <div className="lg:hidden py-4 px-4 bg-white border-b border-border">
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-blue-dark mb-1">
             Find Your Perfect Clinic
           </h1>
-          <p className="text-base text-neutral-gray mb-4 max-w-2xl mx-auto">
-            Search and filter through {clinics.length} verified dental clinics to find your match
+          <p className="text-sm text-neutral-gray">
+            {clinics.length} verified dental clinics
           </p>
         </div>
+      </div>
 
-        {/* Compact Medical Disclaimer */}
-        <div className="mb-4">
-          <MedicalDisclaimer variant="compact" />
-        </div>
-
-        {/* Collapsible Legal Disclaimer */}
-        <div className="mb-4">
-          <Collapsible>
-            <CollapsibleTrigger className="w-full">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 hover:bg-blue-100 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <svg className="h-4 w-4 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-sm font-medium text-blue-900">Legal Disclaimers & Data Sources</span>
-                  </div>
-                  <ChevronDown className="h-4 w-4 text-blue-700" />
-                </div>
-              </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <DisclaimerSection onOptOutClick={handleOptOutClick} />
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-
-        {/* Search & Filter Clinics Section */}
-        <div className="mb-6">
-          <Card className="p-4 border-blue-light bg-white shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-blue-dark">Search & Filter Clinics</h2>
-              <UserStatusDisplay
-                isAuthenticated={isAuthenticated}
-                userProfile={userProfile}
-                onSignInClick={handleSignInClick}
-              />
-            </div>
-            
-            <ClinicSearchBar
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-            />
-
-            <ClinicMainFilters
-              selectedTreatments={selectedTreatments}
-              onTreatmentChange={setSelectedTreatments}
-              ratingFilter={ratingFilter}
-              onRatingChange={setRatingFilter}
-              selectedTownships={selectedTownships}
-              onTownshipChange={setSelectedTownships}
-              townships={townships}
-              sortBy={sortBy}
-              onSortChange={setSortBy}
-              mdaLicenseFilter={mdaLicenseFilter}
-              onMdaLicenseFilterChange={setMdaLicenseFilter}
-            />
-
-            <FilterControls
-              showAdvancedFilters={showAdvancedFilters}
-              onToggleAdvanced={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              activeFiltersCount={activeFiltersCount}
-              onClearAll={clearAllFilters}
-            />
-
-            {showAdvancedFilters && (
-              <ClinicAdvancedFilters
-                maxDistance={maxDistance}
-                onMaxDistanceChange={setMaxDistance}
-                minReviews={minReviews}
-                onMinReviewsChange={setMinReviews}
-              />
-            )}
-          </Card>
-        </div>
-
-        <ResultsCount
+      {/* Main Content Layout */}
+      <div className="flex w-full">
+        {/* Sidebar */}
+        <ClinicSidebar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedTreatments={selectedTreatments}
+          onTreatmentChange={setSelectedTreatments}
+          selectedTownships={selectedTownships}
+          onTownshipChange={setSelectedTownships}
+          townships={townships}
+          ratingFilter={ratingFilter}
+          onRatingChange={setRatingFilter}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          mdaLicenseFilter={mdaLicenseFilter}
+          onMdaLicenseFilterChange={setMdaLicenseFilter}
+          maxDistance={maxDistance}
+          onMaxDistanceChange={setMaxDistance}
+          minReviews={minReviews}
+          onMinReviewsChange={setMinReviews}
+          activeFiltersCount={activeFiltersCount}
+          onClearAll={clearAllFilters}
+          isAuthenticated={isAuthenticated}
+          userProfile={userProfile}
+          onSignInClick={handleSignInClick}
           filteredCount={filteredAndSortedClinics.length}
           totalCount={clinics.length}
-          activeFiltersCount={activeFiltersCount}
-          selectedTreatments={selectedTreatments}
-          selectedTownships={selectedTownships}
-          ratingFilter={ratingFilter}
-          mdaLicenseFilter={mdaLicenseFilter}
+          isOpen={isMobileSidebarOpen}
+          onClose={() => setIsMobileSidebarOpen(false)}
         />
 
-        <ClinicGrid
-          clinics={filteredAndSortedClinics}
-          isAuthenticated={isAuthenticated}
-          onSignInClick={handleSignInClick}
-          onViewPractitionerDetails={handleViewPractitionerDetails}
-          onClearAllFilters={clearAllFilters}
-          activeFiltersCount={activeFiltersCount}
-        />
-
-        <AuthModal 
-          isOpen={showAuthModal} 
-          onClose={() => setShowAuthModal(false)} 
-          defaultTab="login"
-        />
+        {/* Main Content Area */}
+        <div className="flex-1 lg:ml-0">
+          <div className="p-4 sm:p-6">
+            <ClinicGrid
+              clinics={filteredAndSortedClinics}
+              isAuthenticated={isAuthenticated}
+              onSignInClick={handleSignInClick}
+              onViewPractitionerDetails={handleViewPractitionerDetails}
+              onClearAllFilters={clearAllFilters}
+              activeFiltersCount={activeFiltersCount}
+            />
+          </div>
+        </div>
       </div>
-    </section>
+
+      {/* Mobile Sidebar Toggle */}
+      <MobileSidebarToggle
+        onClick={() => setIsMobileSidebarOpen(true)}
+        activeFiltersCount={activeFiltersCount}
+      />
+
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+        defaultTab="login"
+      />
+    </div>
   );
 };
 

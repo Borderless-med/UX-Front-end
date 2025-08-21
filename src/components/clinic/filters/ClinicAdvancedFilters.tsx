@@ -17,12 +17,12 @@ const ClinicAdvancedFilters = ({
   onMinReviewsChange
 }: ClinicAdvancedFiltersProps) => {
   return (
-    <div className="mt-6 border-t border-blue-light pt-6">
-      <h3 className="text-lg font-medium text-blue-dark mb-4">Advanced Filters</h3>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-6">
+      <h3 className="text-lg font-medium text-sidebar-foreground">Advanced Filters</h3>
+      <div className="space-y-6">
         {/* Max Distance from CIQ */}
         <div>
-          <h4 className="font-medium text-blue-dark mb-3">
+          <h4 className="font-medium text-sidebar-foreground mb-3">
             Max Distance from CIQ: {maxDistance}km
           </h4>
           <Slider
@@ -37,7 +37,7 @@ const ClinicAdvancedFilters = ({
 
         {/* Minimum Google Reviews */}
         <div>
-          <h4 className="font-medium text-blue-dark mb-3">
+          <h4 className="font-medium text-sidebar-foreground mb-3">
             Minimum Google Reviews: {minReviews}
           </h4>
           <Slider
@@ -50,10 +50,10 @@ const ClinicAdvancedFilters = ({
           />
         </div>
 
-        {/* Credentials */}
+        {/* Credentials - Compact Grid Layout */}
         <div>
-          <h4 className="font-medium text-blue-dark mb-3">Credentials</h4>
-          <div className="space-y-2">
+          <h4 className="font-medium text-sidebar-foreground mb-3">Credentials</h4>
+          <div className="grid grid-cols-1 gap-2">
             {credentialOptions.map((credential) => (
               <div key={credential.key} className="flex items-center space-x-2">
                 <Checkbox
@@ -61,7 +61,7 @@ const ClinicAdvancedFilters = ({
                 />
                 <label 
                   htmlFor={credential.key} 
-                  className="text-sm text-neutral-gray cursor-pointer"
+                  className="text-sm text-sidebar-foreground cursor-pointer leading-tight"
                 >
                   {credential.label}
                 </label>
