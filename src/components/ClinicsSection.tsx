@@ -166,7 +166,7 @@ const ClinicsSection = () => {
       </div>
 
       {/* Main Content Layout */}
-      <div className="max-w-screen-2xl mx-auto flex w-full">
+      <div className="max-w-screen-2xl mx-auto flex w-full min-h-0">
         {/* Sidebar */}
         <ClinicSidebar
           searchTerm={searchTerm}
@@ -200,8 +200,8 @@ const ClinicsSection = () => {
         />
 
         {/* Main Content Area */}
-        <div className="flex-1 lg:ml-0 max-w-5xl overflow-hidden">
-          <div className="p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div className="p-3 sm:p-4 lg:p-6 xl:p-8 max-w-7xl mx-auto">
             <ClinicGrid
               clinics={filteredAndSortedClinics}
               isAuthenticated={isAuthenticated}

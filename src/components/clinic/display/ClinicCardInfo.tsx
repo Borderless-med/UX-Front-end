@@ -29,9 +29,9 @@ const ClinicCardInfo = ({ clinic }: ClinicCardInfoProps) => {
     <>
       {/* Second Row: Distance and Operating Hours */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center text-sm text-neutral-gray">
-          <MapPin className="h-4 w-4 mr-1" />
-          <span>{clinic.distance.toFixed(1)}km from CIQ</span>
+        <div className="flex items-center text-xs sm:text-sm text-neutral-gray min-w-0">
+          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+          <span className="truncate">{clinic.distance.toFixed(1)}km from CIQ</span>
         </div>
         
         {/* Operating Hours */}

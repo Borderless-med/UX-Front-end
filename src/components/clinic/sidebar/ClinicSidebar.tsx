@@ -2,11 +2,14 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { X, Filter } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSidebarResize } from '@/hooks/useSidebarResize';
 import ClinicSearchBar from '../search/ClinicSearchBar';
 import UserStatusDisplay from '../display/UserStatusDisplay';
 import ClinicMainFilters from '../filters/ClinicMainFilters';
 import ClinicAdvancedFilters from '../filters/ClinicAdvancedFilters';
 import ResultsCount from '../search/ResultsCount';
+import SidebarPresets from './SidebarPresets';
+import ResizeHandle from './ResizeHandle';
 
 interface ClinicSidebarProps {
   // Search & filters state
@@ -46,6 +49,10 @@ interface ClinicSidebarProps {
   // Mobile specific
   isOpen?: boolean;
   onClose?: () => void;
+  
+  // Resize functionality
+  sidebarWidth?: number;
+  onSidebarResize?: (width: number) => void;
 }
 
 const ClinicSidebar = ({
@@ -76,9 +83,23 @@ const ClinicSidebar = ({
   filteredCount,
   totalCount,
   isOpen = true,
-  onClose
+  onClose,
+  sidebarWidth: externalSidebarWidth,
+  onSidebarResize: externalOnSidebarResize
 }: ClinicSidebarProps) => {
   const isMobile = useIsMobile();
+  const {
+    sidebarWidth: internalSidebarWidth,
+    setSidebarWidth: internalSetSidebarWidth,
+    presetSizes,
+    setPresetSize,
+    isResizing,
+    setIsResizing
+  } = useSidebarResize();
+
+  // Use external width/resize if provided, otherwise use internal
+  const sidebarWidth = externalSidebarWidth ?? internalSidebarWidth;
+  const setSidebarWidth = externalOnSidebarResize ?? internalSetSidebarWidth;
 
   const sidebarContent = (
     <div className="h-full flex flex-col">
@@ -165,7 +186,16 @@ const ClinicSidebar = ({
       </div>
 
       {/* Footer Actions */}
-      <div className="p-4 border-t border-sidebar-border">
+      <div className="p-4 border-t border-sidebar-border space-y-3">
+        {/* Sidebar Width Controls - Desktop Only */}
+        {!isMobile && (
+          <SidebarPresets
+            currentWidth={sidebarWidth}
+            presetSizes={presetSizes}
+            onPresetSelect={setPresetSize}
+          />
+        )}
+        
         {activeFiltersCount > 0 && (
           <Button
             onClick={onClearAll}
@@ -189,9 +219,12 @@ const ClinicSidebar = ({
         )}
         
         {/* Mobile sidebar */}
-        <div className={`fixed inset-y-0 left-0 w-[600px] bg-sidebar-background z-50 transform transition-transform duration-300 lg:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}>
+        <div 
+          className={`fixed inset-y-0 left-0 bg-sidebar-background z-50 transform transition-transform duration-300 lg:hidden ${
+            isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+          style={{ width: `min(90vw, ${Math.max(320, Math.min(600, sidebarWidth))}px)` }}
+        >
           {sidebarContent}
         </div>
       </>
@@ -200,10 +233,19 @@ const ClinicSidebar = ({
 
   // Desktop sidebar - always visible and sticky
   return (
-    <div className="hidden lg:block w-[600px] bg-sidebar-background border-r border-sidebar-border">
-      <div className="sticky top-0 h-screen">
+    <div className="hidden lg:flex bg-sidebar-background border-r border-sidebar-border">
+      <div 
+        className="sticky top-0 h-screen flex-shrink-0 transition-all duration-200"
+        style={{ width: `${sidebarWidth}px` }}
+      >
         {sidebarContent}
       </div>
+      <ResizeHandle
+        currentWidth={sidebarWidth}
+        onResize={setSidebarWidth}
+        onResizeStart={() => setIsResizing(true)}
+        onResizeEnd={() => setIsResizing(false)}
+      />
     </div>
   );
 };
