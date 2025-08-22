@@ -1,6 +1,6 @@
 
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Star, Shield, Stethoscope } from 'lucide-react';
+import { MapPin, Star, Shield, Stethoscope, CheckCircle, Search } from 'lucide-react';
 
 interface ResultsCountProps {
   filteredCount: number;
@@ -47,17 +47,72 @@ const ResultsCount = ({
 
   const filterSummary = getFilterSummary();
 
+  // Determine result state for dynamic styling
+  const getResultState = () => {
+    if (activeFiltersCount === 0) return 'default';
+    if (filteredCount === 0) return 'no-results';
+    return 'success';
+  };
+
+  const resultState = getResultState();
+
+  // Dynamic styling based on result state
+  const getContainerClasses = () => {
+    const baseClasses = "bg-white border rounded-lg p-4 mb-6 transition-all duration-300";
+    
+    switch (resultState) {
+      case 'success':
+        return `${baseClasses} border-red-500 bg-red-50/30 shadow-md animate-pulse-once`;
+      case 'no-results':
+        return `${baseClasses} border-amber-400 bg-amber-50/30`;
+      default:
+        return `${baseClasses} border-blue-light`;
+    }
+  };
+
+  const getHeaderClasses = () => {
+    const baseClasses = "text-xl font-semibold transition-colors duration-300";
+    
+    switch (resultState) {
+      case 'success':
+        return `${baseClasses} text-red-600`;
+      case 'no-results':
+        return `${baseClasses} text-amber-700`;
+      default:
+        return `${baseClasses} text-blue-dark`;
+    }
+  };
+
+  const getResultIcon = () => {
+    switch (resultState) {
+      case 'success':
+        return <CheckCircle className="h-5 w-5 text-red-500" />;
+      case 'no-results':
+        return <Search className="h-5 w-5 text-amber-500" />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="bg-white border border-blue-light rounded-lg p-4 mb-6">
+    <div className={getContainerClasses()}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <h3 className="text-xl font-semibold text-blue-dark">
-            {filteredCount} {filteredCount === 1 ? 'Clinic' : 'Clinics'} Found
-          </h3>
-          {filteredCount !== totalCount && (
-            <span className="text-sm text-neutral-gray">
-              (out of {totalCount} total)
-            </span>
+        <div className="flex items-center gap-3">
+          {getResultIcon()}
+          <div className="flex items-center gap-2">
+            <h3 className={getHeaderClasses()}>
+              {filteredCount} {filteredCount === 1 ? 'Clinic' : 'Clinics'} Found
+            </h3>
+            {filteredCount !== totalCount && (
+              <span className="text-sm text-neutral-gray">
+                (out of {totalCount} total)
+              </span>
+            )}
+          </div>
+          {resultState === 'success' && (
+            <Badge variant="secondary" className="bg-red-100 text-red-700 text-xs animate-fade-in">
+              Filtered
+            </Badge>
           )}
         </div>
 
