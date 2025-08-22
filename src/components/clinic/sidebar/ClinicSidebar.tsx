@@ -231,12 +231,16 @@ const ClinicSidebar = ({
     );
   }
 
-  // Desktop sidebar - always visible and sticky
+  // Desktop sidebar - always visible and sticky with zoom-aware sizing
   return (
     <div className="hidden lg:flex bg-sidebar-background border-r border-sidebar-border">
       <div 
         className="sticky top-0 h-screen flex-shrink-0 transition-all duration-200"
-        style={{ width: `${sidebarWidth}px` }}
+        style={{ 
+          width: `clamp(17.5rem, ${sidebarWidth}px, min(37.5rem, 30vw))`,
+          minWidth: '17.5rem',
+          maxWidth: 'min(37.5rem, 30vw)'
+        }}
       >
         {sidebarContent}
       </div>

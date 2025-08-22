@@ -10,13 +10,14 @@ interface UseSidebarResizeReturn {
 }
 
 export const useSidebarResize = (): UseSidebarResizeReturn => {
-  const [sidebarWidth, setSidebarWidthState] = useState(480); // Default reduced from 600px
+  // Use clamp values that scale better with zoom
+  const [sidebarWidth, setSidebarWidthState] = useState(400); // Reduced default for better zoom scaling
   const [isResizing, setIsResizing] = useState(false);
 
   const presetSizes = [
-    { label: 'Narrow', width: 400 },
-    { label: 'Default', width: 480 },
-    { label: 'Wide', width: 600 }
+    { label: 'Narrow', width: 320 },
+    { label: 'Default', width: 400 },
+    { label: 'Wide', width: 480 }
   ];
 
   // Load saved width from localStorage
@@ -31,13 +32,14 @@ export const useSidebarResize = (): UseSidebarResizeReturn => {
   }, []);
 
   const setSidebarWidth = useCallback((width: number) => {
-    const clampedWidth = Math.max(320, Math.min(800, width));
+    // Tighter constraints for better zoom scaling
+    const clampedWidth = Math.max(280, Math.min(600, width));
     setSidebarWidthState(clampedWidth);
     localStorage.setItem('clinic-sidebar-width', clampedWidth.toString());
   }, []);
 
   const setPresetSize = useCallback((preset: 'narrow' | 'default' | 'wide') => {
-    const presetWidth = presetSizes.find(p => p.label.toLowerCase() === preset)?.width || 480;
+    const presetWidth = presetSizes.find(p => p.label.toLowerCase() === preset)?.width || 400;
     setSidebarWidth(presetWidth);
   }, [setSidebarWidth, presetSizes]);
 

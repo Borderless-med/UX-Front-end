@@ -7,16 +7,16 @@ interface ClinicCardServicesProps {
 
 const ClinicCardServices = ({ availableCategories }: ClinicCardServicesProps) => {
   return (
-    <div className="h-[90px] flex flex-col justify-start overflow-hidden">
+    <div className="min-h-[4.5rem] max-h-[6rem] flex flex-col justify-start overflow-hidden">
       {availableCategories.length > 0 ? (
         <>
-          <p className="text-xs sm:text-sm font-medium text-blue-dark mb-2">Available Services:</p>
+          <p className="text-xs font-medium text-blue-dark mb-1.5">Available Services:</p>
           <div className="flex flex-wrap gap-1 overflow-hidden">
             {availableCategories.slice(0, 4).map((category) => (
               <Badge 
                 key={category} 
                 variant="secondary" 
-                className="text-xs bg-blue-primary/10 text-blue-primary truncate max-w-[5rem] sm:max-w-none"
+                className="text-xs bg-blue-primary/10 text-blue-primary truncate max-w-[4rem] md:max-w-[5rem]"
                 title={category}
               >
                 {category}

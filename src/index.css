@@ -108,4 +108,15 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
+
+  /* High zoom layout utilities */
+  @media (min-resolution: 1.5dppx) {
+    .clinic-grid {
+      gap: clamp(0.5rem, 1vw, 1rem);
+    }
+    
+    .clinic-card {
+      min-height: clamp(20rem, 25vh, 32rem);
+    }
+  }
 }
