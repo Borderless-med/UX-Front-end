@@ -56,19 +56,19 @@ const ResizeHandle = ({ onResize, onResizeStart, onResizeEnd, currentWidth }: Re
     <div
       className={`
         hidden lg:flex w-1 bg-border hover:bg-primary/20 cursor-col-resize 
-        items-center justify-center group transition-colors duration-200
+        items-center justify-center group transition-colors duration-200 relative z-10
         ${isDragging ? 'bg-primary/30' : ''}
       `}
       onMouseDown={handleMouseDown}
       title="Drag to resize sidebar"
     >
       <div className={`
-        absolute inset-y-0 -left-1 -right-1 flex items-center justify-center
-        ${isDragging || 'group-hover:bg-primary/10'}
+        absolute inset-y-0 left-0 right-0 flex items-center justify-center
+        ${isDragging ? 'bg-primary/10' : 'group-hover:bg-primary/10'}
       `}>
         <GripVertical 
           className={`
-            h-4 w-4 text-muted-foreground transition-colors duration-200
+            h-4 w-4 text-muted-foreground transition-colors duration-200 pointer-events-none
             ${isDragging ? 'text-primary' : 'group-hover:text-primary'}
           `} 
         />
