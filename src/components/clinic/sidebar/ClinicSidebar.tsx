@@ -220,7 +220,7 @@ const ClinicSidebar = ({
         
         {/* Mobile sidebar */}
         <div 
-          className={`fixed inset-y-0 left-0 bg-sidebar-background z-50 transform transition-transform duration-300 lg:hidden ${
+          className={`fixed inset-y-0 left-0 bg-card backdrop-blur-md border-r border-border shadow-2xl z-50 transform transition-transform duration-300 lg:hidden ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
           style={{ width: `min(90vw, ${Math.max(320, Math.min(600, sidebarWidth))}px)` }}

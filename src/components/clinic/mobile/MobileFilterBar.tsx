@@ -34,7 +34,7 @@ const MobileFilterBar = ({
   const hasActiveFilters = activeFiltersCount > 0;
 
   return (
-    <div className="lg:hidden bg-background border-b border-border">
+    <div className="lg:hidden bg-card/95 backdrop-blur-sm border-b border-border shadow-sm z-20">
       {/* Quick Filter Actions */}
       <div className="flex items-center justify-between p-3">
         <Button
