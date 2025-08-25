@@ -34,21 +34,23 @@ const MobileFilterBar = ({
   const hasActiveFilters = activeFiltersCount > 0;
 
   return (
-    <div className="lg:hidden bg-card/95 backdrop-blur-sm border-b border-border shadow-sm z-20">
-      {/* Quick Filter Actions */}
-      <div className="flex items-center justify-between p-3">
+    <div className="lg:hidden bg-gradient-to-r from-primary/10 via-blue-50 to-primary/10 border-b border-primary/20 shadow-md z-20 sticky top-[88px]">
+      {/* Enhanced Filter Actions */}
+      <div className="flex items-center justify-between p-4">
         <Button
           onClick={onOpenFilters}
-          variant="outline"
-          size="sm"
-          className="relative"
+          variant="default"
+          size="default"
+          className={`relative min-w-[120px] shadow-sm ${
+            activeFiltersCount === 0 ? 'animate-pulse' : ''
+          }`}
         >
-          <Filter className="h-4 w-4 mr-2" />
-          Filters
+          <Filter className="h-5 w-5 mr-2" />
+          {activeFiltersCount > 0 ? `${activeFiltersCount} Active` : 'Filter Clinics'}
           {activeFiltersCount > 0 && (
             <Badge 
-              variant="destructive" 
-              className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center"
+              variant="secondary" 
+              className="absolute -top-2 -right-2 h-6 w-6 p-0 text-xs flex items-center justify-center bg-destructive text-destructive-foreground border-2 border-background"
             >
               {activeFiltersCount > 9 ? '9+' : activeFiltersCount}
             </Badge>
