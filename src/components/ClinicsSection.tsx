@@ -15,6 +15,7 @@ import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 import ClinicGrid from './clinic/display/ClinicGrid';
 import ClinicSidebar from './clinic/sidebar/ClinicSidebar';
 import MobileSidebarToggle from './clinic/sidebar/MobileSidebarToggle';
+import MobileFilterBar from './clinic/mobile/MobileFilterBar';
 
 const ClinicsSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -164,6 +165,26 @@ const ClinicsSection = () => {
           </p>
         </div>
       </div>
+
+      {/* Mobile Filter Bar */}
+      <MobileFilterBar
+        searchTerm={searchTerm}
+        selectedTreatments={selectedTreatments}
+        selectedTownships={selectedTownships}
+        ratingFilter={ratingFilter}
+        mdaLicenseFilter={mdaLicenseFilter}
+        activeFiltersCount={activeFiltersCount}
+        onClearAll={clearAllFilters}
+        onOpenFilters={() => setIsMobileSidebarOpen(true)}
+        onRemoveTreatment={(treatment) => 
+          setSelectedTreatments(selectedTreatments.filter(t => t !== treatment))
+        }
+        onRemoveTownship={(township) => 
+          setSelectedTownships(selectedTownships.filter(t => t !== township))
+        }
+        onClearRating={() => setRatingFilter(0)}
+        onClearSearch={() => setSearchTerm('')}
+      />
 
       {/* Main Content Layout */}
       <div className="max-w-screen-2xl mx-auto flex w-full min-h-0">

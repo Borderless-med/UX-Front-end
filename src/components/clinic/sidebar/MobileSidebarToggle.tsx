@@ -12,14 +12,24 @@ const MobileSidebarToggle = ({ onClick, activeFiltersCount }: MobileSidebarToggl
       <Button
         onClick={onClick}
         size="lg"
-        className="rounded-full h-14 w-14 bg-primary shadow-lg hover:shadow-xl transition-all duration-200"
+        className="rounded-full h-16 w-16 bg-primary shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-background"
       >
-        <div className="relative">
+        <div className="relative flex flex-col items-center">
           <Filter className="h-6 w-6" />
           {activeFiltersCount > 0 && (
-            <div className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-              {activeFiltersCount > 9 ? '9+' : activeFiltersCount}
-            </div>
+            <>
+              <div className="absolute -top-3 -right-3 bg-destructive text-destructive-foreground text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold border-2 border-background">
+                {activeFiltersCount > 9 ? '9+' : activeFiltersCount}
+              </div>
+              <span className="text-[10px] font-medium mt-0.5 leading-none">
+                {activeFiltersCount} active
+              </span>
+            </>
+          )}
+          {activeFiltersCount === 0 && (
+            <span className="text-[10px] font-medium mt-0.5 leading-none">
+              Filter
+            </span>
           )}
         </div>
       </Button>
