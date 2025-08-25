@@ -79,12 +79,12 @@ const HeroSection = () => {
         <div className="max-w-7xl mx-auto w-full">
           {/* Hero Header - Main Focus */}
           <div className="text-center animate-fade-in mb-4 sm:mb-6 md:mb-8">
-            <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6 leading-tight md:leading-none">
+            <h1 className="text-2xl sm:text-3xl md:text-7xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-6 leading-tight md:leading-none">
               World-Class Dental Care<br />
               Smart Savings & <span className="text-blue-600">AI Concierge</span>
             </h1>
             
-            <p className="text-base sm:text-lg md:text-2xl text-gray-700 mb-2 sm:mb-3 md:mb-4 max-w-3xl md:max-w-4xl mx-auto leading-snug md:leading-relaxed">
+            <p className="text-sm sm:text-base md:text-2xl text-gray-700 mb-2 sm:mb-3 md:mb-4 max-w-3xl md:max-w-4xl mx-auto leading-snug md:leading-relaxed">
               Save 50-70% with intelligent guidance every step of the way
             </p>
             
