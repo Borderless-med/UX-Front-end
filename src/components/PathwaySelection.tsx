@@ -12,7 +12,7 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Choose Your Preferred Experience</h2>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
+      <div className="grid grid-cols-2 gap-3 sm:gap-6 md:gap-10">
         {/* AI Concierge Card */}
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex flex-col h-full">
           <div className="text-center mb-4 sm:mb-6 md:mb-8 min-h-[140px] sm:min-h-[200px] md:min-h-[280px] flex flex-col justify-between">
