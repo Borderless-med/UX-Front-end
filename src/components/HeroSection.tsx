@@ -75,10 +75,10 @@ const HeroSection = () => {
       )}
 
       {/* Simplified Hero Section */}
-      <section id="home" className="pt-1 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
+      <section id="home" className="pt-1 pb-6 sm:pb-8 md:pb-12 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto w-full">
           {/* Hero Header - Main Focus */}
-          <div className="text-center animate-fade-in mb-4 sm:mb-6 md:mb-8">
+          <div className="text-center animate-fade-in mb-3 sm:mb-4 md:mb-6">
             <h1 className="text-2xl sm:text-3xl md:text-7xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-6 leading-tight md:leading-none">
               World-Class Dental Care<br />
               Smart Savings & <span className="text-blue-600">AI Concierge</span>
@@ -98,7 +98,7 @@ const HeroSection = () => {
           />
 
           {/* Secondary CTA */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-6 sm:mb-8">
             <Button 
               onClick={goToCompare}
               variant="outline"
@@ -109,22 +109,22 @@ const HeroSection = () => {
           </div>
 
           {/* Two Key Trust Signals */}
-          <div className="flex flex-col md:flex-row gap-6 justify-center mb-12 max-w-4xl mx-auto">
-            <Card className="p-8 text-center bg-green-50 border-green-200 hover:shadow-lg transition-shadow flex-1">
-              <Users className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <div className="text-3xl font-bold text-gray-900 mb-2">50,000+</div>
-              <div className="text-gray-600">Singaporeans Seek JB Dental Care Annually</div>
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-6 justify-center mb-6 sm:mb-8 max-w-4xl mx-auto">
+            <Card className="p-4 sm:p-6 md:p-8 text-center bg-green-50 border-green-200 hover:shadow-lg transition-shadow flex-1">
+              <Users className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-green-600 mx-auto mb-2 sm:mb-3 md:mb-4" />
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">50,000+</div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600">Singaporeans Seek JB Dental Care Annually</div>
             </Card>
             
-            <Card className="p-8 text-center bg-blue-50 border-blue-200 hover:shadow-lg transition-shadow flex-1">
-              <Star className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-              <div className="text-3xl font-bold text-gray-900 mb-2">4.9/5</div>
-              <div className="text-gray-600">JB Clinics Rated by 500+ Singapore Patient Reviews</div>
+            <Card className="p-4 sm:p-6 md:p-8 text-center bg-blue-50 border-blue-200 hover:shadow-lg transition-shadow flex-1">
+              <Star className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-blue-600 mx-auto mb-2 sm:mb-3 md:mb-4" />
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">4.9/5</div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600">JB Clinics Rated by 500+ Singapore Patient Reviews</div>
             </Card>
           </div>
 
           {/* Revolutionary AI Features Section */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-8 mb-12 max-w-4xl mx-auto">
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 Revolutionary AI Features Now Live
@@ -159,7 +159,7 @@ const HeroSection = () => {
           </div>
 
           {/* Simple Testimonial */}
-          <div className="bg-blue-50 rounded-xl p-8 mb-12 max-w-4xl mx-auto">
+          <div className="bg-blue-50 rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-4xl mx-auto">
             <div className="text-center">
               <p className="text-xl text-gray-700 italic mb-4">
                 "Saved $3,200 on my dental implants compared to Singapore prices. The quality was exceptional, and the clinic was just 25 minutes from Woodlands checkpoint."
@@ -177,7 +177,7 @@ const HeroSection = () => {
           </div>
 
           {/* Simple Pricing Teaser */}
-          <div className="bg-gray-50 rounded-xl p-8 text-center">
+          <div className="bg-gray-50 rounded-xl p-4 sm:p-6 md:p-8 text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Transparent Pricing - No Hidden Costs
             </h2>
