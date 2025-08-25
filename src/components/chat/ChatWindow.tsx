@@ -111,7 +111,10 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
       // Step 4: Call the Supabase Edge Function with all three variables
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
-        body: requestBody
+        body: requestBody,
+        headers: {
+          'x-environment': (process.env.NODE_ENV === 'production' ? 'production' : 'development'),
+        },
       });
 
       if (error) {
