@@ -13,7 +13,7 @@ const MobileSidebarToggle = ({ onClick, activeFiltersCount }: MobileSidebarToggl
         onClick={onClick}
         size="lg"
         className={`rounded-full h-20 w-20 bg-primary shadow-2xl hover:shadow-3xl transition-all duration-300 border-3 border-background ${
-          activeFiltersCount === 0 ? 'animate-pulse' : ''
+          activeFiltersCount === 0 ? 'animate-gentle-pulse motion-reduce:animate-none' : ''
         }`}
       >
         <div className="relative flex flex-col items-center">

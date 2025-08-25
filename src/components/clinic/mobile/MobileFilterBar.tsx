@@ -42,7 +42,7 @@ const MobileFilterBar = ({
           variant="default"
           size="default"
           className={`relative min-w-[120px] shadow-sm ${
-            activeFiltersCount === 0 ? 'animate-pulse' : ''
+            activeFiltersCount === 0 ? 'animate-gentle-pulse motion-reduce:animate-none' : ''
           }`}
         >
           <Filter className="h-5 w-5 mr-2" />
