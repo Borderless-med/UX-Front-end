@@ -33,10 +33,14 @@ const handler = async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Initialize Resend
-    const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
     const bookingData: AppointmentBookingRequest = await req.json();
     console.log("Booking data received:", { ...bookingData, email: '[REDACTED]' });
+
+    // Track email sending status
+    let emailsSent = false;
+    let warnMessage: string | undefined;
 
     // Validate required fields
     const requiredFields = ['patient_name', 'email', 'whatsapp', 'treatment_type', 'preferred_date', 'time_slot', 'clinic_location'];
@@ -87,11 +91,13 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // Send confirmation email to patient
-    const patientEmailResponse = await resend.emails.send({
-      from: "SG-JB Dental <appointments@sg-jb-dental.com>",
-      to: [bookingData.email],
-      subject: `Appointment Booking Confirmation - ${bookingRef}`,
-      html: `
+    if (resend) {
+      try {
+        const patientEmailResponse = await resend.emails.send({
+          from: "SG-JB Dental <onboarding@resend.dev>",
+          to: [bookingData.email],
+          subject: `Appointment Booking Confirmation - ${bookingRef}`,
+          html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
             <h1 style="margin: 0; font-size: 28px;">Appointment Confirmed!</h1>
@@ -142,16 +148,25 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
         </div>
       `,
-    });
-
-    console.log("Patient email sent:", patientEmailResponse.id);
-
-    // Send notification email to admin
-    const adminEmailResponse = await resend.emails.send({
-      from: "SG-JB Dental <appointments@sg-jb-dental.com>",
-      to: ["admin@sg-jb-dental.com"],
-      subject: `New Appointment Booking - ${bookingRef}`,
-      html: `
+        });
+        console.log("Patient email sent:", patientEmailResponse.id);
+        emailsSent = true;
+      } catch (e) {
+        console.error("Failed to send patient email:", e);
+        warnMessage = "Booking saved, but we couldn't send the confirmation email yet.";
+      }
+    } else {
+      console.warn("RESEND_API_KEY not configured - skipping email sending");
+      warnMessage = "Email service is not configured yet.";
+    }
+    // Send notification email to admin (non-blocking)
+    if (resend) {
+      try {
+        const adminEmailResponse = await resend.emails.send({
+          from: "SG-JB Dental <onboarding@resend.dev>",
+          to: ["admin@sg-jb-dental.com"],
+          subject: `New Appointment Booking - ${bookingRef}`,
+          html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <div style="background: #dc2626; color: white; padding: 20px; text-align: center;">
             <h1 style="margin: 0; font-size: 24px;">New Appointment Booking</h1>
@@ -187,16 +202,24 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
         </div>
       `,
-    });
-
-    console.log("Admin email sent:", adminEmailResponse.id);
+        });
+        console.log("Admin email sent:", adminEmailResponse.id);
+      } catch (e) {
+        console.error("Failed to send admin email:", e);
+        if (!warnMessage) warnMessage = "Email notification to admin could not be sent.";
+      }
+    }
 
     return new Response(
       JSON.stringify({
         success: true,
         booking_ref: bookingRef,
         appointment_id: appointment.id,
-        message: "Appointment booking confirmed! Check your email for details."
+        emails_sent: emailsSent,
+        ...(warnMessage ? { warn: warnMessage } : {}),
+        message: emailsSent
+          ? "Appointment booking confirmed! Check your email for details."
+          : "Appointment booking received! We will contact you via WhatsApp shortly."
       }),
       {
         status: 200,

@@ -61,6 +61,7 @@ const AppointmentBookingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [bookingReference, setBookingReference] = useState('');
+  const [emailsSent, setEmailsSent] = useState<boolean>(false);
   const [completionPercentage, setCompletionPercentage] = useState(0);
 
   // Time slot options
@@ -424,8 +425,13 @@ const AppointmentBookingForm = () => {
 
       console.log('Appointment booked successfully:', data);
       setBookingReference(data.booking_ref);
+      setEmailsSent(Boolean(data.emails_sent));
       setIsSubmitted(true);
-      toast.success('Appointment booked successfully! Check your email for confirmation.');
+      toast.success(
+        data.emails_sent
+          ? 'Appointment booked successfully! Check your email for confirmation.'
+          : 'Appointment booked successfully! We will contact you via WhatsApp shortly.'
+      );
 
     } catch (error: any) {
       console.error('Appointment booking error:', error);
@@ -468,9 +474,20 @@ const AppointmentBookingForm = () => {
                 </div>
               </div>
               
-              <p className="text-gray-600 mb-6">
-                A confirmation email has been sent to <strong>{formData.email}</strong> with all the details.
-              </p>
+              {emailsSent ? (
+                <p className="text-gray-600 mb-6">
+                  A confirmation email has been sent to <strong>{formData.email}</strong> with all the details.
+                </p>
+              ) : (
+                <div className="text-left bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-start space-x-2">
+                    <AlertCircle className="w-5 h-5 text-yellow-700 mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-yellow-700">
+                      Your booking was received, but the confirmation email could not be sent yet. We will contact you via WhatsApp to confirm. You will still receive an email once available.
+                    </p>
+                  </div>
+                </div>
+              )}
               
               <Button 
                 onClick={() => window.location.reload()} 
