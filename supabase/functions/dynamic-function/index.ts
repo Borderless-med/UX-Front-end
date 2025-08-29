@@ -1,100 +1,43 @@
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+const PROD_BACKEND_URL = "https://sg-jb-chatbot-backend.onrender.com/chat";
+const DEV_BACKEND_URL = "https://sg-jb-chatbot-backend-development.onrender.com/chat";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-environment',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Max-Age': '86400',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-environment",
 };
 
-const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
-    });
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const envHeader = req.headers.get('x-environment') || 'not-provided';
-    console.log('Received x-environment header:', envHeader);
+    const requestBody = await req.json();
+    const environment = req.headers.get("x-environment") || "development";
+    const backendUrl = environment === "production" ? PROD_BACKEND_URL : DEV_BACKEND_URL;
 
-    const { history, applied_filters, candidate_pool, booking_context } = await req.json();
+    console.log(`Request received with environment: ${environment}`);
+    console.log(`Routing to backend: ${backendUrl}`);
 
-    console.log('=== EDGE FUNCTION RECEIVING ===');
-    console.log('History array length:', history?.length || 0);
-    console.log('Applied filters:', applied_filters);
-    console.log('Candidate pool length:', candidate_pool?.length || 0);
-    console.log('Booking context:', booking_context);
-    
-    if (history && history.length > 0) {
-      console.log('Complete history being forwarded:', history);
-    } else {
-      console.log('WARNING: No history received or empty history');
-    }
-    console.log('================================');
-
-    // Prepare the complete body for the external API with all three variables
-    const apiBody = {
-      history: history || [],
-      applied_filters: applied_filters || {},
-      candidate_pool: candidate_pool || [],
-      booking_context: booking_context || {}
-    };
-
-    console.log('Forwarding to external API:', apiBody);
-
-    const response = await fetch('https://sg-jb-chatbot-backend.onrender.com/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(apiBody),
+    const response = await fetch(backendUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
     });
-
-    console.log('External API response status:', response.status);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('External API error:', response.status, response.statusText);
-      console.error('External API error details:', errorText);
-      
-      return new Response(JSON.stringify({ 
-        error: `External API error: ${response.status} ${response.statusText}`,
-        details: errorText 
-      }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    }
 
     const data = await response.json();
-    console.log('External API response received successfully');
 
-    return new Response(JSON.stringify({
-      response: data.response || data.message || 'No response available',
-      applied_filters: data.applied_filters || {},
-      candidate_pool: data.candidate_pool || [],
-      booking_context: data.booking_context || {}
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    return new Response(JSON.stringify(data), {
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     });
+
   } catch (error) {
-    console.error('Error in dynamic-function:', error);
-    
-    return new Response(JSON.stringify({ 
-      response: 'Sorry, something went wrong. Please try again.' 
-    }), {
+    console.error("Critical Error in Edge Function:", error);
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   }
-};
-
-serve(handler);
+});
