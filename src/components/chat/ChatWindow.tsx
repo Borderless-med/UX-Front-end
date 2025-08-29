@@ -109,11 +109,25 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       console.log('Complete request body:', requestBody);
       console.log('==========================');
 
+      // Helper function to detect environment based on hostname
+      const getEnvironment = () => {
+        const hostname = window.location.hostname;
+        
+        // If it's a Lovable preview URL or localhost, it's development
+        if (hostname.includes('lovable.app') || hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+          return 'development';
+        }
+        
+        // If it's your actual published domain, it's production
+        // You can customize this condition based on your published domain
+        return 'production';
+      };
+
       // Step 4: Call the Supabase Edge Function with all three variables
       const { data, error } = await supabase.functions.invoke('dynamic-function', {
         body: requestBody,
         headers: {
-          'x-environment': (process.env.NODE_ENV === 'production' ? 'production' : 'development'),
+          'x-environment': getEnvironment(),
         },
       });
 
