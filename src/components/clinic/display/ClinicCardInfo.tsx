@@ -92,7 +92,7 @@ const ClinicCardInfo = ({ clinic }: ClinicCardInfoProps) => {
         const weekendDays = group.days.filter(d => ['Sat', 'Sun'].includes(d));
         
         if (weekdaysInGroup.length === 5) {
-          dayRange = 'Mon-Fri';
+          dayRange = 'Mon-Friday';
         } else if (weekdaysInGroup.length >= 3 && weekdaysInGroup.length < 5) {
           dayRange = `${weekdaysInGroup[0]}-${weekdaysInGroup[weekdaysInGroup.length - 1]}`;
         } else if (weekendDays.length === 2) {

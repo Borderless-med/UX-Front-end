@@ -137,8 +137,19 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
       // Step 5: Parse response text, applied_filters, and candidate_pool from response
       if (data && data.response) {
-        // Use the response directly (AI backend already includes booking links)
+        // Check if response is raw data/JSON or formatted text
         let finalResponseText = data.response;
+        
+        // If response looks like raw data, format it properly
+        if (typeof finalResponseText === 'object' || 
+            (typeof finalResponseText === 'string' && finalResponseText.startsWith('{'))) {
+          try {
+            const parsed = typeof finalResponseText === 'string' ? JSON.parse(finalResponseText) : finalResponseText;
+            finalResponseText = parsed.message || parsed.text || JSON.stringify(parsed, null, 2);
+          } catch (e) {
+            // If parsing fails, use as is
+          }
+        }
 
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
