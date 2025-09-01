@@ -16,11 +16,106 @@ const ClinicCardInfo = ({ clinic }: ClinicCardInfoProps) => {
     if (!hours || hours === 'Not Listed' || hours === 'Operating hours not available') {
       return 'Operating hours not available';
     }
-    return hours.split('\n').map((line, index) => (
-      <div key={index} className="text-sm">
-        {line.trim()}
+
+    // Helper function to convert time format (e.g., "10:00 AM" -> "10am")
+    const formatTime = (timeStr: string) => {
+      const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+      if (!match) return timeStr;
+      
+      const [, hour, minute, period] = match;
+      const hourNum = parseInt(hour);
+      const periodLower = period.toLowerCase();
+      
+      // If minutes are 00, omit them
+      if (minute === '00') {
+        return `${hourNum}${periodLower}`;
+      } else {
+        return `${hourNum}:${minute}${periodLower}`;
+      }
+    };
+
+    // Parse each line to extract day and hours
+    const dayHours: { [key: string]: string } = {};
+    const lines = hours.split('\n').filter(line => line.trim());
+    
+    for (const line of lines) {
+      const match = line.match(/^(\w+):\s*(.+)$/);
+      if (match) {
+        const [, day, timeRange] = match;
+        if (timeRange.toLowerCase().includes('closed')) {
+          dayHours[day.toLowerCase()] = 'Closed';
+        } else {
+          // Extract start and end times
+          const timeMatch = timeRange.match(/(\d{1,2}:\d{2}\s*(?:AM|PM))\s*[–-]\s*(\d{1,2}:\d{2}\s*(?:AM|PM))/i);
+          if (timeMatch) {
+            const [, startTime, endTime] = timeMatch;
+            dayHours[day.toLowerCase()] = `${formatTime(startTime)}-${formatTime(endTime)}`;
+          } else {
+            dayHours[day.toLowerCase()] = timeRange;
+          }
+        }
+      }
+    }
+
+    // Group days with same hours
+    const groups: { days: string[]; hours: string }[] = [];
+    const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const dayAbbr: { [key: string]: string } = {
+      monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', 
+      thursday: 'Thu', friday: 'Fri', saturday: 'Sat', sunday: 'Sun'
+    };
+
+    for (const day of dayOrder) {
+      if (dayHours[day]) {
+        const existingGroup = groups.find(g => g.hours === dayHours[day]);
+        if (existingGroup) {
+          existingGroup.days.push(dayAbbr[day]);
+        } else {
+          groups.push({ days: [dayAbbr[day]], hours: dayHours[day] });
+        }
+      }
+    }
+
+    // Format groups
+    const formattedGroups = groups.map(group => {
+      let dayRange;
+      if (group.days.length === 1) {
+        dayRange = group.days[0];
+      } else if (group.days.length === 2 && 
+                 ((group.days.includes('Mon') && group.days.includes('Tue')) ||
+                  (group.days.includes('Sat') && group.days.includes('Sun')))) {
+        dayRange = group.days.join('-');
+      } else if (group.days.length >= 3) {
+        // Check for consecutive weekdays
+        const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+        const weekdaysInGroup = group.days.filter(d => weekdays.includes(d));
+        const weekendDays = group.days.filter(d => ['Sat', 'Sun'].includes(d));
+        
+        if (weekdaysInGroup.length === 5) {
+          dayRange = 'Mon-Fri';
+        } else if (weekdaysInGroup.length >= 3 && weekdaysInGroup.length < 5) {
+          dayRange = `${weekdaysInGroup[0]}-${weekdaysInGroup[weekdaysInGroup.length - 1]}`;
+        } else if (weekendDays.length === 2) {
+          dayRange = 'Sat-Sun';
+        } else {
+          dayRange = group.days.join(', ');
+        }
+      } else {
+        dayRange = group.days.join(', ');
+      }
+      
+      return `${dayRange}: ${group.hours}`;
+    });
+
+    return (
+      <div className="space-y-1">
+        {formattedGroups.map((groupText, index) => (
+          <div key={index} className="text-sm">
+            {groupText}
+          </div>
+        ))}
       </div>
-    ));
+    );
   };
 
   const hasValidOperatingHours = clinic.operatingHours && clinic.operatingHours !== 'Operating hours not available';
