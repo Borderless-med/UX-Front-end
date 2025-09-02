@@ -113,13 +113,18 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       const getEnvironment = () => {
         const hostname = window.location.hostname;
         
-        // If it's a Lovable preview URL or localhost, it's development
+        // Check if it's the specific published Lovable domain (production)
+        // This pattern matches published Lovable sites vs preview/staging sites
+        if (hostname.match(/^[a-z0-9-]+\.lovable\.app$/) && !hostname.includes('preview') && !hostname.includes('staging')) {
+          return 'production';
+        }
+        
+        // If it's a preview URL, localhost, or development domain, it's development
         if (hostname.includes('lovable.app') || hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
           return 'development';
         }
         
-        // If it's your actual published domain, it's production
-        // You can customize this condition based on your published domain
+        // If it's a custom domain, it's production
         return 'production';
       };
 
