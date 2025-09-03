@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
+import NavigationAuthButton from '@/components/NavigationAuthButton';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const location = useLocation();
 
   const scrollToSection = (sectionId: string) => {
@@ -108,6 +110,7 @@ const Navigation = () => {
             >
               Book Now
             </Button>
+            <NavigationAuthButton onAuthClick={() => setIsAuthModalOpen(true)} />
           </div>
 
           {/* Mobile menu button */}
@@ -198,6 +201,13 @@ const Navigation = () => {
                 >
                   Book Now
                 </Button>
+                
+                <div className="w-full">
+                  <NavigationAuthButton onAuthClick={() => {
+                    setIsMenuOpen(false);
+                    setIsAuthModalOpen(true);
+                  }} />
+                </div>
               </div>
             </div>
           </div>
