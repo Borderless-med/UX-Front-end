@@ -8,6 +8,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import AuthModal from '@/components/auth/AuthModal';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
+import AuthenticationStatusBar from '@/components/clinic/display/AuthenticationStatusBar';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
@@ -223,6 +224,9 @@ const ClinicsSection = () => {
         {/* Main Content Area */}
         <div className="flex-1 min-w-0 overflow-hidden">
           <div className="p-3 sm:p-4 lg:p-6 xl:p-8 max-w-7xl mx-auto">
+            {/* Authentication Status Bar */}
+            <AuthenticationStatusBar onSignInClick={handleSignInClick} />
+            
             <ClinicGrid
               clinics={filteredAndSortedClinics}
               isAuthenticated={isAuthenticated}

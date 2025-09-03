@@ -132,14 +132,6 @@ const ClinicSidebar = ({
             />
           </div>
 
-          {/* User Status */}
-          <Card className="p-3">
-            <UserStatusDisplay
-              isAuthenticated={isAuthenticated}
-              userProfile={userProfile}
-              onSignInClick={onSignInClick}
-            />
-          </Card>
 
           {/* Results Count */}
           <div className="bg-sidebar-accent rounded-lg p-3">

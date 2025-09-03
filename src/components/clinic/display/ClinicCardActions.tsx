@@ -46,9 +46,10 @@ const ClinicCardActions = ({
           onClick={isAuthenticated ? onViewPractitioner : onSignInClick}
           variant="outline"
           className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+          title={isAuthenticated ? 'View practitioner details' : 'Sign in to view dentist name and MDA license'}
         >
           <UserCheck className="h-3 w-3 mr-1" />
-          {isAuthenticated ? 'Details' : 'Sign In'}
+          {isAuthenticated ? 'Details' : 'View Details'}
         </Button>
         {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' && (
           <Button
