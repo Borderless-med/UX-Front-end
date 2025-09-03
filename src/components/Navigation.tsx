@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
 import NavigationAuthButton from '@/components/NavigationAuthButton';
+import AuthModal from '@/components/auth/AuthModal';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -83,16 +84,6 @@ const Navigation = () => {
               >
                 How It Works
               </Link>
-              <Link
-                to="/book-now"
-                className={`transition-all duration-200 font-medium ${
-                  location.pathname === '/book-now' 
-                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
-                    : 'text-blue-dark hover:text-blue-primary text-base'
-                }`}
-              >
-                Book Now
-              </Link>
             </div>
           </div>
 
@@ -100,13 +91,13 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Link 
               to="/partner-application"
-              className="bg-blue-accent hover:bg-blue-primary text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200"
+              className="bg-blue-accent hover:bg-blue-primary text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10 flex items-center"
             >
               Partner with Us
             </Link>
             <Button 
               onClick={navigateToBooking}
-              className="bg-blue-primary hover:bg-blue-accent text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200"
+              className="bg-blue-primary hover:bg-blue-accent text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10"
             >
               Book Now
             </Button>
@@ -173,31 +164,19 @@ const Navigation = () => {
                 How It Works
               </Link>
               
-              <Link
-                to="/book-now"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
-                  location.pathname === '/book-now' 
-                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
-                    : 'text-blue-dark hover:text-blue-primary'
-                }`}
-              >
-                Book Now
-              </Link>
-              
               {/* Mobile CTA Buttons */}
               <div className="pt-4 space-y-3">
                 <Link 
                   to="/partner-application"
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-full bg-blue-accent hover:bg-blue-primary text-white font-medium px-3 py-2 rounded-lg transition-colors duration-200 block text-center"
+                  className="w-full bg-blue-accent hover:bg-blue-primary text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 block text-center h-10 flex items-center justify-center"
                 >
                   Partner with Us
                 </Link>
                 
                 <Button 
                   onClick={navigateToBooking}
-                  className="w-full bg-blue-primary hover:bg-blue-accent text-white font-medium"
+                  className="w-full bg-blue-primary hover:bg-blue-accent text-white font-medium px-5 py-2.5 h-10"
                 >
                   Book Now
                 </Button>
@@ -213,6 +192,12 @@ const Navigation = () => {
           </div>
         )}
       </div>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
     </nav>
   );
 };

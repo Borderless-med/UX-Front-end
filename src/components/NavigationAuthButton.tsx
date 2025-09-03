@@ -16,7 +16,7 @@ const NavigationAuthButton = ({ onAuthClick }: NavigationAuthButtonProps) => {
       <Button 
         onClick={onAuthClick}
         variant="outline"
-        className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200"
+        className="border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10"
       >
         Sign In / Sign Up
       </Button>
