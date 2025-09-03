@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/contexts/AuthContext';
 import LoginForm from './LoginForm';
 import PDPARegistrationForm from './PDPARegistrationForm';
 

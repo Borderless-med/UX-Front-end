@@ -34,9 +34,10 @@ const App = () => (
     <TooltipProvider>
       <SecurityProvider>
         <CookieConsentProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+          <AuthProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/book-now" element={<BookNow />} />
@@ -59,6 +60,7 @@ const App = () => (
             <CookiePreferences />
             <ChatWidget />
           </BrowserRouter>
+          </AuthProvider>
         </CookieConsentProvider>
       </SecurityProvider>
     </TooltipProvider>
