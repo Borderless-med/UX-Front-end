@@ -13,9 +13,25 @@ export const useSupabaseClinics = () => {
       try {
         setLoading(true);
         const start = performance.now();
-        console.log('Fetching clinics from Supabase (optimized columns)...');
+        
+        // Environment diagnostics
+        const hostname = typeof window !== 'undefined' ? window.location.hostname : 'unknown';
+        const isIframe = typeof window !== 'undefined' && window.self !== window.top;
+        const isLovable = /lovable\.dev|sandbox\.lovable\.dev/.test(hostname);
+        const timeoutMs = isIframe ? 12000 : 8000; // extend timeout when inside an iframe
+        
+        console.log('Fetching clinics from Supabase (optimized columns)...', {
+          hostname,
+          isIframe,
+          isLovable,
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
+          timeoutMs,
+        });
 
-        const timeoutMs = 8000;
+        // Log an example of the REST URL for diagnostics (not used for fetching)
+        const debugColumns = 'id, name, address, dentist, rating, reviews, distance, sentiment, mda_license, credentials, township, website_url, google_review_url, operating_hours, tooth_filling, root_canal, dental_crown, dental_implant, teeth_whitening, braces, wisdom_tooth, gum_treatment, composite_veneers, porcelain_veneers, dental_bonding, inlays_onlays, enamel_shaping, gingivectomy, bone_grafting, sinus_lift, frenectomy, tmj_treatment, sleep_apnea_appliances, crown_lengthening, oral_cancer_screening, alveoplasty';
+        const restUrlExample = `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?select=${encodeURIComponent(debugColumns)}&order=distance.asc`;
+        console.log('Supabase REST example URL (debug):', restUrlExample);
 
         const supabaseQuery = () =>
           supabase
@@ -44,6 +60,13 @@ export const useSupabaseClinics = () => {
         let data: any[] | null = null;
         let error: any = null;
 
+        const stallTimer = window.setTimeout(() => {
+          console.warn('Clinic fetch still in progress after 5s. This may be due to preview iframe/network routing. ', {
+            hostname,
+            isIframe,
+          });
+        }, 5000);
+
         try {
           ({ data, error } = await withTimeout<SupabaseResult>(exec()));
         } catch (e) {
@@ -51,6 +74,8 @@ export const useSupabaseClinics = () => {
           // brief backoff then retry once
           await new Promise((res) => setTimeout(res, 400));
           ({ data, error } = await withTimeout<SupabaseResult>(exec()));
+        } finally {
+          clearTimeout(stallTimer);
         }
 
         if (error) {
@@ -132,9 +157,14 @@ export const useSupabaseClinics = () => {
         setClinics(transformedClinics);
       } catch (err) {
         console.error('Error fetching clinics:', err);
-        setError(
-          err instanceof Error ? err.message : 'Failed to fetch clinics'
-        );
+        const message = err instanceof Error ? err.message : 'Failed to fetch clinics';
+        const isNetworkError = typeof message === 'string' && /timed out|Failed to fetch|NetworkError|TypeError/i.test(message);
+        if (isNetworkError) {
+          console.warn('Network/CORS hint: If viewing inside a Lovable preview iframe, cross-origin requests can be slower or blocked. Try opening the app in a new tab. ', {
+            hostname: typeof window !== 'undefined' ? window.location.hostname : 'n/a',
+          });
+        }
+        setError(message);
       } finally {
         setLoading(false);
       }
