@@ -267,11 +267,8 @@ const AppointmentBookingForm = () => {
         const formattedClinic = formatClinicName(decodedClinic);
         newFormData.preferred_clinic = formattedClinic;
         
-        // Also map to township for the location dropdown using the original decoded name
-        const mappedClinic = mapClinicToTownship(decodedClinic);
-        if (mappedClinic) {
-          newFormData.clinic_location = mappedClinic;
-        }
+        // Don't auto-populate clinic_location when clinic is pre-filled
+        // This maintains mutual exclusivity - user must choose one or the other
       }
       
       console.log('=== MAPPED FORM DATA ===');
@@ -304,12 +301,18 @@ const AppointmentBookingForm = () => {
   // Calculate completion percentage
   useEffect(() => {
     const requiredFields = [
-      'patient_name', 'email', 'whatsapp', 'treatment_type', 'preferred_clinic',
-      'preferred_date', 'time_slot', 'clinic_location', 'consent_given'
+      'patient_name', 'email', 'whatsapp', 'treatment_type',
+      'preferred_date', 'time_slot', 'consent_given'
     ];
     
-    // preferred_clinic is now always required
-    const fieldsToCheck = requiredFields;
+    // Add either preferred_clinic OR clinic_location (mutually exclusive)
+    const fieldsToCheck = [...requiredFields];
+    if (formData.preferred_clinic || formData.clinic_location) {
+      fieldsToCheck.push(formData.preferred_clinic ? 'preferred_clinic' : 'clinic_location');
+    } else {
+      // Neither is filled, so count clinic_location as the field to be completed
+      fieldsToCheck.push('clinic_location');
+    }
     
     let completedFields = 0;
     fieldsToCheck.forEach(field => {
@@ -349,8 +352,9 @@ const AppointmentBookingForm = () => {
       newErrors.treatment_type = 'Please select a treatment type';
     }
 
-    if (!formData.preferred_clinic) {
-      newErrors.preferred_clinic = 'Please select a preferred clinic';
+    // Mutual exclusivity: Either preferred_clinic OR clinic_location is required, not both
+    if (!formData.preferred_clinic && !formData.clinic_location) {
+      newErrors.clinic_location = 'Please select either a specific clinic or a general location';
     }
 
     if (!formData.preferred_date) {
@@ -359,10 +363,6 @@ const AppointmentBookingForm = () => {
 
     if (!formData.time_slot) {
       newErrors.time_slot = 'Please select a preferred time slot';
-    }
-
-    if (!formData.clinic_location) {
-      newErrors.clinic_location = 'Please select a clinic location';
     }
 
     if (!formData.consent_given) {
@@ -375,11 +375,33 @@ const AppointmentBookingForm = () => {
 
   // Handle input changes
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    const newFormData = { ...formData, [field]: value };
     
-    // Clear error when user starts typing
+    // Handle mutual exclusivity between preferred_clinic and clinic_location
+    if (field === 'preferred_clinic' && value) {
+      // When clinic is selected, auto-populate location and clear clinic_location
+      const mappedLocation = mapClinicToTownship(value);
+      newFormData.clinic_location = '';
+      console.log('Clinic selected:', value, 'Mapped location:', mappedLocation);
+    } else if (field === 'clinic_location' && value) {
+      // When location is selected, clear preferred_clinic
+      newFormData.preferred_clinic = '';
+      console.log('Location selected:', value);
+    }
+    
+    setFormData(newFormData);
+    
+    // Clear relevant errors
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+    // Clear mutual exclusivity errors
+    if ((field === 'preferred_clinic' || field === 'clinic_location') && value) {
+      setErrors(prev => ({ 
+        ...prev, 
+        preferred_clinic: '', 
+        clinic_location: '' 
+      }));
     }
   };
 
@@ -637,11 +659,18 @@ const AppointmentBookingForm = () => {
               <div className="space-y-2">
                 <Label className="flex items-center space-x-2">
                   <Building2 className="w-4 h-4" />
-                  <span>Preferred Clinic {formData.preferred_clinic ? '' : '*'}</span>
+                  <span>Preferred Clinic {!formData.clinic_location ? '*' : ''}</span>
                 </Label>
                 
+                {/* Mutual exclusivity helper text */}
+                {!formData.preferred_clinic && !formData.clinic_location && (
+                  <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+                    💡 Choose either a specific clinic OR select a general location below (not both)
+                  </p>
+                )}
+                
                 {formData.preferred_clinic ? (
-                  // Read-only field when pre-filled from URL
+                  // Read-only field when pre-filled from URL or clinic is selected
                   <div className="relative">
                     <Input
                       value={formData.preferred_clinic}
@@ -652,8 +681,17 @@ const AppointmentBookingForm = () => {
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     </div>
                     <p className="text-xs text-green-600 font-medium mt-1">
-                      ✓ Selected by AI assistant based on your preferences
+                      ✓ {formData.preferred_clinic === 'Any clinic' ? 'We will recommend the best clinic match' : 'Selected by AI assistant based on your preferences'}
                     </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleInputChange('preferred_clinic', '')}
+                      className="mt-2 text-xs h-8"
+                    >
+                      Clear selection & choose location instead
+                    </Button>
                   </div>
                 ) : (
                   // Dropdown selection when no clinic specified
@@ -666,13 +704,20 @@ const AppointmentBookingForm = () => {
                     <Select 
                       value={formData.preferred_clinic} 
                       onValueChange={(value) => handleInputChange('preferred_clinic', value)}
-                      disabled={clinicsLoading}
+                      disabled={clinicsLoading || !!formData.clinic_location}
                     >
                       <SelectTrigger className={cn(
                         "h-12 text-base",
-                        errors.preferred_clinic && "border-red-500"
+                        errors.preferred_clinic && "border-red-500",
+                        formData.clinic_location && "bg-gray-50 cursor-not-allowed"
                       )}>
-                        <SelectValue placeholder={clinicsLoading ? "Loading clinics..." : "Select a clinic or 'Any clinic'"} />
+                        <SelectValue placeholder={
+                          formData.clinic_location 
+                            ? "Disabled - location selected below" 
+                            : clinicsLoading 
+                              ? "Loading clinics..." 
+                              : "Select a specific clinic"
+                        } />
                       </SelectTrigger>
                       <SelectContent className="bg-background border shadow-lg z-50 max-h-64 overflow-y-auto">
                         <SelectItem value="Any clinic">Any clinic (we'll recommend the best match)</SelectItem>
@@ -691,12 +736,19 @@ const AppointmentBookingForm = () => {
                     {errors.preferred_clinic && (
                       <p className="text-sm text-red-600">{errors.preferred_clinic}</p>
                     )}
-                    <p className="text-xs text-gray-500">
-                      {clinicsLoading 
-                        ? "Loading clinic options..." 
-                        : `Choose from ${clinics.length} available clinics or let us recommend the best match`
-                      }
-                    </p>
+                    {formData.clinic_location && (
+                      <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+                        ⚠️ This field is disabled because you selected a location below. Clear the location to select a specific clinic.
+                      </p>
+                    )}
+                    {!formData.clinic_location && (
+                      <p className="text-xs text-gray-500">
+                        {clinicsLoading 
+                          ? "Loading clinic options..." 
+                          : `Choose from ${clinics.length} available clinics or select a general location below`
+                        }
+                      </p>
+                    )}
                   </>
                 )}
               </div>
@@ -770,14 +822,24 @@ const AppointmentBookingForm = () => {
               <div className="space-y-2">
                 <Label className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4" />
-                  <span>Preferred Clinic Location (JB) *</span>
+                  <span>Preferred Clinic Location (JB) {!formData.preferred_clinic ? '*' : ''}</span>
                 </Label>
-                <Select value={formData.clinic_location} onValueChange={(value) => handleInputChange('clinic_location', value)}>
+                
+                <Select 
+                  value={formData.clinic_location} 
+                  onValueChange={(value) => handleInputChange('clinic_location', value)}
+                  disabled={!!formData.preferred_clinic}
+                >
                   <SelectTrigger className={cn(
                     "h-12 text-base",
-                    errors.clinic_location && "border-red-500"
+                    errors.clinic_location && "border-red-500",
+                    formData.preferred_clinic && "bg-gray-50 cursor-not-allowed"
                   )}>
-                    <SelectValue placeholder="Select JB area" />
+                    <SelectValue placeholder={
+                      formData.preferred_clinic 
+                        ? "Disabled - specific clinic selected above" 
+                        : "Select JB area/township"
+                    } />
                   </SelectTrigger>
                   <SelectContent>
                     {commonTownships.slice(0, 20).map((township) => (
@@ -787,8 +849,30 @@ const AppointmentBookingForm = () => {
                     ))}
                   </SelectContent>
                 </Select>
+                
                 {errors.clinic_location && (
                   <p className="text-sm text-red-600">{errors.clinic_location}</p>
+                )}
+                
+                {formData.preferred_clinic ? (
+                  <div className="space-y-2">
+                    <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+                      ⚠️ This field is disabled because you selected a specific clinic above. Clear the clinic selection to choose a general location.
+                    </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleInputChange('preferred_clinic', '')}
+                      className="text-xs h-8"
+                    >
+                      Clear clinic selection & choose location
+                    </Button>
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-500">
+                    Choose a general area in JB, and we'll find the best clinics in that location
+                  </p>
                 )}
               </div>
 
