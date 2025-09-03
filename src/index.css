@@ -134,12 +134,14 @@
     animation: pulse-once 0.6s ease-out 1;
   }
 
-  /* Tooltip fix for portal rendering */
+  /* Tooltip fix for portal rendering - target actual Radix UI selectors */
   .tooltip-content,
-  [data-radix-popper-content-wrapper] [role="tooltip"] {
+  [data-radix-tooltip-content],
+  [data-state="delayed-open"][data-radix-tooltip-content] {
     background-color: hsl(var(--popover)) !important;
     color: hsl(var(--popover-foreground)) !important;
     border: 1px solid hsl(var(--border)) !important;
     z-index: 9999 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
   }
 }
