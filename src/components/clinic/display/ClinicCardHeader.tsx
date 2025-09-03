@@ -15,32 +15,23 @@ interface ClinicCardHeaderProps {
 const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
   const { toast } = useToast();
 
-  const handleRatingClick = () => {
+  const handleRatingClick = async () => {
     if (clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '') {
+      const searchQuery = `"${clinic.name}" reviews ${clinic.address.split(',')[0]}`;
+      
       try {
-        // Skip all maps URLs entirely - use only accessible search formats
-        const searchQuery = `"${clinic.name}" reviews ${clinic.address.split(',')[0]}`;
-        const targetUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-        
-        const newWindow = window.open(targetUrl, '_blank');
-        
-        // Improved popup detection
-        setTimeout(() => {
-          if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-            toast({
-              title: "Link blocked or failed",
-              description: `Search Google for "${clinic.name} reviews" to see reviews`,
-              duration: 5000,
-            });
-          }
-        }, 100);
-        
-      } catch (error) {
-        console.error('Error opening review URL:', error);
+        await navigator.clipboard.writeText(searchQuery);
         toast({
-          title: "Link unavailable", 
-          description: `Search Google for "${clinic.name} reviews" to see reviews`,
-          duration: 5000,
+          title: "Search terms copied!",
+          description: "Paste into Google to find reviews for this clinic",
+          duration: 4000,
+        });
+      } catch (error) {
+        console.error('Clipboard not available:', error);
+        toast({
+          title: "Search Google for:",
+          description: searchQuery,
+          duration: 6000,
         });
       }
     }
