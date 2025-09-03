@@ -12,21 +12,61 @@ export const useSupabaseClinics = () => {
     const fetchClinics = async () => {
       try {
         setLoading(true);
-        console.log('Fetching clinics from Supabase database...');
-        
-        const { data, error } = await supabase
-          .from('clinics_data')
-          .select('*')
-          .order('distance', { ascending: true });
+        const start = performance.now();
+        console.log('Fetching clinics from Supabase (optimized columns)...');
+
+        const timeoutMs = 8000;
+
+        const supabaseQuery = () =>
+          supabase
+            .from('clinics_data')
+            .select(`
+              id, name, address, dentist, rating, reviews, distance, sentiment,
+              mda_license, credentials, township, website_url, google_review_url, operating_hours,
+              tooth_filling, root_canal, dental_crown, dental_implant, teeth_whitening, braces,
+              wisdom_tooth, gum_treatment, composite_veneers, porcelain_veneers, dental_bonding,
+              inlays_onlays, enamel_shaping, gingivectomy, bone_grafting, sinus_lift, frenectomy,
+              tmj_treatment, sleep_apnea_appliances, crown_lengthening, oral_cancer_screening, alveoplasty
+            `)
+            .order('distance', { ascending: true });
+
+        const withTimeout = <T,>(p: Promise<T>) =>
+          Promise.race<T>([
+            p,
+            new Promise<T>((_, reject) =>
+              setTimeout(() => reject(new Error(`Request timed out after ${timeoutMs}ms`)), timeoutMs)
+            ),
+          ]);
+
+        type SupabaseResult = { data: any[] | null; error: any };
+        const exec = () => supabaseQuery() as unknown as Promise<SupabaseResult>;
+
+        let data: any[] | null = null;
+        let error: any = null;
+
+        try {
+          ({ data, error } = await withTimeout<SupabaseResult>(exec()));
+        } catch (e) {
+          console.warn('First attempt failed, retrying once...', e);
+          // brief backoff then retry once
+          await new Promise((res) => setTimeout(res, 400));
+          ({ data, error } = await withTimeout<SupabaseResult>(exec()));
+        }
 
         if (error) {
           console.error('Supabase query error:', error);
           throw error;
         }
 
-        console.log('Raw data from database:', data?.length || 0, 'records');
+        const duration = Math.round(performance.now() - start);
+        console.log(`Raw data from database: ${data?.length || 0} records in ${duration}ms`);
         if (data && data.length > 0) {
-          console.log('Sample raw record:', data[0]);
+          console.log('Sample raw record (trimmed):', {
+            id: data[0].id,
+            name: data[0].name,
+            rating: data[0].rating,
+            reviews: data[0].reviews,
+          });
         }
 
         // Transform database data to match Clinic interface
@@ -38,8 +78,8 @@ export const useSupabaseClinics = () => {
             dentist: clinic.dentist || '',
             rating: clinic.rating || 0,
             reviews: clinic.reviews || 0,
-            distance: clinic.distance || 0,
-            sentiment: clinic.sentiment || 0,
+            distance: Number(clinic.distance) || 0,
+            sentiment: Number(clinic.sentiment) || 0,
             mdaLicense: clinic.mda_license || '',
             credentials: clinic.credentials || '',
             township: clinic.township || '',
@@ -69,9 +109,9 @@ export const useSupabaseClinics = () => {
               crownLengthening: clinic.crown_lengthening || false,
               oralCancerScreening: clinic.oral_cancer_screening || false,
               alveoplasty: clinic.alveoplasty || false,
-            }
+            },
           };
-          
+
           // Debug log for first few records
           if (clinic.id <= 5) {
             console.log(`Transformed clinic ${clinic.id}:`, {
@@ -81,10 +121,10 @@ export const useSupabaseClinics = () => {
               reviews: transformed.reviews,
               websiteUrl: transformed.websiteUrl,
               googleReviewUrl: transformed.googleReviewUrl,
-              operatingHours: transformed.operatingHours
+              operatingHours: transformed.operatingHours,
             });
           }
-          
+
           return transformed;
         });
 
@@ -92,7 +132,9 @@ export const useSupabaseClinics = () => {
         setClinics(transformedClinics);
       } catch (err) {
         console.error('Error fetching clinics:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch clinics');
+        setError(
+          err instanceof Error ? err.message : 'Failed to fetch clinics'
+        );
       } finally {
         setLoading(false);
       }
