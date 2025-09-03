@@ -16,7 +16,7 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
     if (clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '') {
       // Convert blocked maps.google.com URLs to accessible google.com/search format
       let reviewUrl = clinic.googleReviewUrl;
-      if (reviewUrl.includes('maps.google.com/?cid=')) {
+      if (reviewUrl.includes('maps.google.com') && reviewUrl.includes('cid=')) {
         const cid = reviewUrl.split('cid=')[1];
         reviewUrl = `https://www.google.com/search?q=${cid}`;
       }
