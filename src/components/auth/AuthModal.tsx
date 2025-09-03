@@ -30,7 +30,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTab = 'lo
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'login' | 'register')} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="login">Sign In</TabsTrigger>
-            <TabsTrigger value="register">Create Account</TabsTrigger>
+            <TabsTrigger value="register">Sign Up</TabsTrigger>
           </TabsList>
           
           <TabsContent value="login">
