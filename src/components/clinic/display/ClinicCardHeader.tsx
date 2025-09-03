@@ -17,44 +17,28 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
 
   const handleRatingClick = () => {
     if (clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '') {
-      const originalUrl = clinic.googleReviewUrl;
-      
       try {
-        // Try multiple URL formats for maximum compatibility
-        const urlsToTry = [];
+        // Skip all maps URLs entirely - use only accessible search formats
+        const searchQuery = `"${clinic.name}" reviews ${clinic.address.split(',')[0]}`;
+        const targetUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
         
-        // Extract CID if it's a maps.google.com URL
-        if (originalUrl.includes('maps.google.com') && originalUrl.includes('cid=')) {
-          const cid = originalUrl.split('cid=')[1].split('&')[0];
-          
-          // Primary: Direct maps place URL
-          urlsToTry.push(`https://www.google.com/maps/place/?cid=${cid}`);
-          
-          // Secondary: Business search with clinic name
-          urlsToTry.push(`https://www.google.com/search?q="${encodeURIComponent(clinic.name)}"+reviews`);
-        } else {
-          // If not a maps URL, try the original URL first
-          urlsToTry.push(originalUrl);
-        }
-        
-        // Try the first URL
-        const targetUrl = urlsToTry[0];
         const newWindow = window.open(targetUrl, '_blank');
         
-        // Check if the window opened successfully
-        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-          // If popup was blocked, show instructions
-          toast({
-            title: "Pop-up blocked",
-            description: `Search Google for "${clinic.name} reviews" to see reviews`,
-            duration: 5000,
-          });
-        }
+        // Improved popup detection
+        setTimeout(() => {
+          if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+            toast({
+              title: "Link blocked or failed",
+              description: `Search Google for "${clinic.name} reviews" to see reviews`,
+              duration: 5000,
+            });
+          }
+        }, 100);
         
       } catch (error) {
         console.error('Error opening review URL:', error);
         toast({
-          title: "Link unavailable",
+          title: "Link unavailable", 
           description: `Search Google for "${clinic.name} reviews" to see reviews`,
           duration: 5000,
         });
