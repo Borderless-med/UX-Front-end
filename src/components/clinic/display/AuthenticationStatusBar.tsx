@@ -26,7 +26,7 @@ const AuthenticationStatusBar: React.FC<AuthenticationStatusBarProps> = ({ onSig
                   Enhanced Clinic Information Available
                 </h3>
                 <p className="text-sm text-blue-700">
-                  Sign in to view dentist names, MDA licenses, and detailed practitioner information
+                  Sign in to view dentist names, MDA licenses, detailed practitioner information, chat history, and past transactions
                 </p>
               </div>
             </div>

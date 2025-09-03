@@ -65,7 +65,7 @@ const ClinicCardActions = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{isAuthenticated ? 'View practitioner details' : 'Sign in to view dentist name and MDA license'}</p>
+              <p>{isAuthenticated ? 'View practitioner details' : 'Sign in to view dentist names, MDA licenses, chat history, and transactions'}</p>
             </TooltipContent>
           </Tooltip>
 

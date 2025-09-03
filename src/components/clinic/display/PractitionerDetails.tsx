@@ -22,21 +22,21 @@ const PractitionerDetails = ({
       ) : (
         <>
           <p className="text-xs text-blue-600 mb-1">
-            Dentist Name Available - 
+            Dentist: Dr. {clinic.dentist ? clinic.dentist.charAt(0) + '***' : 'S***'} - 
             <button 
               onClick={onSignInClick}
               className="ml-1 underline hover:text-blue-dark"
             >
-              Sign in to view
+              Sign in for full details
             </button>
           </p>
           <p className="text-xs text-blue-600">
-            MDA License Available - 
+            MDA License: {clinic.mdaLicense ? clinic.mdaLicense.substring(0, 2) + '***' : 'MD***'} - 
             <button 
               onClick={onSignInClick}
               className="ml-1 underline hover:text-blue-dark"
             >
-              Sign in to view
+              Sign in for full details
             </button>
           </p>
         </>
