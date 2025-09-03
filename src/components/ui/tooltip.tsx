@@ -7,7 +7,38 @@ const TooltipProvider = TooltipPrimitive.Provider
 
 const Tooltip = TooltipPrimitive.Root
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipTrigger = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>
+>(({ children, ...props }, ref) => {
+  console.log('🔍 TooltipTrigger rendered with props:', props);
+  
+  React.useEffect(() => {
+    console.log('🔍 TooltipTrigger mounted');
+  }, []);
+
+  return (
+    <TooltipPrimitive.Trigger
+      ref={ref}
+      onMouseEnter={(e) => {
+        console.log('🔍 TooltipTrigger onMouseEnter');
+        props.onMouseEnter?.(e);
+      }}
+      onMouseLeave={(e) => {
+        console.log('🔍 TooltipTrigger onMouseLeave');
+        props.onMouseLeave?.(e);
+      }}
+      onFocus={(e) => {
+        console.log('🔍 TooltipTrigger onFocus');
+        props.onFocus?.(e);
+      }}
+      {...props}
+    >
+      {children}
+    </TooltipPrimitive.Trigger>
+  );
+});
+TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName;
 
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,

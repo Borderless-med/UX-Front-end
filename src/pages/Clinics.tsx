@@ -4,6 +4,7 @@ import ClinicsSection from '@/components/ClinicsSection';
 import Footer from '@/components/Footer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
+import TestTooltip from '@/components/TestTooltip';
 
 const Clinics = () => {
   return (
@@ -11,6 +12,7 @@ const Clinics = () => {
       <Navigation />
       
       <div className="pt-28">
+        <TestTooltip />
         <ClinicsSection />
       </div>
 
