@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Globe, UserCheck, Calendar, Phone } from 'lucide-react';
 
 interface ClinicCardActionsProps {
