@@ -14,7 +14,13 @@ interface ClinicCardHeaderProps {
 const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
   const handleRatingClick = () => {
     if (clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '') {
-      window.open(clinic.googleReviewUrl, '_blank');
+      // Convert blocked maps.google.com URLs to accessible google.com/search format
+      let reviewUrl = clinic.googleReviewUrl;
+      if (reviewUrl.includes('maps.google.com/?cid=')) {
+        const cid = reviewUrl.split('cid=')[1];
+        reviewUrl = `https://www.google.com/search?q=${cid}`;
+      }
+      window.open(reviewUrl, '_blank');
     }
   };
 
