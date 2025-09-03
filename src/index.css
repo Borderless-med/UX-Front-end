@@ -5,82 +5,82 @@
 
 @layer base {
   :root {
-    --background: hsl(0, 0%, 100%);
-    --foreground: hsl(213, 31%, 15%);
+    --background: 0 0% 100%;
+    --foreground: 213 31% 15%;
 
-    --card: hsl(0, 0%, 100%);
-    --card-foreground: hsl(213, 31%, 15%);
+    --card: 0 0% 100%;
+    --card-foreground: 213 31% 15%;
 
-    --popover: hsl(0, 0%, 100%);
-    --popover-foreground: hsl(213, 31%, 15%);
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 31% 15%;
 
-    --primary: hsl(213, 94%, 68%);
-    --primary-foreground: hsl(0, 0%, 100%);
+    --primary: 213 94% 68%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: hsl(213, 27%, 84%);
-    --secondary-foreground: hsl(213, 31%, 15%);
+    --secondary: 213 27% 84%;
+    --secondary-foreground: 213 31% 15%;
 
-    --muted: hsl(213, 27%, 84%);
-    --muted-foreground: hsl(215, 20.2%, 45%);
+    --muted: 213 27% 84%;
+    --muted-foreground: 215 20.2% 45%;
 
-    --accent: hsl(213, 27%, 84%);
-    --accent-foreground: hsl(213, 31%, 10%);
+    --accent: 213 27% 84%;
+    --accent-foreground: 213 31% 10%;
 
-    --destructive: hsl(0, 84.2%, 60.2%);
-    --destructive-foreground: hsl(210, 40%, 98%);
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: hsl(213, 12%, 92%);
-    --input: hsl(213, 12%, 92%);
-    --ring: hsl(213, 94%, 68%);
+    --border: 213 12% 92%;
+    --input: 213 12% 92%;
+    --ring: 213 94% 68%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: hsl(0, 0%, 100%);
-    --sidebar-foreground: hsl(215, 25%, 27%);
-    --sidebar-primary: hsl(213, 94%, 68%);
-    --sidebar-primary-foreground: hsl(0, 0%, 100%);
-    --sidebar-accent: hsl(213, 16%, 92%);
-    --sidebar-accent-foreground: hsl(215, 25%, 27%);
-    --sidebar-border: hsl(213, 12%, 92%);
-    --sidebar-ring: hsl(213, 94%, 68%);
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 25% 27%;
+    --sidebar-primary: 213 94% 68%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 213 16% 92%;
+    --sidebar-accent-foreground: 215 25% 27%;
+    --sidebar-border: 213 12% 92%;
+    --sidebar-ring: 213 94% 68%;
   }
 
   .dark {
-    --background: hsl(0, 0%, 100%);
-    --foreground: hsl(213, 31%, 15%);
+    --background: 0 0% 100%;
+    --foreground: 213 31% 15%;
 
-    --card: hsl(0, 0%, 100%);
-    --card-foreground: hsl(213, 31%, 15%);
+    --card: 0 0% 100%;
+    --card-foreground: 213 31% 15%;
 
-    --popover: hsl(0, 0%, 100%);
-    --popover-foreground: hsl(213, 31%, 15%);
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 31% 15%;
 
-    --primary: hsl(213, 94%, 68%);
-    --primary-foreground: hsl(0, 0%, 100%);
+    --primary: 213 94% 68%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: hsl(213, 27%, 84%);
-    --secondary-foreground: hsl(213, 31%, 15%);
+    --secondary: 213 27% 84%;
+    --secondary-foreground: 213 31% 15%;
 
-    --muted: hsl(213, 27%, 84%);
-    --muted-foreground: hsl(215, 20.2%, 45%);
+    --muted: 213 27% 84%;
+    --muted-foreground: 215 20.2% 45%;
 
-    --accent: hsl(213, 27%, 84%);
-    --accent-foreground: hsl(213, 31%, 10%);
+    --accent: 213 27% 84%;
+    --accent-foreground: 213 31% 10%;
 
-    --destructive: hsl(0, 62.8%, 30.6%);
-    --destructive-foreground: hsl(210, 40%, 98%);
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: hsl(213, 12%, 92%);
-    --input: hsl(213, 12%, 92%);
-    --ring: hsl(213, 94%, 68%);
-    --sidebar-background: hsl(0, 0%, 100%);
-    --sidebar-foreground: hsl(215, 25%, 27%);
-    --sidebar-primary: hsl(213, 94%, 68%);
-    --sidebar-primary-foreground: hsl(0, 0%, 100%);
-    --sidebar-accent: hsl(213, 16%, 92%);
-    --sidebar-accent-foreground: hsl(215, 25%, 27%);
-    --sidebar-border: hsl(213, 12%, 92%);
-    --sidebar-ring: hsl(213, 94%, 68%);
+    --border: 213 12% 92%;
+    --input: 213 12% 92%;
+    --ring: 213 94% 68%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 25% 27%;
+    --sidebar-primary: 213 94% 68%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 213 16% 92%;
+    --sidebar-accent-foreground: 215 25% 27%;
+    --sidebar-border: 213 12% 92%;
+    --sidebar-ring: 213 94% 68%;
   }
 }
 
@@ -133,5 +133,4 @@
   .animate-pulse-once {
     animation: pulse-once 0.6s ease-out 1;
   }
-
 }
