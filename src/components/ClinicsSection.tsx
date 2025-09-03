@@ -9,7 +9,6 @@ import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import AuthModal from '@/components/auth/AuthModal';
 import DisclaimerSection from '@/components/clinic/display/DisclaimerSection';
 import AuthenticationStatusBar from '@/components/clinic/display/AuthenticationStatusBar';
-import PractitionerDetailsModal from '@/components/clinic/display/PractitionerDetailsModal';
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
@@ -22,10 +21,6 @@ import MobileFilterBar from './clinic/mobile/MobileFilterBar';
 const ClinicsSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [practitionerDetailsModal, setPractitionerDetailsModal] = useState<{
-    isOpen: boolean;
-    clinic: any | null;
-  }>({ isOpen: false, clinic: null });
   const navigate = useNavigate();
   const { isAuthenticated, userProfile, logDataAccess } = useAuth();
   const { clinics, loading, error } = useSupabaseClinics();
@@ -88,7 +83,6 @@ const ClinicsSection = () => {
   const handleViewPractitionerDetails = async (clinic: any) => {
     if (isAuthenticated) {
       await logDataAccess('practitioner_details', clinic.id.toString(), clinic.dentist);
-      setPractitionerDetailsModal({ isOpen: true, clinic });
     }
   };
 
@@ -255,12 +249,6 @@ const ClinicsSection = () => {
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
         defaultTab="login"
-      />
-
-      <PractitionerDetailsModal
-        isOpen={practitionerDetailsModal.isOpen}
-        onClose={() => setPractitionerDetailsModal({ isOpen: false, clinic: null })}
-        clinic={practitionerDetailsModal.clinic}
       />
     </div>
   );
