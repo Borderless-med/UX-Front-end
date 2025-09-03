@@ -47,7 +47,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
       <CardContent>
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-dark">
-            Sign in to view detailed clinic information including dentist names and credentials.
+            Sign in to access exclusive benefits: view detailed clinic information including dentist names and credentials, plus access your personalized chat history and activity tracking across the platform.
           </p>
         </div>
 
