@@ -65,7 +65,7 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
         <div 
           className="bg-gradient-to-r from-blue-light to-blue-150 border border-blue-light rounded-lg p-1 sm:p-1.5 cursor-pointer hover:from-blue-150 hover:to-blue-secondary/20 hover:border-blue-secondary/30 transition-all duration-200 shadow-sm flex-shrink-0 min-w-[5.5rem] max-w-[6rem]"
           onClick={handleRatingClick}
-          title="Click to view Google Reviews"
+          title="Click to copy Google search terms for reviews"
         >
           <div className="text-xs font-medium mb-1 text-blue-primary truncate">
             Google Review
