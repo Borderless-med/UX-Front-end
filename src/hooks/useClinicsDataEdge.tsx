@@ -21,56 +21,69 @@ export const useClinicsDataEdge = (): UseClinicsDataEdgeReturn => {
         setLoading(true);
         setError(null);
         
-        console.log('🔧 Using edge function strategy v2.1 at:', new Date().toISOString());
+        console.log('🔧 Starting edge function call at:', new Date().toISOString());
         
         // Set up timeout for edge function call
         const timeoutController = new AbortController();
         const timeoutId = setTimeout(() => {
+          console.log('⏰ Edge function timeout after 15s');
           timeoutController.abort();
         }, 15000);
 
+        console.log('📡 Calling supabase.functions.invoke with get-clinics-data...');
+        
         const { data, error: functionError } = await supabase.functions.invoke('get-clinics-data', {
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
+          body: {}
         });
 
         clearTimeout(timeoutId);
 
-        // DEBUG: Log the actual response structure
-        console.log('🔍 Raw edge function response:', {
-          data,
-          functionError,
+        console.log('🔍 COMPLETE Edge function response:', {
+          data: data,
+          functionError: functionError,
           dataType: typeof data,
-          dataKeys: data ? Object.keys(data) : 'null/undefined',
-          hasClinics: data?.clinics ? 'yes' : 'no',
-          clinicsType: typeof data?.clinics,
-          clinicsLength: Array.isArray(data?.clinics) ? data.clinics.length : 'not array'
+          dataIsNull: data === null,
+          dataIsUndefined: data === undefined,
+          dataStringified: JSON.stringify(data),
+          functionErrorStringified: JSON.stringify(functionError)
         });
 
         if (functionError) {
-          console.error('Edge function error:', functionError);
-          throw new Error(`Edge function failed: ${functionError.message}`);
+          console.error('❌ Edge function error detected:', functionError);
+          throw new Error(`Edge function failed: ${JSON.stringify(functionError)}`);
         }
 
         if (!data) {
+          console.error('❌ No data received from edge function');
           throw new Error('No data received from edge function');
         }
 
-        if (!data.clinics) {
-          console.error('Missing clinics property in response:', data);
-          throw new Error('Missing clinics property in edge function response');
+        // Handle response based on actual structure
+        let clinicsArray;
+        if (data.clinics) {
+          clinicsArray = data.clinics;
+        } else if (Array.isArray(data)) {
+          clinicsArray = data;
+        } else {
+          console.error('❌ Unexpected response structure:', data);
+          throw new Error(`Unexpected response structure: ${JSON.stringify(data)}`);
         }
 
-        if (!Array.isArray(data.clinics)) {
-          console.error('Clinics is not an array:', data.clinics);
+        if (!Array.isArray(clinicsArray)) {
+          console.error('❌ Clinics is not an array:', clinicsArray);
           throw new Error('Clinics data is not an array');
         }
 
-        console.log(`✅ Edge function returned ${data.clinics.length} clinics`);
+        console.log(`✅ Edge function returned ${clinicsArray.length} clinics`);
+        
+        // Store the clinics array for transformation
+        const rawClinics = clinicsArray;
 
         // Transform the data to match Clinic interface
-        const transformedClinics: Clinic[] = data.clinics.map((clinic: any) => ({
+        const transformedClinics: Clinic[] = rawClinics.map((clinic: any) => ({
           id: clinic.id,
           name: clinic.name || 'Unknown Clinic',
           address: clinic.address || '',
