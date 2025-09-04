@@ -3,11 +3,15 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Clinic } from '@/types/clinic';
 
+// Centralized anon key
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA';
+
 export const useSupabaseClinics = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const fetchClinics = async () => {
@@ -17,132 +21,178 @@ export const useSupabaseClinics = () => {
       try {
         setLoading(true);
         
+        // Create abort controller for canceling losing requests
+        abortControllerRef.current = new AbortController();
+        const { signal } = abortControllerRef.current;
+        
         // Environment detection
         const isInIframe = window.self !== window.top;
         const isLovableDev = window.location.hostname.includes('sandbox.lovable.dev');
         const isDev = isInIframe || isLovableDev;
         
+        // Check for debug fetch strategy override
+        const urlParams = new URLSearchParams(window.location.search);
+        const fetchStrategy = urlParams.get('fetchStrategy');
+        
         console.log('🔍 Environment diagnostics:', {
           isInIframe,
           isLovableDev,
           isDev,
+          fetchStrategy,
           hostname: window.location.hostname,
           userAgent: navigator.userAgent.substring(0, 100)
         });
         
-        console.log('📡 Starting Supabase fetch at:', new Date().toISOString());
-        console.log('🔗 REST URL would be: https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*');
+        console.log('📡 Starting optimized clinic fetch at:', new Date().toISOString());
         
-        // Set up hard timeout for dev environments
-        const timeoutMs = isDev ? 12000 : 8000;
+        // Set up hard timeout
+        const timeoutMs = isDev ? 10000 : 6000;
         timeoutRef.current = setTimeout(() => {
-          console.error('⚠️ HARD TIMEOUT after', timeoutMs + 'ms - request never resolved');
-          setError(`Request timeout after ${timeoutMs/1000}s in ${isDev ? 'dev' : 'prod'} environment`);
+          console.error('⚠️ HARD TIMEOUT after', timeoutMs + 'ms');
+          if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+          }
+          setError(`Request timeout after ${timeoutMs/1000}s`);
           setLoading(false);
         }, timeoutMs);
-        
-        // Stall warning for dev
-        if (isDev) {
-          setTimeout(() => {
-            if (!requestStarted) {
-              console.warn('⚠️ Request appears stalled - no network activity detected after 5s');
-            }
-          }, 5000);
-        }
         
         // Mark request as started
         requestStarted = true;
         const requestTime = performance.now();
-        console.log('📤 Supabase SDK call initiated at:', requestTime - startTime + 'ms');
         
         let data, error;
         
-        // Race multiple strategies to bypass preview networking issues
-        console.log('🏁 Racing multiple fetch strategies...');
-        
-        const createTimeoutPromise = (ms: number, name: string) => 
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error(`${name} timeout after ${ms}ms`)), ms)
-          );
-        
-        const strategies = [
-          // Strategy 1: Direct Supabase SDK query
-          Promise.race([
-            (async () => {
-              console.log('📡 Strategy 1: Direct Supabase query...');
-              const result = await supabase
-                .from('clinics_data')
-                .select('*')
-                .order('distance', { ascending: true });
-              console.log('✅ Strategy 1: Direct query completed');
-              return { source: 'direct', data: result.data, error: result.error };
-            })(),
-            createTimeoutPromise(4000, 'Direct query')
-          ]),
+        // Force specific strategy if debug param provided
+        if (fetchStrategy) {
+          console.log(`🎯 Debug mode: forcing ${fetchStrategy} strategy`);
           
-          // Strategy 2: Edge function
-          Promise.race([
-            (async () => {
-              console.log('🔧 Strategy 2: Edge function...');
-              const result = await supabase.functions.invoke('get-clinics-data');
-              console.log('✅ Strategy 2: Edge function completed');
-              return { 
-                source: 'edge-function', 
-                data: result.data?.data, 
-                error: result.error || result.data?.error 
-              };
-            })(),
-            createTimeoutPromise(4000, 'Edge function')
-          ]),
+          if (fetchStrategy === 'direct') {
+            const result = await supabase
+              .from('clinics_data')
+              .select('*, !embedding, !embedding_arr')
+              .order('distance', { ascending: true });
+            data = result.data;
+            error = result.error;
+          } else if (fetchStrategy === 'edge') {
+            const result = await supabase.functions.invoke('get-clinics-data');
+            data = result.data?.data;
+            error = result.error || result.data?.error;
+          } else if (fetchStrategy === 'rest') {
+            const response = await fetch(
+              `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*&select=!embedding,!embedding_arr`,
+              {
+                headers: {
+                  'apikey': SUPABASE_ANON_KEY,
+                  'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                signal
+              }
+            );
+            data = await response.json();
+          }
+        } else {
+          // Environment-aware strategy preferences
+          console.log('🏁 Racing optimized fetch strategies...');
           
-          // Strategy 3: Direct REST fetch (last resort)
-          Promise.race([
-            (async () => {
-              console.log('🌐 Strategy 3: Direct REST fetch...');
-              const response = await fetch(
-                `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*`,
-                {
-                  headers: {
-                    'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA',
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA'
-                  }
-                }
-              );
-              const restData = await response.json();
-              console.log('✅ Strategy 3: REST fetch completed');
-              return { source: 'rest', data: restData, error: null };
-            })(),
-            createTimeoutPromise(4000, 'REST fetch')
-          ])
-        ];
-        
-        try {
-          // Manual Promise.any implementation (first successful result wins)
-          const result = await new Promise((resolve, reject) => {
-            let rejectedCount = 0;
-            const errors: any[] = [];
+          const createTimeoutPromise = (ms: number, name: string) => 
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error(`${name} timeout after ${ms}ms`)), ms)
+            );
+          
+          // Production: prefer edge function, Dev: prefer direct query
+          const strategiesOrder = isDev ? ['direct', 'edge', 'rest'] : ['edge', 'direct', 'rest'];
+          
+          const strategies = strategiesOrder.map((strategyName, index) => {
+            const timeout = 3000 + (index * 500); // Stagger timeouts slightly
             
-            strategies.forEach((strategy, index) => {
-              strategy
-                .then(result => resolve(result))
-                .catch(err => {
-                  errors[index] = err;
-                  rejectedCount++;
-                  if (rejectedCount === strategies.length) {
-                    reject(new Error(`All strategies failed: ${errors.map(e => e.message).join(', ')}`));
-                  }
-                });
-            });
+            if (strategyName === 'direct') {
+              return Promise.race([
+                (async () => {
+                  console.log('📡 Strategy: Direct Supabase (optimized)...');
+                  const result = await supabase
+                    .from('clinics_data')
+                    .select('*, !embedding, !embedding_arr') // Exclude large embedding fields
+                    .order('distance', { ascending: true });
+                  console.log('✅ Direct query completed');
+                  return { source: 'direct', data: result.data, error: result.error };
+                })(),
+                createTimeoutPromise(timeout, 'Direct query')
+              ]);
+            } else if (strategyName === 'edge') {
+              return Promise.race([
+                (async () => {
+                  console.log('🔧 Strategy: Edge function...');
+                  const result = await supabase.functions.invoke('get-clinics-data');
+                  console.log('✅ Edge function completed');
+                  return { 
+                    source: 'edge-function', 
+                    data: result.data?.data, 
+                    error: result.error || result.data?.error 
+                  };
+                })(),
+                createTimeoutPromise(timeout, 'Edge function')
+              ]);
+            } else {
+              return Promise.race([
+                (async () => {
+                  console.log('🌐 Strategy: Direct REST (fallback)...');
+                  const response = await fetch(
+                    `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*&select=!embedding,!embedding_arr`,
+                    {
+                      headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                      },
+                      signal
+                    }
+                  );
+                  const restData = await response.json();
+                  console.log('✅ REST fetch completed');
+                  return { source: 'rest', data: restData, error: null };
+                })(),
+                createTimeoutPromise(timeout, 'REST fetch')
+              ]);
+            }
           });
-          
-          console.log(`🎯 Winner: ${(result as any).source} strategy succeeded`);
-          
-          data = (result as any).data;
-          error = (result as any).error;
-          
-        } catch (allErrors) {
-          console.error('❌ All strategies failed:', allErrors);
-          throw new Error('All fetch strategies failed - unable to load clinic data');
+        
+          try {
+            // First successful result wins, others get cancelled
+            const result = await new Promise((resolve, reject) => {
+              let resolved = false;
+              let rejectedCount = 0;
+              const errors: any[] = [];
+              
+              strategies.forEach((strategy, index) => {
+                strategy
+                  .then(result => {
+                    if (!resolved) {
+                      resolved = true;
+                      // Cancel remaining requests
+                      if (abortControllerRef.current) {
+                        abortControllerRef.current.abort();
+                      }
+                      resolve(result);
+                    }
+                  })
+                  .catch(err => {
+                    errors[index] = err;
+                    rejectedCount++;
+                    if (rejectedCount === strategies.length && !resolved) {
+                      reject(new Error(`All strategies failed: ${errors.map(e => e.message).join(', ')}`));
+                    }
+                  });
+              });
+            });
+            
+            console.log(`🎯 Winner: ${(result as any).source} strategy succeeded`);
+            
+            data = (result as any).data;
+            error = (result as any).error;
+            
+          } catch (allErrors) {
+            console.error('❌ All strategies failed:', allErrors);
+            throw new Error('All fetch strategies failed - unable to load clinic data');
+          }
         }
           
         const responseTime = performance.now();
@@ -264,10 +314,13 @@ export const useSupabaseClinics = () => {
 
     fetchClinics();
     
-    // Cleanup timeout on unmount
+    // Cleanup on unmount
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
     };
   }, []);
