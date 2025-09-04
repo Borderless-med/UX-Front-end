@@ -12,7 +12,7 @@ import AuthenticationStatusBar from '@/components/clinic/display/AuthenticationS
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
-import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
+import { useClinicsDataEdge } from '@/hooks/useClinicsDataEdge';
 import ClinicGrid from './clinic/display/ClinicGrid';
 import ClinicSidebar from './clinic/sidebar/ClinicSidebar';
 import MobileSidebarToggle from './clinic/sidebar/MobileSidebarToggle';
@@ -23,7 +23,7 @@ const ClinicsSection = () => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, userProfile, logDataAccess } = useAuth();
-  const { clinics, loading, error } = useSupabaseClinics();
+  const { clinics, loading, error } = useClinicsDataEdge();
   const isMobile = useIsMobile();
 
   // Debug: Log the clinic data source
