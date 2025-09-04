@@ -45,8 +45,8 @@ export const useSupabaseClinics = () => {
         
         console.log('📡 Starting optimized clinic fetch at:', new Date().toISOString());
         
-        // Set up hard timeout
-        const timeoutMs = isDev ? 10000 : 6000;
+        // Set up hard timeout - unified 10s for both environments for production reliability
+        const timeoutMs = 10000;
         timeoutRef.current = setTimeout(() => {
           console.error('⚠️ HARD TIMEOUT after', timeoutMs + 'ms');
           if (abortControllerRef.current) {
@@ -99,20 +99,26 @@ export const useSupabaseClinics = () => {
               setTimeout(() => reject(new Error(`${name} timeout after ${ms}ms`)), ms)
             );
           
-          // Production: prefer edge function, Dev: prefer direct query
-          const strategiesOrder = isDev ? ['direct', 'edge', 'rest'] : ['edge', 'direct', 'rest'];
+          // Production: prefer edge function first, Dev: prefer direct query
+          const strategiesOrder = isDev ? ['direct', 'edge'] : ['edge', 'direct'];
+          
+          // Create individual abort controllers for each strategy
+          const strategyControllers = strategiesOrder.map(() => new AbortController());
           
           const strategies = strategiesOrder.map((strategyName, index) => {
-            const timeout = 3000 + (index * 500); // Stagger timeouts slightly
+            const timeout = 4000 + (index * 1000); // More generous timeouts: 4s, 5s
+            const strategySignal = strategyControllers[index].signal;
             
             if (strategyName === 'direct') {
               return Promise.race([
                 (async () => {
+                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
                   console.log('📡 Strategy: Direct Supabase (optimized)...');
                   const result = await supabase
                     .from('clinics_data')
-                    .select('*, !embedding, !embedding_arr') // Exclude large embedding fields
+                    .select('*, !embedding, !embedding_arr')
                     .order('distance', { ascending: true });
+                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
                   console.log('✅ Direct query completed');
                   return { source: 'direct', data: result.data, error: result.error };
                 })(),
@@ -121,36 +127,23 @@ export const useSupabaseClinics = () => {
             } else if (strategyName === 'edge') {
               return Promise.race([
                 (async () => {
+                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
                   console.log('🔧 Strategy: Edge function...');
                   const result = await supabase.functions.invoke('get-clinics-data');
+                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
                   console.log('✅ Edge function completed');
+                  // Better data extraction for edge function
+                  let edgeData = result.data;
+                  if (edgeData && typeof edgeData === 'object' && edgeData.data) {
+                    edgeData = edgeData.data;
+                  }
                   return { 
                     source: 'edge-function', 
-                    data: result.data?.data, 
-                    error: result.error || result.data?.error 
+                    data: edgeData, 
+                    error: result.error || (result.data && result.data.error) 
                   };
                 })(),
                 createTimeoutPromise(timeout, 'Edge function')
-              ]);
-            } else {
-              return Promise.race([
-                (async () => {
-                  console.log('🌐 Strategy: Direct REST (fallback)...');
-                  const response = await fetch(
-                    `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*&select=!embedding,!embedding_arr`,
-                    {
-                      headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                      },
-                      signal
-                    }
-                  );
-                  const restData = await response.json();
-                  console.log('✅ REST fetch completed');
-                  return { source: 'rest', data: restData, error: null };
-                })(),
-                createTimeoutPromise(timeout, 'REST fetch')
               ]);
             }
           });
@@ -167,31 +160,66 @@ export const useSupabaseClinics = () => {
                   .then(result => {
                     if (!resolved) {
                       resolved = true;
-                      // Cancel remaining requests
-                      if (abortControllerRef.current) {
-                        abortControllerRef.current.abort();
-                      }
+                      console.log(`🎯 Winner: ${(result as any).source} strategy succeeded`);
+                      
+                      // Cancel all other strategy controllers
+                      strategyControllers.forEach((controller, ctrlIndex) => {
+                        if (ctrlIndex !== index && !controller.signal.aborted) {
+                          controller.abort();
+                        }
+                      });
+                      
                       resolve(result);
                     }
                   })
                   .catch(err => {
+                    // Don't log cancellation errors as actual errors
+                    if (!err.message.includes('cancelled') && !err.message.includes('aborted')) {
+                      console.error(`❌ Strategy ${strategiesOrder[index]} failed:`, err.message);
+                    }
+                    
                     errors[index] = err;
                     rejectedCount++;
+                    
                     if (rejectedCount === strategies.length && !resolved) {
-                      reject(new Error(`All strategies failed: ${errors.map(e => e.message).join(', ')}`));
+                      const realErrors = errors.filter(e => 
+                        !e.message.includes('cancelled') && !e.message.includes('aborted')
+                      );
+                      reject(new Error(`All strategies failed: ${realErrors.map(e => e.message).join(', ')}`));
                     }
                   });
               });
             });
             
-            console.log(`🎯 Winner: ${(result as any).source} strategy succeeded`);
-            
             data = (result as any).data;
             error = (result as any).error;
             
           } catch (allErrors) {
-            console.error('❌ All strategies failed:', allErrors);
-            throw new Error('All fetch strategies failed - unable to load clinic data');
+            console.error('❌ All racing strategies failed, trying fallback...');
+            
+            // Fallback: try edge function alone with longer timeout
+            try {
+              console.log('🔄 Fallback: Single edge function call...');
+              const fallbackResult = await Promise.race([
+                supabase.functions.invoke('get-clinics-data'),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('Fallback timeout')), 8000)
+                )
+              ]);
+              
+              let fallbackData = (fallbackResult as any).data;
+              if (fallbackData && typeof fallbackData === 'object' && fallbackData.data) {
+                fallbackData = fallbackData.data;
+              }
+              
+              data = fallbackData;
+              error = (fallbackResult as any).error;
+              console.log('✅ Fallback strategy succeeded');
+              
+            } catch (fallbackError) {
+              console.error('❌ Fallback also failed:', fallbackError);
+              throw new Error('All strategies including fallback failed - unable to load clinic data');
+            }
           }
         }
           
