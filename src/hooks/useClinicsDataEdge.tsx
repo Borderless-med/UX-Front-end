@@ -21,9 +21,31 @@ export const useClinicsDataEdge = (): UseClinicsDataEdgeReturn => {
         setLoading(true);
         setError(null);
         
-        console.log('🔧 Simple edge function call at:', new Date().toISOString());
+        console.log('🚀 STARTING FUNCTION CALL at:', new Date().toISOString());
+        console.log('🔧 Supabase client initialized:', {
+          hasClient: !!supabase,
+          hasAuth: !!supabase.auth,
+          hasFunctions: !!supabase.functions
+        });
         
-        const { data, error: functionError } = await supabase.functions.invoke('get-clinics-data');
+        console.log('📞 About to call supabase.functions.invoke("get-clinics-data")...');
+        
+        let data, functionError;
+        try {
+          console.log('⏰ Function call starting...');
+          const result = await supabase.functions.invoke('get-clinics-data');
+          data = result.data;
+          functionError = result.error;
+          console.log('✅ Function call completed successfully');
+        } catch (invokeError) {
+          console.error('❌ FUNCTION INVOKE ERROR:', invokeError);
+          console.error('❌ Error details:', {
+            name: invokeError.name,
+            message: invokeError.message,
+            stack: invokeError.stack
+          });
+          throw new Error(`Function invoke failed: ${invokeError.message}`);
+        }
 
         console.log('🔍 EXACT RAW RESPONSE:', JSON.stringify({ data, functionError }, null, 2));
         console.log('📊 Response details:', { 
