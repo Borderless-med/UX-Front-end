@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Clinic } from '@/types/clinic';
 
@@ -7,20 +7,76 @@ export const useSupabaseClinics = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const fetchClinics = async () => {
+      const startTime = performance.now();
+      let requestStarted = false;
+      
       try {
         setLoading(true);
-        console.log('Fetching clinics from Supabase database...');
+        
+        // Environment detection
+        const isInIframe = window.self !== window.top;
+        const isLovableDev = window.location.hostname.includes('sandbox.lovable.dev');
+        const isDev = isInIframe || isLovableDev;
+        
+        console.log('🔍 Environment diagnostics:', {
+          isInIframe,
+          isLovableDev,
+          isDev,
+          hostname: window.location.hostname,
+          userAgent: navigator.userAgent.substring(0, 100)
+        });
+        
+        console.log('📡 Starting Supabase fetch at:', new Date().toISOString());
+        console.log('🔗 REST URL would be: https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*');
+        
+        // Set up hard timeout for dev environments
+        const timeoutMs = isDev ? 12000 : 8000;
+        timeoutRef.current = setTimeout(() => {
+          console.error('⚠️ HARD TIMEOUT after', timeoutMs + 'ms - request never resolved');
+          setError(`Request timeout after ${timeoutMs/1000}s in ${isDev ? 'dev' : 'prod'} environment`);
+          setLoading(false);
+        }, timeoutMs);
+        
+        // Stall warning for dev
+        if (isDev) {
+          setTimeout(() => {
+            if (!requestStarted) {
+              console.warn('⚠️ Request appears stalled - no network activity detected after 5s');
+            }
+          }, 5000);
+        }
+        
+        // Mark request as started
+        requestStarted = true;
+        const requestTime = performance.now();
+        console.log('📤 Supabase SDK call initiated at:', requestTime - startTime + 'ms');
         
         const { data, error } = await supabase
           .from('clinics_data')
           .select('*')
           .order('distance', { ascending: true });
+          
+        const responseTime = performance.now();
+        console.log('📥 Supabase response received at:', responseTime - startTime + 'ms');
+        console.log('⏱️ Network round-trip:', responseTime - requestTime + 'ms');
 
+        // Clear timeout on successful response
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        
         if (error) {
-          console.error('Supabase query error:', error);
+          console.error('❌ Supabase query error:', error);
+          console.error('🔍 Error details:', {
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+            code: error.code
+          });
           throw error;
         }
 
@@ -88,10 +144,33 @@ export const useSupabaseClinics = () => {
           return transformed;
         });
 
-        console.log('Successfully transformed', transformedClinics.length, 'clinics');
+        const totalTime = performance.now() - startTime;
+        console.log('✅ Successfully transformed', transformedClinics.length, 'clinics in', totalTime.toFixed(1) + 'ms');
         setClinics(transformedClinics);
       } catch (err) {
-        console.error('Error fetching clinics:', err);
+        // Clear timeout on error
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        
+        console.error('❌ Error fetching clinics:', err);
+        
+        // Enhanced error diagnostics
+        if (err instanceof Error) {
+          console.error('🔍 Error analysis:', {
+            name: err.name,
+            message: err.message,
+            stack: err.stack?.substring(0, 500),
+            requestStarted,
+            totalTime: performance.now() - startTime
+          });
+          
+          // Check for common network issues
+          if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+            console.error('🌐 Network error detected - possible CORS/CSP issue in dev environment');
+          }
+        }
+        
         setError(err instanceof Error ? err.message : 'Failed to fetch clinics');
       } finally {
         setLoading(false);
@@ -99,6 +178,13 @@ export const useSupabaseClinics = () => {
     };
 
     fetchClinics();
+    
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, []);
 
   return { clinics, loading, error };
