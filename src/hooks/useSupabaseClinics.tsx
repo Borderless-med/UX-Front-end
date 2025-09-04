@@ -87,18 +87,6 @@ export const useSupabaseClinics = () => {
             const result = await supabase.functions.invoke('get-clinics-data');
             data = result.data?.data;
             error = result.error || result.data?.error;
-          } else if (fetchStrategy === 'rest') {
-            const response = await fetch(
-              `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=${SELECT_COLUMNS}`,
-              {
-                headers: {
-                  'apikey': SUPABASE_ANON_KEY,
-                  'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                signal
-              }
-            );
-            data = await response.json();
           }
         } else {
           // Environment-aware strategy preferences
