@@ -30,7 +30,7 @@ export const useSupabaseClinics = () => {
         setLoading(true);
         setError(null);
         
-        console.log('📡 Starting simplified clinic fetch at:', new Date().toISOString());
+        console.log('📡 Starting simplified clinic fetch (v2) at:', new Date().toISOString());
         
         // Set up 15-second timeout for reliable loading
         const timeoutMs = 15000;
