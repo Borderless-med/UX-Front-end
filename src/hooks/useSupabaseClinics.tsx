@@ -21,229 +21,49 @@ export const useSupabaseClinics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const fetchClinics = async () => {
       const startTime = performance.now();
-      let requestStarted = false;
       
       try {
         setLoading(true);
+        setError(null);
         
-        // Create abort controller for canceling losing requests
-        abortControllerRef.current = new AbortController();
-        const { signal } = abortControllerRef.current;
+        console.log('📡 Starting simplified clinic fetch at:', new Date().toISOString());
         
-        // Environment detection
-        const isInIframe = window.self !== window.top;
-        const isLovableDev = window.location.hostname.includes('sandbox.lovable.dev');
-        const isDev = isInIframe || isLovableDev;
-        
-        // Check for debug fetch strategy override
-        const urlParams = new URLSearchParams(window.location.search);
-        const fetchStrategy = urlParams.get('fetchStrategy');
-        
-        console.log('🔍 Environment diagnostics:', {
-          isInIframe,
-          isLovableDev,
-          isDev,
-          fetchStrategy,
-          hostname: window.location.hostname,
-          userAgent: navigator.userAgent.substring(0, 100)
-        });
-        
-        console.log('📡 Starting optimized clinic fetch at:', new Date().toISOString());
-        
-        // Set up hard timeout - unified 10s for both environments for production reliability
-        const timeoutMs = 10000;
+        // Set up 15-second timeout for reliable loading
+        const timeoutMs = 15000;
         timeoutRef.current = setTimeout(() => {
-          console.error('⚠️ HARD TIMEOUT after', timeoutMs + 'ms');
-          if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-          }
+          console.error('⚠️ Request timeout after', timeoutMs + 'ms');
           setError(`Request timeout after ${timeoutMs/1000}s`);
           setLoading(false);
         }, timeoutMs);
         
-        // Mark request as started
-        requestStarted = true;
-        const requestTime = performance.now();
+        // Use edge function with generous timeout
+        console.log('🔧 Using edge function strategy...');
+        const result = await supabase.functions.invoke('get-clinics-data');
         
-        let data, error;
-        
-        // Force specific strategy if debug param provided
-        if (fetchStrategy) {
-          console.log(`🎯 Debug mode: forcing ${fetchStrategy} strategy`);
-          
-          if (fetchStrategy === 'direct') {
-            const result = await supabase
-              .from('clinics_data')
-              .select(SELECT_COLUMNS)
-              .order('distance', { ascending: true });
-            data = result.data;
-            error = result.error;
-          } else if (fetchStrategy === 'edge') {
-            const result = await supabase.functions.invoke('get-clinics-data');
-            data = result.data?.data;
-            error = result.error || result.data?.error;
-          }
-        } else {
-          // Environment-aware strategy preferences
-          console.log('🏁 Racing optimized fetch strategies...');
-          
-          const createTimeoutPromise = (ms: number, name: string) => 
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error(`${name} timeout after ${ms}ms`)), ms)
-            );
-          
-          // Production: prefer edge function first, Dev: prefer direct query
-          const strategiesOrder = isDev ? ['direct', 'edge'] : ['edge', 'direct'];
-          
-          // Create individual abort controllers for each strategy
-          const strategyControllers = strategiesOrder.map(() => new AbortController());
-          
-          const strategies = strategiesOrder.map((strategyName, index) => {
-            const timeout = 4000 + (index * 1000); // More generous timeouts: 4s, 5s
-            const strategySignal = strategyControllers[index].signal;
-            
-            if (strategyName === 'direct') {
-              return Promise.race([
-                (async () => {
-                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
-                  console.log('📡 Strategy: Direct Supabase (optimized)...');
-                  const result = await supabase
-                    .from('clinics_data')
-                    .select(SELECT_COLUMNS)
-                    .order('distance', { ascending: true });
-                  if (result.error) throw result.error;
-                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
-                  console.log('✅ Direct query completed');
-                  return { source: 'direct', data: result.data, error: null };
-                })(),
-                createTimeoutPromise(timeout, 'Direct query')
-              ]);
-            } else if (strategyName === 'edge') {
-              return Promise.race([
-                (async () => {
-                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
-                  console.log('🔧 Strategy: Edge function...');
-                  const result = await supabase.functions.invoke('get-clinics-data');
-                  if ((result as any).error) throw (result as any).error;
-                  if (strategySignal.aborted) throw new Error('Strategy cancelled');
-                  console.log('✅ Edge function completed');
-                  let edgeData = (result as any).data;
-                  if (edgeData && typeof edgeData === 'object' && edgeData.data) {
-                    edgeData = edgeData.data;
-                  }
-                  if (!edgeData || (Array.isArray(edgeData) && edgeData.length === 0)) {
-                    throw new Error('Edge function returned no data');
-                  }
-                  return { 
-                    source: 'edge-function', 
-                    data: edgeData, 
-                    error: null 
-                  };
-                })(),
-                createTimeoutPromise(timeout, 'Edge function')
-              ]);
-            }
-          });
-        
-          try {
-            // First successful result wins, others get cancelled
-            const result = await new Promise((resolve, reject) => {
-              let resolved = false;
-              let rejectedCount = 0;
-              const errors: any[] = [];
-              
-              strategies.forEach((strategy, index) => {
-                strategy
-                  .then(result => {
-                    if (!resolved) {
-                      resolved = true;
-                      console.log(`🎯 Winner: ${(result as any).source} strategy succeeded`);
-                      
-                      // Cancel all other strategy controllers
-                      strategyControllers.forEach((controller, ctrlIndex) => {
-                        if (ctrlIndex !== index && !controller.signal.aborted) {
-                          controller.abort();
-                        }
-                      });
-                      
-                      resolve(result);
-                    }
-                  })
-                  .catch(err => {
-                    // Don't log cancellation errors as actual errors
-                    if (!err.message.includes('cancelled') && !err.message.includes('aborted')) {
-                      console.error(`❌ Strategy ${strategiesOrder[index]} failed:`, err.message);
-                    }
-                    
-                    errors[index] = err;
-                    rejectedCount++;
-                    
-                    if (rejectedCount === strategies.length && !resolved) {
-                      const realErrors = errors.filter(e => 
-                        !e.message.includes('cancelled') && !e.message.includes('aborted')
-                      );
-                      reject(new Error(`All strategies failed: ${realErrors.map(e => e.message).join(', ')}`));
-                    }
-                  });
-              });
-            });
-            
-            data = (result as any).data;
-            error = (result as any).error;
-            
-          } catch (allErrors) {
-            console.error('❌ All racing strategies failed, trying fallback...');
-            
-            // Fallback: try edge function alone with longer timeout
-            try {
-              console.log('🔄 Fallback: Single edge function call...');
-              const fallbackResult = await Promise.race([
-                supabase.functions.invoke('get-clinics-data'),
-                new Promise((_, reject) => 
-                  setTimeout(() => reject(new Error('Fallback timeout')), 8000)
-                )
-              ]);
-              
-              let fallbackData = (fallbackResult as any).data;
-              if (fallbackData && typeof fallbackData === 'object' && fallbackData.data) {
-                fallbackData = fallbackData.data;
-              }
-              
-              data = fallbackData;
-              error = (fallbackResult as any).error;
-              console.log('✅ Fallback strategy succeeded');
-              
-            } catch (fallbackError) {
-              console.error('❌ Fallback also failed:', fallbackError);
-              throw new Error('All strategies including fallback failed - unable to load clinic data');
-            }
-          }
-        }
-          
-        const responseTime = performance.now();
-        console.log('📥 Supabase response received at:', responseTime - startTime + 'ms');
-        console.log('⏱️ Network round-trip:', responseTime - requestTime + 'ms');
-
-        // Clear timeout on successful response
+        // Clear timeout on response
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
         
+        let data = result.data?.data;
+        let error = result.error || result.data?.error;
+        
         if (error) {
-          console.error('❌ Supabase query error:', error);
-          console.error('🔍 Error details:', {
-            message: error.message,
-            details: error.details,
-            hint: error.hint,
-            code: error.code
-          });
+          console.error('❌ Edge function error:', error);
           throw error;
         }
+        
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+          console.error('❌ No data returned from edge function');
+          throw new Error('No clinic data available');
+        }
+          
+        const responseTime = performance.now();
+        console.log('📥 Supabase response received at:', responseTime - startTime + 'ms');
 
         console.log('Raw data from database:', data?.length || 0, 'records');
         if (data && data.length > 0) {
@@ -326,7 +146,6 @@ export const useSupabaseClinics = () => {
             name: err.name,
             message: err.message,
             stack: err.stack?.substring(0, 500),
-            requestStarted,
             totalTime: performance.now() - startTime
           });
           
@@ -348,9 +167,6 @@ export const useSupabaseClinics = () => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
-      }
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
       }
     };
   }, []);
