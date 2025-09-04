@@ -37,13 +37,34 @@ export const useClinicsDataEdge = (): UseClinicsDataEdgeReturn => {
 
         clearTimeout(timeoutId);
 
+        // DEBUG: Log the actual response structure
+        console.log('🔍 Raw edge function response:', {
+          data,
+          functionError,
+          dataType: typeof data,
+          dataKeys: data ? Object.keys(data) : 'null/undefined',
+          hasClinics: data?.clinics ? 'yes' : 'no',
+          clinicsType: typeof data?.clinics,
+          clinicsLength: Array.isArray(data?.clinics) ? data.clinics.length : 'not array'
+        });
+
         if (functionError) {
           console.error('Edge function error:', functionError);
           throw new Error(`Edge function failed: ${functionError.message}`);
         }
 
-        if (!data || !Array.isArray(data.clinics)) {
-          throw new Error('Invalid response format from edge function');
+        if (!data) {
+          throw new Error('No data received from edge function');
+        }
+
+        if (!data.clinics) {
+          console.error('Missing clinics property in response:', data);
+          throw new Error('Missing clinics property in edge function response');
+        }
+
+        if (!Array.isArray(data.clinics)) {
+          console.error('Clinics is not an array:', data.clinics);
+          throw new Error('Clinics data is not an array');
         }
 
         console.log(`✅ Edge function returned ${data.clinics.length} clinics`);
