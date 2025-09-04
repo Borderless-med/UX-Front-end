@@ -6,6 +6,16 @@ import { Clinic } from '@/types/clinic';
 // Centralized anon key
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA';
 
+// Explicit column list to avoid PostgREST select parse errors
+const SELECT_COLUMNS = [
+  'id','name','address','township','rating','reviews','distance','sentiment',
+  'website_url','google_review_url','operating_hours','dentist','mda_license','credentials',
+  'tooth_filling','root_canal','dental_crown','dental_implant','teeth_whitening','braces','wisdom_tooth',
+  'gum_treatment','composite_veneers','porcelain_veneers','dental_bonding','inlays_onlays','enamel_shaping',
+  'gingivectomy','bone_grafting','sinus_lift','frenectomy','tmj_treatment','sleep_apnea_appliances',
+  'crown_lengthening','oral_cancer_screening','alveoplasty'
+].join(',');
+
 export const useSupabaseClinics = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +79,7 @@ export const useSupabaseClinics = () => {
           if (fetchStrategy === 'direct') {
             const result = await supabase
               .from('clinics_data')
-              .select('*, !embedding, !embedding_arr')
+              .select(SELECT_COLUMNS)
               .order('distance', { ascending: true });
             data = result.data;
             error = result.error;
@@ -79,7 +89,7 @@ export const useSupabaseClinics = () => {
             error = result.error || result.data?.error;
           } else if (fetchStrategy === 'rest') {
             const response = await fetch(
-              `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*&select=!embedding,!embedding_arr`,
+              `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=${SELECT_COLUMNS}`,
               {
                 headers: {
                   'apikey': SUPABASE_ANON_KEY,
@@ -116,11 +126,12 @@ export const useSupabaseClinics = () => {
                   console.log('📡 Strategy: Direct Supabase (optimized)...');
                   const result = await supabase
                     .from('clinics_data')
-                    .select('*, !embedding, !embedding_arr')
+                    .select(SELECT_COLUMNS)
                     .order('distance', { ascending: true });
+                  if (result.error) throw result.error;
                   if (strategySignal.aborted) throw new Error('Strategy cancelled');
                   console.log('✅ Direct query completed');
-                  return { source: 'direct', data: result.data, error: result.error };
+                  return { source: 'direct', data: result.data, error: null };
                 })(),
                 createTimeoutPromise(timeout, 'Direct query')
               ]);
@@ -130,17 +141,20 @@ export const useSupabaseClinics = () => {
                   if (strategySignal.aborted) throw new Error('Strategy cancelled');
                   console.log('🔧 Strategy: Edge function...');
                   const result = await supabase.functions.invoke('get-clinics-data');
+                  if ((result as any).error) throw (result as any).error;
                   if (strategySignal.aborted) throw new Error('Strategy cancelled');
                   console.log('✅ Edge function completed');
-                  // Better data extraction for edge function
-                  let edgeData = result.data;
+                  let edgeData = (result as any).data;
                   if (edgeData && typeof edgeData === 'object' && edgeData.data) {
                     edgeData = edgeData.data;
+                  }
+                  if (!edgeData || (Array.isArray(edgeData) && edgeData.length === 0)) {
+                    throw new Error('Edge function returned no data');
                   }
                   return { 
                     source: 'edge-function', 
                     data: edgeData, 
-                    error: result.error || (result.data && result.data.error) 
+                    error: null 
                   };
                 })(),
                 createTimeoutPromise(timeout, 'Edge function')
