@@ -25,10 +25,15 @@ export const useClinicsDataEdge = (): UseClinicsDataEdgeReturn => {
         
         const { data, error: functionError } = await supabase.functions.invoke('get-clinics-data');
 
-        console.log('📊 Response received:', { 
+        console.log('🔍 EXACT RAW RESPONSE:', JSON.stringify({ data, functionError }, null, 2));
+        console.log('📊 Response details:', { 
           hasData: !!data, 
           hasError: !!functionError,
-          dataType: typeof data 
+          dataType: typeof data,
+          dataKeys: data ? Object.keys(data) : null,
+          isArray: Array.isArray(data),
+          clinicsKey: data?.clinics ? 'found' : 'missing',
+          clinicsLength: data?.clinics?.length || (Array.isArray(data) ? data.length : 0)
         });
 
         if (functionError) {
