@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Clinic } from '@/types/clinic';
 
+// Build verification: v2.1 - Force clean rebuild and cache invalidation
+
 interface UseClinicsDataEdgeReturn {
   clinics: Clinic[];
   loading: boolean;
@@ -19,7 +21,7 @@ export const useClinicsDataEdge = (): UseClinicsDataEdgeReturn => {
         setLoading(true);
         setError(null);
         
-        console.log('🔧 Using edge function strategy...');
+        console.log('🔧 Using edge function strategy v2.1 at:', new Date().toISOString());
         
         // Set up timeout for edge function call
         const timeoutController = new AbortController();

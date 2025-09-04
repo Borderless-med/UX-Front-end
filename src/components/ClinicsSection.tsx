@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,8 +26,13 @@ const ClinicsSection = () => {
   const { clinics, loading, error } = useClinicsDataEdge();
   const isMobile = useIsMobile();
 
-  // Debug: Log the clinic data source
-  console.log('ClinicsSection - Clinic data from database:', clinics.length, 'clinics loaded');
+  // Build verification and cache busting v2.1
+  useEffect(() => {
+    console.log('🚀 ClinicsSection v2.1 loaded at:', new Date().toISOString(), 'clinics count:', clinics.length);
+    if (error) {
+      console.error('❌ ClinicsSection error:', error);
+    }
+  }, [clinics.length, error]);
   if (clinics.length > 0) {
     console.log('Sample clinic data:', clinics[0]);
   }
