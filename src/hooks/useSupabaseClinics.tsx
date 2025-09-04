@@ -55,10 +55,35 @@ export const useSupabaseClinics = () => {
         const requestTime = performance.now();
         console.log('📤 Supabase SDK call initiated at:', requestTime - startTime + 'ms');
         
-        const { data, error } = await supabase
-          .from('clinics_data')
-          .select('*')
-          .order('distance', { ascending: true });
+        let data, error;
+        
+        // Try direct query first, fallback to edge function in dev environments
+        try {
+          console.log('🔄 Attempting direct Supabase query...');
+          const directResult = await supabase
+            .from('clinics_data')
+            .select('*')
+            .order('distance', { ascending: true });
+          
+          data = directResult.data;
+          error = directResult.error;
+          
+          console.log('✅ Direct query successful');
+        } catch (directError) {
+          console.warn('⚠️ Direct query failed, trying edge function fallback:', directError);
+          
+          // Fallback to edge function, especially useful in dev preview environments
+          const functionResult = await supabase.functions.invoke('get-clinics-data');
+          
+          if (functionResult.error) {
+            throw functionResult.error;
+          }
+          
+          data = functionResult.data?.data;
+          error = functionResult.data?.error || null;
+          
+          console.log('✅ Edge function fallback successful');
+        }
           
         const responseTime = performance.now();
         console.log('📥 Supabase response received at:', responseTime - startTime + 'ms');

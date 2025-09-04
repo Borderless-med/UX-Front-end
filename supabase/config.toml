@@ -1,6 +1,9 @@
 
 project_id = "uzppuebjzqxeavgmwtvr"
 
+[functions.get-clinics-data]
+verify_jwt = false
+
 [functions.dynamic-function]
 verify_jwt = false
 
