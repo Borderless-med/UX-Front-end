@@ -51,7 +51,7 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ 
-        clinics: optimizedData, 
+        data: optimizedData, 
         metadata: { 
           count: optimizedData?.length || 0,
           executionTime: totalTime 

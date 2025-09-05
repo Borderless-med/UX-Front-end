@@ -17,7 +17,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { treatmentOptions, type TreatmentType } from '@/data/treatmentOptions';
 import { commonTownships } from '@/components/clinic/utils/clinicConstants';
 import { isDateDisabled } from '@/data/singaporeHolidays';
-import { useClinicsDataEdge } from '@/hooks/useClinicsDataEdge';
+import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 import { toast } from 'sonner';
 
 interface FormData {
@@ -41,8 +41,8 @@ const AppointmentBookingForm = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   
-  // Fetch clinic data - Updated to use edge function hook (cache-buster: v2.0)
-  const { clinics, loading: clinicsLoading, error: clinicsError } = useClinicsDataEdge();
+  // Fetch clinic data
+  const { clinics, loading: clinicsLoading, error: clinicsError } = useSupabaseClinics();
   
   const [formData, setFormData] = useState<FormData>({
     patient_name: '',

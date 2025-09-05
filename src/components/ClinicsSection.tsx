@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,7 +12,7 @@ import AuthenticationStatusBar from '@/components/clinic/display/AuthenticationS
 import { useClinicFilters } from './clinic/hooks/useClinicFilters';
 import { useClinicSearch } from './clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from './clinic/utils/clinicFilterUtils';
-import { useClinicsDataEdge } from '@/hooks/useClinicsDataEdge';
+import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 import ClinicGrid from './clinic/display/ClinicGrid';
 import ClinicSidebar from './clinic/sidebar/ClinicSidebar';
 import MobileSidebarToggle from './clinic/sidebar/MobileSidebarToggle';
@@ -23,16 +23,11 @@ const ClinicsSection = () => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, userProfile, logDataAccess } = useAuth();
-  const { clinics, loading, error } = useClinicsDataEdge();
+  const { clinics, loading, error } = useSupabaseClinics();
   const isMobile = useIsMobile();
 
-  // Build verification and cache busting v2.1
-  useEffect(() => {
-    console.log('🚀 ClinicsSection v2.1 loaded at:', new Date().toISOString(), 'clinics count:', clinics.length);
-    if (error) {
-      console.error('❌ ClinicsSection error:', error);
-    }
-  }, [clinics.length, error]);
+  // Debug: Log the clinic data source
+  console.log('ClinicsSection - Clinic data from database:', clinics.length, 'clinics loaded');
   if (clinics.length > 0) {
     console.log('Sample clinic data:', clinics[0]);
   }
