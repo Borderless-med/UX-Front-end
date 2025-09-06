@@ -55,94 +55,62 @@ export const useSupabaseClinics = () => {
         const requestTime = performance.now();
         console.log('📤 Supabase SDK call initiated at:', requestTime - startTime + 'ms');
         
-        let data, error;
-        
-        // Race multiple strategies to bypass preview networking issues
-        console.log('🏁 Racing multiple fetch strategies...');
-        
-        const createTimeoutPromise = (ms: number, name: string) => 
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error(`${name} timeout after ${ms}ms`)), ms)
+        let data: any = null;
+        let error: any = null;
+
+        // Sequential strategy with limited retries to avoid 429s
+        const attemptWithTimeout = async (promise: Promise<any>, ms: number, label: string): Promise<any> => {
+          return await Promise.race([
+            promise,
+            new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timeout after ${ms}ms`)), ms))
+          ]);
+        };
+        // 1) Try Supabase SDK with small retry/backoff
+        const maxRetries = 2;
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+          try {
+            console.log(`📡 Supabase SDK attempt ${attempt + 1}/${maxRetries + 1}...`);
+            const result = await attemptWithTimeout(
+              (async () => await supabase.from('clinics_data').select('*').order('distance', { ascending: true }))(),
+              4000,
+              'Direct query'
+            );
+            data = (result as any).data;
+            error = (result as any).error;
+            if (!error && Array.isArray(data)) {
+              console.log('✅ SDK fetch succeeded');
+              break;
+            }
+            console.warn('⚠️ SDK fetch returned error, will consider fallback', error);
+          } catch (e: any) {
+            console.warn(`⚠️ SDK attempt ${attempt + 1} failed:`, e?.message || e);
+          }
+
+          if (attempt < maxRetries) {
+            const backoff = 500 * Math.pow(2, attempt) + Math.floor(Math.random() * 200);
+            await new Promise(res => setTimeout(res, backoff));
+          }
+        }
+
+        // 2) Fallback to REST if SDK failed
+        if (!data || error) {
+          console.log('🌐 Falling back to REST fetch...');
+          const response = await attemptWithTimeout(
+            fetch(`https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*`, {
+              headers: {
+                'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA',
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA'
+              }
+            }),
+            4000,
+            'REST fetch'
           );
-        
-        const strategies = [
-          // Strategy 1: Direct Supabase SDK query
-          Promise.race([
-            (async () => {
-              console.log('📡 Strategy 1: Direct Supabase query...');
-              const result = await supabase
-                .from('clinics_data')
-                .select('*')
-                .order('distance', { ascending: true });
-              console.log('✅ Strategy 1: Direct query completed');
-              return { source: 'direct', data: result.data, error: result.error };
-            })(),
-            createTimeoutPromise(4000, 'Direct query')
-          ]),
-          
-          // Strategy 2: Edge function
-          Promise.race([
-            (async () => {
-              console.log('🔧 Strategy 2: Edge function...');
-              const result = await supabase.functions.invoke('get-clinics-data');
-              console.log('✅ Strategy 2: Edge function completed');
-              return { 
-                source: 'edge-function', 
-                data: result.data?.data, 
-                error: result.error || result.data?.error 
-              };
-            })(),
-            createTimeoutPromise(4000, 'Edge function')
-          ]),
-          
-          // Strategy 3: Direct REST fetch (last resort)
-          Promise.race([
-            (async () => {
-              console.log('🌐 Strategy 3: Direct REST fetch...');
-              const response = await fetch(
-                `https://uzppuebjzqxeavgmwtvr.supabase.co/rest/v1/clinics_data?order=distance.asc&select=*`,
-                {
-                  headers: {
-                    'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA',
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA'
-                  }
-                }
-              );
-              const restData = await response.json();
-              console.log('✅ Strategy 3: REST fetch completed');
-              return { source: 'rest', data: restData, error: null };
-            })(),
-            createTimeoutPromise(4000, 'REST fetch')
-          ])
-        ];
-        
-        try {
-          // Manual Promise.any implementation (first successful result wins)
-          const result = await new Promise((resolve, reject) => {
-            let rejectedCount = 0;
-            const errors: any[] = [];
-            
-            strategies.forEach((strategy, index) => {
-              strategy
-                .then(result => resolve(result))
-                .catch(err => {
-                  errors[index] = err;
-                  rejectedCount++;
-                  if (rejectedCount === strategies.length) {
-                    reject(new Error(`All strategies failed: ${errors.map(e => e.message).join(', ')}`));
-                  }
-                });
-            });
-          });
-          
-          console.log(`🎯 Winner: ${(result as any).source} strategy succeeded`);
-          
-          data = (result as any).data;
-          error = (result as any).error;
-          
-        } catch (allErrors) {
-          console.error('❌ All strategies failed:', allErrors);
-          throw new Error('All fetch strategies failed - unable to load clinic data');
+          if (!(response as Response).ok) {
+            throw new Error(`REST fetch failed with status ${(response as Response).status}`);
+          }
+          data = await (response as Response).json();
+          error = null;
+          console.log('✅ REST fetch succeeded');
         }
           
         const responseTime = performance.now();
