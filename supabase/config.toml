@@ -1,17 +1,1 @@
-
 project_id = "uzppuebjzqxeavgmwtvr"
-
-[functions.get-clinics-data]
-verify_jwt = false
-
-[functions.dynamic-function]
-verify_jwt = false
-
-[functions.send-whatsapp-confirmation]
-verify_jwt = false
-
-[functions.confirm-whatsapp-optin]
-verify_jwt = false
-
-[functions.send-appointment-confirmation]
-verify_jwt = false

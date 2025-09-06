@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -203,6 +203,7 @@ export type Database = {
           gum_treatment: boolean | null
           id: number
           inlays_onlays: boolean | null
+          is_metro_jb: boolean | null
           mda_license: string | null
           name: string
           operating_hours: string | null
@@ -254,6 +255,7 @@ export type Database = {
           gum_treatment?: boolean | null
           id?: number
           inlays_onlays?: boolean | null
+          is_metro_jb?: boolean | null
           mda_license?: string | null
           name: string
           operating_hours?: string | null
@@ -305,6 +307,7 @@ export type Database = {
           gum_treatment?: boolean | null
           id?: number
           inlays_onlays?: boolean | null
+          is_metro_jb?: boolean | null
           mda_license?: string | null
           name?: string
           operating_hours?: string | null
@@ -677,12 +680,12 @@ export type Database = {
     Functions: {
       audit_data_access: {
         Args: {
-          p_user_id: string
-          p_data_type: string
           p_clinic_id?: string
-          p_practitioner_name?: string
+          p_data_type: string
           p_ip_address?: string
+          p_practitioner_name?: string
           p_user_agent?: string
+          p_user_id: string
         }
         Returns: string
       }
@@ -709,74 +712,76 @@ export type Database = {
       }
       log_consent: {
         Args: {
-          p_user_id: string
-          p_consent_type: string
+          p_consent_details?: Json
           p_consent_status: boolean
+          p_consent_type: string
           p_ip_address?: string
           p_user_agent?: string
-          p_consent_details?: Json
+          p_user_id: string
         }
         Returns: string
       }
       match_clinics: {
         Args: {
-          query_embedding: string
-          p_township: string
           match_count: number
+          p_township: string
+          query_embedding: string
         }
         Returns: {
-          id: number
-          name: string
           address: string
-          township: string
-          rating: number
-          reviews: number
-          tooth_filling: boolean
-          root_canal: boolean
+          alveoplasty: boolean
+          bone_grafting: boolean
+          braces: boolean
+          composite_veneers: boolean
+          crown_lengthening: boolean
+          dental_bonding: boolean
           dental_crown: boolean
           dental_implant: boolean
-          teeth_whitening: boolean
-          braces: boolean
-          wisdom_tooth: boolean
-          gum_treatment: boolean
-          composite_veneers: boolean
-          porcelain_veneers: boolean
-          dental_bonding: boolean
-          inlays_onlays: boolean
           enamel_shaping: boolean
-          gingivectomy: boolean
-          bone_grafting: boolean
-          sinus_lift: boolean
           frenectomy: boolean
-          tmj_treatment: boolean
-          sleep_apnea_appliances: boolean
-          crown_lengthening: boolean
+          gingivectomy: boolean
+          gum_treatment: boolean
+          id: number
+          inlays_onlays: boolean
+          name: string
           oral_cancer_screening: boolean
-          alveoplasty: boolean
+          porcelain_veneers: boolean
+          rating: number
+          reviews: number
+          root_canal: boolean
           similarity: number
+          sinus_lift: boolean
+          sleep_apnea_appliances: boolean
+          teeth_whitening: boolean
+          tmj_treatment: boolean
+          tooth_filling: boolean
+          township: string
+          wisdom_tooth: boolean
         }[]
       }
       match_clinics_hybrid: {
         Args: {
-          query_embedding: string
-          match_threshold: number
-          match_count: number
           filter_township?: string
+          match_count: number
+          match_threshold: number
           min_rating?: number
+          query_embedding: string
           service_filter?: string
         }
         Returns: {
+          address: string
           id: number
           name: string
-          address: string
-          township: string
           rating: number
           reviews: number
           similarity: number
+          township: string
         }[]
       }
       match_clinics_simple: {
-        Args: { query_embedding: string; match_count: number }
+        Args:
+          | { match_count: number; query_embedding: string }
+          | { match_count: number; query_embedding_text: string }
         Returns: {
           address: string | null
           alveoplasty: boolean | null
@@ -801,6 +806,7 @@ export type Database = {
           gum_treatment: boolean | null
           id: number
           inlays_onlays: boolean | null
+          is_metro_jb: boolean | null
           mda_license: string | null
           name: string
           operating_hours: string | null
@@ -831,27 +837,27 @@ export type Database = {
       }
       match_documents: {
         Args: {
-          query_embedding: string
-          match_threshold: number
           match_count: number
+          match_threshold: number
+          query_embedding: string
         }
         Returns: {
           id: number
-          text_content: string
-          similarity: number
           metadata: Json
+          similarity: number
+          text_content: string
         }[]
       }
       update_sentiments: {
         Args: {
           clinic_id_to_update: number
-          s_overall: number
-          s_skill: number
-          s_pain: number
-          s_cost: number
-          s_staff: number
           s_ambiance: number
           s_convenience: number
+          s_cost: number
+          s_overall: number
+          s_pain: number
+          s_skill: number
+          s_staff: number
         }
         Returns: undefined
       }
