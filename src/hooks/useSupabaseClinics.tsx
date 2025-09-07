@@ -37,7 +37,7 @@ export const useSupabaseClinics = () => {
         const timeoutMs = isDev ? 12000 : 8000;
         timeoutRef.current = setTimeout(() => {
           console.error('⚠️ HARD TIMEOUT after', timeoutMs + 'ms - request never resolved');
-          setError(`Request timeout after ${timeoutMs/1000}s in ${isDev ? 'dev' : 'prod'} environment`);
+          setError(`Network connectivity issues detected. This may be a temporary platform problem. Visit /debug-test to run diagnostics.`);
           setLoading(false);
         }, timeoutMs);
         

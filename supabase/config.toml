@@ -1,1 +1,7 @@
 project_id = "uzppuebjzqxeavgmwtvr"
+
+[functions.dynamic-function]
+verify_jwt = false
+
+[functions.ping]
+verify_jwt = false

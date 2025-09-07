@@ -21,6 +21,7 @@ import DirectoryDisclaimer from "./pages/DirectoryDisclaimer";
 import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import CookiePolicy from "./pages/CookiePolicy";
 import NotFound from "./pages/NotFound";
+import DebugTest from "./pages/DebugTest";
 import PartnerApplication from "./pages/PartnerApplication";
 import ConfirmWhatsApp from "./pages/ConfirmWhatsApp";
 import OptOutReport from "./pages/OptOutReport";
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
               <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
+              <Route path="/debug-test" element={<DebugTest />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <CookieConsentBanner />
