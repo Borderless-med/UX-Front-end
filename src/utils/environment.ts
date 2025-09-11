@@ -23,20 +23,22 @@ export const getProductionUrl = (): string => {
   return 'https://jb-dental-directory.vercel.app';
 };
 
-export const shouldUseIframeWorkaround = (): boolean => {
-  // Only use workaround when actually in iframe AND in development environment
-  // Published Lovable apps are not in iframes, so they should work normally
-  if (!isInIframe() || !isLovableEnvironment()) {
-    return false;
-  }
-  
-  // Try to safely check if we can access parent frame
+// Detect if running inside the Lovable Editor preview iframe
+export const isLovableEditorPreview = (): boolean => {
+  if (!isInIframe()) return false;
   try {
-    const parentHostname = window.parent?.location?.hostname;
-    // If we can access parent hostname and it's different, we're in Lovable editor iframe
-    return parentHostname !== window.location.hostname;
-  } catch (e) {
-    // SecurityError means cross-origin iframe - this is likely Lovable editor
+    const parentHostname = window.parent?.location?.hostname || '';
+    const childHostname = window.location.hostname;
+    const isParentLovable = parentHostname.includes('lovable.app') || parentHostname.includes('lovable.dev');
+    const isDifferentHost = !!parentHostname && parentHostname !== childHostname;
+    return isParentLovable && isDifferentHost;
+  } catch {
+    // Cross-origin access blocked → most likely the Lovable editor iframe
     return true;
   }
+};
+
+// Only use workaround inside the Lovable editor preview iframe
+export const shouldUseIframeWorkaround = (): boolean => {
+  return isLovableEditorPreview();
 };
