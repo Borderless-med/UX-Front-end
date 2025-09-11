@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import IframeAwareDialog from './IframeAwareDialog';
 import LoginForm from './LoginForm';
 import PDPARegistrationForm from './PDPARegistrationForm';
 
@@ -18,21 +18,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTab = 'lo
     onClose();
   };
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      onClose();
-    }
-  };
-
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto" aria-describedby="auth-modal-description">
-        <DialogHeader>
-          <DialogTitle id="auth-modal-title">Authentication</DialogTitle>
-          <DialogDescription id="auth-modal-description">
+    <IframeAwareDialog isOpen={isOpen} onClose={onClose}>
+      <div className="p-6">
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-foreground">Authentication</h2>
+          <p className="text-muted-foreground mt-2">
             Sign in to your account or create a new account to access practitioner details
-          </DialogDescription>
-        </DialogHeader>
+          </p>
+        </div>
         
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'login' | 'register')} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -54,8 +48,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTab = 'lo
             />
           </TabsContent>
         </Tabs>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </IframeAwareDialog>
   );
 };
 
