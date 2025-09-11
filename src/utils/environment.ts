@@ -19,8 +19,8 @@ export const isProductionEnvironment = (): boolean => {
 };
 
 export const getProductionUrl = (): string => {
-  // Replace with your actual Vercel deployment URL
-  return 'https://your-app.vercel.app';
+  // Update this with your actual Vercel deployment URL after publishing
+  return 'https://jb-dental-directory.vercel.app';
 };
 
 export const shouldUseIframeWorkaround = (): boolean => {
