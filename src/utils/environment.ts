@@ -26,5 +26,17 @@ export const getProductionUrl = (): string => {
 export const shouldUseIframeWorkaround = (): boolean => {
   // Only use workaround when actually in iframe AND in development environment
   // Published Lovable apps are not in iframes, so they should work normally
-  return isInIframe() && isLovableEnvironment() && window.location.hostname !== window.parent?.location?.hostname;
+  if (!isInIframe() || !isLovableEnvironment()) {
+    return false;
+  }
+  
+  // Try to safely check if we can access parent frame
+  try {
+    const parentHostname = window.parent?.location?.hostname;
+    // If we can access parent hostname and it's different, we're in Lovable editor iframe
+    return parentHostname !== window.location.hostname;
+  } catch (e) {
+    // SecurityError means cross-origin iframe - this is likely Lovable editor
+    return true;
+  }
 };
