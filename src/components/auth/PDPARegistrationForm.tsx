@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,33 +37,6 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [step, setStep] = useState(1);
-  
-  // Iframe focus workaround refs
-  const fullNameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const organizationRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  const purposeRef = useRef<HTMLTextAreaElement>(null);
-
-  // Focus management for iframe environment
-  useEffect(() => {
-    if (step === 1 && fullNameRef.current) {
-      // Delay focus to ensure modal is fully rendered
-      const timer = setTimeout(() => {
-        fullNameRef.current?.focus();
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [step]);
-
-  const handleInputFocus = (inputRef: React.RefObject<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Iframe focus workaround
-    if (inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.click();
-    }
-  };
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -129,7 +102,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto relative z-[100000]">
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Shield className="h-5 w-5 text-blue-primary" />
@@ -137,74 +110,66 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="space-y-6 relative z-[100001]">
+      <CardContent className="space-y-6">
         {/* Step 1: Basic Information */}
         {step === 1 && (
           <div className="space-y-4">
-            <div className="space-y-2" onClick={() => handleInputFocus(fullNameRef)}>
+            <div className="space-y-2">
               <Label htmlFor="fullName">Full Name *</Label>
               <Input
-                ref={fullNameRef}
                 id="fullName"
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleInputChange('fullName', e.target.value)}
                 placeholder="Enter your full name"
                 disabled={isLoading}
-                className="z-[10000] relative"
                 onFocus={() => setError('')}
               />
             </div>
 
-            <div className="space-y-2" onClick={() => handleInputFocus(emailRef)}>
+            <div className="space-y-2">
               <Label htmlFor="email">Email Address *</Label>
               <Input
-                ref={emailRef}
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 placeholder="Enter your email address"
                 disabled={isLoading}
-                className="z-[10000] relative"
                 onFocus={() => setError('')}
               />
             </div>
 
-            <div className="space-y-2" onClick={() => handleInputFocus(organizationRef)}>
+            <div className="space-y-2">
               <Label htmlFor="organization">Organization (Optional)</Label>
               <Input
-                ref={organizationRef}
                 id="organization"
                 type="text"
                 value={formData.organization}
                 onChange={(e) => handleInputChange('organization', e.target.value)}
                 placeholder="e.g., ABC Dental Clinic, Ministry of Health"
                 disabled={isLoading}
-                className="z-[10000] relative"
                 onFocus={() => setError('')}
               />
             </div>
 
-            <div className="space-y-2" onClick={() => handleInputFocus(passwordRef)}>
+            <div className="space-y-2">
               <Label htmlFor="password">Password *</Label>
               <div className="relative">
                 <Input
-                  ref={passwordRef}
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   placeholder="Choose a password (min. 6 characters)"
                   disabled={isLoading}
-                  className="z-[10000] relative"
                   onFocus={() => setError('')}
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent z-[10001]"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={isLoading}
                 >
@@ -217,17 +182,15 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
               </div>
             </div>
 
-            <div className="space-y-2" onClick={() => handleInputFocus(confirmPasswordRef)}>
+            <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password *</Label>
               <Input
-                ref={confirmPasswordRef}
                 id="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                 placeholder="Confirm your password"
                 disabled={isLoading}
-                className="z-[10000] relative"
                 onFocus={() => setError('')}
               />
             </div>
@@ -297,15 +260,14 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
               </Select>
             </div>
 
-            <div className="space-y-2" onClick={() => handleInputFocus(purposeRef)}>
+            <div className="space-y-2">
               <Label htmlFor="purposeOfUse">Purpose of Use *</Label>
               <Textarea
-                ref={purposeRef}
                 id="purposeOfUse"
                 value={formData.purposeOfUse}
                 onChange={(e) => handleInputChange('purposeOfUse', e.target.value)}
                 placeholder="Please describe how you plan to use this platform (e.g., seeking dental treatment, professional collaboration, clinic management)"
-                className="min-h-[80px] z-[10000] relative"
+                className="min-h-[80px]"
                 disabled={isLoading}
                 onFocus={() => setError('')}
               />

@@ -26,7 +26,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTab = 'lo
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto z-[99999]" aria-describedby="auth-modal-description">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto" aria-describedby="auth-modal-description">
         <DialogHeader>
           <DialogTitle id="auth-modal-title">Authentication</DialogTitle>
           <DialogDescription id="auth-modal-description">
