@@ -60,7 +60,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto relative z-[100000]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Shield className="h-5 w-5 text-blue-primary" />
@@ -68,7 +68,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
         </CardTitle>
       </CardHeader>
       
-      <CardContent>
+      <CardContent className="relative z-[100001]">
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-dark">
             Sign in to view detailed clinic information including dentist names and credentials. You'll also get access to your chat history and past transactions on this platform.

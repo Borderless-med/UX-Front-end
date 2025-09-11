@@ -129,7 +129,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto relative z-[100000]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Shield className="h-5 w-5 text-blue-primary" />
@@ -137,7 +137,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 relative z-[100001]">
         {/* Step 1: Basic Information */}
         {step === 1 && (
           <div className="space-y-4">
