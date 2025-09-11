@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { supabase } from '@/integrations/supabase/client';
+import { restInvokeFunction } from '@/utils/restClient';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, CheckCircle } from 'lucide-react';
 
@@ -82,17 +83,20 @@ const OptOutReportForm = () => {
         throw insertError;
       }
 
-      // Call edge function to send confirmation email
-      const { error: emailError } = await supabase.functions.invoke('send-opt-out-confirmation', {
-        body: {
-          email: data.email,
-          name: data.name,
-          requestType: data.requestType,
-          clinicName: data.clinicName,
-        },
-      });
-
-      if (emailError) {
+      // Call edge function to send confirmation email using REST client
+      try {
+        await restInvokeFunction('send-opt-out-confirmation', {
+          body: {
+            email: data.email,
+            name: data.name,
+            requestType: data.requestType,
+            clinicName: data.clinicName,
+          },
+        }, {
+          timeout: 15000,
+          retries: 1
+        });
+      } catch (emailError) {
         console.warn('Email confirmation failed:', emailError);
         // Don't throw here - the request was still submitted successfully
       }

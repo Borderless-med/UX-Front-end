@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
-import { supabase } from '@/integrations/supabase/client';
+import { restInvokeFunction } from '@/utils/restClient';
 
 interface Message {
   id: string;
@@ -128,17 +128,16 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         return 'production';
       };
 
-      // Step 4: Call the Supabase Edge Function with all three variables
-      const { data, error } = await supabase.functions.invoke('dynamic-function', {
+      // Step 4: Call the Edge Function using REST client
+      const data = await restInvokeFunction('dynamic-function', {
         body: requestBody,
         headers: {
           'x-environment': getEnvironment(),
         },
+      }, {
+        timeout: 30000,  // 30 second timeout for AI responses
+        retries: 1       // Single retry for edge functions
       });
-
-      if (error) {
-        throw error;
-      }
 
       // Step 5: Parse response text, applied_filters, and candidate_pool from response
       if (data && data.response) {

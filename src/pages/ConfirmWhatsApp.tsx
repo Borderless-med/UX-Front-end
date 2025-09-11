@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { restInvokeFunction } from '@/utils/restClient';
 import { useToast } from '@/hooks/use-toast';
 
 const ConfirmWhatsApp = () => {
@@ -25,16 +26,12 @@ const ConfirmWhatsApp = () => {
       }
 
       try {
-        const { data, error } = await supabase.functions.invoke(
-          'confirm-whatsapp-optin',
-          {
-            body: { token }
-          }
-        );
-
-        if (error) {
-          throw error;
-        }
+        const data = await restInvokeFunction('confirm-whatsapp-optin', {
+          body: { token }
+        }, {
+          timeout: 10000,
+          retries: 1
+        });
 
         if (data?.success) {
           setStatus('success');

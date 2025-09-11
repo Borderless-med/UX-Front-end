@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { restInvokeFunction } from '@/utils/restClient';
 
 const WaitlistSection = () => {
   const [formData, setFormData] = useState({
@@ -86,19 +87,19 @@ const WaitlistSection = () => {
         throw error;
       }
 
-      // Send confirmation message
-      const { error: confirmationError } = await supabase.functions.invoke(
-        'send-whatsapp-confirmation',
-        {
+      // Send confirmation message using REST client
+      try {
+        await restInvokeFunction('send-whatsapp-confirmation', {
           body: {
             email: formData.email.trim().toLowerCase(),
             name: formData.name.trim(),
             confirmationToken: confirmationToken
           }
-        }
-      );
-
-      if (confirmationError) {
+        }, {
+          timeout: 15000,
+          retries: 1
+        });
+      } catch (confirmationError) {
         console.error('Confirmation sending failed:', confirmationError);
         // Don't fail the whole process if confirmation sending fails
       }

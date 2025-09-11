@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { restInvokeFunction } from '@/utils/restClient';
 
 interface TestResult {
   name: string;
@@ -60,16 +60,16 @@ const DebugTest = () => {
     // Test 1: Input Focus (immediate)
     updateResult('Input Focus Test', { status: 'success', response: 'Input is focusable and editable' });
 
-    // Test 2: Supabase Functions - Ping
-    await runTest('Supabase Edge Function - Ping', async () => {
-      return await supabase.functions.invoke('ping');
+    // Test 2: REST Functions - Ping
+    await runTest('REST Edge Function - Ping', async () => {
+      return await restInvokeFunction('ping', {}, { timeout: 5000 });
     });
 
-    // Test 3: Supabase Functions - Dynamic Function  
-    await runTest('Supabase Edge Function - Dynamic', async () => {
-      return await supabase.functions.invoke('dynamic-function', {
+    // Test 3: REST Functions - Dynamic Function  
+    await runTest('REST Edge Function - Dynamic', async () => {
+      return await restInvokeFunction('dynamic-function', {
         body: { message: "test", context: "diagnostic" }
-      });
+      }, { timeout: 10000 });
     });
 
     // Test 4: Supabase REST

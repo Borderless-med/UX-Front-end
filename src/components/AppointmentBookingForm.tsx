@@ -14,6 +14,7 @@ import { Progress } from '@/components/ui/progress';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { restInvokeFunction } from '@/utils/restClient';
 import { treatmentOptions, type TreatmentType } from '@/data/treatmentOptions';
 import { commonTownships } from '@/components/clinic/utils/clinicConstants';
 import { isDateDisabled } from '@/data/singaporeHolidays';
@@ -431,15 +432,13 @@ const AppointmentBookingForm = () => {
 
       console.log('Submitting appointment booking:', submissionData);
 
-      // Call the edge function
-      const { data, error } = await supabase.functions.invoke('send-appointment-confirmation', {
+      // Call the edge function using REST client
+      const data = await restInvokeFunction('send-appointment-confirmation', {
         body: submissionData,
+      }, {
+        timeout: 15000,
+        retries: 1
       });
-
-      if (error) {
-        console.error('Edge function error:', error);
-        throw new Error(error.message || 'Failed to book appointment');
-      }
 
       if (!data?.success) {
         throw new Error(data?.error || 'Failed to book appointment');
