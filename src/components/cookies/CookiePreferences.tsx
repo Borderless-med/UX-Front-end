@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Cookie } from 'lucide-react';
 import { useCookieConsent } from '@/contexts/CookieConsentContext';
 import CookieTypeCard from './components/CookieTypeCard';
@@ -31,13 +31,13 @@ const CookiePreferences = () => {
             <Cookie className="h-5 w-5 text-blue-600" />
             Cookie Preferences
           </DialogTitle>
+          <DialogDescription>
+            Manage your cookie preferences below. You can enable or disable different categories 
+            of cookies except for essential cookies which are required for the website to function.
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-6">
-          <p className="text-sm text-gray-600 leading-relaxed">
-            Manage your cookie preferences below. You can enable or disable different categories 
-            of cookies except for essential cookies which are required for the website to function.
-          </p>
           
           <div className="space-y-6">
             <CookieTypeCard
