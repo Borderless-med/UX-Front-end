@@ -24,5 +24,7 @@ export const getProductionUrl = (): string => {
 };
 
 export const shouldUseIframeWorkaround = (): boolean => {
-  return isInIframe() && isLovableEnvironment();
+  // Only use workaround when actually in iframe AND in development environment
+  // Published Lovable apps are not in iframes, so they should work normally
+  return isInIframe() && isLovableEnvironment() && window.location.hostname !== window.parent?.location?.hostname;
 };
