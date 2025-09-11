@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +19,30 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  // Iframe focus workaround
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Force focus on first input after a delay to work around iframe issues
+    const timer = setTimeout(() => {
+      if (emailRef.current) {
+        emailRef.current.focus();
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleInputFocus = (inputRef: React.RefObject<HTMLInputElement>) => {
+    // Additional focus management for iframe environment
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.click();
+      }
+    }, 0);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,36 +76,44 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-2" onClick={() => handleInputFocus(emailRef)}>
             <Label htmlFor="login-email">Email</Label>
             <Input
+              ref={emailRef}
               id="login-email"
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
+              onFocus={() => handleInputFocus(emailRef)}
+              className="relative z-[10000]"
+              style={{ zIndex: 10000 }}
               required
             />
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-2" onClick={() => handleInputFocus(passwordRef)}>
             <Label htmlFor="login-password">Password</Label>
             <div className="relative">
               <Input
+                ref={passwordRef}
                 id="login-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
+                onFocus={() => handleInputFocus(passwordRef)}
+                className="relative z-[10000]"
+                style={{ zIndex: 10000 }}
                 required
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent z-[10001]"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={isLoading}
               >

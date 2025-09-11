@@ -9,6 +9,7 @@ import ClinicCardHeader from './ClinicCardHeader';
 import ClinicCardInfo from './ClinicCardInfo';
 import ClinicCardServices from './ClinicCardServices';
 import ClinicCardActions from './ClinicCardActions';
+import PractitionerDetailsModal from './PractitionerDetailsModal';
 
 interface ClinicCardProps {
   clinic: Clinic;
@@ -19,13 +20,14 @@ interface ClinicCardProps {
 
 const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitionerDetails }: ClinicCardProps) => {
   const [showClaimModal, setShowClaimModal] = useState(false);
+  const [showPractitionerModal, setShowPractitionerModal] = useState(false);
   const navigate = useNavigate();
 
   const availableCategories = getAvailableCategories(clinic);
 
   const handleViewPractitioner = () => {
     if (isAuthenticated) {
-      onViewPractitionerDetails(clinic);
+      setShowPractitionerModal(true);
     } else {
       onSignInClick();
     }
@@ -65,6 +67,12 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
       <ClaimClinicModal
         isOpen={showClaimModal}
         onClose={() => setShowClaimModal(false)}
+        clinic={clinic}
+      />
+
+      <PractitionerDetailsModal
+        isOpen={showPractitionerModal}
+        onClose={() => setShowPractitionerModal(false)}
         clinic={clinic}
       />
     </>
