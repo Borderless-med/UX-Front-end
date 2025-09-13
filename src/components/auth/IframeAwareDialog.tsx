@@ -58,7 +58,7 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
     // Direct DOM rendering for iframe environment
     return (
       <div 
-        className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4 pt-32"
+        className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4 pt-44"
         onClick={(e) => {
           if (e.target === e.currentTarget) {
             onClose();
