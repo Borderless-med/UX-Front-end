@@ -58,7 +58,7 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
     // Direct DOM rendering for iframe environment
     return (
       <div 
-        className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+        className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4 pt-32"
         onClick={(e) => {
           if (e.target === e.currentTarget) {
             onClose();
@@ -89,11 +89,11 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
   // Standard portal-based rendering for normal environments
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/50" onClick={onClose} />
+      <div className="fixed inset-0 z-[60] bg-black/50" onClick={onClose} />
       <div 
         ref={dialogRef}
         className={cn(
-          "fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] bg-background border border-border rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto",
+          "fixed left-[50%] top-[50%] z-[60] translate-x-[-50%] translate-y-[-50%] bg-background border border-border rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto mt-14",
           className
         )}
       >
