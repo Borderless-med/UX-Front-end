@@ -59,7 +59,7 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
   // Simplified single rendering approach that works everywhere
   return (
     <div 
-      className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999] bg-black/50 flex items-start justify-center p-4 pt-32"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           console.log('Backdrop clicked, closing modal');
@@ -70,7 +70,7 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
       <div 
         ref={dialogRef}
         className={cn(
-          "bg-background border border-border rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto relative",
+          "bg-background border border-border rounded-lg shadow-lg w-full max-w-2xl max-h-[calc(100vh-8rem)] overflow-y-auto relative",
           className
         )}
         onClick={(e) => e.stopPropagation()}
