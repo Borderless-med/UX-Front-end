@@ -42,8 +42,8 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
   return (
     <div 
       className="fixed inset-0 z-[9999] bg-black/50 flex items-start justify-center p-4 pt-32"
-      onMouseDown={(e) => {
-        // Only close on backdrop click, not form interaction
+      onClick={(e) => {
+        // Only close on backdrop click
         if (e.target === e.currentTarget) {
           onClose();
         }
