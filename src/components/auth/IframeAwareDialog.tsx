@@ -52,13 +52,9 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
       <div 
         ref={dialogRef}
         className={cn(
-          "bg-background border border-border rounded-lg shadow-lg w-full max-w-2xl max-h-[calc(100vh-8rem)] overflow-y-auto relative pointer-events-auto",
+          "bg-background border border-border rounded-lg shadow-lg w-full max-w-2xl max-h-[calc(100vh-8rem)] overflow-y-auto relative",
           className
         )}
-        onMouseDown={(e) => {
-          // Prevent backdrop close when clicking inside modal
-          e.stopPropagation();
-        }}
       >
         <button
           onClick={onClose}
