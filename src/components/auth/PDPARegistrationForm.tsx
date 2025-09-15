@@ -77,7 +77,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       return;
     }
 
-    const result = await register(formData);
+    const result = await register(formData.email, formData.password);
     
     if (result.success) {
       onSuccess();
