@@ -16,6 +16,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTab = 'lo
 
   const handleSuccess = () => {
     onClose();
+    // --- FINAL FIX: Add this line to force a page refresh ---
+    window.location.reload();
   };
 
   return (
