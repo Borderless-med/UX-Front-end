@@ -5,11 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
 import NavigationAuthButton from '@/components/NavigationAuthButton';
 import AuthModal from '@/components/auth/AuthModal';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const location = useLocation();
+  const { user, isLoading } = useAuth();
+  
+  console.log('[Navigation] Component rendered - Auth State:', { user: !!user, isLoading, isAuthModalOpen });
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -101,7 +105,10 @@ const Navigation = () => {
             >
               Book Now
             </Button>
-            <NavigationAuthButton onAuthClick={() => setIsAuthModalOpen(true)} />
+            <NavigationAuthButton onAuthClick={() => {
+              console.log('[Navigation] Auth button clicked - opening modal');
+              setIsAuthModalOpen(true);
+            }} />
           </div>
 
           {/* Mobile menu button */}
@@ -183,6 +190,7 @@ const Navigation = () => {
                 
                 <div className="w-full">
                   <NavigationAuthButton onAuthClick={() => {
+                    console.log('[Navigation] Mobile auth button clicked - opening modal');
                     setIsMenuOpen(false);
                     setIsAuthModalOpen(true);
                   }} />
@@ -196,7 +204,10 @@ const Navigation = () => {
       {/* Auth Modal */}
       <AuthModal 
         isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
+        onClose={() => {
+          console.log('[Navigation] Modal closing');
+          setIsAuthModalOpen(false);
+        }} 
       />
     </nav>
   );

@@ -426,7 +426,7 @@ const AppointmentBookingForm = () => {
         treatment_type: formData.treatment_type,
         preferred_date: formData.preferred_date!.toISOString().split('T')[0],
         time_slot: formData.time_slot,
-        clinic_location: formData.clinic_location,
+        clinic_location: formData.preferred_clinic || formData.clinic_location,
         consent_given: formData.consent_given,
       };
 

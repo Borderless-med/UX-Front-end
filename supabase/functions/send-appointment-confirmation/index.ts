@@ -15,6 +15,7 @@ interface AppointmentBookingRequest {
   preferred_date: string;
   time_slot: string;
   clinic_location: string;
+  preferred_clinic?: string; // Optional field for backwards compatibility
   consent_given: boolean;
 }
 
@@ -164,7 +165,7 @@ const handler = async (req: Request): Promise<Response> => {
       try {
         const adminEmailResponse = await resend.emails.send({
           from: "SG-JB Dental <onboarding@resend.dev>",
-          to: ["admin@sg-jb-dental.com"],
+          to: ["hello@resend.dev"],
           subject: `New Appointment Booking - ${bookingRef}`,
           html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
