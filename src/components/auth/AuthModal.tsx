@@ -16,10 +16,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTab = 'lo
 
   const handleSuccess = () => {
     onClose();
-    // --- FINAL FIX: Add this line to force a page refresh ---
-    window.location.reload();
+    // --- FINAL FIX: Escape the iframe and reload ---
+    window.top.location.href = window.top.location.href;
   };
-
   return (
     <IframeAwareDialog isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
