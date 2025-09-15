@@ -103,7 +103,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           <Button 
             type="submit"
             className="w-full bg-blue-primary hover:bg-blue-dark"
-            
+            disabled={isLoading}
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
             Sign In
