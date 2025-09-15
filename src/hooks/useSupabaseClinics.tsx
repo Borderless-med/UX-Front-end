@@ -2,12 +2,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { Clinic } from '@/types/clinic';
 import { restSelect } from '@/utils/restClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const useSupabaseClinics = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
+  const { user } = useAuth(); // Import useAuth if it's not already there
 
   useEffect(() => {
     const fetchClinics = async () => {
@@ -148,7 +150,7 @@ export const useSupabaseClinics = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [user]);
 
   return { clinics, loading, error };
 };
