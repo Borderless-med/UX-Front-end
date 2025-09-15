@@ -61,9 +61,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (email: string, password: string) => {
     setIsLoading(true);
-    // ... (register function logic) ...
-    setIsLoading(false);
+    console.log("--- TRACER BULLET: REGISTER ATTEMPT START ---");
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error("--- TRACER BULLET: REGISTER FAILED ---", error);
+        throw error;
+      }
+      
+      console.log("--- TRACER BULLET: REGISTER SUCCEEDED ---", data);
+      // Even on success, signUp returns data, so we create our own success object
+      return { success: true };
+
+    } catch (error: any) {
+      return { success: false, error: error.message || 'An unknown error occurred' };
+    } finally {
+      setIsLoading(false);
+      console.log("--- TRACER BULLET: REGISTER ATTEMPT END ---");
+    }
   };
+
+
+
+
+
 
   const logout = async () => {
     await supabase.auth.signOut();
