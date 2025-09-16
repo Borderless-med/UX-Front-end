@@ -87,7 +87,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
                 size="sm"
                 className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
-                
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4 text-gray-400" />
@@ -105,12 +104,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           )}
           
           <Button 
-            type="button"
+            type="submit"
             className="w-full bg-blue-primary hover:bg-blue-dark"
-            onClick={(e) => {
-              console.log('Sign In button clicked');
-              handleSubmit(e);
-            }}
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
             {console.log('Button rendered')}
