@@ -9,6 +9,7 @@ import FloatingClinicTab from '@/components/FloatingClinicTab';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import ChatWidget from '@/components/ChatWidget';
+import TestLogin from '@/components/auth/TestLogin';
 
 const Index = () => {
 
