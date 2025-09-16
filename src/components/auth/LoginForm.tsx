@@ -14,6 +14,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) => {
+  console.log('LoginForm rendered');
   const { login, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,8 +24,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    console.log('Login form submitted:', email, password); // Add this line
+    console.log('Login form submitted:', email, password);
     const result = await login(email, password);
+    console.log('Login result:', result);
 
     if (result.success) {
       setEmail('');
@@ -37,6 +39,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
 
   return (
     <Card className="w-full max-w-md mx-auto">
+      {console.log('LoginForm JSX rendered')}
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Shield className="h-5 w-5 text-blue-primary" />
@@ -52,6 +55,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {console.log('Form rendered')}
           <div className="space-y-2">
             <Label htmlFor="login-email">Email</Label>
             <Input
@@ -101,11 +105,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           )}
           
           <Button 
-            type="submit"
+            type="button"
             className="w-full bg-blue-primary hover:bg-blue-dark"
-            disabled={isLoading}
+            onClick={(e) => {
+              console.log('Sign In button clicked');
+              handleSubmit(e);
+            }}
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            {console.log('Button rendered')}
             Sign In
           </Button>
         </form>
