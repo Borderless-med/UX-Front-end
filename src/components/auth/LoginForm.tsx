@@ -40,7 +40,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
 
   return (
     <Card className="w-full max-w-md mx-auto">
-      {console.log('LoginForm JSX rendered')}
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Shield className="h-5 w-5 text-blue-primary" />
@@ -56,7 +55,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {console.log('Form rendered')}
           <div className="space-y-2">
             <Label htmlFor="login-email">Email</Label>
             <Input
@@ -109,7 +107,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
             className="w-full bg-blue-primary hover:bg-blue-dark"
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            {console.log('Button rendered')}
             Sign In
           </Button>
         </form>
