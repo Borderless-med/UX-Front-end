@@ -36,22 +36,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     console.log("--- TRACER BULLET: LOGIN ATTEMPT START ---");
     console.log(`Attempting to sign in user: ${email}`);
-    
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
+      console.log('Supabase signInWithPassword response:', { data, error });
       if (error) {
         console.error("--- TRACER BULLET: LOGIN FAILED ---", error);
-        throw error;
+        return { success: false, error: error.message || 'Login failed' };
       }
-      
+      if (!data?.user) {
+        console.error("--- TRACER BULLET: LOGIN FAILED --- No user returned");
+        return { success: false, error: 'No user returned from Supabase' };
+      }
       console.log("--- TRACER BULLET: LOGIN SUCCEEDED ---", data);
       return { success: true };
-
     } catch (error: any) {
+      console.error('Login error (catch):', error);
       return { success: false, error: error.message || 'An unknown error occurred' };
     } finally {
       setIsLoading(false);
