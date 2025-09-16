@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import LoginForm from '@/components/auth/LoginForm';
 import Navigation from '@/components/Navigation';
@@ -26,12 +25,13 @@ const Index = () => {
       </div>
       <HeroSection />
 
-      {/* TEST: Render LoginForm directly for debugging */}
+      {/* TEST: Render LoginForm and TestLogin directly for debugging */}
       <div className="max-w-md mx-auto my-8">
         <LoginForm
           onSuccess={() => alert('Login success!')}
           onSwitchToRegister={() => alert('Switch to register!')}
         />
+        <TestLogin />
       </div>
 
       {/* Add Pricing & Booking Disclaimer */}
