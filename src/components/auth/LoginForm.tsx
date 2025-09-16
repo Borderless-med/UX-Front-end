@@ -23,9 +23,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+    console.log('Login form submitted:', email, password); // Add this line
     const result = await login(email, password);
-    
+
     if (result.success) {
       setEmail('');
       setPassword('');
