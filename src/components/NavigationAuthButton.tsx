@@ -9,9 +9,11 @@ interface NavigationAuthButtonProps {
 }
 
 const NavigationAuthButton = ({ onAuthClick }: NavigationAuthButtonProps) => {
-  const { isAuthenticated, user, logout } = useAuth();
+  // FIX 1: Removed `isAuthenticated` as it's not provided by your context
+  const { user, logout } = useAuth();
 
-  if (!isAuthenticated || !user) {
+  // FIX 2: The condition now correctly checks only for the existence of the `user` object
+  if (!user) {
     return (
       <Button 
         onClick={onAuthClick}
@@ -23,6 +25,7 @@ const NavigationAuthButton = ({ onAuthClick }: NavigationAuthButtonProps) => {
     );
   }
 
+  // The rest of your code is perfect and needs no changes.
   const getInitials = (email: string) => {
     return email.substring(0, 2).toUpperCase();
   };
@@ -65,4 +68,11 @@ const NavigationAuthButton = ({ onAuthClick }: NavigationAuthButtonProps) => {
   );
 };
 
-export default NavigationAuthButton;
+export default NavigationAuthButton;```
+
+### **Next Steps**
+
+1.  Replace the content of your `NavigationAuthButton.tsx` file with the corrected code above.
+2.  Save and deploy this change to Vercel.
+
+When you reload the page, the component will now correctly see the `user` object from the context, the `if (!user)` condition will be `false`, and you will see your user avatar and the dropdown menu as intended.
