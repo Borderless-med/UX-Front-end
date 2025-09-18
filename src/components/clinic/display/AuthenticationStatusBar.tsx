@@ -10,7 +10,8 @@ interface AuthenticationStatusBarProps {
 }
 
 const AuthenticationStatusBar: React.FC<AuthenticationStatusBarProps> = ({ onSignInClick }) => {
-  const { user, isAuthenticated, userProfile, logout } = useAuth();
+  const { user, userProfile, logout } = useAuth();
+  const isAuthenticated = !!user;
 
   if (!isAuthenticated) {
     return (

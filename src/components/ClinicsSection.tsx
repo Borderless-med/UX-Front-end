@@ -22,7 +22,8 @@ const ClinicsSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const { isAuthenticated, userProfile, logDataAccess } = useAuth();
+  const { user, userProfile, logDataAccess } = useAuth();
+  const isAuthenticated = !!user;
   const { clinics, loading, error } = useSupabaseClinics();
   const isMobile = useIsMobile();
 
