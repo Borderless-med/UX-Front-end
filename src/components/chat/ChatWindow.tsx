@@ -1,9 +1,10 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
-import { restInvokeFunction } from '@/utils/restClient';
+// --- NEW: Import the useAuth hook to get user data ---
+import { restInvokeFunction } from '@/utils/restClient'; // <--- ADD THIS LINE
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Message {
   id: string;
@@ -12,42 +13,14 @@ interface Message {
   timestamp: Date;
 }
 
-interface HistoryItem {
-  role: 'user' | 'model';
-  content: string;
-}
-
 interface ChatWindowProps {
   onClose: () => void;
 }
 
-// Helper function to extract user details from message text
-const extractUserDetailsFromMessage = (messageText: string) => {
-  const details: { name?: string; email?: string; phone?: string } = {};
-  
-  // Extract name (basic pattern: "My name is [Name]" or "[Name]" at start)
-  const nameMatch = messageText.match(/(?:my name is|i am|i'm)\s+([^,.\n]+)/i) || 
-                   messageText.match(/^([A-Z][a-z]+ [A-Z][a-z]+)/);
-  if (nameMatch) {
-    details.name = nameMatch[1].trim();
-  }
-  
-  // Extract email
-  const emailMatch = messageText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  if (emailMatch) {
-    details.email = emailMatch[0];
-  }
-  
-  // Extract phone (international format)
-  const phoneMatch = messageText.match(/\+\d{1,3}[\s-]?\d{2,3}[\s-]?\d{3,4}[\s-]?\d{3,4}/);
-  if (phoneMatch) {
-    details.phone = phoneMatch[0];
-  }
-  
-  return details;
-};
-
 const ChatWindow = ({ onClose }: ChatWindowProps) => {
+  // --- NEW: Get the user object from the AuthContext ---
+  const { user } = useAuth();
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -74,118 +47,93 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || isTyping) return;
 
-    // Step 1: Take the user's new message and add it to the conversation
+    // --- Step 1: Add the user's new message to the UI ---
     const userMessage: Message = {
       id: Date.now().toString(),
       text: message,
       sender: 'user',
       timestamp: new Date(),
     };
-
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInputMessage('');
     setIsTyping(true);
 
     try {
-      // Step 2: Create complete history array from ALL messages (excluding welcome message)
+      // --- Step 2: Prepare the request for the backend ---
       const history = updatedMessages
-        .filter(msg => msg.id !== '1') // Exclude only the initial welcome message
+        .filter(msg => msg.id !== '1')
         .map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'model',
           content: msg.text
         }));
 
-      // Step 3: Create the three session variables required by backend
-      const requestBody = {
+      const requestBody: any = {
         history: history,
         applied_filters: sessionAppliedFilters || {},
         candidate_pool: sessionCandidatePool || [],
         booking_context: sessionBookingContext || {}
       };
 
-      console.log('=== SENDING TO BACKEND ===');
-      console.log('History length:', history.length);
-      console.log('Complete request body:', requestBody);
-      console.log('==========================');
+      // Read the existing session ID from local storage
+      const sessionId = localStorage.getItem('chat_session_id');
+      if (sessionId) {
+        requestBody.session_id = sessionId;
+      }
 
-      // Helper function to detect environment based on hostname
-      const getEnvironment = () => {
-        const hostname = window.location.hostname;
-        
-        // Check if it's the specific published Lovable domain (production)
-        // This pattern matches published Lovable sites vs preview/staging sites
-        if (hostname.match(/^[a-z0-9-]+\.lovable\.app$/) && !hostname.includes('preview') && !hostname.includes('staging')) {
-          return 'production';
-        }
-        
-        // If it's a preview URL, localhost, or development domain, it's development
-        if (hostname.includes('lovable.app') || hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
-          return 'development';
-        }
-        
-        // If it's a custom domain, it's production
-        return 'production';
-      };
+      // =================================================================
+      // --- NEW: Add the user's ID to the request if they are logged in ---
+      if (user) {
+        requestBody.user_id = user.id;
+        console.log('Authenticated user ID sent:', user.id);
+      } else {
+        console.log('No authenticated user found.');
+      }
+      // =================================================================
 
-      // Step 4: Call the Edge Function using REST client
+      
+      // This calls the Edge Function using the reusable REST client
       const data = await restInvokeFunction('dynamic-function', {
         body: requestBody,
         headers: {
-          'x-environment': getEnvironment(),
+          'x-environment': getEnvironment(), // This tells the function whether we are in dev or prod
         },
       }, {
         timeout: 30000,  // 30 second timeout for AI responses
         retries: 1       // Single retry for edge functions
       });
 
-      // Step 5: Parse response text, applied_filters, and candidate_pool from response
+      // --- Step 4: Process the successful response ---
       if (data && data.response) {
-        // Check if response is raw data/JSON or formatted text
-        let finalResponseText = data.response;
-        
-        // If response looks like raw data, format it properly
-        if (typeof finalResponseText === 'object' || 
-            (typeof finalResponseText === 'string' && finalResponseText.startsWith('{'))) {
-          try {
-            const parsed = typeof finalResponseText === 'string' ? JSON.parse(finalResponseText) : finalResponseText;
-            finalResponseText = parsed.message || parsed.text || JSON.stringify(parsed, null, 2);
-          } catch (e) {
-            // If parsing fails, use as is
-          }
+        // Store the session ID from the response
+        if (data.session_id) {
+          localStorage.setItem('chat_session_id', data.session_id);
+          console.log('Session ID received and saved:', data.session_id);
         }
 
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: finalResponseText,
+          text: data.response,
           sender: 'ai',
           timestamp: new Date(),
         };
 
-        // Step 7: Update chat display with AI response and update session variables
+        // --- Step 5: Update the UI with the AI's response ---
         setMessages(prev => [...prev, aiMessage]);
         
-        // Update session state with new applied_filters and candidate_pool
-        if (data.applied_filters) {
-          setSessionAppliedFilters(data.applied_filters);
-          console.log('Updated applied_filters:', data.applied_filters);
-        }
-        if (data.candidate_pool) {
-          setSessionCandidatePool(data.candidate_pool);
-          console.log('Updated candidate_pool:', data.candidate_pool);
-        }
-        if (data.booking_context) {
-          setSessionBookingContext(data.booking_context);
-          console.log('Updated booking_context:', data.booking_context);
-        }
+        if (data.applied_filters) setSessionAppliedFilters(data.applied_filters);
+        if (data.candidate_pool) setSessionCandidatePool(data.candidate_pool);
+        if (data.booking_context) setSessionBookingContext(data.booking_context);
+        
       } else {
         throw new Error('No response received from AI');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Sorry, I encountered an error while processing your message. Please try again.',
+        // --- NEW: Display the specific error message from the backend ---
+        text: error.message || 'Sorry, I encountered an error while processing your message. Please try again.',
         sender: 'ai',
         timestamp: new Date(),
       };
@@ -222,6 +170,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
           <ChatMessage key={message.id} message={message} />
         ))}
         {isTyping && (
+          // ... (typing indicator code is unchanged) ...
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-blue-primary rounded-full flex items-center justify-center">
               <span className="text-xs font-bold text-white">AI</span>

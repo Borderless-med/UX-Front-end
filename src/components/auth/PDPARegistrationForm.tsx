@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -77,7 +76,11 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       return;
     }
 
-    const result = await register(formData.email, formData.password);
+    // =================================================================
+    // --- THIS IS THE ONLY LINE THAT HAS CHANGED ---
+    // We are now passing the entire formData object to the register function.
+    const result = await register(formData);
+    // =================================================================
     
     if (result.success) {
       onSuccess();
