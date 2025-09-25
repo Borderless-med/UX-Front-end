@@ -6,6 +6,21 @@ import ChatInput from './ChatInput';
 import { restInvokeFunction } from '@/utils/restClient'; // <--- ADD THIS LINE
 import { useAuth } from '@/contexts/AuthContext';
 
+// --- PASTE THIS HELPER FUNCTION HERE ---
+
+// Helper function to detect environment based on hostname
+const getEnvironment = () => {
+  const hostname = window.location.hostname;
+  
+  // If it's a localhost or development domain, it's development
+  if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+    return 'development';
+  }
+  
+  // Otherwise, assume it's production (Vercel preview URLs, live domain, etc.)
+  return 'production';
+};
+
 interface Message {
   id: string;
   text: string;
