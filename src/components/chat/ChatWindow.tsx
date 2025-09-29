@@ -1,23 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Send } from 'lucide-react';
+import { X } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
-// --- NEW: Import the useAuth hook to get user data ---
-import { restInvokeFunction } from '@/utils/restClient'; // <--- ADD THIS LINE
+import { restInvokeFunction } from '@/utils/restClient';
 import { useAuth } from '@/contexts/AuthContext';
-
-// --- PASTE THIS HELPER FUNCTION HERE ---
 
 // Helper function to detect environment based on hostname
 const getEnvironment = () => {
   const hostname = window.location.hostname;
-  
-  // If it's a localhost or development domain, it's development
   if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
     return 'development';
   }
-  
-  // Otherwise, assume it's production (Vercel preview URLs, live domain, etc.)
   return 'production';
 };
 
@@ -33,7 +26,6 @@ interface ChatWindowProps {
 }
 
 const ChatWindow = ({ onClose }: ChatWindowProps) => {
-  // --- NEW: Get the user object from the AuthContext ---
   const { user } = useAuth();
 
   const [messages, setMessages] = useState<Message[]>([
@@ -62,7 +54,39 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || isTyping) return;
 
-    // --- Step 1: Add the user's new message to the UI ---
+    // --- NEW LOGIC: Check if the user is logged in ---
+    if (!user) {
+      // If there is NO user...
+
+      // 1. Add the user's message to the UI immediately.
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: message,
+        sender: 'user',
+        timestamp: new Date(),
+      };
+      setMessages(prevMessages => [...prevMessages, userMessage]);
+      setInputMessage(''); // Clear the input box
+
+      // 2. Create our polite, pre-written response.
+      const botResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Hello! To get started and enjoy all the features of our AI Concierge, please sign up or log in. We'd love to help you find the perfect dental clinic!",
+        sender: 'ai',
+        timestamp: new Date(),
+      };
+
+      // 3. Add the pre-written response to the chat window after a short delay.
+      setTimeout(() => {
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      }, 500); // 500ms delay to feel more natural
+
+      // 4. IMPORTANT: Stop the function here so it doesn't try to call the backend.
+      return;
+    }
+    // --- END OF NEW LOGIC ---
+
+    // If we are here, the user IS logged in.
     const userMessage: Message = {
       id: Date.now().toString(),
       text: message,
@@ -75,7 +99,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     setIsTyping(true);
 
     try {
-      // --- Step 2: Prepare the request for the backend ---
       const history = updatedMessages
         .filter(msg => msg.id !== '1')
         .map(msg => ({
@@ -90,37 +113,26 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         booking_context: sessionBookingContext || {}
       };
 
-      // Read the existing session ID from local storage
       const sessionId = localStorage.getItem('chat_session_id');
       if (sessionId) {
         requestBody.session_id = sessionId;
       }
 
-      // =================================================================
-      // --- NEW: Add the user's ID to the request if they are logged in ---
-      if (user) {
-        requestBody.user_id = user.id;
-        console.log('Authenticated user ID sent:', user.id);
-      } else {
-        console.log('No authenticated user found.');
-      }
-      // =================================================================
-
+      // Add the user's ID to the request since we know they are logged in
+      requestBody.user_id = user.id;
+      console.log('Authenticated user ID sent:', user.id);
       
-      // This calls the Edge Function using the reusable REST client
       const data = await restInvokeFunction('dynamic-function', {
         body: requestBody,
         headers: {
-          'x-environment': getEnvironment(), // This tells the function whether we are in dev or prod
+          'x-environment': getEnvironment(),
         },
       }, {
-        timeout: 30000,  // 30 second timeout for AI responses
-        retries: 1       // Single retry for edge functions
+        timeout: 30000,
+        retries: 1
       });
 
-      // --- Step 4: Process the successful response ---
       if (data && data.response) {
-        // Store the session ID from the response
         if (data.session_id) {
           localStorage.setItem('chat_session_id', data.session_id);
           console.log('Session ID received and saved:', data.session_id);
@@ -128,12 +140,11 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: data.response,
+          text: data.response, // Use data.response directly
           sender: 'ai',
           timestamp: new Date(),
         };
 
-        // --- Step 5: Update the UI with the AI's response ---
         setMessages(prev => [...prev, aiMessage]);
         
         if (data.applied_filters) setSessionAppliedFilters(data.applied_filters);
@@ -147,7 +158,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       console.error('Error sending message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        // --- NEW: Display the specific error message from the backend ---
         text: error.message || 'Sorry, I encountered an error while processing your message. Please try again.',
         sender: 'ai',
         timestamp: new Date(),
@@ -185,7 +195,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
           <ChatMessage key={message.id} message={message} />
         ))}
         {isTyping && (
-          // ... (typing indicator code is unchanged) ...
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-blue-primary rounded-full flex items-center justify-center">
               <span className="text-xs font-bold text-white">AI</span>
