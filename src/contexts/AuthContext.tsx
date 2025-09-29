@@ -4,12 +4,23 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
 
+// --- NEW: Define a type for the registration data ---
+interface RegistrationData {
+  email: string;
+  password: string;
+  fullName: string;
+  organization: string;
+  purposeOfUse: string;
+  userCategory: string;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  // --- NEW: Update the register function's signature ---
+  register: (registrationData: RegistrationData) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 }
 
@@ -46,10 +57,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("--- TRACER BULLET: LOGIN FAILED ---", error);
         return { success: false, error: error.message || 'Login failed' };
       }
-      if (!data?.user) {
-        console.error("--- TRACER BULLET: LOGIN FAILED --- No user returned");
-        return { success: false, error: 'No user returned from Supabase' };
-      }
       console.log("--- TRACER BULLET: LOGIN SUCCEEDED ---", data);
       return { success: true };
     } catch (error: any) {
@@ -61,13 +68,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (email: string, password: string) => {
+  // --- NEW: The entire register function is updated ---
+  const register = async (registrationData: RegistrationData) => {
     setIsLoading(true);
     console.log("--- TRACER BULLET: REGISTER ATTEMPT START ---");
     try {
+      const { email, password, fullName, organization, purposeOfUse, userCategory } = registrationData;
+
+      // This is the key change: passing the extra data to Supabase
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+            organization: organization,
+            purpose_of_use: purposeOfUse,
+            user_category: userCategory,
+          }
+        }
       });
 
       if (error) {
@@ -76,21 +95,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       console.log("--- TRACER BULLET: REGISTER SUCCEEDED ---", data);
-      // Even on success, signUp returns data, so we create our own success object
       return { success: true };
 
     } catch (error: any) {
+      // Return the specific database error message if available
       return { success: false, error: error.message || 'An unknown error occurred' };
     } finally {
       setIsLoading(false);
       console.log("--- TRACER BULLET: REGISTER ATTEMPT END ---");
     }
   };
-
-
-
-
-
 
   const logout = async () => {
     await supabase.auth.signOut();

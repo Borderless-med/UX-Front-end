@@ -1,73 +1,39 @@
-# Welcome to your Lovable project
 
-## Project info
+# SG-Smile Saver – Project Overview
 
-**URL**: https://lovable.dev/projects/20b0e962-1b25-40eb-b514-5b283d2a150d
+## Purpose
 
-## How can I edit this code?
+SG-Smile Saver is a web application designed to help users compare dental clinics, book appointments, and access practitioner details in Singapore. The platform aims to provide transparent pricing, verified clinic information, and a seamless booking experience.
 
-There are several ways of editing your application.
+## Tech Stack & Key Dependencies
 
-**Use Lovable**
+- **Frontend:** React, TypeScript, Vite
+- **UI Frameworks:** shadcn-ui, Tailwind CSS
+- **Authentication & Data:** Supabase (for user auth and clinic data)
+- **Other:** ESLint, PostCSS, Vercel (deployment)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/20b0e962-1b25-40eb-b514-5b283d2a150d) and start prompting.
+## What to Expect from the Candidate
 
-Changes made via Lovable will be committed automatically to this repo.
+As part of your interview exercise, please:
 
-**Use your preferred IDE**
+1. **Develop an Overview:**  
+	Provide your own high-level overview of the system architecture and design.  
+	(How do the main components interact? What is the user flow?)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **Critique the Design:**  
+	Identify strengths and weaknesses in the current system design and architecture.  
+	(Consider UX, scalability, maintainability, and code structure.)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. **Debug the Login Issue:**  
+	Investigate and propose a solution for the current inability to log in.  
+	(Focus on the `LoginForm` and `AuthContext.tsx`.)
 
-Follow these steps:
+**Note:**  
+- No real API keys or secrets are included.  
+- If you wish to run the project locally, use your own Supabase credentials or mock the API calls.
+- The live site is available at: [Vercel Deployment URL](https://sg-smile-saver.vercel.app)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Instructions
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/20b0e962-1b25-40eb-b514-5b283d2a150d) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- Please document your findings and solutions clearly.
+- You may submit diagrams, written analysis, and/or code changes as appropriate.
