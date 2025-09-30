@@ -51,11 +51,9 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     scrollToBottom();
   }, [messages]);
 
-  // --- THIS IS THE NEW, CORRECTED FUNCTION ---
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || isTyping) return;
 
-    // --- LOGIC FOR LOGGED-OUT USERS (No change here) ---
     if (!user) {
       const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
       setMessages(prev => [...prev, userMessage]);
@@ -64,17 +62,12 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       setTimeout(() => setMessages(prev => [...prev, botResponse]), 500);
       return;
     }
-    // --- END OF LOGIC FOR LOGGED-OUT USERS ---
-
-    // If we are here, the user IS logged in.
 
     const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInputMessage('');
     setIsTyping(true);
-
-    // CRITICAL FIX: We create the history based on the *next* state of messages, not the current one.
-    const updatedMessages = [...messages, userMessage];
 
     try {
       const history = updatedMessages
@@ -84,7 +77,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
           content: msg.text
         }));
 
-      // CRITICAL FIX: Build the request body with the CURRENT state variables.
       const requestBody: any = {
         history: history,
         applied_filters: sessionAppliedFilters,
@@ -123,8 +115,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
         setMessages(prev => [...prev, aiMessage]);
         
-        // CRITICAL FIX: Update the state with the NEW data from the backend.
-        // This ensures the *next* message will have the correct context.
         if (data.applied_filters) {
           console.log("<<<<< Updating applied_filters state:", data.applied_filters);
           setSessionAppliedFilters(data.applied_filters);
@@ -189,4 +179,24 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             <div className="bg-white rounded-lg px-4 py-2 shadow-sm">
               <div className="flex space-x-1">
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <ChatInput
+        value={inputMessage}
+        onChange={setInputMessage}
+        onSend={handleSendMessage}
+        disabled={isTyping}
+      />
+    </div>
+  );
+};
+
+export default ChatWindow;
