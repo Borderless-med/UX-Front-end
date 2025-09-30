@@ -38,10 +38,12 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [sessionAppliedFilters, setSessionAppliedFilters] = useState<Record<string, any>>({});
-  const [sessionCandidatePool, setSessionCandidatePool] = useState<any[]>([]);
-  const [sessionBookingContext, setSessionBookingContext] = useState<Record<string, any>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // --- CRITICAL FIX: Use refs to hold the immediate session state ---
+  const sessionAppliedFilters = useRef<Record<string, any>>({});
+  const sessionCandidatePool = useRef<any[]>([]);
+  const sessionBookingContext = useRef<Record<string, any>>({});
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -77,11 +79,12 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
           content: msg.text
         }));
 
+      // --- CRITICAL FIX: Read the .current value from the refs ---
       const requestBody: any = {
         history: history,
-        applied_filters: sessionAppliedFilters,
-        candidate_pool: sessionCandidatePool,
-        booking_context: sessionBookingContext,
+        applied_filters: sessionAppliedFilters.current,
+        candidate_pool: sessionCandidatePool.current,
+        booking_context: sessionBookingContext.current,
         user_id: user.id
       };
 
@@ -115,17 +118,18 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
         setMessages(prev => [...prev, aiMessage]);
         
+        // --- CRITICAL FIX: Update the .current value of the refs ---
         if (data.applied_filters) {
           console.log("<<<<< Updating applied_filters state:", data.applied_filters);
-          setSessionAppliedFilters(data.applied_filters);
+          sessionAppliedFilters.current = data.applied_filters;
         }
         if (data.candidate_pool) {
           console.log("<<<<< Updating candidate_pool state with", data.candidate_pool.length, "clinics");
-          setSessionCandidatePool(data.candidate_pool);
+          sessionCandidatePool.current = data.candidate_pool;
         }
         if (data.booking_context) {
           console.log("<<<<< Updating booking_context state:", data.booking_context);
-          setSessionBookingContext(data.booking_context);
+          sessionBookingContext.current = data.booking_context;
         }
         
       } else {
