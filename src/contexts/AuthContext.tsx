@@ -155,9 +155,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log("--- TRACER BULLET: REGISTER ATTEMPT END ---");
     }
   };
-
+  
   const logout = async () => {
-    await supabase.auth.signOut();
+      // The 'global' scope tells signOut to clear storage for all users, 
+      // which is the most likely cause of our issue. 
+      // We are changing it to 'local' to be more specific.
+      await supabase.auth.signOut({ scope: 'local' });
   };
 
   return (
