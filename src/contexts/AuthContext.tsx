@@ -157,11 +157,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const logout = async () => {
-      // The 'global' scope tells signOut to clear storage for all users, 
-      // which is the most likely cause of our issue. 
-      // We are changing it to 'local' to be more specific.
-      await supabase.auth.signOut({ scope: 'local' });
+    // --- THIS IS THE CRITICAL FIX ---
+    // Step 1: Read the session ID from storage and save it in a temporary variable.
+    const lastSessionId = localStorage.getItem('chat_session_id');
+    console.log('Preparing to log out. Last session ID was:', lastSessionId);
+
+    // Step 2: Call the signOut function, which we know clears localStorage.
+    await supabase.auth.signOut();
+
+    // Step 3: Immediately after signOut completes, write the session ID back.
+    if (lastSessionId) {
+      localStorage.setItem('chat_session_id', lastSessionId);
+      console.log('Logout complete. Session ID has been restored to localStorage.');
+    }
+    // --- END OF FIX ---
   };
+
+
 
   return (
     <AuthContext.Provider value={{ user, session, isLoading, login, register, logout }}>
