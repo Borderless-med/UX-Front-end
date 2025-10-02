@@ -46,11 +46,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
-      // --- CRITICAL CHANGE: When a user signs out, clear the session ID ---
-      if (_event === "SIGNED_OUT") {
-        localStorage.removeItem('chat_session_id');
-        console.log("User signed out, chat session ID cleared.");
-      }
     });
 
     return () => {
