@@ -3,8 +3,18 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
+// --- CHANGE 1: Import the API client and the environment helper ---
+import { restInvokeFunction } from '@/utils/restClient';
 
-// --- NEW: Define a type for the registration data ---
+const getEnvironment = () => {
+  const hostname = window.location.hostname;
+  if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+    return 'development';
+  }
+  return 'production';
+};
+
+// --- (No changes to this interface) ---
 interface RegistrationData {
   email: string;
   password: string;
@@ -19,7 +29,6 @@ interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  // --- NEW: Update the register function's signature ---
   register: (registrationData: RegistrationData) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 }
@@ -36,12 +45,61 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log("Auth state changed:", _event, session);
       setSession(session);
       setUser(session?.user ?? null);
+      
+      // --- CRITICAL CHANGE: When a user signs out, clear the session ID ---
+      if (_event === "SIGNED_OUT") {
+        localStorage.removeItem('chat_session_id');
+        console.log("User signed out, chat session ID cleared.");
+      }
     });
 
     return () => {
       authListener?.subscription.unsubscribe();
     };
   }, []);
+  
+  // --- CHANGE 2: Add the new useEffect hook for session restoration ---
+  useEffect(() => {
+    // This effect runs whenever the user's authentication state changes.
+    if (user && session) { 
+      // We only care about when a user has just logged IN.
+      
+      const restoreSession = async () => {
+        const sessionId = localStorage.getItem('chat_session_id');
+        
+        // Only try to restore if an old session ID exists
+        if (sessionId) {
+          console.log(`User ${user.id} logged in. Attempting to restore session: ${sessionId}`);
+          try {
+            // Call our new backend endpoint
+            const data = await restInvokeFunction('restore_session', {
+              body: { session_id: sessionId, user_id: user.id },
+              headers: { 'x-environment': getEnvironment() },
+            });
+
+            if (data.success && data.context) {
+              console.log('✅ Session successfully restored from backend.');
+              // We don't need to do anything else here. The ChatWindow will now
+              // pick up the session on its own. This just verifies the connection.
+            } else {
+              console.warn('Backend restore call did not succeed, starting fresh.', data);
+              // If restore fails (e.g., session expired), clear the old ID
+              localStorage.removeItem('chat_session_id');
+            }
+          } catch (error) {
+            console.error('Failed to restore session:', error);
+            // Clear the old ID if there's a network error
+            localStorage.removeItem('chat_session_id');
+          }
+        } else {
+          console.log("User logged in, but no previous chat session ID found in localStorage. A new session will be created on the first message.");
+        }
+      };
+
+      restoreSession();
+    }
+  }, [user, session]); // This code runs ONLY when the 'user' or 'session' object changes.
+
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -68,14 +126,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // --- NEW: The entire register function is updated ---
   const register = async (registrationData: RegistrationData) => {
     setIsLoading(true);
     console.log("--- TRACER BULLET: REGISTER ATTEMPT START ---");
     try {
       const { email, password, fullName, organization, purposeOfUse, userCategory } = registrationData;
 
-      // This is the key change: passing the extra data to Supabase
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -98,7 +154,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { success: true };
 
     } catch (error: any) {
-      // Return the specific database error message if available
       return { success: false, error: error.message || 'An unknown error occurred' };
     } finally {
       setIsLoading(false);
