@@ -56,12 +56,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // --- CHANGE 2: Add the new useEffect hook for session restoration ---
   useEffect(() => {
     // This effect runs whenever the user's authentication state changes.
+    // We use a unique key for session ID to avoid interference from Supabase or other libraries.
     if (user && session) { 
       // We only care about when a user has just logged IN.
-      
       const restoreSession = async () => {
-        const sessionId = localStorage.getItem('chat_session_id');
-        
+        const sessionId = localStorage.getItem('gsp-chatbot-session-id');
         // Only try to restore if an old session ID exists
         if (sessionId) {
           console.log(`User ${user.id} logged in. Attempting to restore session: ${sessionId}`);
@@ -71,7 +70,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               body: { session_id: sessionId, user_id: user.id },
               headers: { 'x-environment': getEnvironment() },
             });
-
             if (data.success && data.context) {
               console.log('✅ Session successfully restored from backend.');
               // We don't need to do anything else here. The ChatWindow will now
@@ -79,18 +77,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             } else {
               console.warn('Backend restore call did not succeed, starting fresh.', data);
               // If restore fails (e.g., session expired), clear the old ID
-              localStorage.removeItem('chat_session_id');
+              localStorage.removeItem('gsp-chatbot-session-id');
             }
           } catch (error) {
             console.error('Failed to restore session:', error);
             // Clear the old ID if there's a network error
-            localStorage.removeItem('chat_session_id');
+            localStorage.removeItem('gsp-chatbot-session-id');
           }
         } else {
           console.log("User logged in, but no previous chat session ID found in localStorage. A new session will be created on the first message.");
         }
       };
-
       restoreSession();
     }
   }, [user, session]); // This code runs ONLY when the 'user' or 'session' object changes.
@@ -161,7 +158,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     // --- THIS IS THE CRITICAL FIX ---
     // Step 1: Read the session ID from storage and save it in a temporary variable.
-    const lastSessionId = localStorage.getItem('chat_session_id');
+    // We use a unique key for session ID to avoid interference from Supabase or other libraries.
+    const lastSessionId = localStorage.getItem('gsp-chatbot-session-id');
     console.log('🔴 Preparing to log out. Last session ID was:', lastSessionId);
 
     // Step 2: Call the signOut function with no parameters (safest default)
@@ -169,7 +167,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Step 3: Immediately after signOut completes, write the session ID back.
     if (lastSessionId) {
-      localStorage.setItem('chat_session_id', lastSessionId);
+      localStorage.setItem('gsp-chatbot-session-id', lastSessionId);
       console.log('🔴 Logout complete. Session ID has been restored to localStorage.');
     } else {
       console.log('🔴 No session ID to preserve (this is expected if you had no previous chat)');
