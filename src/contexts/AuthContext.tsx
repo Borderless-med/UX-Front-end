@@ -157,10 +157,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const logout = async () => {
+    console.log('🔴 LOGOUT FUNCTION CALLED - Our custom logout is running!');
+    
     // --- THIS IS THE CRITICAL FIX ---
     // Step 1: Read the session ID from storage and save it in a temporary variable.
     const lastSessionId = localStorage.getItem('chat_session_id');
-    console.log('Preparing to log out. Last session ID was:', lastSessionId);
+    console.log('🔴 Preparing to log out. Last session ID was:', lastSessionId);
 
     // Step 2: Call the signOut function, which we know clears localStorage.
     await supabase.auth.signOut();
@@ -168,7 +170,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Step 3: Immediately after signOut completes, write the session ID back.
     if (lastSessionId) {
       localStorage.setItem('chat_session_id', lastSessionId);
-      console.log('Logout complete. Session ID has been restored to localStorage.');
+      console.log('🔴 Logout complete. Session ID has been restored to localStorage.');
+    } else {
+      console.log('🔴 No session ID to preserve (this is expected if you had no previous chat)');
     }
     // --- END OF FIX ---
   };
