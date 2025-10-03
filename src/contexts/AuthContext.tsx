@@ -164,8 +164,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const lastSessionId = localStorage.getItem('chat_session_id');
     console.log('🔴 Preparing to log out. Last session ID was:', lastSessionId);
 
-    // Step 2: Call the signOut function, which we know clears localStorage.
-    await supabase.auth.signOut();
+    // Step 2: Call the signOut function with LOCAL scope only (not global)
+    await supabase.auth.signOut({ scope: 'local' });
 
     // Step 3: Immediately after signOut completes, write the session ID back.
     if (lastSessionId) {
