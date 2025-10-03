@@ -88,13 +88,14 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         user_id: user.id
       };
 
-      const sessionId = localStorage.getItem('chat_session_id');
+      // Use unique key for persistent session
+      const sessionId = localStorage.getItem('gsp-chatbot-session-id');
       if (sessionId) {
         requestBody.session_id = sessionId;
       }
-      
+
       console.log(">>>>> Sending this body to backend:", JSON.stringify(requestBody, null, 2));
-      
+
       const data = await restInvokeFunction('dynamic-function', {
         body: requestBody,
         headers: { 'x-environment': getEnvironment() },
@@ -105,7 +106,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
       if (data && data.response) {
         if (data.session_id) {
-          localStorage.setItem('chat_session_id', data.session_id);
+          localStorage.setItem('gsp-chatbot-session-id', data.session_id);
           console.log('<<<<< Session ID received:', data.session_id);
         }
 
@@ -117,7 +118,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         };
 
         setMessages(prev => [...prev, aiMessage]);
-        
+
         // --- CRITICAL FIX: Update the .current value of the refs ---
         if (data.applied_filters) {
           console.log("<<<<< Updating applied_filters state:", data.applied_filters);
@@ -131,7 +132,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
           console.log("<<<<< Updating booking_context state:", data.booking_context);
           sessionBookingContext.current = data.booking_context;
         }
-        
+
       } else {
         throw new Error('No response received from AI');
       }
