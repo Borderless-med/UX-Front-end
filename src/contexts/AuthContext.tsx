@@ -28,6 +28,8 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
+  sessionId: string | null;
+  setSessionId: (id: string | null) => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (registrationData: RegistrationData) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -36,9 +38,43 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const register = async (registrationData: RegistrationData) => {
+    setIsLoading(true);
+    console.log("--- TRACER BULLET: REGISTER ATTEMPT START ---");
+    try {
+      const { email, password, fullName, organization, purposeOfUse, userCategory } = registrationData;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            organization: organization,
+            purpose_of_use: purposeOfUse,
+            user_category: userCategory,
+          }
+        }
+      });
+
+      if (error) {
+        console.error("--- TRACER BULLET: REGISTER FAILED ---", error);
+        throw error;
+      }
+      console.log("--- TRACER BULLET: REGISTER SUCCEEDED ---", data);
+      return { success: true };
+
+    } catch (error: any) {
+      return { success: false, error: error.message || 'An unknown error occurred' };
+    } finally {
+      setIsLoading(false);
+      console.log("--- TRACER BULLET: REGISTER ATTEMPT END ---");
+    }
+  };
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -60,32 +96,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (user && session) { 
       // We only care about when a user has just logged IN.
       const restoreSession = async () => {
-        const sessionId = localStorage.getItem('gsp-chatbot-session-id');
-        // Only try to restore if an old session ID exists
-        if (sessionId) {
-          console.log(`User ${user.id} logged in. Attempting to restore session: ${sessionId}`);
+        const restoredSessionId = localStorage.getItem('gsp-chatbot-session-id');
+        if (restoredSessionId) {
+          console.log(`User ${user.id} logged in. Attempting to restore session: ${restoredSessionId}`);
+          setSessionId(restoredSessionId);
           try {
-            // Call our new backend endpoint
             const data = await restInvokeFunction('restore_session', {
-              body: { session_id: sessionId, user_id: user.id },
+              body: { session_id: restoredSessionId, user_id: user.id },
               headers: { 'x-environment': getEnvironment() },
             });
             if (data.success && data.context) {
               console.log('✅ Session successfully restored from backend.');
-              // We don't need to do anything else here. The ChatWindow will now
-              // pick up the session on its own. This just verifies the connection.
             } else {
               console.warn('Backend restore call did not succeed, starting fresh.', data);
-              // If restore fails (e.g., session expired), clear the old ID
               localStorage.removeItem('gsp-chatbot-session-id');
+              setSessionId(null);
             }
           } catch (error) {
             console.error('Failed to restore session:', error);
-            // Clear the old ID if there's a network error
             localStorage.removeItem('gsp-chatbot-session-id');
+            setSessionId(null);
           }
         } else {
           console.log("User logged in, but no previous chat session ID found in localStorage. A new session will be created on the first message.");
+          setSessionId(null);
         }
       };
       restoreSession();
@@ -110,46 +144,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log("--- TRACER BULLET: LOGIN SUCCEEDED ---", data);
       return { success: true };
     } catch (error: any) {
-      console.error('Login error (catch):', error);
       return { success: false, error: error.message || 'An unknown error occurred' };
     } finally {
       setIsLoading(false);
       console.log("--- TRACER BULLET: LOGIN ATTEMPT END ---");
-    }
-  };
-
-  const register = async (registrationData: RegistrationData) => {
-    setIsLoading(true);
-    console.log("--- TRACER BULLET: REGISTER ATTEMPT START ---");
-    try {
-      const { email, password, fullName, organization, purposeOfUse, userCategory } = registrationData;
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            organization: organization,
-            purpose_of_use: purposeOfUse,
-            user_category: userCategory,
-          }
-        }
-      });
-
-      if (error) {
-        console.error("--- TRACER BULLET: REGISTER FAILED ---", error);
-        throw error;
-      }
-      
-      console.log("--- TRACER BULLET: REGISTER SUCCEEDED ---", data);
-      return { success: true };
-
-    } catch (error: any) {
-      return { success: false, error: error.message || 'An unknown error occurred' };
-    } finally {
-      setIsLoading(false);
-      console.log("--- TRACER BULLET: REGISTER ATTEMPT END ---");
     }
   };
   
@@ -159,7 +157,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // --- THIS IS THE CRITICAL FIX ---
     // Step 1: Read the session ID from storage and save it in a temporary variable.
     // We use a unique key for session ID to avoid interference from Supabase or other libraries.
-    const lastSessionId = localStorage.getItem('gsp-chatbot-session-id');
+  const lastSessionId = localStorage.getItem('gsp-chatbot-session-id');
     console.log('🔴 Preparing to log out. Last session ID was:', lastSessionId);
 
     // Step 2: Call the signOut function with no parameters (safest default)
@@ -178,7 +176,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, session, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, session, isLoading, sessionId, setSessionId, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
