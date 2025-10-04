@@ -91,40 +91,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
   // --- CHANGE 2: Add the new useEffect hook for session restoration ---
   useEffect(() => {
-    // This effect runs whenever the user's authentication state changes.
-    // We use a unique key for session ID to avoid interference from Supabase or other libraries.
-    if (user && session) { 
-      // We only care about when a user has just logged IN.
-      const restoreSession = async () => {
-        const restoredSessionId = localStorage.getItem('gsp-chatbot-session-id');
-        if (restoredSessionId) {
-          console.log(`User ${user.id} logged in. Attempting to restore session: ${restoredSessionId}`);
-          setSessionId(restoredSessionId);
-          try {
-            const data = await restInvokeFunction('restore_session', {
-              body: { session_id: restoredSessionId, user_id: user.id },
-              headers: { 'x-environment': getEnvironment() },
-            });
-            if (data.success && data.context) {
-              console.log('✅ Session successfully restored from backend.');
-            } else {
-              console.warn('Backend restore call did not succeed, starting fresh.', data);
-              localStorage.removeItem('gsp-chatbot-session-id');
-              setSessionId(null);
-            }
-          } catch (error) {
-            console.error('Failed to restore session:', error);
-            localStorage.removeItem('gsp-chatbot-session-id');
-            setSessionId(null);
-          }
-        } else {
-          console.log("User logged in, but no previous chat session ID found in localStorage. A new session will be created on the first message.");
-          setSessionId(null);
-        }
-      };
-      restoreSession();
+    // Always restore sessionId from localStorage after login
+    if (user && session) {
+      const restoredSessionId = localStorage.getItem('gsp-chatbot-session-id');
+      if (restoredSessionId) {
+        setSessionId(restoredSessionId);
+        console.log(`Restored sessionId after login: ${restoredSessionId}`);
+      } else {
+        setSessionId(null);
+        console.log('No previous chat session ID found in localStorage.');
+      }
     }
-  }, [user, session]); // This code runs ONLY when the 'user' or 'session' object changes.
+  }, [user, session]);
 
 
   const login = async (email: string, password: string) => {
