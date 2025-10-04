@@ -26,7 +26,7 @@ interface ChatWindowProps {
 }
 
 const ChatWindow = ({ onClose }: ChatWindowProps) => {
-  const { user } = useAuth();
+  const { user, sessionId, setSessionId } = useAuth();
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -88,8 +88,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         user_id: user.id
       };
 
-      // Use unique key for persistent session
-      const sessionId = localStorage.getItem('gsp-chatbot-session-id');
+      // Use sessionId from AuthContext for persistent session
       if (sessionId) {
         requestBody.session_id = sessionId;
       }
@@ -106,6 +105,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
       if (data && data.response) {
         if (data.session_id) {
+          setSessionId(data.session_id);
           localStorage.setItem('gsp-chatbot-session-id', data.session_id);
           console.log('<<<<< Session ID received:', data.session_id);
         }
