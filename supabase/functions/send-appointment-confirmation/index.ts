@@ -97,7 +97,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.log("Resend client is initialized, attempting to send patient email...");
       try {
         const patientEmailResponse = await resend.emails.send({
-          from: "SG-JB Dental <contact@orachope.org>",
+          from: "SG-JB Dental <onboarding@resend.dev>",
           to: [bookingData.email],
           subject: `Booking Request Received - ${bookingRef}`,
           html: `
@@ -169,7 +169,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (resend) {
       try {
         const adminEmailResponse = await resend.emails.send({
-          from: "SG-JB Dental <contact@orachope.org>",
+          from: "SG-JB Dental <onboarding@resend.dev>",
           to: ["Contact@oracchope.org"],
           subject: `New Appointment Booking - ${bookingRef}`,
           html: `
