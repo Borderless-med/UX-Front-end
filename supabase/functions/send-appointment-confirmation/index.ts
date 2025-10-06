@@ -92,7 +92,9 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // Send confirmation email to patient
+    console.log(`Attempting to send patient email to: ${bookingData.email}`);
     if (resend) {
+      console.log("Resend client is initialized, attempting to send patient email...");
       try {
         const patientEmailResponse = await resend.emails.send({
           from: "SG-JB Dental <onboarding@resend.dev>",
@@ -150,14 +152,16 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
       `,
         });
-        console.log("Patient email sent:", patientEmailResponse.id);
+        console.log("Patient email sent successfully:", patientEmailResponse.id);
+        console.log("Patient email status:", patientEmailResponse);
         emailsSent = true;
       } catch (e) {
-        console.error("Failed to send patient email:", e);
+        console.error("CRITICAL: Failed to send patient email to", bookingData.email, "Error:", e);
+        console.error("Error details:", JSON.stringify(e, null, 2));
         warnMessage = "Booking saved, but we couldn't send the confirmation email yet.";
       }
     } else {
-      console.warn("RESEND_API_KEY not configured - skipping email sending");
+      console.error("CRITICAL: Resend client is null. RESEND_API_KEY:", Deno.env.get("RESEND_API_KEY") ? "SET" : "NOT SET");
       warnMessage = "Email service is not configured yet.";
     }
     // Send notification email to admin (non-blocking)
@@ -165,7 +169,7 @@ const handler = async (req: Request): Promise<Response> => {
       try {
         const adminEmailResponse = await resend.emails.send({
           from: "SG-JB Dental <onboarding@resend.dev>",
-          to: ["hello@resend.dev"],
+          to: ["Contact@oracchope.org"],
           subject: `New Appointment Booking - ${bookingRef}`,
           html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
