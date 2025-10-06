@@ -26,6 +26,9 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
                 <span className="hidden sm:inline">Get personalized recommendations based on<br className="hidden md:inline" />
                 <span className="md:inline"> thousands of Google reviews and sentiment analysis</span></span>
               </p>
+              <div className="bg-blue-100 text-blue-800 text-xs sm:text-sm px-2 py-1 rounded-full font-semibold inline-block mb-3 sm:mb-4">
+                🔐 Sign up FREE - 40 conversations per month
+              </div>
             </div>
             <div className="text-xs sm:text-sm md:text-base text-blue-700 font-semibold">
               <span className="sm:hidden">Perfect for first-time JB patients</span>
