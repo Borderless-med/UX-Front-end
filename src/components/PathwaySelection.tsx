@@ -20,19 +20,16 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
               <div className="bg-blue-500 rounded-full w-8 h-8 sm:w-12 sm:h-12 md:w-20 md:h-20 flex items-center justify-center mx-auto mb-2 sm:mb-3 md:mb-6">
                 <Bot className="w-4 h-4 sm:w-6 sm:h-6 md:w-10 md:h-10 text-white" />
               </div>
-              <h3 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2 md:mb-4">Get Expert Advice in 60 Seconds</h3>
+                            <h3 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2 md:mb-4">Smart AI Concierge</h3>
               <p className="text-sm sm:text-base md:text-lg text-gray-700 mb-3 sm:mb-4 md:mb-6">
-                <span className="sm:hidden">Ask our AI: "Is JB dental care worth it?"</span>
-                <span className="hidden sm:inline">The only AI that reads between the lines<br className="hidden md:inline" />
-                <span className="md:inline"> of 500+ real patient reviews</span></span>
+                <span className="sm:hidden">Get personalized recommendations based on thousands of Google reviews</span>
+                <span className="hidden sm:inline">Get personalized recommendations based on<br className="hidden md:inline" />
+                <span className="md:inline"> thousands of Google reviews and sentiment analysis</span></span>
               </p>
-              <div className="bg-green-100 text-green-800 text-xs sm:text-sm px-2 py-1 rounded-full font-semibold inline-block">
-                Try 40 questions FREE - Sign up in 30 seconds
-              </div>
             </div>
             <div className="text-xs sm:text-sm md:text-base text-blue-700 font-semibold">
               <span className="sm:hidden">Perfect for first-time JB patients</span>
-              <span className="hidden sm:inline">Perfect for: First-time JB patients, cost-conscious families</span>
+              <span className="hidden sm:inline">Perfect for: First-time JB patients, those seeking guidance</span>
             </div>
           </div>
           
@@ -71,8 +68,8 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
             onClick={onAIPath}
             className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 md:py-5 md:px-8 rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-xs sm:text-sm md:text-lg mt-auto"
           >
-            <span className="sm:hidden">Try AI FREE</span>
-            <span className="hidden sm:inline">Try Our AI Expert FREE</span>
+            <span className="sm:hidden">Start with AI Concierge</span>
+            <span className="hidden sm:inline">Start with AI Concierge</span>
           </button>
         </div>
         
@@ -86,7 +83,8 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
               <h3 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2 md:mb-4">Browse & Compare</h3>
               <p className="text-sm sm:text-base md:text-lg text-gray-700 mb-3 sm:mb-4 md:mb-6">
                 <span className="sm:hidden">Browse clinics & compare options</span>
-                <span className="hidden sm:inline">Explore our verified clinics, compare options, and book when you're ready</span>
+                <span className="hidden sm:inline">Explore our verified clinics, compare options, and book when<br className="hidden md:inline" />
+                <span className="md:inline"> you're ready</span></span>
               </p>
             </div>
             <div className="text-xs sm:text-sm md:text-base text-gray-700 font-semibold">

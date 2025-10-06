@@ -130,7 +130,7 @@ const HeroSection = () => {
                 Ask Our AI: "Is JB Dental Care Really Worth It?"
               </h2>
               <p className="text-lg text-gray-600">
-                Get honest answers from 500+ real patient reviews • <span className="text-green-600 font-semibold">Try 40 questions FREE</span>
+                Get honest answers from 500+ real patient reviews • <span className="text-blue-600 font-semibold">40 conversations per month</span>
               </p>
             </div>
             
@@ -151,12 +151,12 @@ const HeroSection = () => {
             <div className="text-center">
               <Button 
                 onClick={handleAIPath}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 mb-3"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 mb-3"
               >
-                Ask Our AI Expert FREE
+                Sign Up & Ask Our AI Expert
               </Button>
               <div className="text-sm text-gray-600">
-                No credit card • 40 questions included • Sign up in 30 seconds
+                Free account • 40 conversations per month • No credit card needed
               </div>
             </div>
           </div>

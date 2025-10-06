@@ -31,7 +31,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: `👋 Hi there! I'm your AI Dental Expert.\n\n🎯 **Ask me anything:**\n• "Should I get my root canal in JB or Singapore?"\n• "Which clinic has the best implant reviews?"\n• "What's the real cost difference for my treatment?"\n\n💬 I've analyzed 500+ real patient reviews to give you honest, personalized recommendations.\n\n${!user ? "**Sign up for FREE to get started** (40 questions included!)" : "What dental question can I help you with today?"}`,
+      text: `👋 Hi there! I'm your AI Dental Expert.\n\n🎯 **I can help you with:**\n• "Should I get my root canal in JB or Singapore?"\n• "Which clinic has the best implant reviews?"\n• "What's the real cost difference for my treatment?"\n\n💬 I've analyzed 500+ real patient reviews to give you honest, personalized recommendations.\n\n${!user ? "**Please sign up to start chatting** (FREE account with 40 conversations per month)" : "What dental question can I help you with today?"}`,
       sender: 'ai',
       timestamp: new Date(),
     },
@@ -64,7 +64,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       // Create a more compelling sign-up CTA message
       const botResponse: Message = { 
         id: (Date.now() + 1).toString(), 
-        text: `Great question! 🤔 To give you personalized recommendations based on 500+ real patient reviews, I'll need you to sign up first.\n\n✨ **Try 40 questions FREE** - No credit card required\n\n🎯 I can help answer:\n• "Which JB clinic has the best implant reviews?"\n• "What's the real cost difference vs Singapore?"\n• "Is this clinic worth the 2-hour travel?"\n\n**Sign up takes just 30 seconds!** Click the registration button in the top menu.`, 
+        text: `Great question! 🤔 To give you personalized recommendations based on 500+ real patient reviews, please sign up for a free account first.\n\n🔐 **FREE Account Includes:** 40 conversations per month\n\n🎯 I can help answer:\n• "Which JB clinic has the best implant reviews?"\n• "What's the real cost difference vs Singapore?"\n• "Is this clinic worth the 2-hour travel?"\n\n**Sign up takes 30 seconds!** Click the registration button in the top menu.`, 
         sender: 'ai', 
         timestamp: new Date() 
       };
@@ -167,7 +167,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
           </div>
           <div>
             <h3 className="font-semibold">AI Dental Expert</h3>
-            <p className="text-xs text-blue-150">{!user ? "Sign up for FREE access!" : "500+ reviews analyzed • Online now"}</p>
+            <p className="text-xs text-blue-150">{!user ? "Sign up required" : "40 chats/month • Online now"}</p>
           </div>
         </div>
         <button
