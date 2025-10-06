@@ -7,7 +7,14 @@ import FloatingClinicTab from '@/components/FloatingClinicTab';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import ChatWidget from '@/components/ChatWidget';
+import AuthModal from '@/components/auth/AuthModal';
+
 const Index = () => {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const handleAuthClick = () => {
+    setIsAuthModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen font-inter bg-white text-gray-900">
@@ -20,7 +27,7 @@ const Index = () => {
           </div>
         </div>
       </div>
-      <HeroSection />
+      <HeroSection onAuthClick={handleAuthClick} />
 
       {/* Add Pricing & Booking Disclaimer */}
       <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -30,7 +37,13 @@ const Index = () => {
       </section>
       <Footer />
       <FloatingClinicTab />
-      <ChatWidget />
+      <ChatWidget onAuthClick={handleAuthClick} />
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
     </div>
   );
 };

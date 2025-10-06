@@ -3,9 +3,10 @@ import { Bot, User, CheckCircle } from 'lucide-react';
 interface PathwaySelectionProps {
   onAIPath: () => void;
   onManualPath: () => void;
+  onAuthClick: () => void;
 }
 
-const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => {
+const PathwaySelection = ({ onAIPath, onManualPath, onAuthClick }: PathwaySelectionProps) => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12 md:mb-16">
       <div className="text-center mb-3 sm:mb-6 md:mb-8">
@@ -26,9 +27,6 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
                 <span className="hidden sm:inline">Get personalized recommendations based on<br className="hidden md:inline" />
                 <span className="md:inline"> thousands of Google reviews and sentiment analysis</span></span>
               </p>
-              <div className="bg-blue-100 text-blue-800 text-xs sm:text-sm px-2 py-1 rounded-full font-semibold inline-block mb-3 sm:mb-4">
-                🔐 Sign up FREE - 40 conversations per month
-              </div>
             </div>
             <div className="text-xs sm:text-sm md:text-base text-blue-700 font-semibold">
               <span className="sm:hidden">Perfect for first-time JB patients</span>
@@ -67,13 +65,18 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
             </div>
           </div>
           
-          <button
-            onClick={onAIPath}
-            className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 md:py-5 md:px-8 rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-xs sm:text-sm md:text-lg mt-auto"
-          >
-            <span className="sm:hidden">Start with AI Concierge</span>
-            <span className="hidden sm:inline">Start with AI Concierge</span>
-          </button>
+          <div className="mt-auto">
+            <button
+              onClick={onAuthClick}
+              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 md:py-5 md:px-8 rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-xs sm:text-sm md:text-lg mb-2"
+            >
+              <span className="sm:hidden">Sign Up to Use AI Concierge</span>
+              <span className="hidden sm:inline">Sign Up to Use AI Concierge</span>
+            </button>
+            <div className="bg-blue-100 text-blue-800 text-xs sm:text-sm px-2 py-1 rounded-full font-semibold text-center">
+              🔐 Sign up FREE - 40 conversations per month
+            </div>
+          </div>
         </div>
         
         {/* Manual Process Card */}
@@ -127,13 +130,18 @@ const PathwaySelection = ({ onAIPath, onManualPath }: PathwaySelectionProps) => 
             </div>
           </div>
           
-          <button
-            onClick={onManualPath}
-            className="w-full bg-gray-600 hover:bg-gray-700 active:bg-gray-800 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 md:py-5 md:px-8 rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-xs sm:text-sm md:text-lg mt-auto"
-          >
-            <span className="sm:hidden">Start Browsing</span>
-            <span className="hidden sm:inline">Start Browsing Clinics</span>
-          </button>
+          <div className="mt-auto">
+            <button
+              onClick={onManualPath}
+              className="w-full bg-gray-600 hover:bg-gray-700 active:bg-gray-800 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 md:py-5 md:px-8 rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg text-xs sm:text-sm md:text-lg mb-2"
+            >
+              <span className="sm:hidden">Start Browsing</span>
+              <span className="hidden sm:inline">Start Browsing Clinics</span>
+            </button>
+            <div className="bg-gray-100 text-gray-700 text-xs sm:text-sm px-2 py-1 rounded-full font-semibold text-center">
+              💡 No account required - Browse freely
+            </div>
+          </div>
         </div>
       </div>
     </div>

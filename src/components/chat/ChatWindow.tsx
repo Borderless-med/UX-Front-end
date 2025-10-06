@@ -23,9 +23,10 @@ interface Message {
 
 interface ChatWindowProps {
   onClose: () => void;
+  onAuthClick?: () => void;
 }
 
-const ChatWindow = ({ onClose }: ChatWindowProps) => {
+const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   const { user, sessionId, setSessionId } = useAuth();
 
   const [messages, setMessages] = useState<Message[]>([
@@ -64,7 +65,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       // Create a more compelling sign-up CTA message
       const botResponse: Message = { 
         id: (Date.now() + 1).toString(), 
-        text: `Great question! 🤔 To give you personalized recommendations based on 500+ real patient reviews, please sign up for a free account first.\n\n🔐 **FREE Account Includes:** 40 conversations per month\n\n🎯 I can help answer:\n• "Which JB clinic has the best implant reviews?"\n• "What's the real cost difference vs Singapore?"\n• "Is this clinic worth the 2-hour travel?"\n\n**Sign up takes 30 seconds!** Click the registration button in the top menu.`, 
+        text: `Great question! 🤔 To give you personalized recommendations based on 500+ real patient reviews, please sign up for a free account first.\n\n🔐 **FREE Account Includes:** 40 conversations per month\n\n🎯 I can help answer:\n• "Which JB clinic has the best implant reviews?"\n• "What's the real cost difference vs Singapore?"\n• "Is this clinic worth the 2-hour travel?"\n\n**Sign up takes 30 seconds!** ${onAuthClick ? 'Click the blue button below to get started.' : 'Click the registration button in the top menu.'}`, 
         sender: 'ai', 
         timestamp: new Date() 
       };
@@ -201,12 +202,30 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       </div>
 
       {/* Input */}
-      <ChatInput
-        value={inputMessage}
-        onChange={setInputMessage}
-        onSend={handleSendMessage}
-        disabled={isTyping}
-      />
+      <div>
+        <ChatInput
+          value={inputMessage}
+          onChange={setInputMessage}
+          onSend={handleSendMessage}
+          disabled={isTyping}
+        />
+        
+        {/* Sign-up CTA for unauthenticated users */}
+        {!user && onAuthClick && (
+          <div className="p-4 bg-blue-50 border-t border-blue-100">
+            <button
+              onClick={() => {
+                onClose();
+                onAuthClick();
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+            >
+              🚀 Sign Up Free - Start Chatting Now!
+            </button>
+            <p className="text-xs text-gray-600 text-center mt-2">40 conversations per month • No credit card required</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

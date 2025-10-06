@@ -7,7 +7,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import PathwaySelection from './PathwaySelection';
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  onAuthClick?: () => void;
+}
+
+const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showBanner, setShowBanner] = useState(false);
@@ -95,6 +99,7 @@ const HeroSection = () => {
           <PathwaySelection 
             onAIPath={handleAIPath}
             onManualPath={handleManualPath}
+            onAuthClick={onAuthClick || (() => {})}
           />
 
           {/* Secondary CTA */}
