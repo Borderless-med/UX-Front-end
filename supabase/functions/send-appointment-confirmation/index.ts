@@ -103,8 +103,8 @@ const handler = async (req: Request): Promise<Response> => {
           html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
-            <h1 style="margin: 0; font-size: 28px;">Appointment Confirmed!</h1>
-            <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Your dental appointment has been successfully booked</p>
+            <h1 style="margin: 0; font-size: 28px;">Booking Requested!</h1>
+            <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Your Booking Request is being processed</p>
           </div>
           
           <div style="background: white; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px;">
@@ -142,7 +142,8 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div style="text-align: center; margin: 30px 0;">
               <p style="color: #6b7280; margin: 0;">Questions? Contact us:</p>
-              <p style="color: #2563eb; margin: 5px 0; font-weight: 600;">WhatsApp: +60 12-345-6789</p>
+              <p style="color: #2563eb; margin: 5px 0; font-weight: 600;">WhatsApp: +65 8192 6158</p>
+              <p style="color: #2563eb; margin: 5px 0; font-weight: 600;">Email: contact@orachope.org</p>
             </div>
           </div>
           
