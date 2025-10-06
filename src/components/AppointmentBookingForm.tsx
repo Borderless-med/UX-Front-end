@@ -474,7 +474,7 @@ const AppointmentBookingForm = () => {
               </div>
               
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Appointment Booked Successfully!
+                Booking Request Received!
               </h2>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
