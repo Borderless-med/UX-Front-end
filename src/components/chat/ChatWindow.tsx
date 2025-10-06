@@ -31,7 +31,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I can help you find dental clinics, compare prices, and answer questions about dental care in Singapore and Johor Bahru. What can I help you with today?",
+      text: `👋 Hi there! I'm your AI Dental Expert.\n\n🎯 **Ask me anything:**\n• "Should I get my root canal in JB or Singapore?"\n• "Which clinic has the best implant reviews?"\n• "What's the real cost difference for my treatment?"\n\n💬 I've analyzed 500+ real patient reviews to give you honest, personalized recommendations.\n\n${!user ? "**Sign up for FREE to get started** (40 questions included!)" : "What dental question can I help you with today?"}`,
       sender: 'ai',
       timestamp: new Date(),
     },
@@ -60,7 +60,14 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
       setMessages(prev => [...prev, userMessage]);
       setInputMessage('');
-      const botResponse: Message = { id: (Date.now() + 1).toString(), text: "Hello! To get started and enjoy all the features of our AI Concierge, please sign up or log in. We'd love to help you find the perfect dental clinic!", sender: 'ai', timestamp: new Date() };
+      
+      // Create a more compelling sign-up CTA message
+      const botResponse: Message = { 
+        id: (Date.now() + 1).toString(), 
+        text: `Great question! 🤔 To give you personalized recommendations based on 500+ real patient reviews, I'll need you to sign up first.\n\n✨ **Try 40 questions FREE** - No credit card required\n\n🎯 I can help answer:\n• "Which JB clinic has the best implant reviews?"\n• "What's the real cost difference vs Singapore?"\n• "Is this clinic worth the 2-hour travel?"\n\n**Sign up takes just 30 seconds!** Click the registration button in the top menu.`, 
+        sender: 'ai', 
+        timestamp: new Date() 
+      };
       setTimeout(() => setMessages(prev => [...prev, botResponse]), 500);
       return;
     }
@@ -156,11 +163,11 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-primary text-white rounded-t-lg">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-            <span className="text-sm font-bold">AI</span>
+            <span className="text-sm font-bold">🤖</span>
           </div>
           <div>
-            <h3 className="font-semibold">AI Concierge</h3>
-            <p className="text-xs text-blue-150">Online now</p>
+            <h3 className="font-semibold">AI Dental Expert</h3>
+            <p className="text-xs text-blue-150">{!user ? "Sign up for FREE access!" : "500+ reviews analyzed • Online now"}</p>
           </div>
         </div>
         <button

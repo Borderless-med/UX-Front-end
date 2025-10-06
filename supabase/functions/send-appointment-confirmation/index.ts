@@ -72,32 +72,30 @@ const handler = async (req: Request): Promise<Response> => {
     if (bookingData.create_account) {
       console.log("Creating user account for:", bookingData.email);
       try {
-        // Check if user already exists
-        const { data: existingUser } = await supabase.auth.admin.getUserByEmail(bookingData.email);
+        // Create new user
+        const { data: newUser, error: userError } = await supabase.auth.admin.createUser({
+          email: bookingData.email,
+          email_confirm: true, // Auto-confirm email
+          user_metadata: {
+            full_name: bookingData.patient_name,
+            whatsapp: bookingData.whatsapp,
+            created_via: 'booking_form',
+            booking_ref: bookingRef
+          }
+        });
         
-        if (existingUser.user) {
-          console.log("User already exists:", bookingData.email);
-          userCreated = true; // Account exists, considered "created"
-        } else {
-          // Create new user
-          const { data: newUser, error: userError } = await supabase.auth.admin.createUser({
-            email: bookingData.email,
-            email_confirm: true, // Auto-confirm email
-            user_metadata: {
-              full_name: bookingData.patient_name,
-              whatsapp: bookingData.whatsapp,
-              created_via: 'booking_form',
-              booking_ref: bookingRef
-            }
-          });
-          
-          if (userError) {
+        if (userError) {
+          // Check if it's a duplicate email error
+          if (userError.message.includes('already') || userError.message.includes('exists')) {
+            console.log("User already exists:", bookingData.email);
+            userCreated = true; // Consider existing user as "created"
+          } else {
             console.error("Error creating user:", userError);
             userCreationError = userError.message;
-          } else {
-            console.log("User created successfully:", newUser.user?.id);
-            userCreated = true;
           }
+        } else {
+          console.log("User created successfully:", newUser.user?.id);
+          userCreated = true;
         }
       } catch (e) {
         console.error("Exception during user creation:", e);
@@ -105,11 +103,12 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
-    // Insert appointment booking
+    // Insert appointment booking (exclude create_account field as it's not a DB column)
+    const { create_account, ...bookingDataForDb } = bookingData;
     const { data: appointment, error: insertError } = await supabase
       .from('appointment_bookings')
       .insert({
-        ...bookingData,
+        ...bookingDataForDb,
         booking_ref: bookingRef,
         status: 'pending'
       })

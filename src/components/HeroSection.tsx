@@ -127,34 +127,37 @@ const HeroSection = () => {
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Revolutionary AI Features Now Live
+                Ask Our AI: "Is JB Dental Care Really Worth It?"
               </h2>
               <p className="text-lg text-gray-600">
-                Experience intelligent dental care assistance with our AI concierge
+                Get honest answers from 500+ real patient reviews • <span className="text-green-600 font-semibold">Try 40 questions FREE</span>
               </p>
             </div>
             
             <div className="flex flex-col md:flex-row gap-6 mb-8">
               <div className="flex-1 bg-white/70 rounded-lg p-6 border border-blue-100">
-                <div className="text-2xl mb-3">🤖</div>
-                <h3 className="font-semibold text-gray-900 mb-2">24/7 AI Concierge with Sentiment Analysis</h3>
-                <p className="text-gray-600">Advanced review analysis for authentic clinic recommendations</p>
+                <div className="text-2xl mb-3">💬</div>
+                <h3 className="font-semibold text-gray-900 mb-2">"What do patients REALLY say about this clinic?"</h3>
+                <p className="text-gray-600">Our AI reads between the lines of reviews to find patterns humans miss</p>
               </div>
               
               <div className="flex-1 bg-white/70 rounded-lg p-6 border border-blue-100">
-                <div className="text-2xl mb-3">📊</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Advanced Analytics Dashboard</h3>
-                <p className="text-gray-600">Real-time insights for clinic partners</p>
+                <div className="text-2xl mb-3">�</div>
+                <h3 className="font-semibold text-gray-900 mb-2">"Should I travel 2 hours for dental care?"</h3>
+                <p className="text-gray-600">Get personalized cost-benefit analysis based on your specific needs</p>
               </div>
             </div>
             
             <div className="text-center">
               <Button 
-                onClick={navigateToBooking}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                onClick={handleAIPath}
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 mb-3"
               >
-                Book Now
+                Ask Our AI Expert FREE
               </Button>
+              <div className="text-sm text-gray-600">
+                No credit card • 40 questions included • Sign up in 30 seconds
+              </div>
             </div>
           </div>
 
