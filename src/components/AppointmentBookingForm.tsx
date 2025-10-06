@@ -32,6 +32,7 @@ interface FormData {
   time_slot: string;
   clinic_location: string;
   consent_given: boolean;
+  create_account: boolean;
 }
 
 interface FormErrors {
@@ -56,6 +57,7 @@ const AppointmentBookingForm = () => {
     time_slot: '',
     clinic_location: '',
     consent_given: false,
+    create_account: true, // Pre-checked for convenience
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -63,6 +65,7 @@ const AppointmentBookingForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [bookingReference, setBookingReference] = useState('');
   const [emailsSent, setEmailsSent] = useState<boolean>(false);
+  const [userCreated, setUserCreated] = useState<boolean>(false);
   const [completionPercentage, setCompletionPercentage] = useState(0);
 
   // Time slot options
@@ -428,6 +431,7 @@ const AppointmentBookingForm = () => {
         time_slot: formData.time_slot,
         clinic_location: formData.preferred_clinic || formData.clinic_location,
         consent_given: formData.consent_given,
+        create_account: formData.create_account,
       };
 
       console.log('Submitting appointment booking:', submissionData);
@@ -447,11 +451,15 @@ const AppointmentBookingForm = () => {
       console.log('Appointment booked successfully:', data);
       setBookingReference(data.booking_ref);
       setEmailsSent(Boolean(data.emails_sent));
+      setUserCreated(Boolean(data.user_created));
       setIsSubmitted(true);
+      
+      // Show success message
+      const accountMessage = data.user_created ? ' Your account has been created!' : '';
       toast.success(
         data.emails_sent
-          ? 'Appointment booked successfully! Check your email for confirmation.'
-          : 'Appointment booked successfully! We will contact you via WhatsApp shortly.'
+          ? `Appointment booked successfully! Check your email for confirmation.${accountMessage}`
+          : `Appointment booked successfully! We will contact you via WhatsApp shortly.${accountMessage}`
       );
 
     } catch (error: any) {
@@ -876,7 +884,7 @@ const AppointmentBookingForm = () => {
               </div>
 
               {/* PDPA Consent */}
-              <div className="space-y-3">
+              <div className="space-y-3 bg-red-50 p-4 rounded-lg border border-red-200">
                 <div className="flex items-start space-x-3">
                   <Checkbox
                     id="consent"
@@ -884,18 +892,18 @@ const AppointmentBookingForm = () => {
                     onCheckedChange={(checked) => handleInputChange('consent_given', checked)}
                     className="mt-1"
                   />
-                  <div className="grid gap-1.5 leading-none">
+                  <div className="grid gap-1.5 leading-none flex-1">
                     <Label
                       htmlFor="consent"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-red-800"
                     >
                       PDPA Consent Required *
                     </Label>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-red-700 text-justify">
                       I consent to the collection, use and disclosure of my personal data for appointment booking, 
                       treatment coordination, and communication purposes. By providing my WhatsApp number, I agree 
                       to receive appointment confirmations and travel guidance via WhatsApp.{' '}
-                      <a href="/privacy-policy" target="_blank" className="text-blue-600 hover:text-blue-800 underline">
+                      <a href="/privacy-policy" target="_blank" className="text-red-600 hover:text-red-800 underline">
                         Read our Privacy Policy
                       </a>
                     </p>
@@ -904,6 +912,30 @@ const AppointmentBookingForm = () => {
                 {errors.consent_given && (
                   <p className="text-sm text-red-600">{errors.consent_given}</p>
                 )}
+              </div>
+
+              {/* Account Creation */}
+              <div className="space-y-3 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="create-account"
+                    checked={formData.create_account}
+                    onCheckedChange={(checked) => handleInputChange('create_account', checked)}
+                    className="mt-1"
+                  />
+                  <div className="grid gap-1.5 leading-none flex-1">
+                    <Label
+                      htmlFor="create-account"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-800"
+                    >
+                      Create Account (Recommended) 🚀
+                    </Label>
+                    <p className="text-xs text-blue-700 text-justify">
+                      <strong>Get more benefits:</strong> Access our AI chatbot for instant dental advice, easy rebooking for future treatments, 
+                      exclusive promotions, and faster checkout. We'll create a secure account using your email above.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Submit Button */}

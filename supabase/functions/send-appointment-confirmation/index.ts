@@ -17,6 +17,7 @@ interface AppointmentBookingRequest {
   clinic_location: string;
   preferred_clinic?: string; // Optional field for backwards compatibility
   consent_given: boolean;
+  create_account?: boolean; // Optional field for user registration
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -63,6 +64,46 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     console.log("Generated booking reference:", bookingRef);
+
+    // Create user account if requested
+    let userCreated = false;
+    let userCreationError: string | undefined;
+    
+    if (bookingData.create_account) {
+      console.log("Creating user account for:", bookingData.email);
+      try {
+        // Check if user already exists
+        const { data: existingUser } = await supabase.auth.admin.getUserByEmail(bookingData.email);
+        
+        if (existingUser.user) {
+          console.log("User already exists:", bookingData.email);
+          userCreated = true; // Account exists, considered "created"
+        } else {
+          // Create new user
+          const { data: newUser, error: userError } = await supabase.auth.admin.createUser({
+            email: bookingData.email,
+            email_confirm: true, // Auto-confirm email
+            user_metadata: {
+              full_name: bookingData.patient_name,
+              whatsapp: bookingData.whatsapp,
+              created_via: 'booking_form',
+              booking_ref: bookingRef
+            }
+          });
+          
+          if (userError) {
+            console.error("Error creating user:", userError);
+            userCreationError = userError.message;
+          } else {
+            console.log("User created successfully:", newUser.user?.id);
+            userCreated = true;
+          }
+        }
+      } catch (e) {
+        console.error("Exception during user creation:", e);
+        userCreationError = String(e);
+      }
+    }
 
     // Insert appointment booking
     const { data: appointment, error: insertError } = await supabase
@@ -139,6 +180,16 @@ const handler = async (req: Request): Promise<Response> => {
                 <li>Treatment details and pricing confirmation</li>
               </ul>
             </div>
+            
+            ${userCreated ? `
+            <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 15px; border-radius: 6px; margin: 20px 0;">
+              <h4 style="color: #16a34a; margin: 0 0 8px; font-size: 16px;">🎉 Account Created!</h4>
+              <p style="margin: 0; color: #15803d; font-size: 14px;">
+                Your account has been created successfully! You can now access our AI chatbot for instant dental advice, easy rebooking, and exclusive member benefits. 
+                <a href="https://sg-smile-saver.vercel.app" style="color: #16a34a; text-decoration: underline;">Visit our website</a> to get started.
+              </p>
+            </div>
+            ` : ''}
             
             <div style="text-align: center; margin: 30px 0;">
               <p style="color: #6b7280; margin: 0;">Questions? Contact us:</p>
@@ -222,7 +273,9 @@ const handler = async (req: Request): Promise<Response> => {
         booking_ref: bookingRef,
         appointment_id: appointment.id,
         emails_sent: emailsSent,
+        user_created: userCreated,
         ...(warnMessage ? { warn: warnMessage } : {}),
+        ...(userCreationError ? { user_creation_error: userCreationError } : {}),
         message: emailsSent
           ? "Appointment booking confirmed! Check your email for details."
           : "Appointment booking received! We will contact you via WhatsApp shortly."
