@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Concierge Experience - High Fidelity Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .chat-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .pulse-ring { animation: pulse-ring 2s infinite; }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.33); }
+            40%, 50% { opacity: 1; }
+            100% { opacity: 0; transform: scale(1.33); }
+        }
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid orange;
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-200 px-6 py-4">
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-900">🦷 SG-JB Dental - AI Concierge Mockup</h1>
+            <div class="flex items-center space-x-4">
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">✅ Improved Copy</span>
+                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">🔐 Sign-up CTA</span>
+                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">🎯 High Converting</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- LEFT SIDE: Hero Section Mockup -->
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 border-b pb-2">📍 Hero Section - Pathway Selection</h2>
+                
+                <!-- Hero Header -->
+                <div class="text-center mb-6">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        World-Class Dental Care<br />
+                        Smart Savings & <span class="text-blue-600">AI Concierge</span>
+                    </h1>
+                    <p class="text-xl text-gray-700 mb-4">
+                        Save 50-70% with intelligent guidance every step of the way
+                    </p>
+                </div>
+
+                <!-- Choose Your Experience -->
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Choose Your Preferred Experience</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- AI Concierge Card - IMPROVED -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        <div class="text-center mb-6">
+                            <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="bot" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Get Personalized Dental Recommendations</h3>
+                            <p class="text-base text-gray-700 mb-4">
+                                Ask our AI anything about JB dental care - get honest answers in 60 seconds
+                            </p>
+                            <div class="bg-blue-100 border border-blue-300 rounded-lg p-3 mb-4">
+                                <p class="text-sm font-semibold text-blue-800">🔐 Sign up for FREE - Get 40 AI conversations per month</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Use Cases -->
+                        <div class="space-y-3 mb-6">
+                            <h4 class="font-semibold text-gray-900 text-center mb-3">Ask me anything like:</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="bg-white/70 rounded-lg p-2 italic">"Should I get my root canal in JB or Singapore?"</div>
+                                <div class="bg-white/70 rounded-lg p-2 italic">"Which clinic has the best implant reviews?"</div>
+                                <div class="bg-white/70 rounded-lg p-2 italic">"What's the real cost difference?"</div>
+                                <div class="bg-white/70 rounded-lg p-2 italic">"Is this clinic worth the 2-hour travel?"</div>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg">
+                            🔐 Sign Up & Start Chatting
+                        </button>
+                        
+                        <p class="text-xs text-center text-gray-600 mt-2">
+                            Free account • 40 AI conversations per month • No credit card
+                        </p>
+                    </div>
+                    
+                    <!-- Browse & Compare Card -->
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        <div class="text-center mb-6">
+                            <div class="bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="user" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Browse & Compare</h3>
+                            <p class="text-base text-gray-700 mb-4">
+                                Explore verified clinics and compare options yourself
+                            </p>
+                        </div>
+                        
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gray-600"></i>
+                                <span class="text-base text-gray-700">Browse all verified clinics</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gray-600"></i>
+                                <span class="text-base text-gray-700">Advanced search & filtering</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gray-600"></i>
+                                <span class="text-base text-gray-700">Compare clinics side-by-side</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gray-600"></i>
+                                <span class="text-base text-gray-700">Book directly from clinic pages</span>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg">
+                            🔍 Start Browsing Clinics
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Features Highlight -->
+                <div class="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 text-center">Why Our AI is Different</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white/70 rounded-lg p-4">
+                            <div class="text-2xl mb-2">🧠</div>
+                            <h4 class="font-semibold text-gray-900 mb-1">Reads Between the Lines</h4>
+                            <p class="text-sm text-gray-600">Our AI analyzes what reviews REALLY mean, not just star ratings</p>
+                        </div>
+                        <div class="bg-white/70 rounded-lg p-4">
+                            <div class="text-2xl mb-2">💬</div>
+                            <h4 class="font-semibold text-gray-900 mb-1">Conversational & Smart</h4>
+                            <p class="text-sm text-gray-600">Ask follow-up questions like chatting with a dental expert friend</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Chat Experience Mockup -->
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 border-b pb-2">💬 Chat Widget Experience</h2>
+                
+                <!-- Chat Button (Floating) -->
+                <div class="relative mb-6">
+                    <div class="bg-gray-100 rounded-lg p-4 text-center">
+                        <p class="text-sm text-gray-600 mb-4">Floating chat button appears on all pages:</p>
+                        <div class="relative inline-block">
+                            <div class="pulse-ring absolute inset-0 bg-blue-400 rounded-full"></div>
+                            <button class="relative bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transform hover:scale-105 transition-all duration-300">
+                                <i data-lucide="message-circle" class="w-7 h-7"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Pulsing effect attracts attention</p>
+                    </div>
+                </div>
+
+                <!-- Chat Window Mockup -->
+                <div class="border-2 border-gray-200 rounded-lg overflow-hidden chat-shadow">
+                    <!-- Chat Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                    <i data-lucide="bot" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">🦷 Dental AI Concierge</h3>
+                                    <p class="text-xs text-blue-100">Ask me about JB dental care!</p>
+                                </div>
+                            </div>
+                            <button class="text-white/80 hover:text-white">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="h-80 bg-gray-50 p-4 overflow-y-auto space-y-4">
+                        <!-- AI Welcome Message -->
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 shadow-sm max-w-xs">
+                                <p class="text-sm text-gray-800">
+                                    👋 Welcome! Please sign up to start chatting with your AI dental expert.
+                                </p>
+                                <p class="text-xs text-gray-500 mt-2">
+                                    🔐 <strong>Sign up required</strong> - Get 40 conversations per month FREE
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Sample Question Buttons -->
+                        <div class="space-y-2">
+                            <p class="text-xs text-gray-600 text-center">Quick start questions:</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <button class="bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-lg border border-blue-200 text-left transition-colors">
+                                    "Should I get my root canal in JB or Singapore?"
+                                </button>
+                                <button class="bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-lg border border-blue-200 text-left transition-colors">
+                                    "Which clinic has the best implant reviews?"
+                                </button>
+                                <button class="bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-lg border border-blue-200 text-left transition-colors">
+                                    "What's the real cost difference for crowns?"
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sign-up Prompt (When Limit Reached) -->
+                    <div class="border-t border-gray-200 bg-gradient-to-r from-yellow-50 to-orange-50 p-4">
+                        <div class="text-center mb-3">
+                            <div class="inline-flex items-center bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mb-2">
+                                <i data-lucide="message-circle" class="w-4 h-4 mr-1"></i>
+                                35 conversations remaining this month
+                            </div>
+                            <p class="text-sm text-gray-700">
+                                <strong>Monthly limit:</strong> 40 AI conversations + chat history saved
+                            </p>
+                        </div>
+                        <button class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md text-sm">
+                            � Complete Registration (40 chats/month)
+                        </button>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="border-t border-gray-200 p-3">
+                        <div class="flex items-center space-x-2">
+                            <input 
+                                type="text" 
+                                placeholder="Ask me about JB dental care..."
+                                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                value=""
+                            >
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-colors">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign-up Modal Mockup -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 border-b pb-2">🔐 Sign-up Modal (Simplified)</h2>
+                
+                <div class="border-2 border-gray-200 rounded-lg p-6 bg-gray-50">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="zap" class="w-8 h-8 text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Start Your AI Dental Expert</h3>
+                        <p class="text-gray-600 mb-4">Get 40 AI conversations per month + save your chat history</p>
+                        
+                        <div class="bg-blue-100 border border-blue-300 rounded-lg p-3 mb-4">
+                            <p class="text-sm font-semibold text-blue-800">✨ FREE Account • 40 conversations/month • No credit card</p>
+                        </div>
+                    </div>
+
+                    <!-- Simplified Form -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Tan">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="john@example.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Create password">
+                        </div>
+                        
+                        <div class="flex items-start space-x-2">
+                            <input type="checkbox" class="mt-1" checked>
+                            <label class="text-xs text-gray-600">
+                                I agree to receive dental care recommendations and booking confirmations via email
+                            </label>
+                        </div>
+                        
+                        <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            🚀 Create FREE Account (40 chats/month)
+                        </button>
+                        
+                        <p class="text-xs text-center text-gray-500">
+                            We'll auto-configure your account for dental patients • Change anytime in settings
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Section -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">📊 Before vs After Comparison</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- BEFORE -->
+                <div class="border-l-4 border-red-500 pl-6">
+                    <h3 class="text-xl font-bold text-red-600 mb-4">❌ BEFORE (Generic)</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-red-50 p-3 rounded">
+                            <strong>Hook:</strong> "Smart AI Concierge"
+                        </div>
+                        <div class="bg-red-50 p-3 rounded">
+                            <strong>Features:</strong> "Sentiment-powered clinic recommendations"
+                        </div>
+                        <div class="bg-red-50 p-3 rounded">
+                            <strong>CTA:</strong> "Start with AI Concierge"
+                        </div>
+                        <div class="bg-red-50 p-3 rounded">
+                            <strong>Problem:</strong> Tech-speak, no clear benefit, no trial offer
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AFTER -->
+                <div class="border-l-4 border-green-500 pl-6">
+                    <h3 class="text-xl font-bold text-green-600 mb-4">✅ AFTER (Compelling)</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-green-50 p-3 rounded">
+                            <strong>Hook:</strong> "Get Personalized Dental Recommendations in 60 Seconds"
+                        </div>
+                        <div class="bg-green-50 p-3 rounded">
+                            <strong>Features:</strong> Specific use cases like "Should I get my root canal in JB?"
+                        </div>
+                        <div class="bg-green-50 p-3 rounded">
+                            <strong>CTA:</strong> "Start Free Chat (40 Questions)" + Sign-up for unlimited
+                        </div>
+                        <div class="bg-green-50 p-3 rounded">
+                            <strong>Result:</strong> Human benefits, curiosity gap, risk-free trial, clear value
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Improvements -->
+            <div class="mt-8 bg-blue-50 rounded-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">🎯 Key Improvements Implemented</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <div class="text-2xl mb-2">🧠</div>
+                        <h4 class="font-semibold text-gray-900">Human Benefits</h4>
+                        <p class="text-sm text-gray-600">Focus on outcomes, not features</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl mb-2">🎁</div>
+                        <h4 class="font-semibold text-gray-900">Risk-Free Trial</h4>
+                        <p class="text-sm text-gray-600">40 free questions builds trust</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl mb-2">🚀</div>
+                        <h4 class="font-semibold text-gray-900">Clear CTA Path</h4>
+                        <p class="text-sm text-gray-600">Free → Sign up → Unlimited</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate the typewriter effect
+            const typewriterElements = document.querySelectorAll('.typewriter');
+            typewriterElements.forEach(el => {
+                el.style.animation = 'typing 3.5s steps(40, end), blink-caret .75s step-end infinite';
+            });
+        });
+    </script>
+</body>
+</html>
