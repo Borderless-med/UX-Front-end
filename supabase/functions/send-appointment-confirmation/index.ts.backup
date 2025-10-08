@@ -1,103 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.52.0";
-
-// Email service for contact@orachope.org (no DNS changes required)
-class OraHopeEmailService {
-  private host: string;
-  private port: number;
-  private username: string;
-  private password: string;
-
-  constructor(config: { host: string; port: number; username: string; password: string }) {
-    this.host = config.host;
-    this.port = config.port;
-    this.username = config.username;
-    this.password = config.password;
-  }
-
-  async sendMail(options: { from: string; to: string; subject: string; html: string }) {
-    try {
-      console.log("=== SENDING EMAIL VIA ORACHOPE HTTP SERVICE ===");
-      console.log(`From: ${options.from}`);
-      console.log(`To: ${options.to}`);
-      console.log(`Subject: ${options.subject}`);
-      console.log(`Service: HTTP-based email delivery (no DNS changes required)`);
-      
-      console.log(`📧 Using HTTP email service for: ${this.username}`);
-      console.log(`🔑 Sending from OraChope domain`);
-      console.log(`🌐 Using third-party email API`);
-      
-      // Using HTTP-based email services instead of direct SMTP connection
-      console.log("Preparing to send via HTTP email service...");
-
-      // Use HTTP-based email service instead of direct SMTP
-      console.log("Using HTTP-based email API...");
-      
-      // Try SMTP2GO API (works without DNS changes)
-      const smtp2goApiKey = Deno.env.get("SMTP2GO_API_KEY");
-      if (smtp2goApiKey) {
-        const smtp2goResponse = await fetch("https://api.smtp2go.com/v3/email/send", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            api_key: smtp2goApiKey,
-            to: [options.to],
-            sender: this.username, // Use contact@orachope.org
-            subject: options.subject,
-            html_body: options.html,
-          }),
-        });
-
-        if (smtp2goResponse.ok) {
-          console.log(`Email sent successfully via SMTP2GO to ${options.to}`);
-          return { success: true, message: "Email sent via SMTP2GO", service: "smtp2go" };
-        }
-      }
-      
-      // Fallback: Use Brevo (formerly Sendinblue) API
-      const brevoApiKey = Deno.env.get("BREVO_API_KEY");
-      if (brevoApiKey) {
-        const brevoResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
-          method: "POST",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "api-key": brevoApiKey,
-          },
-          body: JSON.stringify({
-            sender: { email: this.username, name: "SG-JB Dental" },
-            to: [{ email: options.to }],
-            subject: options.subject,
-            htmlContent: options.html,
-          }),
-        });
-
-        if (brevoResponse.ok) {
-          console.log(`Email sent successfully via Brevo to ${options.to}`);
-          return { success: true, message: "Email sent via Brevo", service: "brevo" };
-        }
-      }
-      
-      console.log(`Email queued for manual processing to ${options.to}`);
-      return { success: true, message: "Email queued for processing", service: "manual" };
-      
-    } catch (error) {
-      console.error("Failed to send email via OraChope SMTP:", error);
-      console.error("SMTP Error details:", error instanceof Error ? error.message : String(error));
-      
-      // Log specific SMTP error information for debugging
-      if (error instanceof Error) {
-        console.error("Error name:", error.name);
-        console.error("Error stack:", error.stack);
-      }
-      
-      // No fallback - we only use OraChope SMTP server as requested
-      throw new Error(`OraChope SMTP delivery failed: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  }
-}
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -131,15 +34,23 @@ const handler = async (req: Request): Promise<Response> => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Initialize PrivateEmail SMTP settings for OraChope (CONFIRMED SETTINGS)
+    // Initialize SMTP Client
     const SMTP_HOST = Deno.env.get("SMTP_HOST") || "mail.privateemail.com";
-    const SMTP_PORT = parseInt(Deno.env.get("SMTP_PORT") || "587"); // 587 for STARTTLS, 465 for SSL
+    const SMTP_PORT = parseInt(Deno.env.get("SMTP_PORT") || "587");
     const SMTP_USER = Deno.env.get("SMTP_USER") || "contact@orachope.org";
-    const SMTP_PASSWORD = Deno.env.get("SMTP_PASSWORD") || "LifeTipTok1#";
+    const SMTP_PASSWORD = Deno.env.get("SMTP_PASSWORD");
     
-    console.log(`OraChope SMTP Configuration (CONFIRMED): ${SMTP_HOST}:${SMTP_PORT} with user: ${SMTP_USER}`);
-    console.log(`🔒 Using STARTTLS encryption for secure email delivery`);
-
+    const smtpClient = new SMTPClient({
+      connection: {
+        hostname: SMTP_HOST,
+        port: SMTP_PORT,
+        tls: true,
+        auth: {
+          username: SMTP_USER,
+          password: SMTP_PASSWORD || "",
+        },
+      },
+    });
     const bookingData: AppointmentBookingRequest = await req.json();
     console.log("Booking data received:", { ...bookingData, email: '[REDACTED]' });
 
@@ -150,7 +61,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Validate required fields
     const requiredFields = ['patient_name', 'email', 'whatsapp', 'treatment_type', 'preferred_date', 'time_slot', 'clinic_location'];
     for (const field of requiredFields) {
-      if (!bookingData[field as keyof AppointmentBookingRequest]) {
+      if (!bookingData[field]) {
         throw new Error(`Missing required field: ${field}`);
       }
     }
@@ -175,9 +86,10 @@ const handler = async (req: Request): Promise<Response> => {
     if (bookingData.create_account) {
       console.log("Creating user account for:", bookingData.email);
       try {
+        // Create new user
         const { data: newUser, error: userError } = await supabase.auth.admin.createUser({
           email: bookingData.email,
-          email_confirm: true,
+          email_confirm: true, // Auto-confirm email
           user_metadata: {
             full_name: bookingData.patient_name,
             whatsapp: bookingData.whatsapp,
@@ -187,9 +99,10 @@ const handler = async (req: Request): Promise<Response> => {
         });
         
         if (userError) {
+          // Check if it's a duplicate email error
           if (userError.message.includes('already') || userError.message.includes('exists')) {
             console.log("User already exists:", bookingData.email);
-            userCreated = true;
+            userCreated = true; // Consider existing user as "created"
           } else {
             console.error("Error creating user:", userError);
             userCreationError = userError.message;
@@ -204,7 +117,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
-    // Insert appointment booking (exclude create_account field)
+    // Insert appointment booking (exclude create_account field as it's not a DB column)
     const { create_account, ...bookingDataForDb } = bookingData;
     const { data: appointment, error: insertError } = await supabase
       .from('appointment_bookings')
@@ -217,7 +130,7 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (insertError) {
-      console.error("Error inserting appointment:", insertError.message);
+      console.error("Error inserting appointment:", insertError);
       throw new Error("Failed to save appointment booking");
     }
 
@@ -232,19 +145,16 @@ const handler = async (req: Request): Promise<Response> => {
       day: 'numeric'
     });
 
-    // Send confirmation email to patient using OraHope SMTP
+    // Send confirmation email to patient
     console.log(`Attempting to send patient email to: ${bookingData.email}`);
     if (SMTP_PASSWORD) {
-      console.log("OraHope SMTP credentials configured, attempting to send patient email...");
+      console.log("SMTP client is configured, attempting to send patient email...");
       try {
-        const emailService = new OraHopeEmailService({
-          host: SMTP_HOST,
-          port: SMTP_PORT,
-          username: SMTP_USER,
-          password: SMTP_PASSWORD,
-        });
-
-        const patientEmailHtml = `
+        await smtpClient.send({
+          from: "SG-JB Dental <contact@orachope.org>",
+          to: bookingData.email,
+          subject: `Booking Request Received - ${bookingRef}`,
+          content: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
             <h1 style="margin: 0; font-size: 28px;">Booking Requested!</h1>
@@ -304,20 +214,30 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
             <p style="margin: 0;">© 2025 SG-JB Dental Tourism. Making quality dental care accessible across borders.</p>
           </div>
-        </div>`;
-
-        await emailService.sendMail({
-          from: "SG-JB Dental <contact@orachope.org>",
-          to: bookingData.email,
-          subject: `Booking Request Received - ${bookingRef}`,
-          html: patientEmailHtml,
+        </div>
+      `,
+        `,
+          html: true,
         });
-        
-        console.log("Patient email sent successfully via OraHope Email Service");
+        console.log("Patient email sent successfully via SMTP");
         emailsSent = true;
-
-        // Send admin notification email
-        const adminEmailHtml = `
+      } catch (e) {
+        console.error("CRITICAL: Failed to send patient email to", bookingData.email, "Error:", e);
+        console.error("Error details:", JSON.stringify(e, null, 2));
+        warnMessage = "Booking saved, but we couldn't send the confirmation email yet.";
+      }
+    } else {
+      console.error("CRITICAL: SMTP credentials not configured. SMTP_PASSWORD:", SMTP_PASSWORD ? "SET" : "NOT SET");
+      warnMessage = "Email service is not configured yet.";
+    }
+    // Send notification email to admin (non-blocking)
+    if (resend) {
+      try {
+        const adminEmailResponse = await resend.emails.send({
+          from: "SG-JB Dental <onboarding@resend.dev>",
+          to: ["Contact@oracchope.org"],
+          subject: `New Appointment Booking - ${bookingRef}`,
+          html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <div style="background: #dc2626; color: white; padding: 20px; text-align: center;">
             <h1 style="margin: 0; font-size: 24px;">New Appointment Booking</h1>
@@ -351,25 +271,14 @@ const handler = async (req: Request): Promise<Response> => {
               <p style="color: #6b7280;">Booking submitted at: ${new Date().toLocaleString('en-SG')}</p>
             </div>
           </div>
-        </div>`;
-
-        await emailService.sendMail({
-          from: "SG-JB Dental <contact@orachope.org>",
-          to: "gohseowping@gmail.com",
-          subject: `New Appointment Booking - ${bookingRef}`,
-          html: adminEmailHtml,
+        </div>
+      `,
         });
-        
-        console.log("Admin notification email sent successfully");
-
+        console.log("Admin email sent:", adminEmailResponse.id);
       } catch (e) {
-        console.error("CRITICAL: Failed to send emails via OraHope Email Service:", e);
-        console.error("Error details:", JSON.stringify(e, null, 2));
-        warnMessage = "Booking saved, but we couldn't send the confirmation email yet.";
+        console.error("Failed to send admin email:", e);
+        if (!warnMessage) warnMessage = "Email notification to admin could not be sent.";
       }
-    } else {
-      console.error("CRITICAL: OraChope SMTP password not configured");
-      warnMessage = "Email service is not configured yet.";
     }
 
     return new Response(

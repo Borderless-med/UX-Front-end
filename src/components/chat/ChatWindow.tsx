@@ -41,10 +41,11 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // --- CRITICAL FIX: Use refs to hold the immediate session state ---
-  const sessionAppliedFilters = useRef<Record<string, any>>({});
-  const sessionCandidatePool = useRef<any[]>([]);
-  const sessionBookingContext = useRef<Record<string, any>>({});
+  // --- FIXED: Use state to hold session state (not refs) ---
+  const [sessionAppliedFilters, setSessionAppliedFilters] = useState<Record<string, any>>({});
+  const [sessionCandidatePool, setSessionCandidatePool] = useState<any[]>([]);
+  const [sessionBookingContext, setSessionBookingContext] = useState<Record<string, any>>({});
+  const [sessionStateLoaded, setSessionStateLoaded] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -53,6 +54,47 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // --- NEW: Restore session state when component mounts ---
+  useEffect(() => {
+    const restoreSessionState = async () => {
+      if (user && sessionId && !sessionStateLoaded) {
+        try {
+          console.log(`🔄 Restoring session state for session: ${sessionId}`);
+          
+          const data = await restInvokeFunction('restore-session', {
+            body: {
+              session_id: sessionId,
+              user_id: user.id
+            },
+            headers: { 'x-environment': getEnvironment() }
+          });
+
+          if (data && data.success && data.state) {
+            console.log('✅ Session state restored:', data.state);
+            setSessionAppliedFilters(data.state.applied_filters || {});
+            setSessionCandidatePool(data.state.candidate_pool || []);
+            setSessionBookingContext(data.state.booking_context || {});
+            setSessionStateLoaded(true);
+          } else {
+            console.log('ℹ️ No previous session state found, starting fresh');
+            setSessionStateLoaded(true);
+          }
+        } catch (error) {
+          console.warn('⚠️ Could not restore session state:', error);
+          setSessionStateLoaded(true); // Still mark as loaded to prevent infinite loops
+        }
+      } else if (!user || !sessionId) {
+        // Reset session state if no user or session
+        setSessionAppliedFilters({});
+        setSessionCandidatePool([]);
+        setSessionBookingContext({});
+        setSessionStateLoaded(true);
+      }
+    };
+
+    restoreSessionState();
+  }, [user, sessionId, sessionStateLoaded]);
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || isTyping) return;
@@ -87,12 +129,12 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           content: msg.text
         }));
 
-      // --- CRITICAL FIX: Read the .current value from the refs ---
+      // --- FIXED: Use state values instead of refs ---
       const requestBody: any = {
         history: history,
-        applied_filters: sessionAppliedFilters.current,
-        candidate_pool: sessionCandidatePool.current,
-        booking_context: sessionBookingContext.current,
+        applied_filters: sessionAppliedFilters,
+        candidate_pool: sessionCandidatePool,
+        booking_context: sessionBookingContext,
         user_id: user.id
       };
 
@@ -127,18 +169,18 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
         setMessages(prev => [...prev, aiMessage]);
 
-        // --- CRITICAL FIX: Update the .current value of the refs ---
+        // --- FIXED: Update state values instead of refs ---
         if (data.applied_filters) {
           console.log("<<<<< Updating applied_filters state:", data.applied_filters);
-          sessionAppliedFilters.current = data.applied_filters;
+          setSessionAppliedFilters(data.applied_filters);
         }
         if (data.candidate_pool) {
           console.log("<<<<< Updating candidate_pool state with", data.candidate_pool.length, "clinics");
-          sessionCandidatePool.current = data.candidate_pool;
+          setSessionCandidatePool(data.candidate_pool);
         }
         if (data.booking_context) {
           console.log("<<<<< Updating booking_context state:", data.booking_context);
-          sessionBookingContext.current = data.booking_context;
+          setSessionBookingContext(data.booking_context);
         }
 
       } else {
