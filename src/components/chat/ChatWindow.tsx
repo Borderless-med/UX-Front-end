@@ -27,7 +27,7 @@ interface ChatWindowProps {
 }
 
 const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
-  const { user, sessionId, setSessionId } = useAuth();
+  const { user, session, sessionId, setSessionId } = useAuth();
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -67,7 +67,10 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
               session_id: sessionId,
               user_id: user.id
             },
-            headers: { 'x-environment': getEnvironment() }
+            headers: {
+              'x-environment': getEnvironment(),
+              'Authorization': 'Bearer ' + session?.access_token
+            }
           });
 
           if (data && data.success && data.state) {
@@ -147,7 +150,10 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
       const data = await restInvokeFunction('dynamic-function', {
         body: requestBody,
-        headers: { 'x-environment': getEnvironment() },
+        headers: {
+          'x-environment': getEnvironment(),
+          'Authorization': 'Bearer ' + session?.access_token
+        },
       }, {
         timeout: 30000,
         retries: 1
