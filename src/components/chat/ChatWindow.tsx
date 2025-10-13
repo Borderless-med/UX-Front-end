@@ -60,10 +60,10 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
     const restoreSessionState = async () => {
       if (user && sessionId && !sessionStateLoaded) {
         try {
-  // Debug: Show session and Authorization header value before restore-session
-  console.log("DEBUG: session (restore)", session);
-  console.log("DEBUG: Authorization header (restore)", session?.access_token);
           console.log(`🔄 Restoring session state for session: ${sessionId}`);
+          // Debug: Show session and Authorization header value before restore-session
+          console.log("DEBUG: session (restore)", session);
+          console.log("DEBUG: Authorization header (restore)", session?.access_token);
           
           const data = await restInvokeFunction('restore-session', {
             body: {
@@ -126,6 +126,9 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
     setMessages(updatedMessages);
     setInputMessage('');
     setIsTyping(true);
+    // Debug: Show session and Authorization header value before chat send
+    console.log("DEBUG: session (chat)", session);
+    console.log("DEBUG: Authorization header (chat)", session?.access_token);
 
     try {
       const history = updatedMessages
@@ -152,9 +155,6 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       console.log(">>>>> Sending this body to backend:", JSON.stringify(requestBody, null, 2));
 
       const data = await restInvokeFunction('dynamic-function', {
-  // Debug: Show session and Authorization header value before chat send
-  console.log("DEBUG: session (chat)", session);
-  console.log("DEBUG: Authorization header (chat)", session?.access_token);
         body: requestBody,
         headers: {
           'x-environment': getEnvironment(),
