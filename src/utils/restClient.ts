@@ -10,6 +10,7 @@ interface RestClientOptions {
   timeout?: number;
   retries?: number;
   headers?: Record<string, string>;
+  authToken?: string;
 }
 
 interface RequestQueueItem {
@@ -30,13 +31,12 @@ class RestClient {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_ANON_KEY,
     };
-
+    // Always use the provided authToken if available
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
     } else {
       headers['Authorization'] = `Bearer ${SUPABASE_ANON_KEY}`;
     }
-
     return headers;
   }
 
@@ -49,12 +49,12 @@ class RestClient {
   }
 
   private async executeRequest(
-    url: string, 
-    options: RequestInit, 
+    url: string,
+    options: RequestInit,
     clientOptions: RestClientOptions = {}
   ): Promise<any> {
-    const { timeout = 8000, retries = 2 } = clientOptions;
-    
+    const { timeout = 8000, retries = 2, authToken } = clientOptions as RestClientOptions & { authToken?: string };
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -63,7 +63,7 @@ class RestClient {
         ...options,
         signal: controller.signal,
         headers: {
-          ...this.getDefaultHeaders(),
+          ...this.getDefaultHeaders(authToken),
           ...clientOptions.headers,
           ...options.headers,
         },
@@ -79,11 +79,11 @@ class RestClient {
       return data;
     } catch (error) {
       clearTimeout(timeoutId);
-      
+
       if (error instanceof Error && error.name === 'AbortError') {
         throw new Error(`Request timeout after ${timeout}ms`);
       }
-      
+
       throw error;
     }
   }

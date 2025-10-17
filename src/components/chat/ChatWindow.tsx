@@ -61,17 +61,15 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       if (user && sessionId && !sessionStateLoaded) {
         try {
           console.log(`🔄 Restoring session state for session: ${sessionId}`);
-          // Debug: Show session before restore-session
-          console.log("DEBUG: session (restore)", session);
           
           const data = await restInvokeFunction('restore-session', {
             body: {
               session_id: sessionId,
               user_id: user.id
             },
-            headers: {
-              'x-environment': getEnvironment()
-            }
+            headers: { 'x-environment': getEnvironment() }
+          }, {
+            authToken: session?.access_token
           });
 
           if (data && data.success && data.state) {
@@ -124,8 +122,6 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
     setMessages(updatedMessages);
     setInputMessage('');
     setIsTyping(true);
-  // Debug: Show session before chat send
-  console.log("DEBUG: session (chat)", session);
 
     try {
       const history = updatedMessages
@@ -153,12 +149,11 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
       const data = await restInvokeFunction('dynamic-function', {
         body: requestBody,
-        headers: {
-          'x-environment': getEnvironment()
-        },
+        headers: { 'x-environment': getEnvironment() },
       }, {
         timeout: 30000,
-        retries: 1
+        retries: 1,
+        authToken: session?.access_token
       });
 
       if (data && data.response) {

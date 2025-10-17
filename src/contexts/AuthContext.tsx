@@ -89,12 +89,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
   
-  // --- FIX: Remove sessionId restoration from localStorage after login ---
+  // --- CHANGE 2: Add the new useEffect hook for session restoration ---
   useEffect(() => {
+    // Always restore sessionId from localStorage after login
     if (user && session) {
-      setSessionId(null);
-      localStorage.removeItem('gsp-chatbot-session-id');
-      console.log('SessionId cleared after login. New chat will create a new session.');
+      const restoredSessionId = localStorage.getItem('gsp-chatbot-session-id');
+      if (restoredSessionId) {
+        setSessionId(restoredSessionId);
+        console.log(`Restored sessionId after login: ${restoredSessionId}`);
+      } else {
+        setSessionId(null);
+        console.log('No previous chat session ID found in localStorage.');
+      }
     }
   }, [user, session]);
 
@@ -124,10 +130,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const logout = async () => {
-    setSessionId(null);
-    localStorage.removeItem('gsp-chatbot-session-id');
+    console.log('🔴 LOGOUT FUNCTION CALLED - Our custom logout is running!');
+    
+    // --- THIS IS THE CRITICAL FIX ---
+    // Step 1: Read the session ID from storage and save it in a temporary variable.
+    // We use a unique key for session ID to avoid interference from Supabase or other libraries.
+  const lastSessionId = localStorage.getItem('gsp-chatbot-session-id');
+    console.log('🔴 Preparing to log out. Last session ID was:', lastSessionId);
+
+    // Step 2: Call the signOut function with no parameters (safest default)
     await supabase.auth.signOut();
-    console.log('Logout complete. Session ID cleared from localStorage.');
+
+    // Step 3: Immediately after signOut completes, write the session ID back.
+    if (lastSessionId) {
+      localStorage.setItem('gsp-chatbot-session-id', lastSessionId);
+      console.log('🔴 Logout complete. Session ID has been restored to localStorage.');
+    } else {
+      console.log('🔴 No session ID to preserve (this is expected if you had no previous chat)');
+    }
+    // --- END OF FIX ---
   };
 
 
