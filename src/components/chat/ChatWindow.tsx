@@ -147,14 +147,24 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
       console.log(">>>>> Sending this body to backend:", JSON.stringify(requestBody, null, 2));
 
-      const data = await restInvokeFunction('dynamic-function', {
-        body: requestBody,
-        headers: { 'x-environment': getEnvironment() },
-      }, {
-        timeout: 30000,
-        retries: 1,
-        authToken: session?.access_token
+      // Directly call FastAPI backend /chat endpoint
+      const backendUrl = getEnvironment() === 'development'
+        ? 'http://localhost:10000/chat'
+        : 'https://sg-jb-chatbot-backend.onrender.com/chat';
+
+      const response = await fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify(requestBody),
       });
+
+      if (!response.ok) {
+        throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+      }
+      const data = await response.json();
 
       if (data && data.response) {
         if (data.session_id) {
