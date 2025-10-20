@@ -64,15 +64,23 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           console.log(`🔄 Restoring session state for session: ${sessionId}`);
           console.log('DEBUG: session?.access_token for restore-session:', session?.access_token);
           console.log('DEBUG: Authorization header for restore-session:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
-          const data = await restInvokeFunction('restore-session', {
-            body: {
-              session_id: sessionId,
-              user_id: user.id
-            },
-            headers: { 'x-environment': getEnvironment() }
-          }, {
-            authToken: session?.access_token
-          });
+            const backendUrl = getEnvironment() === 'development'
+              ? 'http://localhost:10000/restore_session'
+              : 'https://sg-jb-chatbot-backend.onrender.com/restore_session';
+
+            const response = await fetch(backendUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session?.access_token}`,
+              },
+              body: JSON.stringify({
+                session_id: sessionId,
+                user_id: user.id
+              }),
+            });
+
+            const data = await response.json();
 
           if (data && data.success && data.state) {
             console.log('✅ Session state restored:', data.state);
