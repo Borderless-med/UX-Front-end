@@ -57,11 +57,13 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
   // --- NEW: Restore session state when component mounts ---
   useEffect(() => {
+
     const restoreSessionState = async () => {
       if (user && sessionId && !sessionStateLoaded) {
         try {
           console.log(`🔄 Restoring session state for session: ${sessionId}`);
-          
+          console.log('DEBUG: session?.access_token for restore-session:', session?.access_token);
+          console.log('DEBUG: Authorization header for restore-session:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
           const data = await restInvokeFunction('restore-session', {
             body: {
               session_id: sessionId,
@@ -99,6 +101,8 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   }, [user, sessionId, sessionStateLoaded]);
 
   const handleSendMessage = async (message: string) => {
+  // Debug print for Authorization header before chat request
+  console.log('DEBUG: Authorization header for chat:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
     if (!message.trim() || isTyping) return;
 
     if (!user) {

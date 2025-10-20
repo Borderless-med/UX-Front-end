@@ -37,6 +37,8 @@ class RestClient {
     } else {
       headers['Authorization'] = `Bearer ${SUPABASE_ANON_KEY}`;
     }
+    // Debug print for Authorization header
+    console.log('DEBUG: REST client Authorization header:', headers['Authorization']);
     return headers;
   }
 
