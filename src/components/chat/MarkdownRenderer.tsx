@@ -67,43 +67,17 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
             </pre>
           ),
           
-          // Links
+          // =================== THIS IS THE CORRECTED LINK HANDLER ===================
           a: ({ href, children }) => {
-            // Check if link is internal (starts with /) OR is a booking link from production domain
+            // REMARK: Simplified the logic. We now only check if a link is internal.
+            // If it's not internal, it will be treated as external and opened in a new tab.
             const isInternal = href?.startsWith('/');
-            const isBookingLink = href?.includes('sg-jb-dental.lovable.app/book-now') || href?.includes('/book-now');
             
             const handleClick = (e: React.MouseEvent) => {
               e.preventDefault();
               
-              let targetPath = '';
-              
-              if (isBookingLink && href) {
-                console.log('=== BOOKING LINK CLICKED ===');
-                console.log('Original href:', href);
-                
-                // Extract just the path and parameters from full URLs
-                if (href.includes('sg-jb-dental.lovable.app/book-now')) {
-                  const url = new URL(href);
-                  targetPath = url.pathname + url.search;
-                  console.log('Extracted path from production URL:', targetPath);
-                } else if (href.startsWith('/book-now')) {
-                  targetPath = href;
-                  console.log('Using relative path:', targetPath);
-                } else {
-                  targetPath = href;
-                }
-                
-                console.log('Final target path:', targetPath);
-                
-                // Navigate to booking form with parameters
-                try {
-                  navigate(targetPath);
-                } catch (error) {
-                  console.error('Navigation failed, using fallback:', error);
-                  window.location.href = targetPath;
-                }
-              } else if (isInternal && href) {
+              if (isInternal && href) {
+                // This logic remains for any true internal app links.
                 console.log('Internal link clicked - navigating to:', href);
                 try {
                   navigate(href);
@@ -112,7 +86,9 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
                   window.location.href = href;
                 }
               } else {
-                // External link - open in new tab
+                // REMARK: This is now the default for ALL external links, including the booking link.
+                // It will correctly open the full booking URL in a new browser tab.
+                console.log('External link clicked - opening in new tab:', href);
                 window.open(href, '_blank', 'noopener,noreferrer');
               }
             };
@@ -127,6 +103,7 @@ const MarkdownRenderer = ({ content, isUser = false }: MarkdownRendererProps) =>
               </a>
             );
           },
+          // ======================================================================
           
           // Emphasis
           strong: ({ children }) => (
