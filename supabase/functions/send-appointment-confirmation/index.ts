@@ -87,13 +87,11 @@ class OraHopeEmailService {
       console.error("Failed to send email via OraChope SMTP:", error);
       console.error("SMTP Error details:", error instanceof Error ? error.message : String(error));
       
-      // Log specific SMTP error information for debugging
       if (error instanceof Error) {
         console.error("Error name:", error.name);
         console.error("Error stack:", error.stack);
       }
       
-      // No fallback - we only use OraChope SMTP server as requested
       throw new Error(`OraChope SMTP delivery failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
@@ -118,7 +116,6 @@ interface AppointmentBookingRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -126,16 +123,17 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log("Processing appointment booking request");
 
-    // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Initialize PrivateEmail SMTP settings for OraChope (CONFIRMED SETTINGS)
     const SMTP_HOST = Deno.env.get("SMTP_HOST") || "mail.privateemail.com";
-    const SMTP_PORT = parseInt(Deno.env.get("SMTP_PORT") || "587"); // 587 for STARTTLS, 465 for SSL
+    const SMTP_PORT = parseInt(Deno.env.get("SMTP_PORT") || "587");
     const SMTP_USER = Deno.env.get("SMTP_USER") || "contact@orachope.org";
-    const SMTP_PASSWORD = Deno.env.get("SMTP_PASSWORD") || "LifeTipTok1#";
+    // --- MODIFICATION 1 of 4 ---
+    // Removed the hardcoded fallback password for better security.
+    // The function will now rely solely on the environment variable.
+    const SMTP_PASSWORD = Deno.env.get("SMTP_PASSWORD");
     
     console.log(`OraChope SMTP Configuration (CONFIRMED): ${SMTP_HOST}:${SMTP_PORT} with user: ${SMTP_USER}`);
     console.log(`🔒 Using STARTTLS encryption for secure email delivery`);
@@ -143,11 +141,9 @@ const handler = async (req: Request): Promise<Response> => {
     const bookingData: AppointmentBookingRequest = await req.json();
     console.log("Booking data received:", { ...bookingData, email: '[REDACTED]' });
 
-    // Track email sending status
     let emailsSent = false;
     let warnMessage: string | undefined;
 
-    // Validate required fields
     const requiredFields = ['patient_name', 'email', 'whatsapp', 'treatment_type', 'preferred_date', 'time_slot', 'clinic_location'];
     for (const field of requiredFields) {
       if (!bookingData[field as keyof AppointmentBookingRequest]) {
@@ -159,7 +155,6 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("PDPA consent is required");
     }
 
-    // Generate booking reference
     const { data: bookingRef, error: refError } = await supabase.rpc('generate_booking_ref');
     if (refError) {
       console.error("Error generating booking reference:", refError);
@@ -168,12 +163,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Generated booking reference:", bookingRef);
 
-    // Create user account if requested
     let userCreated = false;
     let userCreationError: string | undefined;
+    // --- MODIFICATION 2 of 4 ---
+    // Prepare a variable to hold the password setup link.
+    let passwordSetupLink: string | null = null;
     
     if (bookingData.create_account) {
       console.log("Creating user account for:", bookingData.email);
+      let isNewUser = false; // Flag to check if the user was newly created vs already existing
       try {
         const { data: newUser, error: userError } = await supabase.auth.admin.createUser({
           email: bookingData.email,
@@ -184,13 +182,17 @@ const handler = async (req: Request): Promise<Response> => {
             created_via: 'booking_form',
             booking_ref: bookingRef
           },
-          invite: true
+          // --- MODIFICATION 3 of 4 ---
+          // Removed 'invite: true'. This stops Supabase from sending its own
+          // generic email. We will now generate our own link and send it
+          // in our custom email for a better user experience.
         });
         
         if (userError) {
           if (userError.message.includes('already') || userError.message.includes('exists')) {
             console.log("User already exists:", bookingData.email);
-            userCreated = true;
+            userCreated = true; // Still treat as success for the email template
+            isNewUser = false;
           } else {
             console.error("Error creating user:", userError);
             userCreationError = userError.message;
@@ -198,14 +200,30 @@ const handler = async (req: Request): Promise<Response> => {
         } else {
           console.log("User created successfully:", newUser.user?.id);
           userCreated = true;
+          isNewUser = true;
         }
       } catch (e) {
         console.error("Exception during user creation:", e);
         userCreationError = String(e);
       }
+
+      // If a brand new user was successfully created, generate a password setup link.
+      if (isNewUser) {
+        const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+            type: 'recovery', // Generates a password reset link, which is perfect for onboarding.
+            email: bookingData.email
+        });
+
+        if (linkError) {
+            console.error("Error generating password setup link:", linkError);
+            // This is not a fatal error; the booking can still proceed.
+        } else {
+            passwordSetupLink = linkData.properties.action_link;
+            console.log("Generated password setup link for the new user.");
+        }
+      }
     }
 
-    // Insert appointment booking (exclude create_account field)
     const { create_account, ...bookingDataForDb } = bookingData;
     const { data: appointment, error: insertError } = await supabase
       .from('appointment_bookings')
@@ -224,7 +242,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Appointment saved successfully:", appointment.id);
 
-    // Format date for email
     const appointmentDate = new Date(bookingData.preferred_date);
     const formattedDate = appointmentDate.toLocaleDateString('en-SG', {
       weekday: 'long',
@@ -233,7 +250,6 @@ const handler = async (req: Request): Promise<Response> => {
       day: 'numeric'
     });
 
-    // Send confirmation email to patient using OraHope SMTP
     console.log(`Attempting to send patient email to: ${bookingData.email}`);
     if (SMTP_PASSWORD) {
       console.log("OraHope SMTP credentials configured, attempting to send patient email...");
@@ -285,14 +301,30 @@ const handler = async (req: Request): Promise<Response> => {
               </ul>
             </div>
             
+            <!-- --- MODIFICATION 4 of 4 --- -->
+            <!-- This entire block has been updated. It now checks for the passwordSetupLink. -->
+            <!-- If a new user was created and a link was generated, it shows a clear call-to-action. -->
+            <!-- If the user already existed, it shows a simple "welcome back" style message. -->
             ${userCreated ? `
-            <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 15px; border-radius: 6px; margin: 20px 0;">
-              <h4 style="color: #16a34a; margin: 0 0 8px; font-size: 16px;">🎉 Account Created!</h4>
-              <p style="margin: 0; color: #15803d; font-size: 14px;">
-                Your account has been created successfully! You can now access our AI chatbot for instant dental advice, easy rebooking, and exclusive member benefits. 
-                <a href="https://sg-smile-saver.vercel.app" style="color: #16a34a; text-decoration: underline;">Visit our website</a> to get started.
-              </p>
-            </div>
+              ${passwordSetupLink ? `
+                <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: center;">
+                  <h4 style="color: #16a34a; margin: 0 0 10px; font-size: 16px;">🎉 Set Up Your Account!</h4>
+                  <p style="margin: 0 0 15px; color: #15803d; font-size: 14px;">
+                    To manage your bookings and get instant advice from our AI chatbot, please set a password for your new account.
+                  </p>
+                  <a href="${passwordSetupLink}" style="background-color: #22c55e; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+                    Set Your Password
+                  </a>
+                </div>
+              ` : `
+                <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 15px; border-radius: 6px; margin: 20px 0;">
+                  <h4 style="color: #16a34a; margin: 0 0 8px; font-size: 16px;">🎉 Welcome!</h4>
+                  <p style="margin: 0; color: #15803d; font-size: 14px;">
+                    You can now access our AI chatbot for instant dental advice, easy rebooking, and exclusive member benefits. 
+                    <a href="https://sg-smile-saver.vercel.app" style="color: #16a34a; text-decoration: underline;">Visit our website</a> and log in to get started.
+                  </p>
+                </div>
+              `}
             ` : ''}
             
             <div style="text-align: center; margin: 30px 0;">
@@ -317,7 +349,6 @@ const handler = async (req: Request): Promise<Response> => {
         console.log("Patient email sent successfully via OraHope Email Service");
         emailsSent = true;
 
-        // Send admin notification email
         const adminEmailHtml = `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <div style="background: #dc2626; color: white; padding: 20px; text-align: center;">
