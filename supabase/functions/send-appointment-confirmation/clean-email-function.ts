@@ -191,7 +191,8 @@ const handler = async (req: Request): Promise<Response> => {
             whatsapp: bookingData.whatsapp,
             created_via: 'booking_form',
             booking_ref: bookingRef
-          }
+          },
+          invite: true
         });
         
         if (userError) {
