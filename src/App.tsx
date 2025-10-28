@@ -27,6 +27,7 @@ import ConfirmWhatsApp from "./pages/ConfirmWhatsApp";
 import OptOutReport from "./pages/OptOutReport";
 import TestClinicSignup from "./pages/TestClinicSignup";
 import BookNow from "./pages/BookNow";
+import { Analytics } from '@vercel/analytics/react'; // --- CHANGE 1 of 2: Added this import line ---
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,7 @@ const App = () => (
             <CookieConsentBanner />
             <CookiePreferences />
             <ChatWidget />
+            <Analytics /> {/* --- CHANGE 2 of 2: Added this component here --- */}
           </BrowserRouter>
           </AuthProvider>
         </CookieConsentProvider>
