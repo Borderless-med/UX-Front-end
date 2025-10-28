@@ -21,19 +21,7 @@ class OraHopeEmailService {
       console.log(`From: ${options.from}`);
       console.log(`To: ${options.to}`);
       console.log(`Subject: ${options.subject}`);
-      console.log(`Service: HTTP-based email delivery (no DNS changes required)`);
       
-      console.log(`📧 Using HTTP email service for: ${this.username}`);
-      console.log(`🔑 Sending from OraChope domain`);
-      console.log(`🌐 Using third-party email API`);
-      
-      // Using HTTP-based email services instead of direct SMTP connection
-      console.log("Preparing to send via HTTP email service...");
-
-      // Use HTTP-based email service instead of direct SMTP
-      console.log("Using HTTP-based email API...");
-      
-      // Try SMTP2GO API (works without DNS changes)
       const smtp2goApiKey = Deno.env.get("SMTP2GO_API_KEY");
       if (smtp2goApiKey) {
         const smtp2goResponse = await fetch("https://api.smtp2go.com/v3/email/send", {
@@ -44,7 +32,7 @@ class OraHopeEmailService {
           body: JSON.stringify({
             api_key: smtp2goApiKey,
             to: [options.to],
-            sender: this.username, // Use contact@orachope.org
+            sender: this.username,
             subject: options.subject,
             html_body: options.html,
           }),
@@ -56,7 +44,6 @@ class OraHopeEmailService {
         }
       }
       
-      // Fallback: Use Brevo (formerly Sendinblue) API
       const brevoApiKey = Deno.env.get("BREVO_API_KEY");
       if (brevoApiKey) {
         const brevoResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -84,15 +71,8 @@ class OraHopeEmailService {
       return { success: true, message: "Email queued for processing", service: "manual" };
       
     } catch (error) {
-      console.error("Failed to send email via OraChope SMTP:", error);
-      console.error("SMTP Error details:", error instanceof Error ? error.message : String(error));
-      
-      if (error instanceof Error) {
-        console.error("Error name:", error.name);
-        console.error("Error stack:", error.stack);
-      }
-      
-      throw new Error(`OraChope SMTP delivery failed: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Failed to send email:", error);
+      throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 }
@@ -130,13 +110,7 @@ const handler = async (req: Request): Promise<Response> => {
     const SMTP_HOST = Deno.env.get("SMTP_HOST") || "mail.privateemail.com";
     const SMTP_PORT = parseInt(Deno.env.get("SMTP_PORT") || "587");
     const SMTP_USER = Deno.env.get("SMTP_USER") || "contact@orachope.org";
-    // --- MODIFICATION 1 of 4 ---
-    // Removed the hardcoded fallback password for better security.
-    // The function will now rely solely on the environment variable.
     const SMTP_PASSWORD = Deno.env.get("SMTP_PASSWORD");
-    
-    console.log(`OraChope SMTP Configuration (CONFIRMED): ${SMTP_HOST}:${SMTP_PORT} with user: ${SMTP_USER}`);
-    console.log(`🔒 Using STARTTLS encryption for secure email delivery`);
 
     const bookingData: AppointmentBookingRequest = await req.json();
     console.log("Booking data received:", { ...bookingData, email: '[REDACTED]' });
@@ -165,13 +139,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     let userCreated = false;
     let userCreationError: string | undefined;
-    // --- MODIFICATION 2 of 4 ---
-    // Prepare a variable to hold the password setup link.
     let passwordSetupLink: string | null = null;
-    
+    let isNewUser = false; // --- MODIFICATION: We will use this flag to decide which email to show.
+
     if (bookingData.create_account) {
-      console.log("Creating user account for:", bookingData.email);
-      let isNewUser = false; // Flag to check if the user was newly created vs already existing
+      console.log("Attempting to create or verify user account for:", bookingData.email);
       try {
         const { data: newUser, error: userError } = await supabase.auth.admin.createUser({
           email: bookingData.email,
@@ -182,17 +154,13 @@ const handler = async (req: Request): Promise<Response> => {
             created_via: 'booking_form',
             booking_ref: bookingRef
           },
-          // --- MODIFICATION 3 of 4 ---
-          // Removed 'invite: true'. This stops Supabase from sending its own
-          // generic email. We will now generate our own link and send it
-          // in our custom email for a better user experience.
         });
         
         if (userError) {
           if (userError.message.includes('already') || userError.message.includes('exists')) {
             console.log("User already exists:", bookingData.email);
-            userCreated = true; // Still treat as success for the email template
-            isNewUser = false;
+            userCreated = true;
+            isNewUser = false; // --- MODIFICATION: Set flag for existing user
           } else {
             console.error("Error creating user:", userError);
             userCreationError = userError.message;
@@ -200,23 +168,22 @@ const handler = async (req: Request): Promise<Response> => {
         } else {
           console.log("User created successfully:", newUser.user?.id);
           userCreated = true;
-          isNewUser = true;
+          isNewUser = true; // --- MODIFICATION: Set flag for new user
         }
       } catch (e) {
         console.error("Exception during user creation:", e);
         userCreationError = String(e);
       }
 
-      // If a brand new user was successfully created, generate a password setup link.
-      if (isNewUser) {
+      // --- MODIFICATION: This logic now only runs for brand new users. ---
+      if (userCreated && isNewUser && !userCreationError) {
         const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
-            type: 'recovery', // Generates a password reset link, which is perfect for onboarding.
+            type: 'recovery',
             email: bookingData.email
         });
 
         if (linkError) {
             console.error("Error generating password setup link:", linkError);
-            // This is not a fatal error; the booking can still proceed.
         } else {
             passwordSetupLink = linkData.properties.action_link;
             console.log("Generated password setup link for the new user.");
@@ -301,12 +268,9 @@ const handler = async (req: Request): Promise<Response> => {
               </ul>
             </div>
             
-            <!-- --- MODIFICATION 4 of 4 --- -->
-            <!-- This entire block has been updated. It now checks for the passwordSetupLink. -->
-            <!-- If a new user was created and a link was generated, it shows a clear call-to-action. -->
-            <!-- If the user already existed, it shows a simple "welcome back" style message. -->
+            <!-- --- MODIFICATION: This entire block is now smarter. --- -->
             ${userCreated ? `
-              ${passwordSetupLink ? `
+              ${isNewUser && passwordSetupLink ? `
                 <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: center;">
                   <h4 style="color: #16a34a; margin: 0 0 10px; font-size: 16px;">🎉 Set Up Your Account!</h4>
                   <p style="margin: 0 0 15px; color: #15803d; font-size: 14px;">
@@ -317,11 +281,10 @@ const handler = async (req: Request): Promise<Response> => {
                   </a>
                 </div>
               ` : `
-                <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 15px; border-radius: 6px; margin: 20px 0;">
-                  <h4 style="color: #16a34a; margin: 0 0 8px; font-size: 16px;">🎉 Welcome!</h4>
-                  <p style="margin: 0; color: #15803d; font-size: 14px;">
-                    You can now access our AI chatbot for instant dental advice, easy rebooking, and exclusive member benefits. 
-                    <a href="https://sg-smile-saver.vercel.app" style="color: #16a34a; text-decoration: underline;">Visit our website</a> and log in to get started.
+                <div style="background: #f0f9ff; border: 1px solid #3b82f6; padding: 15px; border-radius: 6px; margin: 20px 0;">
+                  <h4 style="color: #1e40af; margin: 0 0 8px; font-size: 16px;">👍 Welcome Back!</h4>
+                  <p style="margin: 0; color: #1c3d5a; font-size: 14px;">
+                    Your booking request has been received. You can log in to your existing account to view your booking history.
                   </p>
                 </div>
               `}
