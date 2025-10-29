@@ -1,5 +1,18 @@
-
 // Test script to call the booking function
+
+// --- MODIFICATION: This function now reads the URL and Key from a secure source ---
+// It is no longer hard-coded.
+const getSupabaseConfig = () => {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Supabase URL or Anon Key is not defined in environment variables.");
+  }
+
+  return { supabaseUrl, supabaseAnonKey };
+};
+
 const testBooking = async () => {
   const bookingData = {
     patient_name: "Test User",
@@ -14,12 +27,23 @@ const testBooking = async () => {
   };
 
   try {
-    const response = await fetch('https://uzppuebjzqxeavgmwtvr.supabase.co/functions/v1/send-appointment-confirmation', {
+    const { supabaseAnonKey } = getSupabaseConfig();
+
+    // --- MODIFICATION: This is the primary fix. ---
+    // The URL is now pointing to your new, secure Vercel endpoint.
+    // The "Emergency Rollback URL" is saved in a comment for safety.
+
+    // Emergency Rollback URL: 'https://uzppuebjzqxeavgmwtvr.supabase.co/functions/v1/send-appointment-confirmation'
+    const apiUrl = '/api/send-appointment-confirmation';
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA'
+        // --- MODIFICATION: The keys are now read securely ---
+        // They are no longer hard-coded into this file.
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${supabaseAnonKey}`
       },
       body: JSON.stringify(bookingData)
     });
