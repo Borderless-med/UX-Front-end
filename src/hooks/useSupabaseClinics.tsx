@@ -1,15 +1,15 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Clinic } from '@/types/clinic';
 import { restSelect } from '@/utils/restClient';
-import { useAuth } from '@/contexts/AuthContext';
+// Note: The 'useAuth' context is no longer needed for this specific hook's logic,
+// but it's fine to leave the import if other parts of your app use it.
+import { useAuth } from '@/contexts/AuthContext'; 
 
 export const useSupabaseClinics = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
-  const { user } = useAuth(); // Import useAuth if it's not already there
 
   useEffect(() => {
     const fetchClinics = async () => {
@@ -35,7 +35,8 @@ export const useSupabaseClinics = () => {
         // REST-first strategy: Direct fetch with optimized settings
         const data = await restSelect('clinics_data', {
           select: '*',
-          order: { column: 'distance', ascending: true }
+          // Note: The 'distance' column is assumed to exist. If not, this order clause might need adjustment.
+          order: { column: 'distance', ascending: true } 
         }, {
           timeout: 8000,
           retries: 2
@@ -132,7 +133,7 @@ export const useSupabaseClinics = () => {
           
           // Check for common network issues
           if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-            console.error('🌐 Network error detected - possible CORS/CSP issue in dev environment');
+            console.error('🌐 Network error detected - possible CORS/CSP issue or offline');
           }
         }
         
@@ -150,7 +151,10 @@ export const useSupabaseClinics = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [user]);
+    // AMENDMENT: Changed the dependency array from [user] to [].
+    // This ensures the data is fetched once when the component mounts,
+    // which is correct for a public list of clinics.
+  }, []);
 
   return { clinics, loading, error };
 };

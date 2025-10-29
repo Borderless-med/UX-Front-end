@@ -22,10 +22,10 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsSecureConnection(window.location.protocol === 'https:');
     
     // Get user's IP address (for logging purposes)
-    fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(data => setIpAddress(data.ip))
-      .catch(() => setIpAddress('unknown'));
+    //fetch('https://api.ipify.org?format=json')
+    //  .then(response => response.json())
+    //  .then(data => setIpAddress(data.ip))
+    //  .catch(() => setIpAddress('unknown'));
   }, []);
 
   const reportSecurityEvent = (event: string, details?: any) => {
