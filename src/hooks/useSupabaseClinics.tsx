@@ -6,12 +6,14 @@ import { restSelect } from '@/utils/restClient';
 import { useAuth } from '@/contexts/AuthContext'; 
 
 export const useSupabaseClinics = () => {
+  console.log('[useSupabaseClinics] Hook initialized at', new Date().toISOString());
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
+    console.log('[useSupabaseClinics] useEffect triggered at', new Date().toISOString());
     const fetchClinics = async () => {
       const startTime = performance.now();
       
