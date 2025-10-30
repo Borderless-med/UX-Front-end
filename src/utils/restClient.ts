@@ -152,7 +152,6 @@ class RestClient {
       clientOptions
     );
   }
-  }
 
   async insert(
     table: string,
