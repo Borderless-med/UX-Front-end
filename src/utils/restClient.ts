@@ -169,7 +169,7 @@ class RestClient {
       },
       clientOptions
     );
-  }
+    // No closing brace here; keep all methods inside the class
   }
 
   async update(
