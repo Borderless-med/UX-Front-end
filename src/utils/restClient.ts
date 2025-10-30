@@ -123,11 +123,35 @@ class RestClient {
   }
 
   async select(
-    table: string, 
-    options: { /* ... */ } = {},
+    table: string,
+    options: { select?: string; order?: { column: string; ascending: boolean } } = {},
     clientOptions: RestClientOptions = {}
   ): Promise<any> {
-    // ... This function remains the same ...
+    // Build the URL for Supabase REST API
+    let url = `${SUPABASE_URL}/rest/v1/${table}?`;
+
+    // Add select columns
+    if (options.select) {
+      url += `select=${options.select}&`;
+    } else {
+      url += `select=*&`;
+    }
+
+    // Add ordering
+    if (options.order) {
+      url += `order=${options.order.column}.${options.order.ascending ? 'asc' : 'desc'}&`;
+    }
+
+    // Remove trailing '&'
+    url = url.replace(/&$/, '');
+
+    // Make the request
+    return await this.executeRequest(
+      url,
+      { method: 'GET' },
+      clientOptions
+    );
+  }
   }
 
   async insert(
@@ -135,7 +159,18 @@ class RestClient {
     data: any,
     clientOptions: RestClientOptions = {}
   ): Promise<any> {
-    // ... This function remains the same ...
+    // Build the URL for Supabase REST API
+    const url = `${SUPABASE_URL}/rest/v1/${table}`;
+    // Make the request
+    return await this.executeRequest(
+      url,
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+      },
+      clientOptions
+    );
+  }
   }
 
   async update(
@@ -144,7 +179,22 @@ class RestClient {
     filter: Record<string, any>,
     clientOptions: RestClientOptions = {}
   ): Promise<any> {
-    // ... This function remains the same ...
+    // Build the URL for Supabase REST API with filter
+    let url = `${SUPABASE_URL}/rest/v1/${table}?`;
+    Object.keys(filter).forEach((key) => {
+      url += `${key}=eq.${filter[key]}&`;
+    });
+    url = url.replace(/&$/, '');
+    // Make the request
+    return await this.executeRequest(
+      url,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      },
+      clientOptions
+    );
+  }
   }
 
   async invokeFunction(
@@ -152,36 +202,24 @@ class RestClient {
     options: { body?: any; headers?: Record<string, string>; } = {},
     clientOptions: RestClientOptions = {}
   ): Promise<any> {
-    
-    // --- MODIFICATION: This is the primary fix. ---
-    // We add a special rule for the booking function to use the Vercel URL.
-    // All other functions will continue to use the Supabase URL.
-
     let url: string;
-
     if (functionName === 'send-appointment-confirmation') {
-      // This is our booking function, so we use the local Vercel API endpoint.
       url = '/api/send-appointment-confirmation';
       console.log('⚡ Using Vercel API endpoint for booking function.');
     } else {
-      // For all other functions, use the standard Supabase URL.
       url = `${SUPABASE_URL}/functions/v1/${functionName}`;
     }
-    
     console.log('⚡ REST function invoke:', functionName, 'URL:', url);
     const startTime = performance.now();
-
     try {
       const result = await this.executeRequest(
         url,
         {
           method: 'POST',
           body: options.body ? JSON.stringify(options.body) : undefined,
+          headers: options.headers,
         },
-        {
-          ...clientOptions,
-          headers: { ...clientOptions.headers, ...options.headers },
-        }
+        clientOptions
       );
       const endTime = performance.now();
       console.log(`✅ Function ${functionName} completed in ${(endTime - startTime).toFixed(1)}ms`);
