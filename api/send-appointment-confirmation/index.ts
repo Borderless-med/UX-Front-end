@@ -15,21 +15,28 @@ class OraHopeEmailService {
     try {
       console.log("=== SENDING EMAIL VIA HTTP API ===");
       const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
+      console.log("SMTP2GO_API_KEY at runtime:", smtp2goApiKey);
+      const smtp2goPayload = {
+        api_key: smtp2goApiKey,
+        to: [options.to],
+        sender: this.username,
+        subject: options.subject,
+        html_body: options.html,
+      };
+      console.log("SMTP2Go email payload:", JSON.stringify(smtp2goPayload, null, 2));
       if (smtp2goApiKey) {
         const response = await fetch("https://api.smtp2go.com/v3/email/send", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            api_key: smtp2goApiKey,
-            to: [options.to],
-            sender: this.username,
-            subject: options.subject,
-            html_body: options.html,
-          }),
+          body: JSON.stringify(smtp2goPayload),
         });
+        const responseText = await response.text();
+        console.log("SMTP2Go response:", response.status, responseText);
         if (response.ok) {
           console.log(`Email sent successfully via SMTP2GO to ${options.to}`);
           return { success: true };
+        } else {
+          console.error(`SMTP2Go email failed:`, response.status, responseText);
         }
       }
       
