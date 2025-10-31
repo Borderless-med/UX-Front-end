@@ -167,16 +167,19 @@ export default async function handler(
       }
 
       if (userCreated && isNewUser && !userCreationError) {
-        const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
-            type: 'recovery',
-            email: bookingData.email
-        });
-        if (linkError) {
-            console.error("Error generating password setup link:", linkError);
-        } else {
-            passwordSetupLink = linkData.properties.action_link;
-            console.log("Generated password setup link for the new user.");
-        }
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+      type: 'recovery',
+      email: bookingData.email,
+      options: {
+        redirectTo: 'https://sg-smile-saver.vercel.app/'
+      }
+    });
+    if (linkError) {
+      console.error("Error generating password setup link:", linkError);
+    } else {
+      passwordSetupLink = linkData.properties.action_link;
+      console.log("Generated password setup link for the new user:", passwordSetupLink);
+    }
       }
     }
 
