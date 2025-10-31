@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +27,7 @@ import OptOutReport from "./pages/OptOutReport";
 import TestClinicSignup from "./pages/TestClinicSignup";
 import BookNow from "./pages/BookNow";
 import { Analytics } from '@vercel/analytics/react'; // --- CHANGE 1 of 2: Added this import line ---
+import CreatePassword from "./pages/CreatePassword";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +57,7 @@ const App = () => (
               <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
               <Route path="/debug-test" element={<DebugTest />} />
+              <Route path="/create-password" element={<CreatePassword />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <CookieConsentBanner />

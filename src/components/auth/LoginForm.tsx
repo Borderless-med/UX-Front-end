@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import PasswordResetForm from './PasswordResetForm';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +17,7 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) => {
   console.log('LoginForm rendered');
   const { login, isLoading } = useAuth();
+  const [showReset, setShowReset] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -39,7 +41,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <>
+      {showReset && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg shadow-lg p-4 max-w-md w-full">
+            <PasswordResetForm onClose={() => setShowReset(false)} />
+          </div>
+        </div>
+      )}
+      <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-dark">
           <Shield className="h-5 w-5 text-blue-primary" />
@@ -54,7 +64,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+  <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="login-email">Email</Label>
             <Input
@@ -77,7 +87,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                
                 required
               />
               <Button
@@ -93,6 +102,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
                   <Eye className="h-4 w-4 text-gray-400" />
                 )}
               </Button>
+            </div>
+            <div className="mt-2 text-right">
+              <button
+                type="button"
+                className="text-blue-primary hover:text-blue-dark text-xs underline"
+                onClick={() => setShowReset(true)}
+              >
+                Forgot My Password?
+              </button>
             </div>
           </div>
           
@@ -112,7 +130,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
+  <div className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?{' '}
           <button
             onClick={onSwitchToRegister}
@@ -124,6 +142,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
         </div>
       </CardContent>
     </Card>
+    </>
   );
 };
 

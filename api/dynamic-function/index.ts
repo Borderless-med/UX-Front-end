@@ -1,4 +1,5 @@
-import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+// Removed Deno import. Node.js/Vercel does not support direct URL imports.
+// import { serve } from "https://deno.land/std@0.177.0/http/server.ts"; // Deno import commented out for Vercel compatibility
 
 const PROD_BACKEND_URL = "https://sg-jb-chatbot-backend.onrender.com/chat";
 const DEV_BACKEND_URL = "https://sg-jb-chatbot-backend-development.onrender.com/chat";
