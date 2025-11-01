@@ -14,6 +14,16 @@ const CreatePassword: React.FC = () => {
   const [session, setSession] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
 
+  // Redirect to home after successful password setup
+  useEffect(() => {
+    if (message === 'Password set successfully! You can now log in.') {
+      const timer = setTimeout(() => {
+        window.location.href = '/';
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   useEffect(() => {
     // Listen for Supabase auth session (from recovery link)
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
