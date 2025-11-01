@@ -53,7 +53,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             organization: organization,
             purpose_of_use: purposeOfUse,
             user_category: userCategory,
-          }
+          },
+          redirectTo: typeof window !== 'undefined'
+            ? window.location.origin + '/create-password'
+            : 'https://sg-smile-saver.vercel.app/create-password',
         }
       });
 
