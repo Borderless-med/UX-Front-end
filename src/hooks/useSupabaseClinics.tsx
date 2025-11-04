@@ -67,6 +67,7 @@ export const useSupabaseClinics = () => {
             sentiment: clinic.sentiment || 0,
             mdaLicense: clinic.mda_license || '',
             credentials: clinic.credentials || '',
+            country: clinic.country || undefined,
             township: clinic.township || '',
             websiteUrl: clinic.website_url || '',
             googleReviewUrl: clinic.google_review_url || '',

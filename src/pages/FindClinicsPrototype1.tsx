@@ -66,7 +66,13 @@ const FindClinicsPrototype1 = () => {
   const isSGTownship = (t: string) => /singapore|sg/i.test(t);
   const selectionFilteredClinics = useMemo(() => {
     if (selection === 'all') return filteredAndSortedClinics;
-    return filteredAndSortedClinics.filter((c) => (selection === 'sg' ? isSGTownship(c.township) : !isSGTownship(c.township)));
+    return filteredAndSortedClinics.filter((c) => {
+      if (c.country) {
+        return selection === 'sg' ? c.country === 'SG' : c.country !== 'SG';
+      }
+      // Fallback to township heuristic if no country
+      return selection === 'sg' ? isSGTownship(c.township) : !isSGTownship(c.township);
+    });
   }, [filteredAndSortedClinics, selection]);
 
   // Proactive greeting timing: appear after 2s, auto-hide after 6s

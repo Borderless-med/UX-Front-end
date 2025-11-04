@@ -10,6 +10,8 @@ export interface Clinic {
   sentiment: number;
   mdaLicense: string;
   credentials: string;
+  // Optional country code. Recommended values: 'SG' (Singapore) or 'MY' (Malaysia)
+  country?: string;
   township: string;
   websiteUrl: string;
   googleReviewUrl: string;
