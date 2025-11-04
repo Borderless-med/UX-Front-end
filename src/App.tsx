@@ -44,11 +44,14 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+            {(() => {
+              const usePrototypes = (import.meta as any).env?.VITE_USE_PROTOTYPES === 'true' || (import.meta as any).env?.MODE === 'development';
+              return (
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={usePrototypes ? <HomePrototype_v2 /> : <Index />} />
               <Route path="/book-now" element={<BookNow />} />
               <Route path="/compare" element={<Compare />} />
-              <Route path="/clinics" element={<Clinics />} />
+              <Route path="/clinics" element={usePrototypes ? <FindClinicsPrototype1 /> : <Clinics />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/qa" element={<QA />} />
               <Route path="/partner-application" element={<PartnerApplication />} />
@@ -68,6 +71,8 @@ const App = () => (
               <Route path="/find-clinics-prototype1" element={<FindClinicsPrototype1 />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+              );
+            })()}
             <CookieConsentBanner />
             <CookiePreferences />
             <ChatWidget />

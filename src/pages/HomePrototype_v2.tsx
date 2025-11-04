@@ -10,15 +10,15 @@ const HomePrototype_v2: React.FC = () => {
   // Dropdown menu options
   const handleDropdownSelect = (option: 'jb' | 'sg' | 'both') => {
     setDropdownOpen(false);
-    if (option === 'jb') navigate('/find-clinics-prototype1?sel=jb');
-    else if (option === 'sg') navigate('/find-clinics-prototype1?sel=sg');
-    else navigate('/find-clinics-prototype1?sel=all');
+    if (option === 'jb') navigate('/clinics?sel=jb');
+    else if (option === 'sg') navigate('/clinics?sel=sg');
+    else navigate('/clinics?sel=all');
   };
 
   // Card click handlers
   const handleCardClick = (option: 'jb' | 'sg') => {
-    if (option === 'jb') navigate('/find-clinics-prototype1?sel=jb');
-    else navigate('/find-clinics-prototype1?sel=sg');
+    if (option === 'jb') navigate('/clinics?sel=jb');
+    else navigate('/clinics?sel=sg');
   };
 
   return (
@@ -48,7 +48,7 @@ const HomePrototype_v2: React.FC = () => {
           <h1 className="text-5xl font-bold text-blue-800 mb-0">Make the Smartest Choice.</h1>
           <p className="text-lg text-gray-600 max-w-xl mx-auto mt-6 mb-8">Find the right fit for your dental needs and budget—powered by real data, not marketing hype.</p>
           <div className="mt-8">
-            <button onClick={() => navigate('/find-clinics-prototype1?sel=all')} className="bg-blue-500 text-white px-12 py-5 text-2xl font-bold rounded-xl shadow-lg inline-flex items-center cursor-pointer hover:bg-blue-600 transition-all" style={{ boxShadow: '0 5px 15px rgba(0,0,0,0.15)' }}>
+            <button onClick={() => navigate('/clinics?sel=all')} className="bg-blue-500 text-white px-12 py-5 text-2xl font-bold rounded-xl shadow-lg inline-flex items-center cursor-pointer hover:bg-blue-600 transition-all" style={{ boxShadow: '0 5px 15px rgba(0,0,0,0.15)' }}>
               <span>See All Clinics (SG & JB)</span>
               <span className="ml-4 text-2xl">🔍</span>
             </button>
