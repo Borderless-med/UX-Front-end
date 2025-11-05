@@ -5,6 +5,8 @@
 
 @layer base {
   :root {
+    /* Sticky nav height for global offset */
+    --nav-height: 72px;
     --background: 0 0% 100%;
     --foreground: 213 31% 15%;
 
@@ -95,6 +97,8 @@
 }
 
 @layer utilities {
+  /* Apply top offset equal to sticky nav height */
+  .main-content-offset { margin-top: var(--nav-height); }
   .line-clamp-2 {
     overflow: hidden;
     display: -webkit-box;
