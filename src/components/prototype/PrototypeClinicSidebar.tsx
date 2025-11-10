@@ -35,6 +35,7 @@ interface Props {
   totalCount: number;
   // selection indicator
   selectionLabel: string;
+  selection?: 'sg' | 'jb' | 'all';
   isOpen?: boolean;
   onClose?: () => void;
   sidebarWidth?: number;
@@ -67,6 +68,7 @@ const PrototypeClinicSidebar = ({
   filteredCount,
   totalCount,
   selectionLabel,
+  selection,
   isOpen = true,
   onClose,
   sidebarWidth: externalSidebarWidth,
@@ -132,6 +134,7 @@ const PrototypeClinicSidebar = ({
             onSortChange={onSortChange}
             mdaLicenseFilter={mdaLicenseFilter}
             onMdaLicenseFilterChange={onMdaLicenseFilterChange}
+            hideDistanceSort={selection === 'sg'}
           />
 
           <ClinicAdvancedFilters
@@ -141,6 +144,7 @@ const PrototypeClinicSidebar = ({
             onMinReviewsChange={onMinReviewsChange}
             selectedCredentials={selectedCredentials}
             onCredentialsChange={onCredentialsChange}
+            hideDistanceFilter={selection === 'sg'}
           />
         </div>
       </div>

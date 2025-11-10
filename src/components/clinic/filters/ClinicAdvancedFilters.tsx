@@ -9,6 +9,7 @@ interface ClinicAdvancedFiltersProps {
   onMinReviewsChange: (reviews: number) => void;
   selectedCredentials: string[];
   onCredentialsChange: (credentials: string[]) => void;
+  hideDistanceFilter?: boolean; // when true, hide the distance slider block
 }
 
 const ClinicAdvancedFilters = ({
@@ -17,26 +18,29 @@ const ClinicAdvancedFilters = ({
   minReviews,
   onMinReviewsChange,
   selectedCredentials,
-  onCredentialsChange
+  onCredentialsChange,
+  hideDistanceFilter = false
 }: ClinicAdvancedFiltersProps) => {
   return (
     <div className="pt-4 border-t border-sidebar-border">
       <h3 className="text-lg font-medium text-sidebar-muted-foreground mb-4">Advanced Filters</h3>
       <div className="space-y-6">
         {/* Max Distance from CIQ */}
-        <div>
-          <h4 className="text-base font-medium text-sidebar-foreground mb-3">
-            Max Distance from CIQ: {maxDistance}km
-          </h4>
-          <Slider
-            value={[maxDistance]}
-            onValueChange={(value) => onMaxDistanceChange(value[0])}
-            max={40}
-            min={0}
-            step={1}
-            className="w-full"
-          />
-        </div>
+        {!hideDistanceFilter && (
+          <div>
+            <h4 className="text-base font-medium text-sidebar-foreground mb-3">
+              Max Distance from CIQ: {maxDistance}km
+            </h4>
+            <Slider
+              value={[maxDistance]}
+              onValueChange={(value) => onMaxDistanceChange(value[0])}
+              max={40}
+              min={0}
+              step={1}
+              className="w-full"
+            />
+          </div>
+        )}
 
         {/* Minimum Google Reviews */}
         <div>

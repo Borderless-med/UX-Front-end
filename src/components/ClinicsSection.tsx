@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useNavigate } from 'react-router-dom';
@@ -27,11 +26,8 @@ const ClinicsSection = () => {
   const { clinics, loading, error } = useSupabaseClinics();
   const isMobile = useIsMobile();
 
-  // Debug: Log the clinic data source
-  console.log('ClinicsSection - Clinic data from database:', clinics.length, 'clinics loaded');
-  if (clinics.length > 0) {
-    console.log('Sample clinic data:', clinics[0]);
-  }
+  // Debug
+  console.log('ClinicsSection - clinics loaded:', clinics.length);
 
   const {
     searchTerm,
@@ -73,14 +69,8 @@ const ClinicsSection = () => {
 
   const townships = getUniqueTownships(clinics);
 
-  const handleOptOutClick = () => {
-    navigate('/opt-out-report');
-  };
-
-  const handleSignInClick = () => {
-    setShowAuthModal(true);
-  };
-
+  const handleOptOutClick = () => navigate('/opt-out-report');
+  const handleSignInClick = () => setShowAuthModal(true);
   const handleViewPractitionerDetails = async (clinic: any) => {
     if (isAuthenticated) {
       await logDataAccess('practitioner_details', clinic.id.toString(), clinic.dentist);
@@ -119,9 +109,7 @@ const ClinicsSection = () => {
       <div className="hidden lg:block py-4 px-4 sm:px-6 lg:px-8 bg-white border-b border-border">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-4">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-dark mb-2">
-              Find Your Perfect Clinic
-            </h1>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-dark mb-2">Find Your Perfect Clinic</h1>
             <p className="text-base text-neutral-gray mb-4 max-w-2xl mx-auto">
               Search and filter through {clinics.length} verified dental clinics to find your match
             </p>
@@ -159,12 +147,8 @@ const ClinicsSection = () => {
       {/* Mobile header */}
       <div className="lg:hidden py-4 px-4 bg-white border-b border-border">
         <div className="text-center">
-          <h1 className="text-xl font-bold text-blue-dark mb-1">
-            Find Your Perfect Clinic
-          </h1>
-          <p className="text-sm text-neutral-gray">
-            {clinics.length} verified dental clinics
-          </p>
+          <h1 className="text-xl font-bold text-blue-dark mb-1">Find Your Perfect Clinic</h1>
+          <p className="text-sm text-neutral-gray">{clinics.length} verified dental clinics</p>
         </div>
       </div>
 
@@ -178,12 +162,8 @@ const ClinicsSection = () => {
         activeFiltersCount={activeFiltersCount}
         onClearAll={clearAllFilters}
         onOpenFilters={() => setIsMobileSidebarOpen(true)}
-        onRemoveTreatment={(treatment) => 
-          setSelectedTreatments(selectedTreatments.filter(t => t !== treatment))
-        }
-        onRemoveTownship={(township) => 
-          setSelectedTownships(selectedTownships.filter(t => t !== township))
-        }
+        onRemoveTreatment={(t) => setSelectedTreatments(selectedTreatments.filter(x => x !== t))}
+        onRemoveTownship={(t) => setSelectedTownships(selectedTownships.filter(x => x !== t))}
         onClearRating={() => setRatingFilter(0)}
         onClearSearch={() => setSearchTerm('')}
       />
@@ -225,9 +205,7 @@ const ClinicsSection = () => {
         {/* Main Content Area */}
         <div className="flex-1 min-w-0 overflow-hidden">
           <div className="p-3 sm:p-4 lg:p-6 xl:p-8 max-w-7xl mx-auto">
-            {/* Authentication Status Bar */}
             <AuthenticationStatusBar onSignInClick={handleSignInClick} />
-            
             <ClinicGrid
               clinics={filteredAndSortedClinics}
               isAuthenticated={isAuthenticated}
@@ -241,16 +219,9 @@ const ClinicsSection = () => {
       </div>
 
       {/* Mobile Sidebar Toggle */}
-      <MobileSidebarToggle
-        onClick={() => setIsMobileSidebarOpen(true)}
-        activeFiltersCount={activeFiltersCount}
-      />
+      <MobileSidebarToggle onClick={() => setIsMobileSidebarOpen(true)} activeFiltersCount={activeFiltersCount} />
 
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)} 
-        defaultTab="login"
-      />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} defaultTab="login" />
     </div>
   );
 };

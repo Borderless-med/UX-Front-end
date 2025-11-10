@@ -16,9 +16,10 @@ interface ClinicCardProps {
   isAuthenticated: boolean;
   onSignInClick: () => void;
   onViewPractitionerDetails: (clinic: Clinic) => void;
+  hideDistance?: boolean; // hide distance line when viewing Singapore clinics
 }
 
-const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitionerDetails }: ClinicCardProps) => {
+const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitionerDetails, hideDistance = false }: ClinicCardProps) => {
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [showPractitionerModal, setShowPractitionerModal] = useState(false);
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
           <div className="min-h-[11rem] flex flex-col justify-between overflow-hidden">
             <ClinicCardHeader clinic={clinic} />
             
-            <ClinicCardInfo clinic={clinic} />
+            <ClinicCardInfo clinic={clinic} hideDistance={hideDistance} />
           </div>
 
           {/* Available Treatment Categories - Flexible Height Section */}

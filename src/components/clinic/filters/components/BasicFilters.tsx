@@ -12,6 +12,7 @@ interface BasicFiltersProps {
   onSortChange: (sort: string) => void;
   mdaLicenseFilter: string;
   onMdaLicenseFilterChange: (filter: string) => void;
+  hideDistanceSort?: boolean; // when true, remove distance sort option
 }
 
 const BasicFilters = ({
@@ -23,7 +24,8 @@ const BasicFilters = ({
   sortBy,
   onSortChange,
   mdaLicenseFilter,
-  onMdaLicenseFilterChange
+  onMdaLicenseFilterChange,
+  hideDistanceSort = false
 }: BasicFiltersProps) => {
   const handleTownshipChange = (value: string) => {
     if (value === 'all') {
@@ -113,7 +115,9 @@ const BasicFilters = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="distance">Distance from CIQ</SelectItem>
+                {!hideDistanceSort && (
+                  <SelectItem value="distance">Distance from CIQ</SelectItem>
+                )}
                 <SelectItem value="rating">Rating</SelectItem>
                 <SelectItem value="reviews">Reviews Count</SelectItem>
                 <SelectItem value="name">Name</SelectItem>

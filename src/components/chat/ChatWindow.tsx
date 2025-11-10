@@ -14,6 +14,17 @@ const getEnvironment = () => {
   return 'production';
 };
 
+// Centralized backend base URL resolver with env override
+const getBackendBaseUrl = () => {
+  const override = (import.meta as any).env?.VITE_CHAT_API_URL as string | undefined;
+  if (override && override.trim()) return override.replace(/\/$/, '');
+  return getEnvironment() === 'development'
+    ? 'http://localhost:10000'
+    : 'https://sg-jb-chatbot-backend.onrender.com';
+};
+
+const getBackupBaseUrl = () => 'https://sg-jb-chatbot-backend.onrender.com';
+
 interface Message {
   id: string;
   text: string;
@@ -64,21 +75,36 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           console.log(`🔄 Restoring session state for session: ${sessionId}`);
           console.log('DEBUG: session?.access_token for restore-session:', session?.access_token);
           console.log('DEBUG: Authorization header for restore-session:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
-            const backendUrl = getEnvironment() === 'development'
-              ? 'http://localhost:10000/restore_session'
-              : 'https://sg-jb-chatbot-backend.onrender.com/restore_session';
+            const baseUrl = getBackendBaseUrl();
+            const backendUrl = `${baseUrl}/restore_session`;
 
-            const response = await fetch(backendUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-Authorization': `Bearer ${session?.access_token}`,
-              },
-              body: JSON.stringify({
-                session_id: sessionId,
-                user_id: user.id
-              }),
-            });
+            let response: Response | null = null;
+            try {
+              response = await fetch(backendUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Authorization': `Bearer ${session?.access_token}`,
+                },
+                body: JSON.stringify({ session_id: sessionId, user_id: user.id }),
+              });
+            } catch (e) {
+              // Failover: if dev local failed, try Render once
+              if (baseUrl.includes('localhost')) {
+                const backupUrl = `${getBackupBaseUrl()}/restore_session`;
+                console.warn('Primary restore_session failed, retrying backup:', backupUrl);
+                response = await fetch(backupUrl, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': `Bearer ${session?.access_token}`,
+                  },
+                  body: JSON.stringify({ session_id: sessionId, user_id: user.id }),
+                });
+              } else {
+                throw e;
+              }
+            }
 
             const data = await response.json();
 
@@ -160,20 +186,39 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       console.log(">>>>> Sending this body to backend:", JSON.stringify(requestBody, null, 2));
 
       // Directly call FastAPI backend /chat endpoint
-      const backendUrl = getEnvironment() === 'development'
-        ? 'http://localhost:10000/chat'
-        : 'https://sg-jb-chatbot-backend.onrender.com/chat';
+      const baseUrl = getBackendBaseUrl();
+      const backendUrl = `${baseUrl}/chat`;
 
-      const response = await fetch(backendUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
+      let response: Response | null = null;
+      try {
+        console.log('[Chat] Using backend:', backendUrl);
+        response = await fetch(backendUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(requestBody),
+        });
+      } catch (err) {
+        // Failover: if dev local failed, retry Render once
+        if (baseUrl.includes('localhost')) {
+          const backupUrl = `${getBackupBaseUrl()}/chat`;
+          console.warn('[Chat] Primary backend failed, retrying backup:', backupUrl);
+          response = await fetch(backupUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': `Bearer ${session?.access_token}`,
+            },
+            body: JSON.stringify(requestBody),
+          });
+        } else {
+          throw err;
+        }
+      }
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
         throw new Error(`Backend error: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
@@ -236,6 +281,10 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           <div>
             <h3 className="font-semibold">AI Dental Expert</h3>
             <p className="text-xs text-blue-150">{!user ? "Sign up required" : "40 chats/month • Online now"}</p>
+            {/* Show backend URL indicator in dev to aid debugging */}
+            {getEnvironment() === 'development' && (
+              <p className="text-[10px] opacity-80">Backend: {getBackendBaseUrl()}</p>
+            )}
           </div>
         </div>
         <button

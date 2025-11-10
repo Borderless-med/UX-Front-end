@@ -59,6 +59,16 @@ const Navigation = () => {
                 Home
               </Link>
               <Link
+                to="/clinics"
+                className={`transition-all duration-200 font-medium ${
+                  location.pathname === '/clinics' 
+                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary text-base'
+                }`}
+              >
+                Find Clinics
+              </Link>
+              <Link
                 to="/compare"
                 className={`transition-all duration-200 font-medium ${
                   location.pathname === '/compare' 
@@ -67,16 +77,6 @@ const Navigation = () => {
                 }`}
               >
                 Compare
-              </Link>
-              <Link
-                to="/clinics"
-                className={`transition-all duration-200 font-medium ${
-                  location.pathname === '/clinics' 
-                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
-                    : 'text-blue-dark hover:text-blue-primary text-base'
-                }`}
-              >
-                Clinics
               </Link>
               <Link
                 to="/how-it-works"
@@ -138,6 +138,17 @@ const Navigation = () => {
                 Home
               </Link>
               <Link
+                to="/clinics"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/clinics' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                }`}
+              >
+                Find Clinics
+              </Link>
+              <Link
                 to="/compare"
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
@@ -147,17 +158,6 @@ const Navigation = () => {
                 }`}
               >
                 Compare
-              </Link>
-              <Link
-                to="/clinics"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
-                  location.pathname === '/clinics' 
-                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
-                    : 'text-blue-dark hover:text-blue-primary'
-                }`}
-              >
-                Clinics
               </Link>
               <Link
                 to="/how-it-works"

@@ -124,7 +124,11 @@ class RestClient {
 
   async select(
     table: string,
-    options: { select?: string; order?: { column: string; ascending: boolean } } = {},
+    options: { 
+      select?: string; 
+      order?: { column: string; ascending: boolean };
+      filters?: Record<string, any | { op?: 'eq' | 'neq' | 'gt' | 'lt' | 'gte' | 'lte' | 'ilike' | 'like' | 'in'; value: any }>;
+    } = {},
     clientOptions: RestClientOptions = {}
   ): Promise<any> {
     // Build the URL for Supabase REST API
@@ -135,6 +139,27 @@ class RestClient {
       url += `select=${options.select}&`;
     } else {
       url += `select=*&`;
+    }
+
+    // Add filters
+    if (options.filters) {
+      const params: string[] = [];
+      for (const [key, raw] of Object.entries(options.filters)) {
+        if (raw === undefined || raw === null || raw === '') continue;
+        if (typeof raw === 'object' && raw !== null && 'value' in raw) {
+          const { op = 'eq', value } = raw as { op?: string; value: any };
+          if (op === 'in' && Array.isArray(value)) {
+            params.push(`${encodeURIComponent(key)}=in.(${value.map(v => encodeURIComponent(String(v))).join(',')})`);
+          } else {
+            params.push(`${encodeURIComponent(key)}=${op}.${encodeURIComponent(String(value))}`);
+          }
+        } else {
+          params.push(`${encodeURIComponent(key)}=eq.${encodeURIComponent(String(raw))}`);
+        }
+      }
+      if (params.length) {
+        url += params.join('&') + '&';
+      }
     }
 
     // Add ordering

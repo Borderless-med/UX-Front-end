@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import ChatWidget from '@/components/ChatWidget';
 import PrototypeClinicSidebar from '@/components/prototype/PrototypeClinicSidebar';
@@ -12,17 +10,21 @@ import { useClinicFilters } from '@/components/clinic/hooks/useClinicFilters';
 import { useClinicSearch } from '@/components/clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from '@/components/clinic/utils/clinicFilterUtils';
 import { Loader2, MapPin } from 'lucide-react';
+import MasterTemplate from '@/components/layout/MasterTemplate';
+import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
+import { useAuth } from '@/contexts/AuthContext';
 
 type Selection = 'all' | 'sg' | 'jb';
 
 const FindClinicsPrototype1 = () => {
   const [selection, setSelection] = useState<Selection>('all');
-  const [showGreeting, setShowGreeting] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { user, isLoading: authLoading } = useAuth();
 
   // Data and filters (reuse production hooks for full functionality)
-  const { clinics, loading, error } = useSupabaseClinics();
+  // Fetch from backend with country awareness (SG vs JB vs all)
+  const { clinics, loading, error } = useSupabaseClinics(selection);
   const {
     searchTerm,
     setSearchTerm,
@@ -75,15 +77,6 @@ const FindClinicsPrototype1 = () => {
     });
   }, [filteredAndSortedClinics, selection]);
 
-  // Proactive greeting timing: appear after 2s, auto-hide after 6s
-  useEffect(() => {
-    const t1 = setTimeout(() => setShowGreeting(true), 2000);
-    const t2 = setTimeout(() => setShowGreeting(false), 8000);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, []);
 
   // Initialize selection from query param `sel` if present (jb | sg | all)
   useEffect(() => {
@@ -133,22 +126,16 @@ const FindClinicsPrototype1 = () => {
   };
 
   return (
-    <div className="min-h-screen font-inter bg-slate-50 text-blue-dark">
-      <Navigation />
-
+    <MasterTemplate title="Find Clinics" subtitle="Search and filter through our verified dental clinics to find your match.">
       {/* Selection Zone */}
-      <section className="pt-28 pb-10 border-b border-sky-100">
+      <section className="pt-6 pb-10 border-b border-sky-100">
         <div className="max-w-7xl mx-auto px-4">
           <div className="rounded-3xl bg-sky-50 p-6 md:p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold text-blue-700 tracking-tight">Find Clinics</h1>
-              <p className="mt-2 text-base text-slate-700">Search and filter through our verified dental clinics to find your match.</p>
-            </div>
-
+            
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-              <Card title="Johor Bahru" subtitle="Focus on Savings" icon="💰" accent="emerald" active={selection === 'jb'} onClick={() => setSelection('jb')} />
-              <Card title="Singapore" subtitle="Focus on Convenience" icon="🏠" accent="blue" active={selection === 'sg'} onClick={() => setSelection('sg')} />
-              <Card title="View All" subtitle="Explore Both Locations" icon="🌏" accent="slate" active={selection === 'all'} onClick={() => setSelection('all')} />
+              <Card title="Johor Bahru" subtitle="Focus on Savings" icon="💰" accent="emerald" active={selection === 'jb'} onClick={() => { setSelection('jb'); setSearchParams({ sel: 'jb' }); }} />
+              <Card title="Singapore" subtitle="Focus on Convenience" icon="🏠" accent="blue" active={selection === 'sg'} onClick={() => { setSelection('sg'); setSearchParams({ sel: 'sg' }); }} />
+              <Card title="View All" subtitle="Explore Both Locations" icon="🌏" accent="slate" active={selection === 'all'} onClick={() => { setSelection('all'); setSearchParams({ sel: 'all' }); }} />
             </div>
 
             {/* Showing pill removed from hero; now placed as header in Results section */}
@@ -192,6 +179,7 @@ const FindClinicsPrototype1 = () => {
                 filteredCount={selectionFilteredClinics.length}
                 totalCount={clinics.length}
                 selectionLabel={selectionLabel}
+                selection={selection}
                 isOpen={false}
               />
             </aside>
@@ -224,18 +212,22 @@ const FindClinicsPrototype1 = () => {
                             <span className={`font-bold text-2xl ${variant.text}`}>Showing: {selectionLabel}</span>
                             <span className="text-lg md:text-xl font-bold text-slate-600">({selectionFilteredClinics.length} found)</span>
                           </div>
-                          <div className="text-right font-bold italic text-slate-700">Full Access Enabled (Logged In)</div>
+                          {user ? (
+                            <div className="text-right font-bold italic text-slate-700">Full Access Enabled (Logged In)</div>
+                          ) : null}
                         </div>
                       </div>
                     );
                   })()}
                   <ClinicGrid
                     clinics={selectionFilteredClinics}
-                    isAuthenticated={false}
+                    isAuthenticated={!!user}
                     onSignInClick={() => {}}
                     onViewPractitionerDetails={() => {}}
                     onClearAllFilters={clearAllFilters}
                     activeFiltersCount={activeFiltersCount}
+                    hideDistance={selection === 'sg'}
+                    selection={selection}
                   />
                 </>
               )}
@@ -268,6 +260,7 @@ const FindClinicsPrototype1 = () => {
             filteredCount={selectionFilteredClinics.length}
             totalCount={clinics.length}
             selectionLabel={selectionLabel}
+            selection={selection}
             isOpen={mobileOpen}
             onClose={() => setMobileOpen(false)}
           />
@@ -275,23 +268,11 @@ const FindClinicsPrototype1 = () => {
       </section>
 
       <MedicalDisclaimer />
-      <Footer />
 
-      {/* Floating chat widget with proactive greeting */}
-      {showGreeting && (
-        <div className="fixed bottom-24 left-6 z-40 bg-blue-600 text-white rounded-full shadow-lg px-4 py-2 cursor-pointer" onClick={() => setShowGreeting(false)}>
-          <span className="mr-2">🤖</span>
-          <span className="font-medium">Hello! Need help? Just ask the chatbot anything.</span>
-        </div>
-      )}
       <ChatWidget />
-      {/* Helper textbox to the right of the ChatWidget button */}
-      <div className="fixed bottom-6 left-24 z-50 hidden sm:flex items-center">
-        <div className="rounded-xl bg-white shadow-lg ring-1 ring-slate-200 px-4 py-2 text-slate-800 text-sm">
-          Hi there! Need any help ? Just ask me
-        </div>
-      </div>
-    </div>
+      {/* Standardized chat helper textbox (replaces prior variant) */}
+      <ChatHelperTextbox />
+    </MasterTemplate>
   );
 };
 

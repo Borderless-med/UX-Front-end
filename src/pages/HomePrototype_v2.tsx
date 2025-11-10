@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import AIIcon from '@/components/brand/AIIcon';
+import MasterTemplate from '@/components/layout/MasterTemplate';
+import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import { useNavigate } from 'react-router-dom';
+import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
 
 const HomePrototype_v2: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,40 +26,20 @@ const HomePrototype_v2: React.FC = () => {
   };
 
   return (
-  <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Navigation Bar (No Change) */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white shadow">
-        <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="SG-JB Dental Logo" className="h-8" />
-          <span className="font-bold text-lg text-blue-700">SG-JB Dental</span>
-        </div>
-        <nav className="flex gap-6 text-gray-700">
-          <a href="/" className="hover:text-blue-600">Home</a>
-          <a href="/compare" className="hover:text-blue-600">Compare Clinics</a>
-          <a href="/how-it-works" className="hover:text-blue-600">How It Works</a>
-          <a href="/partner" className="hover:text-blue-600">Partner with Us</a>
-          <a href="/book-now" className="hover:text-blue-600">Book Now</a>
-        </nav>
-        <div>
-          <img src="/gsp-icon.png" alt="GSP Icon" className="h-6" />
-        </div>
-      </header>
+  <MasterTemplate title="See All Your Dental Options." subtitle="Make the Smartest Choice.">
 
-      {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center py-16 bg-blue-50">
+      {/* Hero CTA Section */}
+      <section className="flex flex-col items-center justify-center py-12 bg-blue-50">
         <div className="w-full max-w-2xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-blue-800 mb-0">See All Your Dental Options.</h1>
-          <h1 className="text-5xl font-bold text-blue-800 mb-0">Make the Smartest Choice.</h1>
-          <p className="text-lg text-gray-600 max-w-xl mx-auto mt-6 mb-8">Find the right fit for your dental needs and budget—powered by real data, not marketing hype.</p>
-          <div className="mt-8">
-            <button onClick={() => navigate('/clinics?sel=all')} className="bg-blue-500 text-white px-12 py-5 text-2xl font-bold rounded-xl shadow-lg inline-flex items-center cursor-pointer hover:bg-blue-600 transition-all" style={{ boxShadow: '0 5px 15px rgba(0,0,0,0.15)' }}>
-              <span>See All Clinics (SG & JB)</span>
-              <span className="ml-4 text-2xl">🔍</span>
-            </button>
+          <p className="text-lg text-gray-700 max-w-xl mx-auto mb-6">Find the right fit for your dental needs and budget—powered by real data, not marketing hype.</p>
+          <div className="mt-2">
+            <Button onClick={() => navigate('/clinics?sel=all')} className="btn-primary px-12 py-5 text-2xl font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
+              See All Clinics (SG & JB)
+            </Button>
           </div>
           <div className="mt-4">
             <span className="text-sm text-gray-600">Or, </span>
-            <button className="text-sm text-blue-500 underline font-medium bg-transparent p-0 border-none cursor-pointer" style={{ textDecoration: 'underline' }}>
+            <button className="text-sm text-blue-600 underline font-medium bg-transparent p-0 border-none cursor-pointer">
               ask our AI Concierge to help you choose
             </button>
           </div>
@@ -121,7 +105,10 @@ const HomePrototype_v2: React.FC = () => {
               <li>Save Time & Money</li>
               <li>24/7 Expert Access</li>
             </ul>
-            <Button className="w-full text-lg mb-2">Ask The AI Concierge — Free</Button>
+            <Button className="btn-primary w-full text-lg mb-2 inline-flex items-center justify-center gap-2">
+              <AIIcon className="text-white" size={18} />
+              Ask The AI Concierge — Free
+            </Button>
             <p className="text-xs text-gray-500 mt-2 text-left">To use - simply sign up for free. No credit card needed.</p>
           </div>
         </div>
@@ -145,30 +132,24 @@ const HomePrototype_v2: React.FC = () => {
         </div>
       </section>
 
-      {/* Final CTA & Footer */}
+      {/* Final CTA */}
       <section className="py-8 bg-blue-50 flex flex-col items-center">
-  <h4 className="text-lg font-semibold text-blue-800 mb-4">Your Smartest Dental Decision Awaits.</h4>
+        <h4 className="text-lg font-semibold text-blue-800 mb-4">Your Smartest Dental Decision Awaits.</h4>
         <div className="flex gap-4">
-          <Button className="px-6">Compare Clinics Now</Button>
-          <Button className="px-6">Chat with AI Expert</Button>
+          <Button className="btn-primary px-6">Compare Clinics Now</Button>
+          <Button className="btn-secondary px-6 inline-flex items-center gap-2">
+            <AIIcon size={16} />
+            Chat with AI Expert
+          </Button>
         </div>
       </section>
-      <footer className="bg-white py-6 mt-auto text-center text-gray-500 text-sm">
-        About | Contact | Privacy | Medical Disclaimer
-      </footer>
 
-      {/* Persistent AI Widget (static, non-functional) */}
-      {/* Persistent AI Widget removed as requested. Native chat widget icon will remain. */}
-      {/* Chatbot icon with speech bubble */}
-  <div className="fixed bottom-10 left-20 z-50 flex items-center" style={{ pointerEvents: 'none' }}>
-        {/* Chat widget icon (native, not controlled here) */}
-        {/* Plain text box for user guidance, 2 lines */}
-        <div className="bg-white border border-blue-400 rounded-lg shadow px-4 py-2 ml-2 flex flex-col justify-center" style={{ fontSize: '1rem', color: '#222', pointerEvents: 'auto', minWidth: '220px' }}>
-          <span className="text-center">Hello! Need help?</span>
-          <span className="text-center">Just ask the chatbot anything.</span>
-        </div>
-      </div>
-    </div>
+      {/* Important Medical Disclaimer (consistent with other pages) */}
+      <MedicalDisclaimer />
+
+      {/* Chat helper textbox (standardized across pages) */}
+      <ChatHelperTextbox />
+    </MasterTemplate>
   );
 };
 

@@ -14,6 +14,7 @@ interface ClinicMainFiltersProps {
   onSortChange: (sort: string) => void;
   mdaLicenseFilter: string;
   onMdaLicenseFilterChange: (filter: string) => void;
+  hideDistanceSort?: boolean;
 }
 
 const ClinicMainFilters = ({
@@ -27,7 +28,8 @@ const ClinicMainFilters = ({
   sortBy,
   onSortChange,
   mdaLicenseFilter,
-  onMdaLicenseFilterChange
+  onMdaLicenseFilterChange,
+  hideDistanceSort = false
 }: ClinicMainFiltersProps) => {
   return (
     <div className="space-y-6">
@@ -46,6 +48,7 @@ const ClinicMainFilters = ({
         onSortChange={onSortChange}
         mdaLicenseFilter={mdaLicenseFilter}
         onMdaLicenseFilterChange={onMdaLicenseFilterChange}
+        hideDistanceSort={hideDistanceSort}
       />
     </div>
   );
