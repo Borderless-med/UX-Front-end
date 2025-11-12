@@ -51,6 +51,9 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // New: location prompt state and reset suppression
+  const [locationPrompt, setLocationPrompt] = useState<null | { options: { key: string; label: string }[] }>(null);
+  const [suppressClientFiltersOnce, setSuppressClientFiltersOnce] = useState(false);
 
   // --- FIXED: Use state to hold session state (not refs) ---
   const [sessionAppliedFilters, setSessionAppliedFilters] = useState<Record<string, any>>({});
@@ -169,14 +172,34 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           content: msg.text
         }));
 
-      // --- FIXED: Use state values instead of refs ---
+      // Determine if we should suppress client filters (fresh turn, reset, or while awaiting location)
+      const isFirstUserTurn = history.filter(h => h.role === 'user').length === 1;
+      const isResetMessage = message.toLowerCase().startsWith('reset');
+
+      // If user requests reset, clear local state immediately
+      if (isResetMessage) {
+        setSessionAppliedFilters({});
+        setSessionCandidatePool([]);
+        setSessionBookingContext({});
+        setLocationPrompt(null);
+        setSuppressClientFiltersOnce(true);
+      }
+
+      // --- Use state values; optionally suppress filters ---
       const requestBody: any = {
         history: history,
-        applied_filters: sessionAppliedFilters,
-        candidate_pool: sessionCandidatePool,
-        booking_context: sessionBookingContext,
         user_id: user.id
       };
+
+      if (isFirstUserTurn || isResetMessage || suppressClientFiltersOnce || !!locationPrompt) {
+        requestBody.applied_filters = {};
+        requestBody.candidate_pool = [];
+      } else {
+        requestBody.applied_filters = sessionAppliedFilters;
+        requestBody.candidate_pool = sessionCandidatePool;
+      }
+
+      requestBody.booking_context = sessionBookingContext;
 
       // Use sessionId from AuthContext for persistent session
       if (sessionId) {
@@ -221,7 +244,24 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       if (!response || !response.ok) {
         throw new Error(`Backend error: ${response.status} ${response.statusText}`);
       }
-      const data = await response.json();
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch (e) {
+        // Optional lightweight retry once on transient network issues
+        console.warn('[Chat] Response parse failed, retrying request once...');
+        await new Promise(r => setTimeout(r, 400));
+        const retryResp = await fetch(backendUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(requestBody),
+        });
+        if (!retryResp.ok) throw new Error(`Backend error after retry: ${retryResp.status} ${retryResp.statusText}`);
+        data = await retryResp.json();
+      }
 
       if (data && data.response) {
         if (data.session_id) {
@@ -253,6 +293,16 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           setSessionBookingContext(data.booking_context);
         }
 
+        // Handle structured meta prompts (location)
+        if (data.meta && data.meta.type === 'location_prompt') {
+          setLocationPrompt({ options: data.meta.options || [] });
+          // Ensure client does not immediately resend old filters on next turn
+          setSuppressClientFiltersOnce(true);
+        } else {
+          setLocationPrompt(null);
+          setSuppressClientFiltersOnce(false);
+        }
+
       } else {
         throw new Error('No response received from AI');
       }
@@ -268,6 +318,19 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
     } finally {
       setIsTyping(false);
     }
+  };
+
+  // Handle choosing location from prompt buttons
+  const handleChooseLocation = async (choice: 'jb' | 'sg' | 'both', label: string) => {
+    // Clear client filters and set booking_context for this one turn
+    setSessionAppliedFilters({});
+    setSessionCandidatePool([]);
+    setSessionBookingContext({ choose_location: choice });
+    setLocationPrompt(null);
+    setSuppressClientFiltersOnce(true);
+    await handleSendMessage(label);
+    // Clear choose_location so we don't keep resending it
+    setSessionBookingContext({});
   };
 
   return (
@@ -300,6 +363,27 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
+        {locationPrompt && (
+          <div className="flex items-start space-x-2">
+            <div className="w-8 h-8 bg-blue-primary rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-xs font-bold text-white">AI</span>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+              <p className="text-sm mb-2">Quick choice: Which country?</p>
+              <div className="flex gap-2">
+                {locationPrompt.options.map((opt) => (
+                  <button
+                    key={opt.key}
+                    onClick={() => handleChooseLocation(opt.key as any, opt.label)}
+                    className="px-3 py-1.5 text-sm rounded-md border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
         {isTyping && (
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-blue-primary rounded-full flex items-center justify-center">
