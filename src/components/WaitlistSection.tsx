@@ -278,7 +278,7 @@ const WaitlistSection = () => {
                     />
                     <label htmlFor="whatsapp-consent" className="text-sm text-gray-800 leading-relaxed cursor-pointer">
                       <span className="font-bold text-green-800">I explicitly consent</span> to receive WhatsApp messages from{' '}
-                      <strong>SG Smile Saver</strong> about dental referral services as described above.
+                      <strong>Orachope</strong> about dental referral services as described above.
                       <br />
                       <span className="text-xs text-gray-600 mt-2 block">
                         ✓ I understand this consent is voluntary and I can withdraw it at any time<br />

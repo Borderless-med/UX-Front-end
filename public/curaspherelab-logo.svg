@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240" height="48" viewBox="0 0 240 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">CuraSphereLab Logo (placeholder)</title>
+  <desc id="desc">Temporary text-based logo for CuraSphereLab until brand SVG is provided.</desc>
+  <rect width="240" height="48" fill="white"/>
+  <g>
+    <circle cx="20" cy="24" r="6" fill="#0F6B73"/>
+    <circle cx="36" cy="14" r="4" fill="#0F6B73"/>
+    <circle cx="36" cy="34" r="4" fill="#0F6B73"/>
+    <line x1="25" y1="21" x2="32" y2="16" stroke="#0F6B73" stroke-width="2"/>
+    <line x1="25" y1="27" x2="32" y2="32" stroke="#0F6B73" stroke-width="2"/>
+    <text x="56" y="32" font-family="Inter, Arial, sans-serif" font-size="22" fill="#0F6B73" font-weight="700">CuraSphereLab</text>
+  </g>
+</svg>

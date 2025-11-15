@@ -29,19 +29,28 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg z-50 border-b border-blue-light">
+    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg z-50 border-b border-blue-light overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-28">
-          {/* Logo - Vertical Stack */}
-          <div className="flex-shrink-0 flex flex-col items-start py-6">
-            <Link to="/" className="text-xl font-bold text-blue-primary leading-tight mb-3">SG-JB Dental</Link>
-            <div className="flex flex-col items-start">
-              <span className="text-xs text-gray-600 font-medium leading-tight mb-2">powered by</span>
-              <img 
-                src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
-                alt="TrustMedAI" 
-                className="h-10 w-auto"
-              />
+  <div className="flex justify-between items-center h-32 md:h-36">
+          {/* Brand Stack: OraChope on top, small powered-by, CuraSphereLab at bottom */}
+          <div className="flex-shrink-0 flex flex-col items-start justify-start pt-0 pb-2 pr-4 md:pr-8 leading-tight w-60 md:w-72 lg:w-80">
+            <Link to="/" aria-label="OraChope.org home" className="inline-flex items-center">
+              {/* OraChope box width retained; ensure left alignment */}
+              <div className="w-44 md:w-52 mb-0.5 self-start">
+                <img
+                  src="/orachope.png"
+                  alt="OraChope.org"
+                  className="h-24 md:h-28 w-full object-contain object-left drop-shadow-sm"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; }}
+                />
+              </div>
+            </Link>
+            <span className="block mt-0 mb-2 text-[10px] md:text-[10px] text-gray-500 opacity-60">powered by</span>
+            {/* Replace logo with plain text to match header tabs */}
+            <div className="mt-0 self-start mb-2">
+              <span className="text-blue-dark text-base md:text-lg font-medium leading-none select-none">
+                Curasphere Labs
+              </span>
             </div>
           </div>
 
@@ -97,7 +106,7 @@ const Navigation = () => {
               to="/partner-application"
               className="bg-blue-accent hover:bg-blue-primary text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10 flex items-center"
             >
-              Partner with Us
+              Partner Us
             </Link>
             <Button 
               onClick={navigateToBooking}
@@ -178,7 +187,7 @@ const Navigation = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className="w-full bg-blue-accent hover:bg-blue-primary text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 block text-center h-10 flex items-center justify-center"
                 >
-                  Partner with Us
+                  Partner Us
                 </Link>
                 
                 <Button 

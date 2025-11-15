@@ -1,0 +1,22 @@
+{
+  "name": "OraChope Dental Directory",
+  "short_name": "OraChope",
+  "description": "World-class dental care with smart savings and AI concierge guidance across Singapore & Malaysia.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/orachope.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb"
+}

@@ -167,12 +167,13 @@ export default async function handler(
       }
 
       if (userCreated && isNewUser && !userCreationError) {
-    console.log("Password setup link will use redirectTo:", 'https://sg-smile-saver.vercel.app/create-password');
+    // Updated to custom domain
+    console.log("Password setup link will use redirectTo:", 'https://orachope.org/create-password');
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'recovery',
       email: bookingData.email,
       options: {
-        redirectTo: 'https://sg-smile-saver.vercel.app/create-password'
+        redirectTo: 'https://orachope.org/create-password'
       }
     });
     if (linkError) {

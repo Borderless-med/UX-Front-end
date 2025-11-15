@@ -256,7 +256,7 @@ const handler = async (req: Request): Promise<Response> => {
             <h4 style="color: #16a34a; margin: 0 0 8px; font-size: 16px;">Account Created!</h4>
             <p style="margin: 0; color: #15803d; font-size: 14px;">
               Your account has been created successfully! You can now access our AI chatbot for instant dental advice, easy rebooking, and exclusive member benefits. 
-              <a href="https://sg-smile-saver.vercel.app" style="color: #16a34a; text-decoration: underline;">Visit our website</a> to get started.
+              <a href="https://orachope.org" style="color: #16a34a; text-decoration: underline;">Visit our website</a> to get started.
             </p>
           </div>
           ` : ''}

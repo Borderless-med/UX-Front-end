@@ -19,8 +19,8 @@ export const isProductionEnvironment = (): boolean => {
 };
 
 export const getProductionUrl = (): string => {
-  // Update this with your actual Vercel deployment URL after publishing
-  return 'https://jb-dental-directory.vercel.app';
+  // Updated to use custom apex domain
+  return 'https://orachope.org';
 };
 
 // Detect if running inside the Lovable Editor preview iframe
