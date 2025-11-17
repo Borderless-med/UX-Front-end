@@ -91,7 +91,7 @@ const PractitionerDetailsModal: React.FC<PractitionerDetailsModalProps> = ({
                 <div>
                   <label className="text-sm font-medium text-gray-600">Rating</label>
                   <p className="text-base text-gray-900">
-                    ⭐ {clinic.rating}/5 ({clinic.reviews} reviews)
+                    ⭐ {clinic.rating && clinic.rating > 0 ? clinic.rating.toFixed(1) : 'N/A'}/5 ({typeof clinic.reviews === 'number' && clinic.reviews > 0 ? clinic.reviews : 'N/A'} reviews)
                   </p>
                 </div>
               </div>
@@ -111,7 +111,7 @@ const PractitionerDetailsModal: React.FC<PractitionerDetailsModalProps> = ({
           </Card>
 
           {/* Contact Information */}
-          {(clinic.websiteUrl || clinic.googleReviewUrl) && (
+          {(clinic.websiteUrl || clinic.googleReviewsHref) && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -137,16 +137,16 @@ const PractitionerDetailsModal: React.FC<PractitionerDetailsModalProps> = ({
                   </div>
                 )}
                 
-                {clinic.googleReviewUrl && (
+                {clinic.googleReviewsHref && (
                   <div>
                     <label className="text-sm font-medium text-gray-600">Google Reviews</label>
                     <a 
-                      href={clinic.googleReviewUrl} 
+                      href={clinic.googleReviewsHref} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-blue-primary hover:text-blue-dark underline block"
                     >
-                      View on Google Maps
+                      Open Google Reviews
                     </a>
                   </div>
                 )}

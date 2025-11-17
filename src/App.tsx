@@ -3,12 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { Suspense } from 'react';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import { SecurityProvider } from "@/contexts/SecurityContext";
 import CookieConsentBanner from "@/components/cookies/CookieConsentBanner";
 import CookiePreferences from "@/components/cookies/CookiePreferences";
-import ChatWidget from "@/components/ChatWidget";
+const ChatWidget = React.lazy(() => import("@/components/ChatWidget"));
 import Index from "./pages/Index";
 import Compare from "./pages/Compare";
 import ComparePrototype from "./pages/ComparePrototype";
@@ -79,7 +80,9 @@ const App = () => (
             })()}
             <CookieConsentBanner />
             <CookiePreferences />
-            <ChatWidget />
+            <Suspense fallback={null}>
+              <ChatWidget />
+            </Suspense>
             <Analytics /> {/* --- CHANGE 2 of 2: Added this component here --- */}
           </BrowserRouter>
           </AuthProvider>

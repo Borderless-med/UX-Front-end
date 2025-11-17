@@ -108,7 +108,42 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
 
         // Transform database data to match Clinic interface
         const transformedClinics: Clinic[] = (data || []).map((clinic: any) => {
-          const transformed = {
+          // Helper to build a canonical Google Reviews href
+          const buildReviewsHref = (): { href: string; hasLink: boolean } => {
+            const name: string = clinic.name || '';
+            const country: string | undefined = clinic.country || (source === 'sg' ? 'SG' : source === 'jb' ? 'MY' : undefined);
+            const township: string = clinic.township || '';
+            const placeId: string | undefined = clinic.place_id || clinic.placeId;
+            const reviewUrl: string | undefined = clinic.google_review_url || clinic.googleReviewUrl;
+
+            // 1) If an explicit Google review/map URL exists, prefer it as-is
+            if (reviewUrl && String(reviewUrl).trim() !== '') {
+              return { href: String(reviewUrl).trim(), hasLink: true };
+            }
+
+            // 2) If we have a Place ID, build a Google Maps place link (opens the place page with reviews available)
+            if (placeId && String(placeId).trim() !== '') {
+              // Add locale hints for a better experience
+              const gl = country === 'SG' ? 'sg' : country === 'MY' ? 'my' : 'sg';
+              const href = `https://www.google.com/maps/place/?q=place_id:${encodeURIComponent(String(placeId).trim())}&hl=en&gl=${gl}`;
+              return { href, hasLink: true };
+            }
+
+            // 3) Fallback: Google Search query targeting reviews
+            const locality = country === 'SG' ? 'Singapore' : township || (country === 'MY' ? 'Johor Bahru' : '');
+            const query = `${name} reviews ${locality}`.trim();
+            if (query) {
+              const gl = country === 'SG' ? 'sg' : country === 'MY' ? 'my' : 'sg';
+              const href = `https://www.google.com/search?q=${encodeURIComponent(query)}&hl=en&gl=${gl}`;
+              return { href, hasLink: true };
+            }
+
+            return { href: '', hasLink: false };
+          };
+
+          const { href: googleReviewsHref, hasLink: hasReviewsLink } = buildReviewsHref();
+
+          const transformed: Clinic = {
             id: clinic.id,
             name: clinic.name || '',
             address: clinic.address || '',
@@ -123,6 +158,9 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
             township: clinic.township || '',
             websiteUrl: clinic.website_url || '',
             googleReviewUrl: clinic.google_review_url || '',
+            placeId: clinic.place_id || undefined,
+            googleReviewsHref,
+            hasReviewsLink,
             operatingHours: clinic.operating_hours || '',
             treatments: {
               toothFilling: clinic.tooth_filling || false,
@@ -159,6 +197,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
               reviews: transformed.reviews,
               websiteUrl: transformed.websiteUrl,
               googleReviewUrl: transformed.googleReviewUrl,
+              googleReviewsHref: transformed.googleReviewsHref,
               operatingHours: transformed.operatingHours
             });
           }

@@ -39,7 +39,7 @@ interface ClinicSidebarProps {
   
   // Auth state
   isAuthenticated: boolean;
-  userProfile: any;
+  userProfile?: any;
   onSignInClick: () => void;
   
   // Results
@@ -88,6 +88,7 @@ const ClinicSidebar = ({
   onSidebarResize: externalOnSidebarResize
 }: ClinicSidebarProps) => {
   const isMobile = useIsMobile();
+  const ENABLE_SIDEBAR_RESIZE = false; // disable desktop resize feature
   const {
     sidebarWidth: internalSidebarWidth,
     setSidebarWidth: internalSetSidebarWidth,
@@ -179,8 +180,8 @@ const ClinicSidebar = ({
 
       {/* Footer Actions */}
       <div className="p-4 border-t border-sidebar-border space-y-3">
-        {/* Sidebar Width Controls - Desktop Only */}
-        {!isMobile && (
+        {/* Sidebar Width Controls - Desktop Only (disabled) */}
+        {!isMobile && ENABLE_SIDEBAR_RESIZE && (
           <SidebarPresets
             currentWidth={sidebarWidth}
             presetSizes={presetSizes}
@@ -229,19 +230,22 @@ const ClinicSidebar = ({
       <div 
         className="sticky top-0 h-screen flex-shrink-0 transition-all duration-200"
         style={{ 
-          width: `clamp(17.5rem, ${sidebarWidth}px, min(37.5rem, 30vw))`,
-          minWidth: '17.5rem',
-          maxWidth: 'min(37.5rem, 30vw)'
+          // Fixed desktop width (no drag-resize)
+          width: 'clamp(18rem, 22rem, 28rem)',
+          minWidth: '18rem',
+          maxWidth: '28rem'
         }}
       >
         {sidebarContent}
       </div>
-      <ResizeHandle
-        currentWidth={sidebarWidth}
-        onResize={setSidebarWidth}
-        onResizeStart={() => setIsResizing(true)}
-        onResizeEnd={() => setIsResizing(false)}
-      />
+      {ENABLE_SIDEBAR_RESIZE && (
+        <ResizeHandle
+          currentWidth={sidebarWidth}
+          onResize={setSidebarWidth}
+          onResizeStart={() => setIsResizing(true)}
+          onResizeEnd={() => setIsResizing(false)}
+        />
+      )}
     </div>
   );
 };

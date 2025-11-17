@@ -15,6 +15,12 @@ export interface Clinic {
   township: string;
   websiteUrl: string;
   googleReviewUrl: string;
+  // Optional Google Place ID when available (primarily for SG dataset)
+  placeId?: string;
+  // Canonical reviews link computed from google_review_url -> place_id -> search fallback
+  googleReviewsHref?: string;
+  // Convenience flag indicating whether a reviews link exists
+  hasReviewsLink?: boolean;
   operatingHours: string;
   treatments: {
     toothFilling: boolean;
