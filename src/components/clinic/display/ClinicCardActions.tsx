@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Globe, UserCheck, Calendar, Phone } from 'lucide-react';
@@ -16,20 +15,14 @@ interface ClinicCardActionsProps {
   onBookNow: () => void;
 }
 
-const ClinicCardActions = ({ 
-  clinic, 
-  isAuthenticated, 
-  onSignInClick, 
-  onViewPractitioner, 
+const ClinicCardActions = ({
+  clinic,
+  isAuthenticated,
+  onSignInClick,
+  onViewPractitioner,
   onClaimClinic,
-  onBookNow 
+  onBookNow
 }: ClinicCardActionsProps) => {
-  const handleWebsiteClick = () => {
-    if (clinic.websiteUrl && clinic.websiteUrl.trim() !== '' && clinic.websiteUrl !== 'N/A') {
-      window.open(clinic.websiteUrl, '_blank');
-    }
-  };
-
   const handleContactClick = () => {
     if (clinic.websiteUrl && clinic.websiteUrl.trim() !== '' && clinic.websiteUrl !== 'N/A') {
       window.open(clinic.websiteUrl, '_blank');
@@ -40,7 +33,7 @@ const ClinicCardActions = ({
 
   return (
     <TooltipProvider>
-      <div className="space-y-3 pb-2">
+      <div className="flex flex-col gap-3 pb-2">
         {/* Book Now - Primary CTA */}
         <Button
           onClick={onBookNow}
@@ -50,15 +43,15 @@ const ClinicCardActions = ({
           Book Now
         </Button>
 
-        {/* Secondary actions row - Always 3 buttons */}
-        <div className="flex gap-2">
+        {/* Secondary actions row - wraps on narrow widths */}
+        <div className="flex flex-wrap gap-2 w-full">
           {/* View Practitioner Details */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 onClick={isAuthenticated ? onViewPractitioner : onSignInClick}
                 variant="outline"
-                className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+                className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
               >
                 <UserCheck className="h-3 w-3 mr-1" />
                 Details
@@ -75,8 +68,8 @@ const ClinicCardActions = ({
               <Button
                 onClick={handleContactClick}
                 variant="outline"
-                className="flex-1 border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
-                disabled={!clinic.websiteUrl || (clinic.websiteUrl === 'N/A') || clinic.websiteUrl.trim() === ''}
+                className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+                disabled={!clinic.websiteUrl || clinic.websiteUrl === 'N/A' || clinic.websiteUrl.trim() === ''}
               >
                 {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' ? (
                   <>
@@ -93,10 +86,9 @@ const ClinicCardActions = ({
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' 
+                {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== ''
                   ? 'Visit clinic website'
-                  : 'Website not available'
-                }
+                  : 'Website not available'}
               </p>
             </TooltipContent>
           </Tooltip>
@@ -107,7 +99,7 @@ const ClinicCardActions = ({
               <Button
                 onClick={onClaimClinic}
                 variant="outline"
-                className="flex-1 border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
+                className="flex-1 min-w-[5.5rem] border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
               >
                 Update
               </Button>
