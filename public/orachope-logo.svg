@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240" height="48" viewBox="0 0 240 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Orachope Logo (placeholder)</title>
+  <desc id="desc">Temporary text-based logo for Orachope until brand SVG is provided.</desc>
+  <rect width="240" height="48" fill="white"/>
+  <g>
+    <text x="8" y="32" font-family="Inter, Arial, sans-serif" font-size="28" fill="#0F6B73" font-weight="700">Orachope</text>
+  </g>
+</svg>

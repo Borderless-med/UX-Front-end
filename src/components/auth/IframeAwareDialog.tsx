@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -34,22 +35,20 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) {
+  if (!isOpen || typeof document === 'undefined') {
     return null;
   }
 
-  // Optimized rendering for production environments
-  return (
-    <div 
+  const dialog = (
+    <div
       className="fixed inset-0 z-[9999] bg-black/50 flex items-start justify-center p-4 pt-32"
       onClick={(e) => {
-        // Only close on backdrop click
         if (e.target === e.currentTarget) {
           onClose();
         }
       }}
     >
-      <div 
+      <div
         ref={dialogRef}
         className={cn(
           "bg-background border border-border rounded-lg shadow-lg w-full max-w-2xl max-h-[calc(100vh-8rem)] overflow-y-auto relative",
@@ -69,6 +68,8 @@ const IframeAwareDialog: React.FC<IframeAwareDialogProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(dialog, document.body);
 };
 
 export default IframeAwareDialog;

@@ -40,18 +40,19 @@ const Footer = () => {
             
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="mb-4">
-                <span className="text-xl sm:text-2xl font-bold text-blue-600">SG-JB Dental</span>
+                <img
+                  src="/orachope.png"
+                  alt="OraChope.org"
+                  className="h-10 sm:h-12 w-auto"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; }}
+                />
               </div>
               <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
                 Connecting Singapore patients to quality, affordable dental care across the causeway
               </p>
-              <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <span className="text-base sm:text-lg text-gray-700 font-bold">Powered by</span>
-                <img 
-                  src="/lovable-uploads/70a8431a-ea7f-4c3b-b1f1-b7470603db93.png" 
-                  alt="TrustMedAI" 
-                  className="h-8 sm:h-10 w-auto"
-                />
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2">
+                <span className="text-sm sm:text-base text-gray-600">powered by</span>
+                <span className="text-blue-dark text-base sm:text-lg font-medium">Curasphere Labs</span>
               </div>
             </div>
             
@@ -86,7 +87,7 @@ const Footer = () => {
             </div>
             
             <div className="text-sm text-gray-500 text-center mb-4">
-              © 2024 SG-JB Dental. Launching August 2025.
+              © 2024 Orachope. Launching August 2025.
             </div>
             
             {/* Legal Links Section - Enhanced with Cookie Management */}

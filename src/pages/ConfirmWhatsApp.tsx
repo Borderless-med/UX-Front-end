@@ -38,7 +38,7 @@ const ConfirmWhatsApp = () => {
           setUserName(data.name || '');
           toast({
             title: "WhatsApp Opt-in Confirmed!",
-            description: "You'll now receive WhatsApp updates from SG Smile Saver.",
+            description: "You'll now receive WhatsApp updates from Orachope.",
           });
         } else {
           setStatus('error');

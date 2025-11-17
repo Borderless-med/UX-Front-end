@@ -9,9 +9,10 @@ interface ClinicCardInfoProps {
     operatingHours: string;
     mdaLicense: string;
   };
+  hideDistance?: boolean;
 }
 
-const ClinicCardInfo = ({ clinic }: ClinicCardInfoProps) => {
+const ClinicCardInfo = ({ clinic, hideDistance = false }: ClinicCardInfoProps) => {
   const formatOperatingHours = (hours: string) => {
     if (!hours || hours === 'Not Listed' || hours === 'Operating hours not available') {
       return 'Operating hours not available';
@@ -124,13 +125,15 @@ const ClinicCardInfo = ({ clinic }: ClinicCardInfoProps) => {
     <>
       {/* Second Row: Distance and Operating Hours */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center text-xs sm:text-sm text-neutral-gray min-w-0">
-          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
-          <span className="truncate">{clinic.distance.toFixed(1)}km from CIQ</span>
-        </div>
+        {!hideDistance && (
+          <div className="flex items-center text-xs sm:text-sm text-neutral-gray min-w-0">
+            <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+            <span className="truncate">{clinic.distance.toFixed(1)}km from CIQ</span>
+          </div>
+        )}
         
         {/* Operating Hours */}
-        <div className="flex items-center">
+        <div className="flex items-center ml-auto">
           <Popover>
             <PopoverTrigger asChild>
               <Button

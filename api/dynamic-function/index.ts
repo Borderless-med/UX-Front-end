@@ -9,6 +9,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-environment",
 };
 
+// Deno 'serve' function disabled for Vercel compatibility. To re-enable, use a Node.js or Vercel API handler.
+/*
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -42,3 +44,4 @@ serve(async (req) => {
     });
   }
 });
+*/
