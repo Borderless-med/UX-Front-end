@@ -111,7 +111,7 @@ const PractitionerDetailsModal: React.FC<PractitionerDetailsModalProps> = ({
           </Card>
 
           {/* Contact Information */}
-          {(clinic.websiteUrl || clinic.googleReviewsHref) && (
+          {(clinic.websiteUrl || clinic.googleMapsHref) && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -137,16 +137,16 @@ const PractitionerDetailsModal: React.FC<PractitionerDetailsModalProps> = ({
                   </div>
                 )}
                 
-                {clinic.googleReviewsHref && (
+                {clinic.googleMapsHref && (
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Google Reviews</label>
+                    <label className="text-sm font-medium text-gray-600">Google Map</label>
                     <a 
-                      href={clinic.googleReviewsHref} 
+                      href={clinic.googleMapsHref} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-blue-primary hover:text-blue-dark underline block"
                     >
-                      Open Google Reviews
+                      Open Google Maps
                     </a>
                   </div>
                 )}

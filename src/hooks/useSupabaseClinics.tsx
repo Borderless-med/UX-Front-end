@@ -108,40 +108,62 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
 
         // Transform database data to match Clinic interface
         const transformedClinics: Clinic[] = (data || []).map((clinic: any) => {
-          // Helper to build a canonical Google Reviews href
-          const buildReviewsHref = (): { href: string; hasLink: boolean } => {
+          // Helper to build canonical links for Google Reviews and Google Maps
+          const buildLinks = (): { reviewsHref: string; mapsHref: string; hasReviews: boolean } => {
             const name: string = clinic.name || '';
             const country: string | undefined = clinic.country || (source === 'sg' ? 'SG' : source === 'jb' ? 'MY' : undefined);
             const township: string = clinic.township || '';
             const placeId: string | undefined = clinic.place_id || clinic.placeId;
             const reviewUrl: string | undefined = clinic.google_review_url || clinic.googleReviewUrl;
+            const address: string = clinic.address || '';
 
-            // 1) If an explicit Google review/map URL exists, prefer it as-is
-            if (reviewUrl && String(reviewUrl).trim() !== '') {
-              return { href: String(reviewUrl).trim(), hasLink: true };
+            const gl = country === 'SG' ? 'sg' : country === 'MY' ? 'my' : 'sg';
+
+            // Attempt to extract CID from a google_review_url like https://maps.google.com/?cid=12345
+            const extractCid = (url?: string): string | null => {
+              if (!url) return null;
+              try {
+                const u = new URL(url);
+                const cid = u.searchParams.get('cid');
+                return cid && cid.match(/^\d+$/) ? cid : null;
+              } catch {
+                return null;
+              }
+            };
+            const cid = extractCid(reviewUrl);
+
+            // Build Maps href
+            let mapsHref = '';
+            if (cid) {
+              mapsHref = `https://www.google.com/maps?cid=${cid}&hl=en&gl=${gl}`;
+            } else if (placeId && String(placeId).trim() !== '') {
+              mapsHref = `https://www.google.com/maps/place/?q=place_id:${encodeURIComponent(String(placeId).trim())}&hl=en&gl=${gl}`;
+            } else {
+              const q = [name, address || township].filter(Boolean).join(' ');
+              mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(q)}?hl=en&gl=${gl}`;
             }
 
-            // 2) If we have a Place ID, build a Google Maps place link (opens the place page with reviews available)
-            if (placeId && String(placeId).trim() !== '') {
-              // Add locale hints for a better experience
-              const gl = country === 'SG' ? 'sg' : country === 'MY' ? 'my' : 'sg';
-              const href = `https://www.google.com/maps/place/?q=place_id:${encodeURIComponent(String(placeId).trim())}&hl=en&gl=${gl}`;
-              return { href, hasLink: true };
+            // Build Reviews href (prefer reviews view when CID exists)
+            let reviewsHref = '';
+            if (cid) {
+              const q = `${name} reviews`;
+              reviewsHref = `https://www.google.com/search?q=${encodeURIComponent(q)}&hl=en&gl=${gl}&ludocid=${cid}`;
+            } else if (placeId && String(placeId).trim() !== '') {
+              // place_id cannot reliably deep-link reviews; use a strong search fallback
+              const locality = country === 'SG' ? 'Singapore' : township || (country === 'MY' ? 'Johor Bahru' : '');
+              const q = `${name} reviews ${locality}`.trim();
+              reviewsHref = `https://www.google.com/search?q=${encodeURIComponent(q)}&hl=en&gl=${gl}`;
+            } else {
+              const locality = country === 'SG' ? 'Singapore' : township || (country === 'MY' ? 'Johor Bahru' : '');
+              const q = `${name} reviews ${locality}`.trim();
+              reviewsHref = q ? `https://www.google.com/search?q=${encodeURIComponent(q)}&hl=en&gl=${gl}` : '';
             }
 
-            // 3) Fallback: Google Search query targeting reviews
-            const locality = country === 'SG' ? 'Singapore' : township || (country === 'MY' ? 'Johor Bahru' : '');
-            const query = `${name} reviews ${locality}`.trim();
-            if (query) {
-              const gl = country === 'SG' ? 'sg' : country === 'MY' ? 'my' : 'sg';
-              const href = `https://www.google.com/search?q=${encodeURIComponent(query)}&hl=en&gl=${gl}`;
-              return { href, hasLink: true };
-            }
-
-            return { href: '', hasLink: false };
+            const hasReviews = !!reviewsHref;
+            return { reviewsHref, mapsHref, hasReviews };
           };
 
-          const { href: googleReviewsHref, hasLink: hasReviewsLink } = buildReviewsHref();
+          const { reviewsHref: googleReviewsHref, mapsHref: googleMapsHref, hasReviews: hasReviewsLink } = buildLinks();
 
           const transformed: Clinic = {
             id: clinic.id,
@@ -160,6 +182,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
             googleReviewUrl: clinic.google_review_url || '',
             placeId: clinic.place_id || undefined,
             googleReviewsHref,
+            googleMapsHref,
             hasReviewsLink,
             operatingHours: clinic.operating_hours || '',
             treatments: {
