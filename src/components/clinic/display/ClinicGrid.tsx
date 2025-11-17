@@ -9,6 +9,8 @@ interface ClinicGridProps {
   onViewPractitionerDetails: (clinic: any) => void;
   onClearAllFilters: () => void;
   activeFiltersCount: number;
+  hideDistance?: boolean; // global override
+  selection?: 'sg' | 'jb' | 'all'; // to allow per-clinic distance hiding logic
 }
 
 const ClinicGrid = ({ 
@@ -17,7 +19,9 @@ const ClinicGrid = ({
   onSignInClick, 
   onViewPractitionerDetails, 
   onClearAllFilters,
-  activeFiltersCount 
+  activeFiltersCount,
+  hideDistance = false,
+  selection
 }: ClinicGridProps) => {
   if (clinics.length === 0) {
     return (
@@ -39,15 +43,18 @@ const ClinicGrid = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-3 md:gap-4 mb-16 min-w-0 auto-rows-min">
-      {clinics.map((clinic) => (
+      {clinics.map((clinic) => {
+        const perClinicHideDistance = hideDistance || (selection === 'all' && clinic?.country === 'SG');
+        return (
         <ClinicCard
           key={clinic.id}
           clinic={clinic}
           isAuthenticated={isAuthenticated}
           onSignInClick={onSignInClick}
           onViewPractitionerDetails={onViewPractitionerDetails}
+          hideDistance={perClinicHideDistance}
         />
-      ))}
+      );})}
     </div>
   );
 };

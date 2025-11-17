@@ -14,6 +14,17 @@ const getEnvironment = () => {
   return 'production';
 };
 
+// Centralized backend base URL resolver with env override
+const getBackendBaseUrl = () => {
+  const override = (import.meta as any).env?.VITE_CHAT_API_URL as string | undefined;
+  if (override && override.trim()) return override.replace(/\/$/, '');
+  return getEnvironment() === 'development'
+    ? 'http://localhost:10000'
+    : 'https://sg-jb-chatbot-backend.onrender.com';
+};
+
+const getBackupBaseUrl = () => 'https://sg-jb-chatbot-backend.onrender.com';
+
 interface Message {
   id: string;
   text: string;
@@ -40,6 +51,9 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // New: location prompt state and reset suppression
+  const [locationPrompt, setLocationPrompt] = useState<null | { options: { key: string; label: string }[] }>(null);
+  const [suppressClientFiltersOnce, setSuppressClientFiltersOnce] = useState(false);
 
   // --- FIXED: Use state to hold session state (not refs) ---
   const [sessionAppliedFilters, setSessionAppliedFilters] = useState<Record<string, any>>({});
@@ -62,23 +76,40 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       if (user && sessionId && !sessionStateLoaded) {
         try {
           console.log(`🔄 Restoring session state for session: ${sessionId}`);
-          console.log('DEBUG: session?.access_token for restore-session:', session?.access_token);
-          console.log('DEBUG: Authorization header for restore-session:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
-            const backendUrl = getEnvironment() === 'development'
-              ? 'http://localhost:10000/restore_session'
-              : 'https://sg-jb-chatbot-backend.onrender.com/restore_session';
+          // Mask token for security (show only first 6 chars)
+          const maskToken = (t?: string) => t ? `${t.slice(0,6)}…${t.slice(-4)}` : 'None';
+          console.log('DEBUG: session?.access_token (masked) for restore-session:', maskToken(session?.access_token));
+          console.log('DEBUG: Authorization header for restore-session:', session?.access_token ? `Bearer ${maskToken(session.access_token)}` : 'None');
+            const baseUrl = getBackendBaseUrl();
+            const backendUrl = `${baseUrl}/restore_session`;
 
-            const response = await fetch(backendUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-Authorization': `Bearer ${session?.access_token}`,
-              },
-              body: JSON.stringify({
-                session_id: sessionId,
-                user_id: user.id
-              }),
-            });
+            let response: Response | null = null;
+            try {
+              response = await fetch(backendUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Authorization': `Bearer ${session?.access_token}`,
+                },
+                body: JSON.stringify({ session_id: sessionId, user_id: user.id }),
+              });
+            } catch (e) {
+              // Failover: if dev local failed, try Render once
+              if (baseUrl.includes('localhost')) {
+                const backupUrl = `${getBackupBaseUrl()}/restore_session`;
+                console.warn('Primary restore_session failed, retrying backup:', backupUrl);
+                response = await fetch(backupUrl, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': `Bearer ${session?.access_token}`,
+                  },
+                  body: JSON.stringify({ session_id: sessionId, user_id: user.id }),
+                });
+              } else {
+                throw e;
+              }
+            }
 
             const data = await response.json();
 
@@ -110,8 +141,31 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
   const handleSendMessage = async (message: string) => {
   // Debug print for Authorization header before chat request
-  console.log('DEBUG: Authorization header for chat:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
+  const maskToken = (t?: string) => t ? `${t.slice(0,6)}…${t.slice(-4)}` : 'None';
+  console.log('DEBUG: Authorization header for chat:', session?.access_token ? `Bearer ${maskToken(session.access_token)}` : 'None');
     if (!message.trim() || isTyping) return;
+
+    // Phase 1: If a location prompt is active and the user TYPES a country instead of clicking
+    // recognize it and convert to a structured choose_location turn (single-pass, no loop).
+    if (locationPrompt) {
+      const lower = message.toLowerCase().trim();
+      type LocationChoice = 'jb' | 'sg' | 'both';
+      let choice: LocationChoice | null = null;
+      if (/(johor bahru|\bjb\b|johor)/i.test(lower)) choice = 'jb';
+      else if (/(singapore|\bsg\b)/i.test(lower)) choice = 'sg';
+      else if (/(both|all)/i.test(lower)) choice = 'both';
+      if (choice) {
+        // Mirror handleChooseLocation logic inline to avoid recursion
+        const label = choice === 'jb' ? 'Johor Bahru' : choice === 'sg' ? 'Singapore' : 'Both';
+        setSessionAppliedFilters({});
+        setSessionCandidatePool([]);
+        setSessionBookingContext({ choose_location: choice });
+        setLocationPrompt(null); // dismiss prompt immediately so next turn sends filters
+        setSuppressClientFiltersOnce(true); // ensure we don't reuse stale filters this turn
+        // Replace the original message with the label so history shows clean selection
+        message = label;
+      }
+    }
 
     if (!user) {
       const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
@@ -143,14 +197,34 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           content: msg.text
         }));
 
-      // --- FIXED: Use state values instead of refs ---
+      // Determine if we should suppress client filters (fresh turn, reset, or while awaiting location)
+      const isFirstUserTurn = history.filter(h => h.role === 'user').length === 1;
+      const isResetMessage = message.toLowerCase().startsWith('reset');
+
+      // If user requests reset, clear local state immediately
+      if (isResetMessage) {
+        setSessionAppliedFilters({});
+        setSessionCandidatePool([]);
+        setSessionBookingContext({});
+        setLocationPrompt(null);
+        setSuppressClientFiltersOnce(true);
+      }
+
+      // --- Use state values; optionally suppress filters ---
       const requestBody: any = {
         history: history,
-        applied_filters: sessionAppliedFilters,
-        candidate_pool: sessionCandidatePool,
-        booking_context: sessionBookingContext,
         user_id: user.id
       };
+
+      if (isFirstUserTurn || isResetMessage || suppressClientFiltersOnce || !!locationPrompt) {
+        requestBody.applied_filters = {};
+        requestBody.candidate_pool = [];
+      } else {
+        requestBody.applied_filters = sessionAppliedFilters;
+        requestBody.candidate_pool = sessionCandidatePool;
+      }
+
+      requestBody.booking_context = sessionBookingContext;
 
       // Use sessionId from AuthContext for persistent session
       if (sessionId) {
@@ -160,23 +234,59 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       console.log(">>>>> Sending this body to backend:", JSON.stringify(requestBody, null, 2));
 
       // Directly call FastAPI backend /chat endpoint
-      const backendUrl = getEnvironment() === 'development'
-        ? 'http://localhost:10000/chat'
-        : 'https://sg-jb-chatbot-backend.onrender.com/chat';
+      const baseUrl = getBackendBaseUrl();
+      const backendUrl = `${baseUrl}/chat`;
 
-      const response = await fetch(backendUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
+      let response: Response | null = null;
+      try {
+        console.log('[Chat] Using backend:', backendUrl);
+        response = await fetch(backendUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(requestBody),
+        });
+      } catch (err) {
+        // Failover: if dev local failed, retry Render once
+        if (baseUrl.includes('localhost')) {
+          const backupUrl = `${getBackupBaseUrl()}/chat`;
+          console.warn('[Chat] Primary backend failed, retrying backup:', backupUrl);
+          response = await fetch(backupUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': `Bearer ${session?.access_token}`,
+            },
+            body: JSON.stringify(requestBody),
+          });
+        } else {
+          throw err;
+        }
+      }
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
         throw new Error(`Backend error: ${response.status} ${response.statusText}`);
       }
-      const data = await response.json();
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch (e) {
+        // Optional lightweight retry once on transient network issues
+        console.warn('[Chat] Response parse failed, retrying request once...');
+        await new Promise(r => setTimeout(r, 400));
+        const retryResp = await fetch(backendUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(requestBody),
+        });
+        if (!retryResp.ok) throw new Error(`Backend error after retry: ${retryResp.status} ${retryResp.statusText}`);
+        data = await retryResp.json();
+      }
 
       if (data && data.response) {
         if (data.session_id) {
@@ -208,6 +318,16 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           setSessionBookingContext(data.booking_context);
         }
 
+        // Handle structured meta prompts (location)
+        if (data.meta && data.meta.type === 'location_prompt') {
+          setLocationPrompt({ options: data.meta.options || [] });
+          // Ensure client does not immediately resend old filters on next turn
+          setSuppressClientFiltersOnce(true);
+        } else {
+          setLocationPrompt(null);
+          setSuppressClientFiltersOnce(false);
+        }
+
       } else {
         throw new Error('No response received from AI');
       }
@@ -225,6 +345,19 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
     }
   };
 
+  // Handle choosing location from prompt buttons
+  const handleChooseLocation = async (choice: 'jb' | 'sg' | 'both', label: string) => {
+    // Clear client filters and set booking_context for this one turn
+    setSessionAppliedFilters({});
+    setSessionCandidatePool([]);
+    setSessionBookingContext({ choose_location: choice });
+    setLocationPrompt(null);
+    setSuppressClientFiltersOnce(true);
+    await handleSendMessage(label);
+    // Clear choose_location so we don't keep resending it
+    setSessionBookingContext({});
+  };
+
   return (
     <div className="relative w-full h-full md:rounded-lg bg-white shadow-xl border border-gray-200 flex flex-col animate-fade-in">
       {/* Header */}
@@ -236,6 +369,10 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           <div>
             <h3 className="font-semibold">AI Dental Expert</h3>
             <p className="text-xs text-blue-150">{!user ? "Sign up required" : "40 chats/month • Online now"}</p>
+            {/* Show backend URL indicator in dev to aid debugging */}
+            {getEnvironment() === 'development' && (
+              <p className="text-[10px] opacity-80">Backend: {getBackendBaseUrl()}</p>
+            )}
           </div>
         </div>
         <button
@@ -251,6 +388,27 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
+        {locationPrompt && (
+          <div className="flex items-start space-x-2">
+            <div className="w-8 h-8 bg-blue-primary rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-xs font-bold text-white">AI</span>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+              <p className="text-sm mb-2">Quick choice: Which country?</p>
+              <div className="flex gap-2">
+                {locationPrompt.options.map((opt) => (
+                  <button
+                    key={opt.key}
+                    onClick={() => handleChooseLocation(opt.key as any, opt.label)}
+                    className="px-3 py-1.5 text-sm rounded-md border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
         {isTyping && (
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-blue-primary rounded-full flex items-center justify-center">

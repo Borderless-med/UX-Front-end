@@ -167,12 +167,13 @@ export default async function handler(
       }
 
       if (userCreated && isNewUser && !userCreationError) {
-    console.log("Password setup link will use redirectTo:", 'https://sg-smile-saver.vercel.app/create-password');
+    // Updated to custom domain
+    console.log("Password setup link will use redirectTo:", 'https://orachope.org/create-password');
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'recovery',
       email: bookingData.email,
       options: {
-        redirectTo: 'https://sg-smile-saver.vercel.app/create-password'
+        redirectTo: 'https://orachope.org/create-password'
       }
     });
     if (linkError) {
@@ -217,7 +218,7 @@ export default async function handler(
             <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Treatment:</td><td style="padding: 8px 0;">${bookingData.treatment_type}</td></tr>
             <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Date:</td><td style="padding: 8px 0;">${formattedDate}</td></tr>
             <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Time:</td><td style="padding: 8px 0;">${bookingData.time_slot}</td></tr>
-            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Clinic Location:</td><td style="padding: 8px 0;">${bookingData.clinic_location}, JB</td></tr>
+            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Clinic Location:</td><td style="padding: 8px 0;">${bookingData.clinic_location}</td></tr>
             <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">WhatsApp:</td><td style="padding: 8px 0;">${bookingData.whatsapp}</td></tr>
           </table>
           <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 20px 0;">

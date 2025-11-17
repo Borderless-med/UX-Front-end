@@ -10,9 +10,19 @@ export interface Clinic {
   sentiment: number;
   mdaLicense: string;
   credentials: string;
+  // Optional country code. Recommended values: 'SG' (Singapore) or 'MY' (Malaysia)
+  country?: string;
   township: string;
   websiteUrl: string;
   googleReviewUrl: string;
+  // Optional Google Place ID when available (primarily for SG dataset)
+  placeId?: string;
+  // Canonical reviews link computed from google_review_url -> place_id -> search fallback
+  googleReviewsHref?: string;
+  // Canonical maps link (open place in Google Maps)
+  googleMapsHref?: string;
+  // Convenience flag indicating whether a reviews link exists
+  hasReviewsLink?: boolean;
   operatingHours: string;
   treatments: {
     toothFilling: boolean;
