@@ -40,13 +40,13 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
   const hasGoogleReviews = clinic.googleReviewUrl && clinic.googleReviewUrl.trim() !== '';
 
   return (
-    <div className="flex items-start justify-between gap-3 mb-2">
+  <div className="flex flex-wrap items-start justify-between gap-3 mb-2 w-full">
       {/* Left Column: Clinic Name and Address */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-sm sm:text-base font-semibold text-blue-dark mb-1 leading-tight truncate">
+        <h3 className="text-sm sm:text-base font-semibold text-blue-dark mb-1 leading-tight break-words">
           {clinic.name}
         </h3>
-        <p className="text-xs text-neutral-gray leading-snug line-clamp-2 break-words">
+        <p className="text-xs text-neutral-gray leading-snug line-clamp-2 break-words max-w-full">
           {clinic.address}
         </p>
       </div>
@@ -54,7 +54,7 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
       {/* Right Column: Google Rating CTA Box */}
       {hasGoogleReviews && (
         <div 
-          className="bg-gradient-to-r from-blue-light to-blue-150 border border-blue-light rounded-lg p-1 sm:p-1.5 cursor-pointer hover:from-blue-150 hover:to-blue-secondary/20 hover:border-blue-secondary/30 transition-all duration-200 shadow-sm flex-shrink-0 min-w-[5.5rem] max-w-[6rem]"
+          className="bg-gradient-to-r from-blue-light to-blue-150 border border-blue-light rounded-lg p-1 sm:p-1.5 cursor-pointer hover:from-blue-150 hover:to-blue-secondary/20 hover:border-blue-secondary/30 transition-all duration-200 shadow-sm flex-shrink-0 w-[5.25rem] sm:w-[5.5rem] mt-2 sm:mt-0"
           onClick={handleRatingClick}
           title="Click to copy Google search terms for reviews"
         >

@@ -37,12 +37,14 @@ class RestClient {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_ANON_KEY,
     };
+    const maskToken = (t?: string) => t ? `${t.slice(0,6)}…${t.slice(-4)}` : 'None';
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
+      console.log('DEBUG: REST client Authorization header:', `Bearer ${maskToken(authToken)}`);
     } else {
       headers['Authorization'] = `Bearer ${SUPABASE_ANON_KEY}`;
+      console.log('DEBUG: REST client Authorization header:', `Bearer ${maskToken(SUPABASE_ANON_KEY)}`);
     }
-    console.log('DEBUG: REST client Authorization header:', headers['Authorization']);
     return headers;
   }
 

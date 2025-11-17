@@ -7,6 +7,11 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export type ClinicSource = 'sg' | 'jb' | 'all';
 
+// Simple in-memory cache (module-level) to prevent duplicate fetches across components
+interface CacheEntry { data: Clinic[]; timestamp: number }
+const CLINICS_CACHE: Record<string, CacheEntry> = {};
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
 export const useSupabaseClinics = (source: ClinicSource = 'all') => {
   console.log('[useSupabaseClinics] Hook initialized at', new Date().toISOString());
   const [clinics, setClinics] = useState<Clinic[]>([]);
@@ -53,6 +58,16 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
             }, { timeout: 8000, retries: 1 });
           }
         };
+
+        // Check cache first
+        const cacheKey = source;
+        const cached = CLINICS_CACHE[cacheKey];
+        if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
+          console.log(`[useSupabaseClinics] ✅ Using cached clinic data for '${source}' (age ${(Date.now() - cached.timestamp)/1000}s)`);
+          setClinics(cached.data);
+          setLoading(false);
+          return; // skip network fetch
+        }
 
         // Deterministic per your schema:
         // - JB -> clinics_data
@@ -154,6 +169,8 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         const totalTime = performance.now() - startTime;
         console.log('✅ Successfully transformed', transformedClinics.length, 'clinics in', totalTime.toFixed(1) + 'ms');
         setClinics(transformedClinics);
+        // Store in cache
+        CLINICS_CACHE[cacheKey] = { data: transformedClinics, timestamp: Date.now() };
       } catch (err) {
         // Clear timeout on error
         if (timeoutRef.current) {
@@ -183,7 +200,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
       }
     };
 
-    fetchClinics();
+  fetchClinics();
     
     // Cleanup timeout on unmount
     return () => {

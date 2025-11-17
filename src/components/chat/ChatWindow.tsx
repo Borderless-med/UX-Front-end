@@ -76,8 +76,10 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       if (user && sessionId && !sessionStateLoaded) {
         try {
           console.log(`🔄 Restoring session state for session: ${sessionId}`);
-          console.log('DEBUG: session?.access_token for restore-session:', session?.access_token);
-          console.log('DEBUG: Authorization header for restore-session:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
+          // Mask token for security (show only first 6 chars)
+          const maskToken = (t?: string) => t ? `${t.slice(0,6)}…${t.slice(-4)}` : 'None';
+          console.log('DEBUG: session?.access_token (masked) for restore-session:', maskToken(session?.access_token));
+          console.log('DEBUG: Authorization header for restore-session:', session?.access_token ? `Bearer ${maskToken(session.access_token)}` : 'None');
             const baseUrl = getBackendBaseUrl();
             const backendUrl = `${baseUrl}/restore_session`;
 
@@ -139,8 +141,31 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
   const handleSendMessage = async (message: string) => {
   // Debug print for Authorization header before chat request
-  console.log('DEBUG: Authorization header for chat:', session?.access_token ? `Bearer ${session.access_token}` : 'None');
+  const maskToken = (t?: string) => t ? `${t.slice(0,6)}…${t.slice(-4)}` : 'None';
+  console.log('DEBUG: Authorization header for chat:', session?.access_token ? `Bearer ${maskToken(session.access_token)}` : 'None');
     if (!message.trim() || isTyping) return;
+
+    // Phase 1: If a location prompt is active and the user TYPES a country instead of clicking
+    // recognize it and convert to a structured choose_location turn (single-pass, no loop).
+    if (locationPrompt) {
+      const lower = message.toLowerCase().trim();
+      type LocationChoice = 'jb' | 'sg' | 'both';
+      let choice: LocationChoice | null = null;
+      if (/(johor bahru|\bjb\b|johor)/i.test(lower)) choice = 'jb';
+      else if (/(singapore|\bsg\b)/i.test(lower)) choice = 'sg';
+      else if (/(both|all)/i.test(lower)) choice = 'both';
+      if (choice) {
+        // Mirror handleChooseLocation logic inline to avoid recursion
+        const label = choice === 'jb' ? 'Johor Bahru' : choice === 'sg' ? 'Singapore' : 'Both';
+        setSessionAppliedFilters({});
+        setSessionCandidatePool([]);
+        setSessionBookingContext({ choose_location: choice });
+        setLocationPrompt(null); // dismiss prompt immediately so next turn sends filters
+        setSuppressClientFiltersOnce(true); // ensure we don't reuse stale filters this turn
+        // Replace the original message with the label so history shows clean selection
+        message = label;
+      }
+    }
 
     if (!user) {
       const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
