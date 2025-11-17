@@ -56,44 +56,44 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-6 lg:ml-10 flex items-center gap-6 lg:gap-8 flex-nowrap">
               <Link
                 to="/"
-                className={`transition-all duration-200 font-medium ${
+                className={`transition-all duration-200 font-medium whitespace-nowrap ${
                   location.pathname === '/' 
-                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
-                    : 'text-blue-dark hover:text-blue-primary text-base'
-                }`}
+                    ? 'text-blue-primary font-semibold px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                } text-base`}
               >
                 Home
               </Link>
               <Link
                 to="/clinics"
-                className={`transition-all duration-200 font-medium ${
+                className={`transition-all duration-200 font-medium whitespace-nowrap ${
                   location.pathname === '/clinics' 
-                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
-                    : 'text-blue-dark hover:text-blue-primary text-base'
-                }`}
+                    ? 'text-blue-primary font-semibold px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                } text-base`}
               >
                 Find Clinics
               </Link>
               <Link
                 to="/compare"
-                className={`transition-all duration-200 font-medium ${
+                className={`transition-all duration-200 font-medium whitespace-nowrap ${
                   location.pathname === '/compare' 
-                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
-                    : 'text-blue-dark hover:text-blue-primary text-base'
-                }`}
+                    ? 'text-blue-primary font-semibold px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                } text-base`}
               >
                 Compare
               </Link>
               <Link
                 to="/how-it-works"
-                className={`transition-all duration-200 font-medium ${
+                className={`transition-all duration-200 font-medium whitespace-nowrap ${
                   location.pathname === '/how-it-works' 
-                    ? 'text-blue-primary text-xl font-bold scale-110 transform shadow-sm px-3 py-2 bg-blue-primary/10 rounded-lg' 
-                    : 'text-blue-dark hover:text-blue-primary text-base'
-                }`}
+                    ? 'text-blue-primary font-semibold px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                } text-base`}
               >
                 How It Works
               </Link>
@@ -104,13 +104,13 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Link 
               to="/partner-application"
-              className="bg-blue-accent hover:bg-blue-primary text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10 flex items-center"
+              className="bg-blue-accent hover:bg-blue-primary text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10 flex items-center justify-center whitespace-nowrap w-[112px] text-sm md:text-base"
             >
               Partner Us
             </Link>
             <Button 
               onClick={navigateToBooking}
-              className="bg-blue-primary hover:bg-blue-accent text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10"
+              className="bg-blue-primary hover:bg-blue-accent text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10 w-[112px] justify-center"
             >
               Book Now
             </Button>
