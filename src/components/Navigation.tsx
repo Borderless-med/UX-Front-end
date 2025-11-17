@@ -93,7 +93,7 @@ const Navigation = () => {
                   location.pathname === '/how-it-works' 
                     ? 'text-blue-primary font-semibold px-3 py-2 bg-blue-primary/10 rounded-lg' 
                     : 'text-blue-dark hover:text-blue-primary'
-                } text-base`}
+                } text-base mr-2 lg:mr-4`}
               >
                 How It Works
               </Link>
@@ -101,7 +101,7 @@ const Navigation = () => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4 shrink-0">
             <Link 
               to="/partner-application"
               className="bg-blue-accent hover:bg-blue-primary text-white font-medium px-5 py-2.5 rounded-lg transition-colors duration-200 h-10 flex items-center justify-center whitespace-nowrap w-[112px] text-sm md:text-base"
