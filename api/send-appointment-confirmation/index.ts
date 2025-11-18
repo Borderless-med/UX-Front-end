@@ -280,9 +280,36 @@ export default async function handler(
     });
     emailsSent = true;
     console.log("Patient email sent successfully.");
-    
-    // --- Admin notification logic (unchanged) ---
-    // ... (Your original, detailed admin email code is preserved) ...
+    // --- Admin notification (simple version) ---
+    const adminEmailHtml = `
+      <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;line-height:1.5">
+        <h2 style="margin:0 0 12px;color:#1e3a8a">New Booking Request</h2>
+        <p style="margin:0 0 16px;color:#334155">Reference <strong>${bookingRef}</strong> received.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Patient</td><td style="padding:4px 0">${bookingData.patient_name}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Email</td><td style="padding:4px 0">${bookingData.email}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">WhatsApp</td><td style="padding:4px 0">${bookingData.whatsapp}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Treatment</td><td style="padding:4px 0">${bookingData.treatment_type}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Date</td><td style="padding:4px 0">${formattedDate}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Time Slot</td><td style="padding:4px 0">${bookingData.time_slot}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Clinic Location</td><td style="padding:4px 0">${bookingData.clinic_location}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Consent Given</td><td style="padding:4px 0">${bookingData.consent_given ? 'Yes' : 'No'}</td></tr>
+        </table>
+        <p style="margin:20px 0 4px;font-size:13px;color:#64748b">Cancel link (internal use):</p>
+        <code style="display:block;font-size:12px;background:#f1f5f9;padding:8px;border-radius:6px;word-break:break-all">${cancelLink}</code>
+        <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Automated notification • Do not forward externally.</p>
+      </div>`;
+    try {
+      await emailService.sendMail({
+        from: `SG-JB Dental <${SMTP_USER}>`,
+        to: 'contact@orachope.org',
+        subject: `ADMIN: New Booking - ${bookingRef}`,
+        html: adminEmailHtml,
+      });
+      console.log('Admin booking notification sent.');
+    } catch (e) {
+      console.error('Failed to send admin booking notification', e);
+    }
 
     res.status(200).json({ 
       success: true, 

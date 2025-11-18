@@ -2,6 +2,39 @@ import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'crypto';
 
+async function sendAdminCancellationEmail(params: { booking: any; ref: string; email: string; reason?: string }) {
+  const { booking, ref, email, reason } = params;
+  const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
+  const brevoApiKey = process.env.BREVO_API_KEY;
+  const fromUser = process.env.SMTP_USER || 'no-reply@orachope.org';
+  const admin = 'contact@orachope.org';
+  const formattedDate = new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;line-height:1.5">
+      <h2 style="margin:0 0 12px;color:#991b1b">Booking Cancelled</h2>
+      <p style="margin:0 0 12px;color:#334155">Reference <strong>${ref}</strong> was cancelled.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px">
+        <tr><td style="padding:4px 0;font-weight:600;color:#475569">Patient</td><td style="padding:4px 0">${booking.patient_name}</td></tr>
+        <tr><td style="padding:4px 0;font-weight:600;color:#475569">Email</td><td style="padding:4px 0">${email}</td></tr>
+        <tr><td style="padding:4px 0;font-weight:600;color:#475569">Treatment</td><td style="padding:4px 0">${booking.treatment_type}</td></tr>
+        <tr><td style="padding:4px 0;font-weight:600;color:#475569">Date</td><td style="padding:4px 0">${formattedDate}</td></tr>
+        <tr><td style="padding:4px 0;font-weight:600;color:#475569">Time Slot</td><td style="padding:4px 0">${booking.time_slot}</td></tr>
+        <tr><td style="padding:4px 0;font-weight:600;color:#475569">Clinic Location</td><td style="padding:4px 0">${booking.clinic_location}</td></tr>
+      </table>
+      ${reason ? `<p style=\"margin:0 0 12px;color:#ea580c\"><strong>Reason:</strong> ${reason}</p>` : ''}
+      <p style="margin:16px 0 0;font-size:11px;color:#94a3b8">Automated cancellation notice.</p>
+    </div>`;
+  const subject = `ADMIN: Booking Cancelled - ${ref}`;
+  if (smtp2goApiKey) {
+    const payload = { api_key: smtp2goApiKey, to: [admin], sender: fromUser, subject, html_body: html };
+    await fetch('https://api.smtp2go.com/v3/email/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    return;
+  }
+  if (brevoApiKey) {
+    await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'api-key': brevoApiKey }, body: JSON.stringify({ sender: { email: fromUser, name: 'SG-JB Dental' }, to: [{ email: admin }], subject, htmlContent: html }) });
+  }
+}
+
 /*
   Minimal cancellation endpoint.
   GET or POST supported for simplicity.
@@ -106,6 +139,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .eq('booking_ref', ref)
           .eq('email', email);
         if (updateErr) throw updateErr;
+        // Send admin cancellation notification
+        try {
+          await sendAdminCancellationEmail({ booking, ref, email, reason });
+        } catch (e) {
+          console.error('Admin cancellation email failed', e);
+        }
         if (wantsHTML) {
           res.status(200).send(htmlPage('Booking cancelled', `
             <h1>Booking cancelled</h1>
@@ -147,6 +186,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .eq('booking_ref', ref)
         .eq('email', email);
       if (updateErr) throw updateErr;
+      try {
+        await sendAdminCancellationEmail({ booking, ref, email, reason });
+      } catch (e) { console.error('Admin cancellation email failed', e); }
       if (wantsHTML) {
         const form = `
           <h1>Booking cancelled</h1>
