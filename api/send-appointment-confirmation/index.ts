@@ -1,6 +1,7 @@
 // --- THIS IS THE FINAL, COMPLETE, AND VERIFIED CODE FOR VERCEL ---
 
 import { createClient } from "@supabase/supabase-js";
+import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 // --- Email Service Class (logic is identical, just uses Node.js env vars) ---
@@ -201,6 +202,15 @@ export default async function handler(
     const emailService = new OraHopeEmailService({ username: SMTP_USER });
     
     // --- The main patient email template ---
+    // --- Cancellation token (deterministic HMAC) ---
+    const CANCEL_SECRET = process.env.CANCEL_SECRET || 'dev-cancel-secret';
+    const cancelToken = crypto
+      .createHmac('sha256', CANCEL_SECRET)
+      .update(`${bookingRef}|${bookingData.email}`)
+      .digest('hex')
+      .slice(0, 32);
+    const cancelLink = `https://www.orachope.org/api/cancel-appointment?ref=${encodeURIComponent(bookingRef)}&email=${encodeURIComponent(bookingData.email)}&token=${cancelToken}`;
+
     const patientEmailHtml = `
       <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
@@ -246,6 +256,11 @@ export default async function handler(
               <p style="margin: 0; color: #1c3d5a; font-size: 14px;">Your booking request has been received. You can log in to your existing account to view your booking history.</p>
             </div>
           `) : ''}
+          <div style="background:#f8fafc;padding:16px;border:1px solid #e5e7eb;border-radius:6px;margin:24px 0;">
+            <h4 style="margin:0 0 8px;color:#374151;font-size:15px;">Need to cancel?</h4>
+            <p style="margin:0 0 12px;color:#4b5563;font-size:13px;">Free cancellation up to 24 hours before the appointment. If you no longer need this slot, please release it for other patients.</p>
+            <a href="${cancelLink}" style="display:inline-block;background:#ef4444;color:#fff;text-decoration:none;padding:10px 16px;border-radius:4px;font-weight:600;font-size:14px;">Cancel This Booking</a>
+          </div>
           <div style="text-align: center; margin: 30px 0;">
             <p style="color: #6b7280; margin: 0;">Questions? Contact us:</p>
             <p style="color: #2563eb; margin: 5px 0; font-weight: 600;">WhatsApp: +65 8192 6158</p>
