@@ -20,6 +20,8 @@ export type Database = {
           clinic_location: string
           consent_given: boolean
           created_at: string
+          cancelled_at?: string | null
+          cancellation_reason?: string | null
           email: string
           id: string
           patient_name: string
@@ -35,6 +37,8 @@ export type Database = {
           clinic_location: string
           consent_given?: boolean
           created_at?: string
+          cancelled_at?: string | null
+          cancellation_reason?: string | null
           email: string
           id?: string
           patient_name: string
@@ -50,6 +54,8 @@ export type Database = {
           clinic_location?: string
           consent_given?: boolean
           created_at?: string
+          cancelled_at?: string | null
+          cancellation_reason?: string | null
           email?: string
           id?: string
           patient_name?: string
