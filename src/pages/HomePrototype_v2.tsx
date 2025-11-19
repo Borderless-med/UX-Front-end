@@ -47,7 +47,7 @@ const HomePrototype_v2: React.FC = () => {
 
       {/* Core Choice Section */}
       <section className="flex flex-col md:flex-row gap-6 justify-center py-10 bg-white">
-        <div className="flex flex-row gap-8 justify-center w-full max-w-3xl">
+        <div className="flex flex-row gap-8 justify-center w-full max-w-3xl px-4">
           <div className="flex-1 cursor-pointer flex flex-col items-stretch" onClick={() => handleCardClick('jb')}>
             <Card className="border-green-400 border-2 p-8 flex flex-col justify-between h-full min-h-[320px] hover:shadow-lg">
               <div className="flex items-center gap-2 mb-2">
