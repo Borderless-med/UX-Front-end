@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface ChatHelperTextboxProps {
   className?: string;
@@ -6,17 +6,27 @@ interface ChatHelperTextboxProps {
 
 // Fixed-position helper textbox shown near the chat widget across pages
 const ChatHelperTextbox: React.FC<ChatHelperTextboxProps> = ({ className }) => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(false), 6000);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (!visible) return null;
+
   return (
     <div
-      className={`fixed bottom-10 left-20 z-50 flex items-center ${className || ''}`}
+      className={`hidden sm:flex fixed bottom-52 left-2 z-40 items-center ${className || ''}`}
       style={{ pointerEvents: 'none' }}
+      aria-hidden="true"
     >
       <div
-        className="bg-white border border-blue-400 rounded-lg shadow px-4 py-2 ml-2 flex flex-col justify-center"
-        style={{ fontSize: '1rem', color: '#222', pointerEvents: 'auto', minWidth: '220px' }}
+        className="bg-white/95 backdrop-blur border border-blue-400 rounded-lg shadow px-2 py-1 flex flex-col justify-center"
+        style={{ fontSize: '0.80rem', color: '#222', pointerEvents: 'auto', minWidth: '110px', maxWidth: '140px' }}
       >
-        <span className="text-center">Hello! Need help?</span>
-        <span className="text-center">Just ask me anything.</span>
+        <span className="text-center leading-tight">Need help?</span>
+        <span className="text-center leading-tight">Ask me anything.</span>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
-import ChatWidget from '@/components/ChatWidget';
 import PrototypeClinicSidebar from '@/components/prototype/PrototypeClinicSidebar';
 import ClinicGrid from '@/components/clinic/display/ClinicGrid';
 import MobileSidebarToggle from '@/components/clinic/sidebar/MobileSidebarToggle';
@@ -11,7 +10,6 @@ import { useClinicSearch } from '@/components/clinic/hooks/useClinicSearch';
 import { getUniqueTownships } from '@/components/clinic/utils/clinicFilterUtils';
 import { Loader2, MapPin } from 'lucide-react';
 import MasterTemplate from '@/components/layout/MasterTemplate';
-import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
 import { useAuth } from '@/contexts/AuthContext';
 
 type Selection = 'all' | 'sg' | 'jb';
@@ -269,9 +267,8 @@ const FindClinicsPrototype1 = () => {
 
       <MedicalDisclaimer />
 
-      <ChatWidget />
       {/* Standardized chat helper textbox (replaces prior variant) */}
-      <ChatHelperTextbox />
+      {/* Chat helper removed on this page to avoid overlap on mobile */}
     </MasterTemplate>
   );
 };
