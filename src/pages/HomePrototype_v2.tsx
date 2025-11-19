@@ -47,15 +47,15 @@ const HomePrototype_v2: React.FC = () => {
 
       {/* Core Choice Section */}
       <section className="flex flex-col md:flex-row gap-6 justify-center py-10 bg-white">
-        <div className="flex flex-row gap-8 justify-center w-full max-w-3xl px-4">
+        <div className="flex flex-row gap-4 justify-center w-full max-w-3xl px-2">
           <div className="flex-1 cursor-pointer flex flex-col items-stretch" onClick={() => handleCardClick('jb')}>
-            <Card className="border-green-400 border-2 p-8 flex flex-col justify-between h-full min-h-[320px] hover:shadow-lg">
+            <Card className="border-green-400 border-2 p-4 sm:p-6 md:p-8 flex flex-col justify-between h-full min-h-[260px] hover:shadow-lg">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-2xl text-green-600">💰</span>
-                <span className="text-lg font-semibold text-green-700">Unlock Big Savings Across the Causeway</span>
+                <span className="text-lg sm:text-xl md:text-2xl text-green-600">💰</span>
+                <span className="text-base sm:text-lg md:text-xl font-semibold text-green-700">Unlock Big Savings Across the Causeway</span>
               </div>
-              <p className="mb-2 text-gray-700">Verified clinics, major savings, full AI support.</p>
-              <ul className="list-disc pl-5 text-gray-600 mb-4">
+              <p className="mb-2 text-gray-700 text-sm sm:text-base">Verified clinics, major savings, full AI support.</p>
+              <ul className="list-disc pl-4 text-gray-600 mb-4 text-sm sm:text-base">
                 <li>Save 50-70% on major treatments</li>
                 <li>World-class dental at up to 70% less</li>
                 <li>AI-powered travel & booking assistance</li>
@@ -63,13 +63,13 @@ const HomePrototype_v2: React.FC = () => {
             </Card>
           </div>
           <div className="flex-1 cursor-pointer flex flex-col items-stretch" onClick={() => handleCardClick('sg')}>
-            <Card className="border-blue-400 border-2 p-8 flex flex-col justify-between h-full min-h-[320px] hover:shadow-lg">
+            <Card className="border-blue-400 border-2 p-4 sm:p-6 md:p-8 flex flex-col justify-between h-full min-h-[260px] hover:shadow-lg">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-2xl text-blue-600">🏠</span>
-                <span className="text-lg font-semibold text-blue-700">Care You Trust, Right Here at Home</span>
+                <span className="text-lg sm:text-xl md:text-2xl text-blue-600">🏠</span>
+                <span className="text-base sm:text-lg md:text-xl font-semibold text-blue-700">Care You Trust, Right Here at Home</span>
               </div>
-              <p className="mb-2 text-gray-700">MOH-accredited, trusted follow-ups, zero travel required.</p>
-              <ul className="list-disc pl-5 text-gray-600 mb-4">
+              <p className="mb-2 text-gray-700 text-sm sm:text-base">MOH-accredited, trusted follow-ups, zero travel required.</p>
+              <ul className="list-disc pl-4 text-gray-600 mb-4 text-sm sm:text-base">
                 <li>Singapore’s Standard. Singapore’s Dentists.</li>
                 <li>Trusted follow-ups, no travel needed</li>
                 <li>Seamless appointments</li>
