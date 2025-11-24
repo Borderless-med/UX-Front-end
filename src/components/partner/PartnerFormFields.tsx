@@ -6,6 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 
 interface PartnerFormData {
+  clinicSource: 'jb' | 'sg';
+  clinicId: string;
   clinicName: string;
   contactName: string;
   email: string;

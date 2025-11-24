@@ -6,8 +6,11 @@ import { Form } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import PartnerFormFields from './PartnerFormFields';
+import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 
 interface PartnerFormData {
+  clinicSource: 'jb' | 'sg';
+  clinicId: string;
   clinicName: string;
   contactName: string;
   email: string;
@@ -32,6 +35,8 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   
   const form = useForm<PartnerFormData>({
     defaultValues: {
+      clinicSource: 'jb',
+      clinicId: '',
       clinicName: '',
       contactName: '',
       email: '',
@@ -47,6 +52,10 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
       aiChatbotInterest: false,
     },
   });
+
+  // Fetch clinics for dropdown
+  const { clinics: jbClinics } = useSupabaseClinics('jb');
+  const { clinics: sgClinics } = useSupabaseClinics('sg');
 
   const onSubmit = async (data: PartnerFormData) => {
     try {
@@ -86,7 +95,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
       }
 
       // 2. Insert partner application with owner_user_id
-      const { error } = await supabase
+      const { error: partnerError } = await supabase
         .from('partner_applications')
         .insert([
           {
@@ -106,8 +115,17 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
           }
         ]);
 
-      if (error) {
-        console.error('Error submitting application:', error);
+      // 3. Update clinics_data or sg_clinics with owner_user_id
+      let clinicTable = data.clinicSource === 'jb' ? 'clinics_data' : 'sg_clinics';
+      if (data.clinicId) {
+        await supabase
+          .from(clinicTable)
+          .update({ owner_user_id: ownerUserId })
+          .eq('id', data.clinicId);
+      }
+
+      if (partnerError) {
+        console.error('Error submitting application:', partnerError);
         toast({
           title: "Submission Failed",
           description: "There was an error submitting your application. Please try again.",
@@ -136,15 +154,46 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Clinic Source Selector */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Clinic Location</label>
+          <select
+            {...form.register('clinicSource', { required: true })}
+            className="block w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="jb">Johor Bahru (JB)</option>
+            <option value="sg">Singapore (SG)</option>
+          </select>
+        </div>
+
+        {/* Clinic Name Dropdown */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Select Your Clinic</label>
+          <select
+            {...form.register('clinicId', { required: true })}
+            className="block w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">-- Select Clinic --</option>
+            {form.watch('clinicSource') === 'jb'
+              ? jbClinics.map((clinic) => (
+                  <option key={clinic.id} value={clinic.id}>{clinic.name}</option>
+                ))
+              : sgClinics.map((clinic) => (
+                  <option key={clinic.id} value={clinic.id}>{clinic.name}</option>
+                ))}
+          </select>
+        </div>
+
         <PartnerFormFields form={form} />
-        {/* Add password field for signup */}
+
+        {/* Add password field for signup with white background */}
         <div className="space-y-2">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
             id="password"
             type="password"
             {...form.register('password', { required: true, minLength: 6 })}
-            className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="block w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Create a password"
           />
         </div>
