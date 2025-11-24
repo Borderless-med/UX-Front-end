@@ -57,6 +57,10 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   const { clinics: jbClinics } = useSupabaseClinics('jb');
   const { clinics: sgClinics } = useSupabaseClinics('sg');
 
+  // Sort clinics alphabetically by name
+  const sortedJbClinics = [...jbClinics].sort((a, b) => a.name.localeCompare(b.name));
+  const sortedSgClinics = [...sgClinics].sort((a, b) => a.name.localeCompare(b.name));
+
   const onSubmit = async (data: PartnerFormData) => {
     try {
       console.log('Submitting partner application:', data);
@@ -67,34 +71,18 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
         password: data.password,
       });
 
-      let ownerUserId = signUpData.user?.id;
-
-      // If user ID is not available, fetch user by email
-      if (!ownerUserId) {
-        const { data: userList, error: userFetchError } = await supabase.auth.admin.listUsers();
-        if (userFetchError) {
-          toast({
-            title: "Signup Failed",
-            description: "Could not retrieve user ID after signup.",
-            variant: "destructive",
-          });
-          return;
-        }
-        // Find user by email
-        const foundUser = userList.users.find((u: any) => u.email === data.email);
-        ownerUserId = foundUser?.id;
-      }
+      const ownerUserId = signUpData.user?.id;
 
       if (!ownerUserId) {
         toast({
           title: "Signup Failed",
-          description: "User ID not found after signup.",
+          description: "Could not retrieve user ID after signup. Please check your email for confirmation and try again.",
           variant: "destructive",
         });
         return;
       }
 
-      // 2. Insert partner application with owner_user_id
+      // 2. Insert partner application (do not include owner_user_id, not in table)
       const { error: partnerError } = await supabase
         .from('partner_applications')
         .insert([
@@ -111,17 +99,26 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             why_join: data.whyJoin,
             sentiment_analysis_interest: data.sentimentAnalysisInterest,
             ai_chatbot_interest: data.aiChatbotInterest,
-            owner_user_id: ownerUserId,
           }
         ]);
 
       // 3. Update clinics_data or sg_clinics with owner_user_id
-      let clinicTable = data.clinicSource === 'jb' ? 'clinics_data' : 'sg_clinics';
       if (data.clinicId) {
-        await supabase
-          .from(clinicTable)
-          .update({ owner_user_id: ownerUserId })
-          .eq('id', data.clinicId);
+        const clinicIdNum = Number(data.clinicId);
+        if (data.clinicSource === 'jb') {
+          await supabase
+            .from('clinics_data')
+            .update({ owner_user_id: ownerUserId })
+            .eq('id', clinicIdNum);
+        } else {
+          // Only run if sg_clinics table exists in Supabase
+          if (supabase.from('sg_clinics')) {
+            await supabase
+              .from('sg_clinics')
+              .update({ owner_user_id: ownerUserId })
+              .eq('id', clinicIdNum);
+          }
+        }
       }
 
       if (partnerError) {
@@ -166,7 +163,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
           </select>
         </div>
 
-        {/* Clinic Name Dropdown */}
+        {/* Clinic Name Dropdown (sorted) */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">Select Your Clinic</label>
           <select
@@ -175,23 +172,25 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
           >
             <option value="">-- Select Clinic --</option>
             {form.watch('clinicSource') === 'jb'
-              ? jbClinics.map((clinic) => (
+              ? sortedJbClinics.map((clinic) => (
                   <option key={clinic.id} value={clinic.id}>{clinic.name}</option>
                 ))
-              : sgClinics.map((clinic) => (
+              : sortedSgClinics.map((clinic) => (
                   <option key={clinic.id} value={clinic.id}>{clinic.name}</option>
                 ))}
           </select>
         </div>
 
+        {/* Remove redundant clinic name field from PartnerFormFields */}
         <PartnerFormFields form={form} />
 
-        {/* Add password field for signup with white background */}
+        {/* Add password field for signup with white background and autocomplete */}
         <div className="space-y-2">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
             id="password"
             type="password"
+            autoComplete="new-password"
             {...form.register('password', { required: true, minLength: 6 })}
             className="block w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Create a password"

@@ -6,7 +6,6 @@ import Footer from '@/components/Footer';
 import FloatingClinicTab from '@/components/FloatingClinicTab';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
-import ChatWidget from '@/components/ChatWidget';
 import AuthModal from '@/components/auth/AuthModal';
 
 const Index = () => {
@@ -37,7 +36,7 @@ const Index = () => {
       </section>
       <Footer />
       <FloatingClinicTab />
-      <ChatWidget onAuthClick={handleAuthClick} />
+      {/* Global ChatWidget is provided via App.tsx */}
       
       {/* Auth Modal */}
       <AuthModal 
