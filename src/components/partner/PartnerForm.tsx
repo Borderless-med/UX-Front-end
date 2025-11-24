@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -146,6 +147,8 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
     }
   };
 
+
+  const [showPassword, setShowPassword] = React.useState(false);
   const isLoading = form.formState.isSubmitting;
 
   return (
@@ -184,17 +187,30 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
         {/* Remove redundant clinic name field from PartnerFormFields */}
         <PartnerFormFields form={form} />
 
-        {/* Add password field for signup with white background and autocomplete */}
-        <div className="space-y-2">
+        {/* Add password field for signup with show/hide icon */}
+        <div className="space-y-2 relative">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             autoComplete="new-password"
             {...form.register('password', { required: true, minLength: 6 })}
-            className="block w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="block w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
             placeholder="Create a password"
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-8 text-gray-500 hover:text-gray-700 focus:outline-none"
+            tabIndex={-1}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10a9.96 9.96 0 012.175-6.125M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.125-2.175A9.96 9.96 0 0122 9c0 5.523-4.477 10-10 10a10.05 10.05 0 01-1.825-.125" /></svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm2.25 2.25l3.75 3.75M4.5 4.5l15 15" /></svg>
+            )}
+          </button>
         </div>
         
         <Button 

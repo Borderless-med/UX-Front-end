@@ -33,20 +33,6 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           control={form.control}
-          name="clinicName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-gray-800 font-semibold">Clinic Name *</FormLabel>
-              <FormControl>
-                <Input placeholder="Your Dental Clinic" {...field} required className="text-gray-900 placeholder:text-gray-500" />
-              </FormControl>
-              <FormMessage className="text-red-600 font-medium" />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="contactName"
           render={({ field }) => (
             <FormItem>
