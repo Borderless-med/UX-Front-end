@@ -58,17 +58,24 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
         password: data.password,
       });
 
-      if (signUpError) {
-        console.error('Error creating user:', signUpError);
-        toast({
-          title: "Signup Failed",
-          description: "Could not create user account. Please try again.",
-          variant: "destructive",
-        });
-        return;
+      let ownerUserId = signUpData.user?.id;
+
+      // If user ID is not available, fetch user by email
+      if (!ownerUserId) {
+        const { data: userList, error: userFetchError } = await supabase.auth.admin.listUsers();
+        if (userFetchError) {
+          toast({
+            title: "Signup Failed",
+            description: "Could not retrieve user ID after signup.",
+            variant: "destructive",
+          });
+          return;
+        }
+        // Find user by email
+        const foundUser = userList.users.find((u: any) => u.email === data.email);
+        ownerUserId = foundUser?.id;
       }
 
-      const ownerUserId = signUpData.user?.id;
       if (!ownerUserId) {
         toast({
           title: "Signup Failed",

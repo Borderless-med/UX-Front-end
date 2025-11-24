@@ -9,6 +9,7 @@ interface PartnerFormData {
   clinicName: string;
   contactName: string;
   email: string;
+  password: string;
   phone: string;
   address: string;
   city: string;
