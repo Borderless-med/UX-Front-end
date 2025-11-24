@@ -83,12 +83,22 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
         return;
       }
 
-      // 2. Insert partner application (do not include owner_user_id, not in table)
+      // 2. Lookup clinic name from selected clinicId
+      let selectedClinicName = '';
+      if (data.clinicSource === 'jb') {
+        const found = jbClinics.find((c) => String(c.id) === data.clinicId);
+        selectedClinicName = found ? found.name : '';
+      } else {
+        const found = sgClinics.find((c) => String(c.id) === data.clinicId);
+        selectedClinicName = found ? found.name : '';
+      }
+
+      // 2. Insert partner application with clinic_name and owner_user_id
       const { error: partnerError } = await supabase
         .from('partner_applications')
         .insert([
           {
-            clinic_name: data.clinicName,
+            clinic_name: selectedClinicName,
             contact_name: data.contactName,
             email: data.email,
             phone: data.phone,
@@ -100,6 +110,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             why_join: data.whyJoin,
             sentiment_analysis_interest: data.sentimentAnalysisInterest,
             ai_chatbot_interest: data.aiChatbotInterest,
+            owner_user_id: ownerUserId,
           }
         ]);
 
