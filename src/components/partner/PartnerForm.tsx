@@ -11,6 +11,7 @@ interface PartnerFormData {
   clinicName: string;
   contactName: string;
   email: string;
+  password: string;
   phone: string;
   address: string;
   city: string;
@@ -34,6 +35,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
       clinicName: '',
       contactName: '',
       email: '',
+      password: '',
       phone: '',
       address: '',
       city: '',
@@ -49,7 +51,34 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   const onSubmit = async (data: PartnerFormData) => {
     try {
       console.log('Submitting partner application:', data);
-      
+
+      // 1. Create Supabase Auth user
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (signUpError) {
+        console.error('Error creating user:', signUpError);
+        toast({
+          title: "Signup Failed",
+          description: "Could not create user account. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const ownerUserId = signUpData.user?.id;
+      if (!ownerUserId) {
+        toast({
+          title: "Signup Failed",
+          description: "User ID not found after signup.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // 2. Insert partner application with owner_user_id
       const { error } = await supabase
         .from('partner_applications')
         .insert([
@@ -66,6 +95,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             why_join: data.whyJoin,
             sentiment_analysis_interest: data.sentimentAnalysisInterest,
             ai_chatbot_interest: data.aiChatbotInterest,
+            owner_user_id: ownerUserId,
           }
         ]);
 
@@ -100,6 +130,17 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <PartnerFormFields form={form} />
+        {/* Add password field for signup */}
+        <div className="space-y-2">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            id="password"
+            type="password"
+            {...form.register('password', { required: true, minLength: 6 })}
+            className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Create a password"
+          />
+        </div>
         
         <Button 
           type="submit" 
