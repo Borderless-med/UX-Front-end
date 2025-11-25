@@ -147,6 +147,29 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
           title: "Application Submitted!",
           description: "We'll review your application and get back to you within 5 business days.",
         });
+
+        // Send confirmation and admin notification emails
+        try {
+          await fetch('/api/send-partner-confirmation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              clinicName: selectedClinicName,
+              contactName: data.contactName,
+              email: data.email,
+              phone: data.phone,
+              city: data.city,
+              registrationNumber: data.registrationNumber,
+              services: data.services,
+              experience: data.experience,
+              whyJoin: data.whyJoin,
+            }),
+          });
+          // Optionally show a toast or message for email success
+        } catch (err) {
+          // Optionally handle email send error
+          console.error('Failed to send partner confirmation emails', err);
+        }
       }
     } catch (error) {
       console.error('Unexpected error:', error);
