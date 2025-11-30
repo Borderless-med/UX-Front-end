@@ -1,22 +1,40 @@
 
 // Treatment categories and labels for the clinic directory
+// These are the most common essential services that almost all clinics offer
 export const basicServices = [
+  'dentalCheckup',
+  'dentalCleaning',
   'toothFilling',
-  'dentalCrown', 
-  'teethWhitening',
-  'wisdomTooth'
+  'simpleExtraction',
+  'wisdomTooth',
+  'dentalXrays',
+  'fluorideTreatment',
+  'dentalSealants',
+  'emergencyCare',
+  'gumTreatment',
+  'rootCanal',
+  'dentalCrown'
 ];
 
 export const specialServicesLabels = {
-  // Basic treatments
+  // Essential/Basic treatments (12 essential services)
+  dentalCheckup: 'Dental Checkup/Examination',
+  dentalCleaning: 'Dental Cleaning (Scaling & Polishing)',
   toothFilling: 'Tooth Filling',
+  simpleExtraction: 'Simple Tooth Extraction',
+  wisdomTooth: 'Wisdom Tooth Extraction',
+  dentalXrays: 'Dental X-rays',
+  fluorideTreatment: 'Fluoride Treatment',
+  dentalSealants: 'Dental Sealants',
+  emergencyCare: 'Emergency Dental Care',
+  gumTreatment: 'Gum Treatment',
   rootCanal: 'Root Canal',
   dentalCrown: 'Dental Crown',
+  
+  // Additional common treatments
   dentalImplant: 'Dental Implant',
   teethWhitening: 'Teeth Whitening',
   braces: 'Braces/Orthodontics',
-  wisdomTooth: 'Wisdom Tooth Extraction',
-  gumTreatment: 'Gum Treatment',
   
   // Cosmetic treatments
   compositeVeneers: 'Composite Veneers',
@@ -41,17 +59,26 @@ export const treatmentCategories = {
   basic: {
     label: 'Basic Treatments',
     treatments: [
+      // All 12 essential services
+      'dentalCheckup',
+      'dentalCleaning',
       'toothFilling',
-      'dentalCrown',
-      'teethWhitening',
+      'simpleExtraction',
       'wisdomTooth',
-      'gumTreatment'
+      'dentalXrays',
+      'fluorideTreatment',
+      'dentalSealants',
+      'emergencyCare',
+      'gumTreatment',
+      'rootCanal',
+      'dentalCrown',
+      // Additional common
+      'teethWhitening'
     ]
   },
   restorative: {
     label: 'Restorative',
     treatments: [
-      'rootCanal',
       'dentalImplant',
       'inlaysOnlays',
       'dentalBonding'

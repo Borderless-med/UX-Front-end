@@ -15,7 +15,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { restInvokeFunction } from '@/utils/restClient';
-import { treatmentOptions, type TreatmentType } from '@/data/treatmentOptions';
+import { treatmentOptions, treatmentCategories, type TreatmentType } from '@/data/treatmentOptions';
 import { commonTownships } from '@/components/clinic/utils/clinicConstants';
 import { isDateDisabled } from '@/data/singaporeHolidays';
 import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
@@ -156,14 +156,96 @@ const AppointmentBookingForm = () => {
       'veneers': 'Composite Veneers',
       'porcelain_veneers': 'Porcelain Veneers',
       'dental_bonding': 'Dental Bonding',
-      'bonding': 'Dental Bonding',
+      'dental_bonding': 'Dental Bonding',
       'tmj_treatment': 'TMJ Treatment',
       
+      // New essential treatments
+      'checkup': 'Dental Checkup/Examination',
+      'dental_checkup': 'Dental Checkup/Examination',
+      'examination': 'Dental Checkup/Examination',
+      'dental_examination': 'Dental Checkup/Examination',
+      'check_up': 'Dental Checkup/Examination',
+      
+      'cleaning': 'Dental Cleaning (Scaling & Polishing)',
+      'dental_cleaning': 'Dental Cleaning (Scaling & Polishing)',
+      'scaling': 'Dental Cleaning (Scaling & Polishing)',
+      'polishing': 'Dental Cleaning (Scaling & Polishing)',
+      'scaling_and_polishing': 'Dental Cleaning (Scaling & Polishing)',
+      
+      'extraction': 'Simple Tooth Extraction',
+      'simple_extraction': 'Simple Tooth Extraction',
+      'tooth_extraction': 'Simple Tooth Extraction',
+      
+      'gum_treatment': 'Gum Treatment',
+      'gum_disease': 'Gum Treatment',
+      'periodontal': 'Gum Treatment',
+      
+      'xray': 'Dental X-rays',
+      'x-ray': 'Dental X-rays',
+      'x_ray': 'Dental X-rays',
+      'dental_xray': 'Dental X-rays',
+      'dental_x-ray': 'Dental X-rays',
+      
+      'fluoride': 'Fluoride Treatment',
+      'fluoride_treatment': 'Fluoride Treatment',
+      
+      'sealant': 'Dental Sealants',
+      'sealants': 'Dental Sealants',
+      'dental_sealant': 'Dental Sealants',
+      
+      'emergency': 'Emergency Dental Care',
+      'emergency_care': 'Emergency Dental Care',
+      'emergency_dental': 'Emergency Dental Care',
+      
+      // Additional common treatments
+      'bridge': 'Dental Bridge',
+      'dental_bridge': 'Dental Bridge',
+      
+      'denture': 'Dentures',
+      'dentures': 'Dentures',
+      'false_teeth': 'Dentures',
+      
+      'invisalign': 'Invisalign/Clear Aligners',
+      'clear_aligners': 'Invisalign/Clear Aligners',
+      'invisible_braces': 'Invisalign/Clear Aligners',
+      
+      'inlay': 'Inlays/Onlays',
+      'onlay': 'Inlays/Onlays',
+      'inlays': 'Inlays/Onlays',
+      'onlays': 'Inlays/Onlays',
+      
+      'enamel': 'Enamel Shaping',
+      'enamel_shaping': 'Enamel Shaping',
+      
+      'sleep_apnea': 'Sleep Apnea Appliances',
+      'sleep_apnea_appliance': 'Sleep Apnea Appliances',
+      
+      'bone_graft': 'Bone Grafting',
+      'bone_grafting': 'Bone Grafting',
+      
+      // Surgical treatments
+      'gingivectomy': 'Gingivectomy',
+      'gum_surgery': 'Gingivectomy',
+      
+      'sinus_lift': 'Sinus Lift',
+      'sinus_augmentation': 'Sinus Lift',
+      
+      'frenectomy': 'Frenectomy',
+      'frenulectomy': 'Frenectomy',
+      
+      'crown_lengthening': 'Crown Lengthening',
+      
+      'oral_cancer_screening': 'Oral Cancer Screening',
+      'cancer_screening': 'Oral Cancer Screening',
+      
+      'alveoplasty': 'Alveoplasty',
+      'ridge_smoothing': 'Alveoplasty',
+      
       // Consultation mappings - AI backend incorrectly maps crown requests to consultation
-      'consultation': 'Dental Crown', // Default consultation to crown since that's what user likely wanted
-      'a consultation': 'Dental Crown', // This is the specific issue - AI says "a consultation" for crown
-      'dental consultation': 'Dental Crown',
-      'general consultation': 'Tooth Filling' // General fallback
+      'consultation': 'Dental Checkup/Examination', // Default consultation to checkup (more appropriate)
+      'a consultation': 'Dental Checkup/Examination',
+      'dental consultation': 'Dental Checkup/Examination',
+      'general consultation': 'Dental Checkup/Examination'
     };
     
     // Try exact match first
@@ -649,17 +731,27 @@ const AppointmentBookingForm = () => {
                    )}>
                      <SelectValue placeholder="Select your treatment" />
                    </SelectTrigger>
-                   <SelectContent>
-                     {treatmentOptions.map((treatment) => (
-                       <SelectItem key={treatment} value={treatment}>
-                         {treatment}
-                       </SelectItem>
+                   <SelectContent className="max-h-[400px]">
+                     {Object.entries(treatmentCategories).map(([categoryKey, category]) => (
+                       <React.Fragment key={categoryKey}>
+                         <div className="px-2 py-1.5 text-sm font-semibold text-gray-500 bg-gray-50">
+                           {category.label}
+                         </div>
+                         {category.treatments.map((treatment) => (
+                           <SelectItem key={treatment} value={treatment} className="pl-6">
+                             {treatment}
+                           </SelectItem>
+                         ))}
+                       </React.Fragment>
                      ))}
                    </SelectContent>
                  </Select>
                  {errors.treatment_type && (
                    <p className="text-sm text-red-600">{errors.treatment_type}</p>
                  )}
+                 <p className="text-xs text-gray-500">
+                   💡 Most patients need: Checkup, Cleaning, or Filling
+                 </p>
                </div>
 
               {/* Clinic Selection - Always visible */}
