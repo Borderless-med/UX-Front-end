@@ -169,7 +169,7 @@ const TravelGuide = () => {
       title="Travel Guide" 
       subtitle="Your comprehensive guide for crossing from Singapore to Johor Bahru"
     >
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Loading State */}
         {loading && (
           <Card className="p-12 text-center">
@@ -207,10 +207,10 @@ const TravelGuide = () => {
                 <MapPin className="w-6 h-6 text-white" />
               </div>
               <div>
-                <CardTitle className="text-4xl md:text-5xl lg:text-6xl font-bold text-blue-900">
+                <CardTitle className="text-xl md:text-2xl font-bold text-blue-900">
                   How to Get to JB Clinics
                 </CardTitle>
-                <p className="text-lg text-gray-600 mt-1">
+                <p className="text-sm text-gray-600 mt-1">
                   Complete guide with transport options, timing tips, and border crossing essentials
                 </p>
               </div>
