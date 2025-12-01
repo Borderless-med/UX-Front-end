@@ -16,29 +16,38 @@ interface TravelFAQ {
   last_updated: string;
 }
 
-// Category metadata for icons and display
+// Category metadata for icons and display - Professional 5-color palette
 const categoryConfig: Record<string, { icon: any; label: string; color: string; order: number }> = {
+  // BLUE: Planning & Preparation (4 categories)
   preparation: { icon: FileText, label: 'Preparation & Documents', color: 'bg-blue-100 text-blue-700', order: 1 },
-  timing: { icon: Clock, label: 'Best Times to Cross', color: 'bg-orange-100 text-orange-700', order: 2 },
-  transport: { icon: Car, label: 'Transport Options', color: 'bg-indigo-100 text-indigo-700', order: 3 },
-  crossing_process: { icon: FileText, label: 'Crossing Process', color: 'bg-pink-100 text-pink-700', order: 4 },
-  driving: { icon: Car, label: 'Driving Your Car', color: 'bg-purple-100 text-purple-700', order: 5 },
-  costs: { icon: DollarSign, label: 'Costs & Payments', color: 'bg-green-100 text-green-700', order: 6 },
+  timing: { icon: Clock, label: 'Best Times to Cross', color: 'bg-blue-100 text-blue-700', order: 2 },
+  costs: { icon: DollarSign, label: 'Costs & Payments', color: 'bg-blue-100 text-blue-700', order: 6 },
+  insurance_records: { icon: FileText, label: 'Insurance & Records', color: 'bg-blue-100 text-blue-700', order: 20 },
+  
+  // TEAL: Transit & Navigation (7 categories)
+  transport: { icon: Car, label: 'Transport Options', color: 'bg-teal-100 text-teal-700', order: 3 },
+  driving: { icon: Car, label: 'Driving Your Car', color: 'bg-teal-100 text-teal-700', order: 5 },
   clinic_travel: { icon: MapPin, label: 'Getting to Clinics', color: 'bg-teal-100 text-teal-700', order: 7 },
-  immigration: { icon: FileText, label: 'Immigration & Customs', color: 'bg-red-100 text-red-700', order: 8 },
-  tech_connectivity: { icon: AlertCircle, label: 'Mobile Data & Apps', color: 'bg-cyan-100 text-cyan-700', order: 9 },
-  payments_currency: { icon: DollarSign, label: 'Currency & Cards', color: 'bg-emerald-100 text-emerald-700', order: 10 },
-  health_safety: { icon: AlertCircle, label: 'Health & Safety', color: 'bg-rose-100 text-rose-700', order: 11 },
-  appointments: { icon: Clock, label: 'Appointments', color: 'bg-amber-100 text-amber-700', order: 12 },
-  return_followup: { icon: MapPin, label: 'Returning & Follow-up', color: 'bg-lime-100 text-lime-700', order: 13 },
-  pitfalls: { icon: AlertCircle, label: 'Common Mistakes', color: 'bg-yellow-100 text-yellow-700', order: 14 },
-  edge_emergency: { icon: AlertCircle, label: 'Emergency Situations', color: 'bg-red-200 text-red-800', order: 15 },
-  afterhours: { icon: Clock, label: 'After Hours Care', color: 'bg-violet-100 text-violet-700', order: 16 },
-  clinic_experience: { icon: FileText, label: 'Clinic Experience', color: 'bg-sky-100 text-sky-700', order: 17 },
-  post_treatment: { icon: AlertCircle, label: 'Post-Treatment Care', color: 'bg-fuchsia-100 text-fuchsia-700', order: 18 },
-  safety: { icon: AlertCircle, label: 'Personal Safety', color: 'bg-orange-200 text-orange-800', order: 19 },
-  insurance_records: { icon: FileText, label: 'Insurance & Records', color: 'bg-slate-100 text-slate-700', order: 20 },
+  crossing_process: { icon: FileText, label: 'Crossing Process', color: 'bg-teal-100 text-teal-700', order: 4 },
+  immigration: { icon: FileText, label: 'Immigration & Customs', color: 'bg-teal-100 text-teal-700', order: 8 },
+  tech_connectivity: { icon: AlertCircle, label: 'Mobile Data & Apps', color: 'bg-teal-100 text-teal-700', order: 9 },
+  payments_currency: { icon: DollarSign, label: 'Currency & Cards', color: 'bg-teal-100 text-teal-700', order: 10 },
+  
+  // GRAY: Healthcare & Operations (6 categories)
+  appointments: { icon: Clock, label: 'Appointments', color: 'bg-gray-100 text-gray-700', order: 12 },
+  clinic_experience: { icon: FileText, label: 'Clinic Experience', color: 'bg-gray-100 text-gray-700', order: 17 },
+  health_safety: { icon: AlertCircle, label: 'Health & Safety', color: 'bg-gray-100 text-gray-700', order: 11 },
+  return_followup: { icon: MapPin, label: 'Returning & Follow-up', color: 'bg-gray-100 text-gray-700', order: 13 },
+  post_treatment: { icon: AlertCircle, label: 'Post-Treatment Care', color: 'bg-gray-100 text-gray-700', order: 18 },
   meta: { icon: FileText, label: 'General Information', color: 'bg-gray-100 text-gray-700', order: 21 },
+  
+  // AMBER: Caution & Important Info (2 categories)
+  pitfalls: { icon: AlertCircle, label: 'Common Mistakes', color: 'bg-amber-100 text-amber-700', order: 14 },
+  safety: { icon: AlertCircle, label: 'Personal Safety', color: 'bg-amber-100 text-amber-700', order: 19 },
+  
+  // RED: Urgent & Emergency (2 categories)
+  edge_emergency: { icon: AlertCircle, label: 'Emergency Situations', color: 'bg-red-100 text-red-700', order: 15 },
+  afterhours: { icon: Clock, label: 'After Hours Care', color: 'bg-red-100 text-red-700', order: 16 },
 };
 
 // Top 10 must-know question IDs (based on most commonly asked)
@@ -53,13 +62,75 @@ const TravelGuide = () => {
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
   const [activeTab, setActiveTab] = useState('before-you-go');
 
-  // Clean up text encoding issues
+  // Clean up text encoding issues - comprehensive Windows-1252 to UTF-8 fix
   const cleanText = (text: string): string => {
     return text
-      .replace(/��/g, '—') // Fix em-dash
-      .replace(/\|\|/g, '—') // Fix double pipes to em-dash
-      .replace(/\|/g, ',') // Fix single pipes to comma
-      .replace(/  +/g, ' ') // Fix multiple spaces
+      // Em-dashes and dashes (0x80, 0x97)
+      .replace(/\u0080/g, '—')
+      .replace(/\u0097/g, '—')
+      .replace(/��/g, '—')
+      .replace(/\|\|/g, '—')
+      .replace(/\|/g, ', ')
+      .replace(/â/g, '–')  // Wrong dash to en-dash for ranges
+      
+      // Quotes and apostrophes (0x93, 0x94, 0x91, 0x92, 0x99)
+      .replace(/\u0093/g, '"')
+      .replace(/\u0094/g, '"')
+      .replace(/\u0091/g, '\u2018')  // Left single quote
+      .replace(/\u0092/g, '\u2019')  // Right single quote
+      .replace(/\u0099/g, "'")
+      .replace(/ân/g, "'n")  // Touch ân Go → Touch 'n Go
+      
+      // Arrows and symbols (0x86)
+      .replace(/\u0086/g, '→')
+      .replace(/Ã/g, '×')  // Multiplication symbol
+      
+      // Common contractions
+      .replace(/\bIm\b/g, "I'm")
+      .replace(/\bcant\b/g, "can't")
+      .replace(/\bwhats\b/g, "what's")
+      .replace(/\bdont\b/g, "don't")
+      .replace(/\bisnt\b/g, "isn't")
+      .replace(/\bwont\b/g, "won't")
+      
+      // Possessives (dentists → dentist's, clinics → clinic's)
+      .replace(/\bdentists\s+([a-z])/gi, "dentist's $1")
+      .replace(/\bclinics\s+([a-z])/gi, "clinic's $1")
+      
+      // Compound words with hyphens
+      .replace(/\boffpeak\b/gi, 'off-peak')
+      .replace(/\bwelllit\b/gi, 'well-lit')
+      .replace(/\binperson\b/gi, 'in-person')
+      .replace(/\bSGfocused\b/g, 'SG-focused')
+      
+      // Missing spaces after Yes/No
+      .replace(/\bYes([a-z])/g, 'Yes; $1')
+      .replace(/\byes([a-z])/g, 'yes; $1')
+      .replace(/\bNo([a-z])/g, 'No; $1')
+      
+      // Fix common word concatenations
+      .replace(/adjustconfirm/gi, 'adjust; confirm')
+      .replace(/jamsalways/gi, 'jams; always')
+      .replace(/surgecompare/gi, 'surge; compare')
+      .replace(/updateverify/gi, 'update; verify')
+      .replace(/parkingcheck/gi, 'parking; check')
+      .replace(/hoursconfirm/gi, 'hours; confirm')
+      .replace(/areaMount/g, 'area; Mount')
+      .replace(/comfortnot/gi, 'comfort; not')
+      .replace(/fineconfirm/gi, 'fine; confirm')
+      .replace(/varycheck/gi, 'vary; check')
+      .replace(/shiftcompare/gi, 'shift; compare')
+      .replace(/lateclinic/gi, 'late; clinic')
+      .replace(/patienceno/gi, 'patience; no')
+      .replace(/guaranteedplan/gi, 'guaranteed; plan')
+      .replace(/workfollow/gi, 'work; follow')
+      .replace(/reintroductionconfirm/gi, 'reintroduction; confirm')
+      .replace(/changeverify/gi, 'change; verify')
+      .replace(/visitretain/gi, 'visit; retain')
+      .replace(/TuesdayThursday/g, 'Tuesday–Thursday')
+      
+      // Clean up multiple spaces
+      .replace(/  +/g, ' ')
       .trim();
   };
 
@@ -289,11 +360,11 @@ const TravelGuide = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 mb-8 h-auto">
             <TabsTrigger value="before-you-go" className="text-xs md:text-sm py-2">🚀 Before You Go</TabsTrigger>
+            <TabsTrigger value="transport-options" className="text-xs md:text-sm py-2">🚗 Transport Options</TabsTrigger>
             <TabsTrigger value="at-border" className="text-xs md:text-sm py-2">🛂 At the Border</TabsTrigger>
-            <TabsTrigger value="getting-there" className="text-xs md:text-sm py-2">🚗 Getting There</TabsTrigger>
             <TabsTrigger value="at-clinic" className="text-xs md:text-sm py-2">🏥 At the Clinic</TabsTrigger>
             <TabsTrigger value="after-treatment" className="text-xs md:text-sm py-2">🔄 After Treatment</TabsTrigger>
-            <TabsTrigger value="special-situations" className="text-xs md:text-sm py-2">⚠️ Special Cases</TabsTrigger>
+            <TabsTrigger value="special-cases" className="text-xs md:text-sm py-2">⚠️ Special Cases</TabsTrigger>
           </TabsList>
 
           {/* Before You Go Tab */}
@@ -356,7 +427,7 @@ const TravelGuide = () => {
 
           {/* At the Border Tab */}
           <TabsContent value="at-border" className="space-y-4">
-            {['crossing_process', 'immigration', 'driving', 'payments_currency'].map(category => {
+            {['crossing_process', 'immigration', 'payments_currency', 'tech_connectivity'].map(category => {
               const categoryFAQs = groupedFAQs[category];
               if (!categoryFAQs || categoryFAQs.length === 0) return null;
               
@@ -412,9 +483,9 @@ const TravelGuide = () => {
             })}
           </TabsContent>
 
-          {/* Getting There Tab */}
-          <TabsContent value="getting-there" className="space-y-4">
-            {['transport', 'clinic_travel', 'tech_connectivity'].map(category => {
+          {/* Transport Options Tab */}
+          <TabsContent value="transport-options" className="space-y-4">
+            {['transport', 'driving', 'clinic_travel'].map(category => {
               const categoryFAQs = groupedFAQs[category];
               if (!categoryFAQs || categoryFAQs.length === 0) return null;
               
@@ -586,8 +657,8 @@ const TravelGuide = () => {
             })}
           </TabsContent>
 
-          {/* Special Situations Tab */}
-          <TabsContent value="special-situations" className="space-y-4">
+          {/* Special Cases Tab */}
+          <TabsContent value="special-cases" className="space-y-4">
             {['pitfalls', 'edge_emergency', 'afterhours', 'safety', 'meta'].map(category => {
               const categoryFAQs = groupedFAQs[category];
               if (!categoryFAQs || categoryFAQs.length === 0) return null;
