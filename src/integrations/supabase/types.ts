@@ -622,6 +622,33 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs_semantic: {
+        Row: {
+          id: number
+          category: string
+          question: string
+          answer: string
+          last_updated: string
+          embedding: number[] | null
+        }
+        Insert: {
+          id?: number
+          category: string
+          question: string
+          answer: string
+          last_updated: string
+          embedding?: number[] | null
+        }
+        Update: {
+          id?: number
+          category?: string
+          question?: string
+          answer?: string
+          last_updated?: string
+          embedding?: number[] | null
+        }
+        Relationships: []
+      }
       opt_out_reports: {
         Row: {
           admin_notes: string | null

@@ -1,5 +1,6 @@
 
-import { User, Bot } from 'lucide-react';
+import { User, Bot, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import MarkdownRenderer from './MarkdownRenderer';
 
 interface Message {
@@ -7,6 +8,14 @@ interface Message {
   text: string;
   sender: 'user' | 'ai';
   timestamp: Date;
+  meta?: {
+    type?: string;
+    travel?: {
+      status?: string;
+      flow?: string;
+      data?: any;
+    };
+  };
 }
 
 interface ChatMessageProps {
@@ -39,6 +48,20 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
             <MarkdownRenderer content={message.text} isUser={isUser} />
           )}
         </div>
+        
+        {/* Travel Guide CTA for travel FAQ responses */}
+        {!isUser && message.meta?.type === 'travel_faq' && message.meta?.travel?.status === 'success' && (
+          <div className="mt-2 border-t border-gray-200 pt-2">
+            <Link 
+              to="/travel-guide" 
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-xs font-medium hover:underline"
+            >
+              <BookOpen size={14} />
+              Browse Complete Travel Guide (102 FAQs)
+            </Link>
+          </div>
+        )}
+        
         <p className={`text-xs text-gray-500 mt-1 ${isUser ? 'text-right' : 'text-left'}`}>
           {time}
         </p>

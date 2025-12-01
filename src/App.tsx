@@ -36,6 +36,7 @@ import HomePrototype from "./pages/HomePrototype";
 import FindClinicsPrototype1 from "./pages/FindClinicsPrototype1";
 import PrototypeHub from "./pages/PrototypeHub";
 import TemplateDemo from "./pages/TemplateDemo";
+import TravelGuide from "./pages/TravelGuide";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ const App = () => (
               <Route path="/prototype-hub" element={<PrototypeHub />} />
               <Route path="/template-demo" element={<TemplateDemo />} />
               <Route path="/find-clinics-prototype1" element={<FindClinicsPrototype1 />} />
+              <Route path="/travel-guide" element={<TravelGuide />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
               );

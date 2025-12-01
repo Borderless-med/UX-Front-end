@@ -93,9 +93,19 @@ const Navigation = () => {
                   location.pathname === '/how-it-works' 
                     ? 'text-blue-primary font-semibold px-3 py-2 bg-blue-primary/10 rounded-lg' 
                     : 'text-blue-dark hover:text-blue-primary'
-                } text-base mr-2 lg:mr-4`}
+                } text-base`}
               >
                 How It Works
+              </Link>
+              <Link
+                to="/travel-guide"
+                className={`transition-all duration-200 font-medium whitespace-nowrap ${
+                  location.pathname === '/travel-guide' 
+                    ? 'text-blue-primary font-semibold px-3 py-2 bg-blue-primary/10 rounded-lg' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                } text-base mr-2 lg:mr-4`}
+              >
+                Travel Guide
               </Link>
             </div>
           </div>
@@ -178,6 +188,17 @@ const Navigation = () => {
                 }`}
               >
                 How It Works
+              </Link>
+              <Link
+                to="/travel-guide"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 transition-all duration-200 font-medium rounded-lg ${
+                  location.pathname === '/travel-guide' 
+                    ? 'text-blue-primary text-lg font-bold bg-blue-primary/10' 
+                    : 'text-blue-dark hover:text-blue-primary'
+                }`}
+              >
+                Travel Guide
               </Link>
               
               {/* Mobile CTA Buttons */}

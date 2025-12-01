@@ -30,6 +30,14 @@ interface Message {
   text: string;
   sender: 'user' | 'ai';
   timestamp: Date;
+  meta?: {
+    type?: string;
+    travel?: {
+      status?: string;
+      flow?: string;
+      data?: any;
+    };
+  };
 }
 
 interface ChatWindowProps {
@@ -300,6 +308,7 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           text: data.response,
           sender: 'ai',
           timestamp: new Date(),
+          meta: data.meta, // Preserve meta from backend (includes travel_faq type)
         };
 
         setMessages(prev => [...prev, aiMessage]);
