@@ -13,14 +13,15 @@ const CLINICS_CACHE: Record<string, CacheEntry> = {};
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 export const useSupabaseClinics = (source: ClinicSource = 'all') => {
-  console.log('[useSupabaseClinics] Hook initialized at', new Date().toISOString());
+  console.log('[useSupabaseClinics] Hook initialized for source:', source, 'at', new Date().toISOString());
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
+  const abortControllerRef = useRef<AbortController>();
 
   useEffect(() => {
-    console.log('[useSupabaseClinics] useEffect triggered at', new Date().toISOString());
+    console.log('[useSupabaseClinics] useEffect triggered for source:', source, 'at', new Date().toISOString());
     const fetchClinics = async () => {
       const startTime = performance.now();
       
@@ -29,17 +30,26 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         
         console.log('🚀 Starting REST-first clinic fetch at:', new Date().toISOString());
         
+        // Abort any in-flight request from previous source change
+        if (abortControllerRef.current) {
+          console.log('⏹️ Aborting previous fetch request');
+          abortControllerRef.current.abort();
+        }
+        abortControllerRef.current = new AbortController();
+        
         // Clear any existing timeout
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
         
-        // Set up timeout for the entire operation
+        // Adaptive timeout: 20s for 'all' (fetches 2 tables), 15s for single source
+        const timeoutDuration = source === 'all' ? 20000 : 15000;
         timeoutRef.current = setTimeout(() => {
-          console.error('⚠️ HARD TIMEOUT after 10s - clinic fetch failed');
+          console.error(`⚠️ HARD TIMEOUT after ${timeoutDuration/1000}s - clinic fetch failed for source: ${source}`);
+          abortControllerRef.current?.abort();
           setError(`Unable to load clinic data. Please check your connection and try again.`);
           setLoading(false);
-        }, 10000);
+        }, timeoutDuration);
         
         // REST-first strategy: Direct fetch with optimized settings
         // Helper to attempt a select ordered by distance, falling back to rating if needed
@@ -264,15 +274,17 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
 
   fetchClinics();
     
-    // Cleanup timeout on unmount
+    // Cleanup on unmount or source change
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
-    // AMENDMENT: Changed the dependency array from [user] to [].
-    // This ensures the data is fetched once when the component mounts,
-    // which is correct for a public list of clinics.
+    // AMENDMENT: Dependency array includes [source] to refetch when source changes.
+    // AbortController ensures previous requests are cancelled to prevent race conditions.
   }, [source]);
 
   return { clinics, loading, error };
