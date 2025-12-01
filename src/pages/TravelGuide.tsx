@@ -4,6 +4,7 @@ import MasterTemplate from '@/components/layout/MasterTemplate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 
 interface TravelFAQ {
@@ -48,8 +49,9 @@ const TravelGuide = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['preparation']));
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
+  const [activeTab, setActiveTab] = useState('before-you-go');
 
   // Clean up text encoding issues
   const cleanText = (text: string): string => {
@@ -207,10 +209,10 @@ const TravelGuide = () => {
                 <MapPin className="w-6 h-6 text-white" />
               </div>
               <div>
-                <CardTitle className="text-xl md:text-2xl font-bold text-blue-900">
+                <CardTitle className="text-3xl md:text-5xl font-bold text-blue-900">
                   How to Get to JB Clinics
                 </CardTitle>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-lg text-gray-600 mt-1">
                   Complete guide with transport options, timing tips, and border crossing essentials
                 </p>
               </div>
@@ -276,17 +278,378 @@ const TravelGuide = () => {
           </Card>
         )}
 
-        {/* All FAQs by Category Section */}
+        {/* All FAQs by Journey Phase - Tabbed Interface */}
         <div className="mb-6">
           <div className="mb-6 pb-4 border-b-2 border-gray-200">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Browse All Travel FAQs</h2>
-            <p className="text-gray-600">Organized by topic for easy navigation - click any category to expand</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Browse by Journey Phase</h2>
+            <p className="text-gray-600">Select a phase below to see relevant categories - organized by your travel timeline</p>
           </div>
         </div>
 
-        {/* Category Accordions */}
-        <div className="space-y-4">
-          {Object.entries(groupedFAQs).map(([category, categoryFAQs]) => {
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 mb-8 h-auto">
+            <TabsTrigger value="before-you-go" className="text-xs md:text-sm py-2">🚀 Before You Go</TabsTrigger>
+            <TabsTrigger value="at-border" className="text-xs md:text-sm py-2">🛂 At the Border</TabsTrigger>
+            <TabsTrigger value="getting-there" className="text-xs md:text-sm py-2">🚗 Getting There</TabsTrigger>
+            <TabsTrigger value="at-clinic" className="text-xs md:text-sm py-2">🏥 At the Clinic</TabsTrigger>
+            <TabsTrigger value="after-treatment" className="text-xs md:text-sm py-2">🔄 After Treatment</TabsTrigger>
+            <TabsTrigger value="special-situations" className="text-xs md:text-sm py-2">⚠️ Special Cases</TabsTrigger>
+          </TabsList>
+
+          {/* Before You Go Tab */}
+          <TabsContent value="before-you-go" className="space-y-4">
+            {['preparation', 'timing', 'costs', 'insurance_records'].map(category => {
+              const categoryFAQs = groupedFAQs[category];
+              if (!categoryFAQs || categoryFAQs.length === 0) return null;
+              
+              const config = categoryConfig[category] || {
+                icon: FileText,
+                label: category,
+                color: 'bg-gray-100 text-gray-700',
+              };
+              const Icon = config.icon;
+              const isExpanded = expandedCategories.has(category);
+
+              return (
+                <Card key={category} className="border-2 hover:border-blue-300 transition-all">
+                  <button
+                    onClick={() => toggleCategory(category)}
+                    className="w-full text-left p-6 flex items-center justify-between hover:bg-blue-50 transition-colors rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Badge className={`${config.color} text-sm px-3 py-1`}>
+                        <Icon className="w-4 h-4 mr-2 inline" />
+                        {config.label}
+                      </Badge>
+                      <span className="text-sm text-gray-600">{categoryFAQs.length} FAQs</span>
+                    </div>
+                    <ChevronDown
+                      className={`w-6 h-6 text-gray-400 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <CardContent className="pt-0 pb-6 px-6">
+                      <div className="space-y-4">
+                        {categoryFAQs.map((faq) => (
+                          <div
+                            key={faq.id}
+                            className="border-l-4 border-blue-200 pl-4 py-2 hover:border-blue-400 transition-colors"
+                          >
+                            <h3 className="font-semibold text-gray-900 mb-2 text-base">
+                              {highlightText(faq.question, searchTerm)}
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed text-sm">
+                              {highlightText(faq.answer, searchTerm)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* At the Border Tab */}
+          <TabsContent value="at-border" className="space-y-4">
+            {['crossing_process', 'immigration', 'driving', 'payments_currency'].map(category => {
+              const categoryFAQs = groupedFAQs[category];
+              if (!categoryFAQs || categoryFAQs.length === 0) return null;
+              
+              const config = categoryConfig[category] || {
+                icon: FileText,
+                label: category,
+                color: 'bg-gray-100 text-gray-700',
+              };
+              const Icon = config.icon;
+              const isExpanded = expandedCategories.has(category);
+
+              return (
+                <Card key={category} className="border-2 hover:border-blue-300 transition-all">
+                  <button
+                    onClick={() => toggleCategory(category)}
+                    className="w-full text-left p-6 flex items-center justify-between hover:bg-blue-50 transition-colors rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Badge className={`${config.color} text-sm px-3 py-1`}>
+                        <Icon className="w-4 h-4 mr-2 inline" />
+                        {config.label}
+                      </Badge>
+                      <span className="text-sm text-gray-600">{categoryFAQs.length} FAQs</span>
+                    </div>
+                    <ChevronDown
+                      className={`w-6 h-6 text-gray-400 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <CardContent className="pt-0 pb-6 px-6">
+                      <div className="space-y-4">
+                        {categoryFAQs.map((faq) => (
+                          <div
+                            key={faq.id}
+                            className="border-l-4 border-blue-200 pl-4 py-2 hover:border-blue-400 transition-colors"
+                          >
+                            <h3 className="font-semibold text-gray-900 mb-2 text-base">
+                              {highlightText(faq.question, searchTerm)}
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed text-sm">
+                              {highlightText(faq.answer, searchTerm)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* Getting There Tab */}
+          <TabsContent value="getting-there" className="space-y-4">
+            {['transport', 'clinic_travel', 'tech_connectivity'].map(category => {
+              const categoryFAQs = groupedFAQs[category];
+              if (!categoryFAQs || categoryFAQs.length === 0) return null;
+              
+              const config = categoryConfig[category] || {
+                icon: FileText,
+                label: category,
+                color: 'bg-gray-100 text-gray-700',
+              };
+              const Icon = config.icon;
+              const isExpanded = expandedCategories.has(category);
+
+              return (
+                <Card key={category} className="border-2 hover:border-blue-300 transition-all">
+                  <button
+                    onClick={() => toggleCategory(category)}
+                    className="w-full text-left p-6 flex items-center justify-between hover:bg-blue-50 transition-colors rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Badge className={`${config.color} text-sm px-3 py-1`}>
+                        <Icon className="w-4 h-4 mr-2 inline" />
+                        {config.label}
+                      </Badge>
+                      <span className="text-sm text-gray-600">{categoryFAQs.length} FAQs</span>
+                    </div>
+                    <ChevronDown
+                      className={`w-6 h-6 text-gray-400 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <CardContent className="pt-0 pb-6 px-6">
+                      <div className="space-y-4">
+                        {categoryFAQs.map((faq) => (
+                          <div
+                            key={faq.id}
+                            className="border-l-4 border-blue-200 pl-4 py-2 hover:border-blue-400 transition-colors"
+                          >
+                            <h3 className="font-semibold text-gray-900 mb-2 text-base">
+                              {highlightText(faq.question, searchTerm)}
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed text-sm">
+                              {highlightText(faq.answer, searchTerm)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* At the Clinic Tab */}
+          <TabsContent value="at-clinic" className="space-y-4">
+            {['appointments', 'clinic_experience'].map(category => {
+              const categoryFAQs = groupedFAQs[category];
+              if (!categoryFAQs || categoryFAQs.length === 0) return null;
+              
+              const config = categoryConfig[category] || {
+                icon: FileText,
+                label: category,
+                color: 'bg-gray-100 text-gray-700',
+              };
+              const Icon = config.icon;
+              const isExpanded = expandedCategories.has(category);
+
+              return (
+                <Card key={category} className="border-2 hover:border-blue-300 transition-all">
+                  <button
+                    onClick={() => toggleCategory(category)}
+                    className="w-full text-left p-6 flex items-center justify-between hover:bg-blue-50 transition-colors rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Badge className={`${config.color} text-sm px-3 py-1`}>
+                        <Icon className="w-4 h-4 mr-2 inline" />
+                        {config.label}
+                      </Badge>
+                      <span className="text-sm text-gray-600">{categoryFAQs.length} FAQs</span>
+                    </div>
+                    <ChevronDown
+                      className={`w-6 h-6 text-gray-400 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <CardContent className="pt-0 pb-6 px-6">
+                      <div className="space-y-4">
+                        {categoryFAQs.map((faq) => (
+                          <div
+                            key={faq.id}
+                            className="border-l-4 border-blue-200 pl-4 py-2 hover:border-blue-400 transition-colors"
+                          >
+                            <h3 className="font-semibold text-gray-900 mb-2 text-base">
+                              {highlightText(faq.question, searchTerm)}
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed text-sm">
+                              {highlightText(faq.answer, searchTerm)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* After Treatment Tab */}
+          <TabsContent value="after-treatment" className="space-y-4">
+            {['return_followup', 'post_treatment', 'health_safety'].map(category => {
+              const categoryFAQs = groupedFAQs[category];
+              if (!categoryFAQs || categoryFAQs.length === 0) return null;
+              
+              const config = categoryConfig[category] || {
+                icon: FileText,
+                label: category,
+                color: 'bg-gray-100 text-gray-700',
+              };
+              const Icon = config.icon;
+              const isExpanded = expandedCategories.has(category);
+
+              return (
+                <Card key={category} className="border-2 hover:border-blue-300 transition-all">
+                  <button
+                    onClick={() => toggleCategory(category)}
+                    className="w-full text-left p-6 flex items-center justify-between hover:bg-blue-50 transition-colors rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Badge className={`${config.color} text-sm px-3 py-1`}>
+                        <Icon className="w-4 h-4 mr-2 inline" />
+                        {config.label}
+                      </Badge>
+                      <span className="text-sm text-gray-600">{categoryFAQs.length} FAQs</span>
+                    </div>
+                    <ChevronDown
+                      className={`w-6 h-6 text-gray-400 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <CardContent className="pt-0 pb-6 px-6">
+                      <div className="space-y-4">
+                        {categoryFAQs.map((faq) => (
+                          <div
+                            key={faq.id}
+                            className="border-l-4 border-blue-200 pl-4 py-2 hover:border-blue-400 transition-colors"
+                          >
+                            <h3 className="font-semibold text-gray-900 mb-2 text-base">
+                              {highlightText(faq.question, searchTerm)}
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed text-sm">
+                              {highlightText(faq.answer, searchTerm)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* Special Situations Tab */}
+          <TabsContent value="special-situations" className="space-y-4">
+            {['pitfalls', 'edge_emergency', 'afterhours', 'safety', 'meta'].map(category => {
+              const categoryFAQs = groupedFAQs[category];
+              if (!categoryFAQs || categoryFAQs.length === 0) return null;
+              
+              const config = categoryConfig[category] || {
+                icon: FileText,
+                label: category,
+                color: 'bg-gray-100 text-gray-700',
+              };
+              const Icon = config.icon;
+              const isExpanded = expandedCategories.has(category);
+
+              return (
+                <Card key={category} className="border-2 hover:border-blue-300 transition-all">
+                  <button
+                    onClick={() => toggleCategory(category)}
+                    className="w-full text-left p-6 flex items-center justify-between hover:bg-blue-50 transition-colors rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Badge className={`${config.color} text-sm px-3 py-1`}>
+                        <Icon className="w-4 h-4 mr-2 inline" />
+                        {config.label}
+                      </Badge>
+                      <span className="text-sm text-gray-600">{categoryFAQs.length} FAQs</span>
+                    </div>
+                    <ChevronDown
+                      className={`w-6 h-6 text-gray-400 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <CardContent className="pt-0 pb-6 px-6">
+                      <div className="space-y-4">
+                        {categoryFAQs.map((faq) => (
+                          <div
+                            key={faq.id}
+                            className="border-l-4 border-blue-200 pl-4 py-2 hover:border-blue-400 transition-colors"
+                          >
+                            <h3 className="font-semibold text-gray-900 mb-2 text-base">
+                              {highlightText(faq.question, searchTerm)}
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed text-sm">
+                              {highlightText(faq.answer, searchTerm)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })}
+          </TabsContent>
+        </Tabs>
+
+        {/* Fallback for search results - show all matching categories */}
+        {searchTerm && (
+          <div className="space-y-4 mt-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Search Results</h3>
+            {Object.entries(groupedFAQs).map(([category, categoryFAQs]) => {
             const config = categoryConfig[category] || {
               icon: FileText,
               label: category,
@@ -360,10 +723,8 @@ const TravelGuide = () => {
               </Card>
             );
           })}
-        </div>
-
-        {/* Empty State */}
-        {Object.keys(groupedFAQs).length === 0 && searchTerm && (
+          </div>
+        )}\n\n        {/* Empty State */}\n        {Object.keys(groupedFAQs).length === 0 && searchTerm && (
           <Card className="p-12 text-center">
             <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
