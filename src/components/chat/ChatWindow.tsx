@@ -205,8 +205,7 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           content: msg.text
         }));
 
-      // Determine if we should suppress client filters (fresh turn, reset, or while awaiting location)
-      const isFirstUserTurn = history.filter(h => h.role === 'user').length === 1;
+      // Determine if we should suppress client filters (explicit reset or while awaiting location)
       const isResetMessage = message.toLowerCase().startsWith('reset');
 
       // If user requests reset, clear local state immediately
@@ -218,16 +217,18 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
         setSuppressClientFiltersOnce(true);
       }
 
-      // --- Use state values; optionally suppress filters ---
+      // --- FIXED: Always use state values unless explicitly suppressed ---
       const requestBody: any = {
         history: history,
         user_id: user.id
       };
 
-      if (isFirstUserTurn || isResetMessage || suppressClientFiltersOnce || !!locationPrompt) {
+      // Only suppress filters when: (1) reset requested, (2) location prompt active, or (3) explicitly flagged
+      if (isResetMessage || suppressClientFiltersOnce || !!locationPrompt) {
         requestBody.applied_filters = {};
         requestBody.candidate_pool = [];
       } else {
+        // ALWAYS preserve state from previous response
         requestBody.applied_filters = sessionAppliedFilters;
         requestBody.candidate_pool = sessionCandidatePool;
       }
