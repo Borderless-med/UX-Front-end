@@ -9,6 +9,8 @@ if (!SUPABASE_PUBLISHABLE_KEY) {
   throw new Error("VITE_SUPABASE_ANON_KEY must be set in environment variables");
 }
 
+console.log('✅ Supabase client initialized with publishable key from env');
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
