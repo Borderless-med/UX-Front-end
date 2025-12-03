@@ -92,3 +92,6 @@ If using emailRedirect links, already updated to `https://orachope.org/create-pa
 - Add proper structured data (JSON-LD) for clinic listings.
 - Implement server-side rate limiting for booking function.
 - Add error tracking (Sentry) environment variable + init.
+
+---
+*Last updated: December 4, 2025*
