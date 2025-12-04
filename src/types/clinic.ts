@@ -8,6 +8,13 @@ export interface Clinic {
   reviews: number;
   distance: number;
   sentiment: number;
+  // Aspect sentiment scores (for backend/chatbot use only - not displayed in UI due to legal sensitivity)
+  sentimentDentistSkill?: number;
+  sentimentPainManagement?: number;
+  sentimentCostValue?: number;
+  sentimentStaffService?: number;
+  sentimentAmbianceCleanliness?: number;
+  sentimentConvenience?: number;
   mdaLicense: string;
   credentials: string;
   // Optional country code. Recommended values: 'SG' (Singapore) or 'MY' (Malaysia)
