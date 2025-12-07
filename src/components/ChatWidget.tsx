@@ -110,35 +110,31 @@ const ChatWidget = ({ onAuthClick }: ChatWidgetProps) => {
         </div>
       )}
 
-      {/* Chat Toggle Button + Hint */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <div className="relative">
-          {/* Small hint bubble above icon - hidden on desktop to avoid conflict with ChatHelperTextbox */}
-          {!isOpen && showHint && (
-            <div
-              className="md:hidden absolute -top-3 left-16 -translate-y-full bg-white/95 backdrop-blur border border-blue-400 rounded-md shadow px-2 py-1 text-[11px] leading-tight text-gray-800"
-              style={{ pointerEvents: 'none', maxWidth: '160px' }}
-            >
-              Tap to chat
-            </div>
-          )}
-          <button
-          onClick={toggleChat}
-          data-chat-widget
-          onMouseEnter={() => setShowHint(true)}
-          onMouseLeave={() => setShowHint(false)}
-          className={`group bg-blue-primary hover:bg-blue-accent text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center transform hover:scale-105 ${
-            isOpen ? 'w-12 h-12' : 'w-14 h-14'
-          }`}
-        >
-          {isOpen ? (
-            <X size={24} className="text-white" />
-          ) : (
+      {/* Chat Toggle Button + Hint - Hidden on mobile when chat is open */}
+      {!isOpen && (
+        <div className="fixed bottom-6 left-6 z-50">
+          <div className="relative">
+            {/* Small hint bubble above icon - hidden on desktop to avoid conflict with ChatHelperTextbox */}
+            {showHint && (
+              <div
+                className="md:hidden absolute -top-3 left-16 -translate-y-full bg-white/95 backdrop-blur border border-blue-400 rounded-md shadow px-2 py-1 text-[11px] leading-tight text-gray-800"
+                style={{ pointerEvents: 'none', maxWidth: '160px' }}
+              >
+                Tap to chat
+              </div>
+            )}
+            <button
+            onClick={toggleChat}
+            data-chat-widget
+            onMouseEnter={() => setShowHint(true)}
+            onMouseLeave={() => setShowHint(false)}
+            className="group bg-blue-primary hover:bg-blue-accent text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center transform hover:scale-105 w-14 h-14"
+          >
             <MessageCircle size={28} className="text-white" />
-          )}
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
