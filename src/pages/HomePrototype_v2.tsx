@@ -25,6 +25,17 @@ const HomePrototype_v2: React.FC = () => {
     else navigate('/clinics?sel=sg');
   };
 
+  // Navigate to Compare tab
+  const goToCompare = () => {
+    navigate('/compare');
+  };
+
+  // Open AI Concierge chatbot
+  const openAIConcierge = () => {
+    const chatButton = document.querySelector('[data-chat-widget]') as HTMLElement | null;
+    chatButton?.click();
+  };
+
   return (
   <MasterTemplate title="See All Your Dental Options." subtitle="Make the Smartest Choice.">
 
@@ -105,7 +116,7 @@ const HomePrototype_v2: React.FC = () => {
               <li>Save Time & Money</li>
               <li>24/7 Expert Access</li>
             </ul>
-            <Button className="btn-primary w-full text-lg mb-2 inline-flex items-center justify-center gap-2">
+            <Button onClick={openAIConcierge} className="btn-primary w-full text-lg mb-2 inline-flex items-center justify-center gap-2">
               <AIIcon className="text-white" size={18} />
               Ask The AI Concierge — Free
             </Button>
@@ -136,8 +147,8 @@ const HomePrototype_v2: React.FC = () => {
       <section className="py-8 bg-blue-50 flex flex-col items-center">
         <h4 className="text-lg font-semibold text-blue-800 mb-4">Your Smartest Dental Decision Awaits.</h4>
         <div className="flex gap-4">
-          <Button className="btn-primary px-6">Compare Clinics Now</Button>
-          <Button className="btn-secondary px-6 inline-flex items-center gap-2">
+          <Button onClick={goToCompare} className="btn-primary px-6">Compare Clinics Now</Button>
+          <Button onClick={openAIConcierge} className="btn-secondary px-6 inline-flex items-center gap-2">
             <AIIcon size={16} />
             Chat with AI Expert
           </Button>
