@@ -370,6 +370,14 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
 
   return (
     <div className="relative w-full h-full md:rounded-lg bg-white shadow-xl border border-gray-200 flex flex-col animate-fade-in">
+      {/* Mobile floating close button - outside header to avoid blocking input */}
+      <button
+        onClick={onClose}
+        className="md:hidden absolute top-2 right-2 z-50 p-2 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all"
+      >
+        <X size={20} className="text-gray-700" />
+      </button>
+
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-primary text-white rounded-t-lg">
         <div className="flex items-center space-x-3 flex-1 min-w-0">
@@ -385,9 +393,10 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
             )}
           </div>
         </div>
+        {/* Desktop close button - only shown on desktop */}
         <button
           onClick={onClose}
-          className="p-1 hover:bg-white/20 rounded-full transition-colors flex-shrink-0 ml-2"
+          className="hidden md:block p-1 hover:bg-white/20 rounded-full transition-colors flex-shrink-0 ml-2"
         >
           <X size={20} />
         </button>

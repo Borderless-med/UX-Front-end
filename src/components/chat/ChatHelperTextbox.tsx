@@ -17,7 +17,7 @@ const ChatHelperTextbox: React.FC<ChatHelperTextboxProps> = ({ className }) => {
 
   return (
     <div
-      className={`hidden sm:flex fixed bottom-52 left-2 z-40 items-center ${className || ''}`}
+      className={`hidden sm:flex fixed bottom-24 left-2 z-40 items-center ${className || ''}`}
       style={{ pointerEvents: 'none' }}
       aria-hidden="true"
     >

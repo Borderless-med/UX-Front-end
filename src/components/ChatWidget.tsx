@@ -113,10 +113,10 @@ const ChatWidget = ({ onAuthClick }: ChatWidgetProps) => {
       {/* Chat Toggle Button + Hint */}
       <div className="fixed bottom-6 left-6 z-50">
         <div className="relative">
-          {/* Small hint bubble above icon */}
+          {/* Small hint bubble above icon - hidden on desktop to avoid conflict with ChatHelperTextbox */}
           {!isOpen && showHint && (
             <div
-              className="absolute -top-3 left-16 md:left-16 -translate-y-full bg-white/95 backdrop-blur border border-blue-400 rounded-md shadow px-2 py-1 text-[11px] leading-tight text-gray-800"
+              className="md:hidden absolute -top-3 left-16 -translate-y-full bg-white/95 backdrop-blur border border-blue-400 rounded-md shadow px-2 py-1 text-[11px] leading-tight text-gray-800"
               style={{ pointerEvents: 'none', maxWidth: '160px' }}
             >
               Tap to chat
