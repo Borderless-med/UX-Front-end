@@ -227,13 +227,13 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       if (isResetMessage || suppressClientFiltersOnce || !!locationPrompt) {
         requestBody.applied_filters = {};
         requestBody.candidate_pool = [];
+        requestBody.booking_context = {}; // Also clear booking_context on reset
       } else {
-        // ALWAYS preserve state from previous response
+        // ALWAYS preserve state from previous response (FIX: Don't clear, always send!)
         requestBody.applied_filters = sessionAppliedFilters;
         requestBody.candidate_pool = sessionCandidatePool;
+        requestBody.booking_context = sessionBookingContext;
       }
-
-      requestBody.booking_context = sessionBookingContext;
 
       // Use sessionId from AuthContext for persistent session
       if (sessionId) {
