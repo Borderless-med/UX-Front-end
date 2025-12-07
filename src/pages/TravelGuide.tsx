@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
+import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
 
 interface TravelFAQ {
   id: number;
@@ -833,6 +834,7 @@ const TravelGuide = () => {
           </>
         )}
       </div>
+      <ChatHelperTextbox />
     </MasterTemplate>
   );
 };

@@ -7,6 +7,7 @@ import FloatingClinicTab from '@/components/FloatingClinicTab';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import AuthModal from '@/components/auth/AuthModal';
+import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
 
 const Index = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -37,6 +38,7 @@ const Index = () => {
       <Footer />
       <FloatingClinicTab />
       {/* Global ChatWidget is provided via App.tsx */}
+      <ChatHelperTextbox />
       
       {/* Auth Modal */}
       <AuthModal 

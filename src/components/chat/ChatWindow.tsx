@@ -372,11 +372,11 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
     <div className="relative w-full h-full md:rounded-lg bg-white shadow-xl border border-gray-200 flex flex-col animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-primary text-white rounded-t-lg">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+        <div className="flex items-center space-x-3 flex-1 min-w-0">
+          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-sm font-bold">🤖</span>
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="font-semibold">AI Dental Expert</h3>
             <p className="text-xs text-blue-150">{!user ? "Sign up required" : "40 chats/month • Online now"}</p>
             {/* Show backend URL indicator in dev to aid debugging */}
@@ -387,7 +387,7 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
         </div>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-white/20 rounded-full transition-colors"
+          className="p-1 hover:bg-white/20 rounded-full transition-colors flex-shrink-0 ml-2"
         >
           <X size={20} />
         </button>

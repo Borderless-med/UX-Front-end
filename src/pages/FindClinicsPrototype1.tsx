@@ -11,6 +11,7 @@ import { getUniqueTownships } from '@/components/clinic/utils/clinicFilterUtils'
 import { Loader2, MapPin } from 'lucide-react';
 import MasterTemplate from '@/components/layout/MasterTemplate';
 import { useAuth } from '@/contexts/AuthContext';
+import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
 
 type Selection = 'all' | 'sg' | 'jb';
 
@@ -266,9 +267,7 @@ const FindClinicsPrototype1 = () => {
       </section>
 
       <MedicalDisclaimer />
-
-      {/* Standardized chat helper textbox (replaces prior variant) */}
-      {/* Chat helper removed on this page to avoid overlap on mobile */}
+      <ChatHelperTextbox />
     </MasterTemplate>
   );
 };

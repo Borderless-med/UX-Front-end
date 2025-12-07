@@ -4,6 +4,7 @@ import ClinicsSection from '@/components/ClinicsSection';
 import Footer from '@/components/Footer';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import PricingBookingDisclaimer from '@/components/PricingBookingDisclaimer';
+import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
 
 const Clinics = () => {
   return (
@@ -22,6 +23,7 @@ const Clinics = () => {
       </section>
       
       <Footer />
+      <ChatHelperTextbox />
     </div>
   );
 };
