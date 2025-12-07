@@ -786,6 +786,7 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          api_calls_remaining: number | null
           created_at: string | null
           email_domain: string | null
           full_name: string
@@ -799,6 +800,7 @@ export type Database = {
           verification_method: string | null
         }
         Insert: {
+          api_calls_remaining?: number | null
           created_at?: string | null
           email_domain?: string | null
           full_name: string
@@ -812,6 +814,7 @@ export type Database = {
           verification_method?: string | null
         }
         Update: {
+          api_calls_remaining?: number | null
           created_at?: string | null
           email_domain?: string | null
           full_name?: string
