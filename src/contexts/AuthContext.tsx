@@ -160,10 +160,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithGoogle = async () => {
     setIsLoading(true);
     try {
+      const redirectUrl = window.location.hostname === 'localhost' 
+        ? `${window.location.origin}/auth/callback`
+        : 'https://orachope.org/auth/callback';
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: redirectUrl,
         }
       });
       
@@ -181,10 +185,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithFacebook = async () => {
     setIsLoading(true);
     try {
+      const redirectUrl = window.location.hostname === 'localhost' 
+        ? `${window.location.origin}/auth/callback`
+        : 'https://orachope.org/auth/callback';
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: redirectUrl,
         }
       });
       
@@ -202,10 +210,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithApple = async () => {
     setIsLoading(true);
     try {
+      const redirectUrl = window.location.hostname === 'localhost' 
+        ? `${window.location.origin}/auth/callback`
+        : 'https://orachope.org/auth/callback';
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: redirectUrl,
         }
       });
       

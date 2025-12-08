@@ -45,10 +45,10 @@ const AuthCallback = () => {
             }
           }
 
-          // Redirect to home page
-          navigate('/', { replace: true });
+          // Redirect to home page using window.location for production
+          window.location.href = '/';
         } else {
-          navigate('/login', { replace: true });
+          window.location.href = '/';
         }
       } catch (error) {
         console.error('Unexpected error during OAuth callback:', error);
