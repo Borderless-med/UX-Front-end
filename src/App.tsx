@@ -31,6 +31,7 @@ import TestClinicSignup from "./pages/TestClinicSignup";
 import BookNow from "./pages/BookNow";
 import { Analytics } from '@vercel/analytics/react'; // --- CHANGE 1 of 2: Added this import line ---
 import CreatePassword from "./pages/CreatePassword";
+import AuthCallback from "./pages/AuthCallback";
 import HomePrototype_v2 from "./pages/HomePrototype_v2";
 import HomePrototype from "./pages/HomePrototype";
 import FindClinicsPrototype1 from "./pages/FindClinicsPrototype1";
@@ -70,6 +71,7 @@ const App = () => (
               <Route path="/confirm-whatsapp" element={<ConfirmWhatsApp />} />
               <Route path="/debug-test" element={<DebugTest />} />
               <Route path="/create-password" element={<CreatePassword />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/home-prototype" element={<HomePrototype />} />
               <Route path="/home-prototype-v2" element={<HomePrototype_v2 />} />
               <Route path="/prototype-hub" element={<PrototypeHub />} />
