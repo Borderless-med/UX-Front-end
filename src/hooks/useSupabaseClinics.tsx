@@ -10,7 +10,7 @@ export type ClinicSource = 'sg' | 'jb' | 'all';
 // Simple in-memory cache (module-level) to prevent duplicate fetches across components
 interface CacheEntry { data: Clinic[]; timestamp: number }
 const CLINICS_CACHE: Record<string, CacheEntry> = {};
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes (increased from 5 minutes)
 
 export const useSupabaseClinics = (source: ClinicSource = 'all') => {
   console.log('[useSupabaseClinics] Hook initialized for source:', source, 'at', new Date().toISOString());
@@ -272,7 +272,17 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
           }
         }
         
-        setError(err instanceof Error ? err.message : 'Failed to fetch clinics');
+        // IMPORTANT: Check if we have stale cached data - if so, use it instead of showing error
+        const cacheKey = source;
+        const staleCache = CLINICS_CACHE[cacheKey];
+        if (staleCache && staleCache.data.length > 0) {
+          console.warn('⚠️ Fetch failed, but using stale cached data from', new Date(staleCache.timestamp).toISOString());
+          setClinics(staleCache.data);
+          // Don't show error if we have cached data to display
+          setError(null);
+        } else {
+          setError(err instanceof Error ? err.message : 'Failed to fetch clinics');
+        }
       } finally {
         setLoading(false);
       }
