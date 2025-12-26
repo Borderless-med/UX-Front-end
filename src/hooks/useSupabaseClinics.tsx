@@ -19,14 +19,27 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
   const [error, setError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
   const abortControllerRef = useRef<AbortController>();
+  const fetchInProgressRef = useRef(false);
 
   useEffect(() => {
     console.log('[useSupabaseClinics] useEffect triggered for source:', source, 'at', new Date().toISOString());
+    
+    // FIX: Prevent duplicate fetches on re-renders (4G fix)
+    if (fetchInProgressRef.current) {
+      console.log('[useSupabaseClinics] ⚠️ Fetch already in progress, skipping duplicate request');
+      return;
+    }
+    
     const fetchClinics = async () => {
       const startTime = performance.now();
       
+      // Mark fetch as in progress
+      fetchInProgressRef.current = true;
+      
       try {
         setLoading(true);
+        // FIX: DON'T clear existing clinics during loading (keeps data visible on 4G)
+        // setClinics([]); // ← REMOVED - prevents flickering on slow connections
         
         console.log('🚀 Starting REST-first clinic fetch at:', new Date().toISOString());
         
@@ -285,18 +298,23 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         }
       } finally {
         setLoading(false);
+        // FIX: Mark fetch as complete
+        fetchInProgressRef.current = false;
       }
     };
 
-  fetchClinics();
+    fetchClinics();
     
-    // Cleanup on unmount or source change
+    // FIX: Simplified cleanup - only reset state, don't abort unless unmounting
     return () => {
+      fetchInProgressRef.current = false;
+      // Only abort if component is truly unmounting (not just re-rendering)
+      if (abortControllerRef.current) {
+        console.log('[useSupabaseClinics] 🧹 Cleanup: Aborting request on unmount');
+        abortControllerRef.current.abort();
+      }
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
-      }
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
       }
     };
     // AMENDMENT: Dependency array includes [source] to refetch when source changes.
