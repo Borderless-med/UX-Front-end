@@ -63,12 +63,12 @@ const HomePrototype_v2: React.FC = () => {
             <Card className="border-green-400 border-2 p-4 sm:p-6 md:p-8 flex flex-col justify-between h-full min-h-[260px] hover:shadow-lg">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-lg sm:text-xl md:text-2xl text-green-600">💰</span>
-                <span className="text-base sm:text-lg md:text-xl font-semibold text-green-700">Unlock Big Savings Across the Causeway</span>
+                <span className="text-base sm:text-lg md:text-xl font-semibold text-green-700">Compare Dental Options Across the Causeway</span>
               </div>
-              <p className="mb-2 text-gray-700 text-sm sm:text-base">Verified clinics, major savings, full AI support.</p>
+              <p className="mb-2 text-gray-700 text-sm sm:text-base">Verified clinics, transparent pricing, full AI support.</p>
               <ul className="list-disc pl-4 text-gray-600 mb-4 text-sm sm:text-base">
-                <li>Save 50-70% on major treatments</li>
-                <li>World-class dental at up to 70% less</li>
+                <li>Compare transparent pricing for treatments</li>
+                <li>Quality dental care across the region</li>
                 <li>AI-powered travel & booking assistance</li>
               </ul>
             </Card>
@@ -81,9 +81,9 @@ const HomePrototype_v2: React.FC = () => {
               </div>
               <p className="mb-2 text-gray-700 text-sm sm:text-base">MOH-accredited, trusted follow-ups, zero travel required.</p>
               <ul className="list-disc pl-4 text-gray-600 mb-4 text-sm sm:text-base">
-                <li>Singapore’s Standard. Singapore’s Dentists.</li>
+                <li>Singapore standard, Singapore dentists</li>
                 <li>Trusted follow-ups, no travel needed</li>
-                <li>Seamless appointments</li>
+                <li>Convenient appointments close to home</li>
               </ul>
             </Card>
           </div>
@@ -132,7 +132,7 @@ const HomePrototype_v2: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-6 w-full max-w-3xl">
           <Card className="p-6 flex-1">
             <div className="mb-2 text-yellow-500 text-lg">★★★★★</div>
-            <p className="text-gray-700 mb-2">"Saved $3,200 on my dental implants compared to Singapore prices. The quality was exceptional, and the AI concierge made planning the trip from Woodlands a breeze."</p>
+            <p className="text-gray-700 mb-2">"The OraChope platform helped me compare my options and plan my trip from Woodlands. The AI concierge made the booking process really easy and the clinic was just 25 minutes from the checkpoint."</p>
             <span className="text-sm text-gray-500">— Linda Wong, Woodlands</span>
           </Card>
           <Card className="p-6 flex-1">
@@ -141,6 +141,9 @@ const HomePrototype_v2: React.FC = () => {
             <span className="text-sm text-gray-500">— David Tan, Bishan</span>
           </Card>
         </div>
+        <p className="text-xs text-gray-500 mt-6 max-w-3xl text-center">
+          Note: Testimonials reflect user experience with OraChope's platform features, not clinical outcomes or endorsements of specific dental providers.
+        </p>
       </section>
 
       {/* Final CTA */}
@@ -150,7 +153,7 @@ const HomePrototype_v2: React.FC = () => {
           <Button onClick={goToCompare} className="btn-primary px-6">Compare Clinics Now</Button>
           <Button onClick={openAIConcierge} className="btn-secondary px-6 inline-flex items-center gap-2">
             <AIIcon size={16} />
-            Chat with AI Expert
+            Chat with AI Concierge
           </Button>
         </div>
       </section>

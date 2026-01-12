@@ -29,14 +29,14 @@ const HowItWorksPrototype = () => {
             {/* Savings (JB) */}
             <div className="border-2 border-emerald-500 rounded-xl bg-white shadow-sm p-6">
               <div className="text-2xl">💰</div>
-              <h3 className="mt-2 text-xl md:text-2xl font-bold">Focus on Savings</h3>
-              <p className="mt-2 text-slate-700">Explore top-rated clinics in Johor Bahru to save up to 70% on major treatments.</p>
+              <h3 className="mt-2 text-xl md:text-2xl font-bold">Consider Regional Options</h3>
+              <p className="mt-2 text-slate-700">Explore verified clinics in Johor Bahru offering transparent pricing and quality dental care.</p>
             </div>
 
             {/* Convenience (SG) */}
             <div className="border-2 border-blue-600 rounded-xl bg-white shadow-sm p-6">
               <div className="text-2xl">🏠</div>
-              <h3 className="mt-2 text-xl md:text-2xl font-bold">Focus on Convenience</h3>
+              <h3 className="mt-2 text-xl md:text-2xl font-bold">Stay Close to Home</h3>
               <p className="mt-2 text-slate-700">Find trusted, MOH-accredited dentists right here in Singapore for peace of mind and easy follow-ups.</p>
             </div>
           </div>

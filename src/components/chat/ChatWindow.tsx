@@ -153,6 +153,24 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   console.log('DEBUG: Authorization header for chat:', session?.access_token ? `Bearer ${maskToken(session.access_token)}` : 'None');
     if (!message.trim() || isTyping) return;
 
+    // DEV BYPASS: Skip auth check on localhost
+    const isDev = window.location.hostname === 'localhost';
+    if (!isDev && !user) {
+      const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
+      setMessages(prev => [...prev, userMessage]);
+      setInputMessage('');
+      
+      // Create a more compelling sign-up CTA message
+      const botResponse: Message = { 
+        id: (Date.now() + 1).toString(), 
+        text: `Great question! 🤔 To give you personalized recommendations based on 500+ real patient reviews, please sign up for a free account first.\n\n🔐 **FREE Account Includes:** 40 conversations per month\n\n🎯 I can help answer:\n• "Which JB clinic has the best implant reviews?"\n• "What's the real cost difference vs Singapore?"\n• "Is this clinic worth the 2-hour travel?"\n\n**Sign up takes 30 seconds!** ${onAuthClick ? 'Click the blue button below to get started.' : 'Click the registration button in the top menu.'}`, 
+        sender: 'ai', 
+        timestamp: new Date() 
+      };
+      setTimeout(() => setMessages(prev => [...prev, botResponse]), 500);
+      return;
+    }
+
     // Phase 1: If a location prompt is active and the user TYPES a country instead of clicking
     // recognize it and convert to a structured choose_location turn (single-pass, no loop).
     if (locationPrompt) {
@@ -173,22 +191,6 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
         // Replace the original message with the label so history shows clean selection
         message = label;
       }
-    }
-
-    if (!user) {
-      const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
-      setMessages(prev => [...prev, userMessage]);
-      setInputMessage('');
-      
-      // Create a more compelling sign-up CTA message
-      const botResponse: Message = { 
-        id: (Date.now() + 1).toString(), 
-        text: `Great question! 🤔 To give you personalized recommendations based on 500+ real patient reviews, please sign up for a free account first.\n\n🔐 **FREE Account Includes:** 40 conversations per month\n\n🎯 I can help answer:\n• "Which JB clinic has the best implant reviews?"\n• "What's the real cost difference vs Singapore?"\n• "Is this clinic worth the 2-hour travel?"\n\n**Sign up takes 30 seconds!** ${onAuthClick ? 'Click the blue button below to get started.' : 'Click the registration button in the top menu.'}`, 
-        sender: 'ai', 
-        timestamp: new Date() 
-      };
-      setTimeout(() => setMessages(prev => [...prev, botResponse]), 500);
-      return;
     }
 
     const userMessage: Message = { id: Date.now().toString(), text: message, sender: 'user', timestamp: new Date() };
@@ -220,7 +222,7 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
       // --- FIXED: Always use state values unless explicitly suppressed ---
       const requestBody: any = {
         history: history,
-        user_id: user.id
+        user_id: user?.id || 'localhost-test-user'
       };
 
       // Only suppress filters when: (1) reset requested, (2) location prompt active, or (3) explicitly flagged

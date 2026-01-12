@@ -12,19 +12,19 @@ const PriceComparison = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-blue-dark mb-4">
-            Dental Price Comparison
+            Regional Pricing Reference Guide
           </h1>
           <p className="text-lg text-neutral-gray max-w-2xl mx-auto">
-            Compare dental treatment costs between Singapore and Johor Bahru. 
-            All prices are in Singapore Dollars (S$).
+            Educational reference for dental treatment pricing in Singapore and Johor Bahru regions. 
+            All prices are estimated market averages in Singapore Dollars (S$).
           </p>
         </div>
 
         <Card className="shadow-lg border border-blue-light">
           <CardHeader className="bg-blue-primary/10 border-b border-blue-light">
-            <CardTitle className="text-2xl text-blue-dark">Treatment Price Comparison</CardTitle>
+            <CardTitle className="text-2xl text-blue-dark">Regional Pricing Reference</CardTitle>
             <CardDescription className="text-neutral-gray">
-              Savings when choosing Malaysian dental clinics over Singapore alternatives
+              Estimated market pricing for dental treatments across Singapore and Johor Bahru regions
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">

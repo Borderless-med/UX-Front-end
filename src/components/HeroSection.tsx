@@ -89,7 +89,7 @@ const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
             </h1>
             
             <p className="text-sm sm:text-base md:text-2xl text-gray-700 mb-2 sm:mb-3 md:mb-4 max-w-3xl md:max-w-4xl mx-auto leading-snug md:leading-relaxed">
-              Save 50-70% with intelligent guidance every step of the way
+              Compare dental options with intelligent guidance every step of the way
             </p>
             
 
@@ -109,7 +109,7 @@ const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
               variant="outline"
               className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
             >
-              Calculate Your Savings
+              Compare Dental Options
             </Button>
           </div>
 
@@ -158,7 +158,7 @@ const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
                 onClick={handleAIPath}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 mb-3"
               >
-                Sign Up & Ask Our AI Expert
+                Sign Up & Try Our AI Concierge
               </Button>
               <div className="text-sm text-gray-600">
                 Free account • 40 conversations per month • No credit card needed
@@ -170,7 +170,7 @@ const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
           <div className="bg-blue-50 rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-4xl mx-auto">
             <div className="text-center">
               <p className="text-xl text-gray-700 italic mb-4">
-                "Saved $3,200 on my dental implants compared to Singapore prices. The quality was exceptional, and the clinic was just 25 minutes from Woodlands checkpoint."
+                "The OraChope platform helped me compare my options and plan my trip from Woodlands. The AI concierge made the booking process really easy and the clinic was just 25 minutes from the checkpoint."
               </p>
               <div className="flex items-center justify-center">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
@@ -181,6 +181,9 @@ const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
                   <div className="text-sm text-gray-600">Singapore Resident</div>
                 </div>
               </div>
+              <p className="text-xs text-gray-500 mt-4 text-center">
+                Note: Testimonials reflect user experience with OraChope's platform features, not clinical outcomes or endorsements of specific dental providers.
+              </p>
             </div>
           </div>
 
@@ -190,7 +193,7 @@ const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
               Transparent Pricing - No Hidden Costs
             </h2>
             <p className="text-lg text-gray-600 mb-6">
-              See exactly how much you can save on every dental treatment
+              View detailed pricing information for every dental treatment
             </p>
             <Button 
               onClick={goToCompare}

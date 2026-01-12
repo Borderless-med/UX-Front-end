@@ -28,7 +28,7 @@ const ComparePrototype = () => {
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-5xl font-bold text-blue-800">Which Path is Right for You?</h1>
             <p className="mt-3 text-base md:text-lg text-slate-600 max-w-3xl mx-auto">
-              Choosing a dentist involves more than just price. It's about balancing savings, convenience, and peace of mind. Use this guide to find the best fit for your personal needs.
+              Choosing a dentist involves balancing affordability, convenience, and peace of mind. Use this guide to find the best fit for your personal needs.
             </p>
           </div>
 
@@ -39,10 +39,11 @@ const ComparePrototype = () => {
               <div className="p-6">
                 <h3 className="text-xl md:text-2xl font-bold">💰 Choose Johor Bahru if...</h3>
                 <ul className="mt-4 list-disc pl-5 space-y-2 text-slate-700">
-                  <li><span className="font-semibold">Maximum Savings</span> is your #1 priority.</li>
-                  <li>You are planning <span className="font-semibold">major procedures</span> (e.g., implants, veneers, multiple crowns).</li>
-                  <li>You are comfortable with <span className="font-semibold">cross-border travel</span> and have a valid passport.</li>
-                  <li>You can set aside a <span className="font-semibold">half or full day</span> for your appointment.</li>
+                  <li>Treatment affordability is an important consideration for you.</li>
+                  <li>You can dedicate half or full day for your appointment.</li>
+                  <li>You're comfortable with cross-border travel (passport required).</li>
+                  <li>You prefer extended appointments to complete more dental work.</li>
+                  <li>You may wish to combine your dental visit with leisure activities (shopping, dining, sightseeing in JB).</li>
                 </ul>
               </div>
             </div>
@@ -53,10 +54,11 @@ const ComparePrototype = () => {
               <div className="p-6">
                 <h3 className="text-xl md:text-2xl font-bold">🏠 Choose Singapore if...</h3>
                 <ul className="mt-4 list-disc pl-5 space-y-2 text-slate-700">
-                  <li><span className="font-semibold">Ultimate Convenience</span> is your #1 priority.</li>
-                  <li>You need a <span className="font-semibold">simple or urgent procedure</span> (e.g., cleaning, filling, toothache).</li>
-                  <li>You prefer to avoid travel and stay close to home.</li>
-                  <li>You require <span className="font-semibold">multiple, short follow-up</span> appointments.</li>
+                  <li>Convenience, Trust and proximity to home are your top priorities.</li>
+                  <li>You need urgent care or have time-sensitive dental concerns.</li>
+                  <li>You prefer to avoid travel and cross-border logistics.</li>
+                  <li>You value having multiple short appointments close to your routine.</li>
+                  <li>You may qualify for CHAS subsidies* (Blue/Orange/Green cardholders receive varying subsidies at participating clinics).</li>
                 </ul>
               </div>
             </div>
@@ -64,25 +66,7 @@ const ComparePrototype = () => {
         </div>
       </section>
 
-      {/* SECTION 2: THE DATA */}
-      <section className="py-10 bg-sky-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-2xl md:text-4xl font-bold text-blue-800">A Transparent Look at Regional Pricing</h2>
-            <p className="mt-3 text-sm md:text-base text-slate-600 max-w-4xl mx-auto border border-dashed border-slate-400 rounded-md p-3">
-              <span className="font-semibold">Important Disclaimer:</span> The prices below are estimates. Singapore (SG) prices are based on typical private clinic rates. Johor Bahru (JB) prices are sourced from our partner clinics. All pricing is indicative and should be verified with the clinic before treatment.
-            </p>
-          </div>
-
-          <div className="mt-6 bg-white rounded-xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
-            <div className="p-4">
-              <PriceComparisonTable procedures={proceduresData} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3: PERSONALIZED SOLUTION */}
+      {/* SECTION 2: PERSONALIZED SOLUTION */}
       <section className="py-12 bg-white">
         <div className="max-w-5xl mx-auto px-4">
           <div className="border border-slate-200 rounded-xl p-8 text-center">
