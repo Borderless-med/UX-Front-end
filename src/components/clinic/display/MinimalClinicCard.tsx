@@ -11,9 +11,9 @@ interface MinimalClinicCardProps {
  * Minimal clinic card for Singapore clinics (HCSA compliant)
  * Features:
  * - Name, address, postal code (directory info only)
- * - Website link (neutral gateway)
- * - Google Reviews link (no rating display)
- * - WhatsApp/Email OraChope.org concierge (lead capture)
+ * - Website link (neutral gateway) with subtle bg-gray-50
+ * - Google Reviews link (no rating display) with subtle bg-gray-50
+ * - WhatsApp/Email OraChope.org concierge (emerald-700/slate-600 - softer colors)
  * - Claim/Remove button (opt-out mechanism)
  * 
  * Removed (non-compliant):
@@ -22,6 +22,7 @@ interface MinimalClinicCardProps {
  * - Rating display (testimonials)
  * - Service badges (promotional)
  * - Verification status (ranking)
+ * - Redundant footer text under Claim button
  */
 const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
   const googleReviewsUrl = `https://www.google.com/search?q=${encodeURIComponent(
