@@ -44,15 +44,15 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
   return (
     <Card className="relative flex flex-col h-[26rem] w-full shadow-sm hover:shadow-md transition-shadow border-gray-200">
       <CardContent className="p-4 h-full flex flex-col">
-        {/* Clinic Name */}
-        <div className="mb-2">
+        {/* Clinic Name - FIXED HEIGHT for alignment */}
+        <div className="mb-2 h-[2.5rem]">
           <h3 className="text-base font-bold text-gray-900 leading-tight break-words line-clamp-2">
             {clinic.name}
           </h3>
         </div>
 
-        {/* Address - Fixed Height Container for Perfect Alignment */}
-        <div className="flex items-start gap-2 mb-3 h-[3.5rem]">
+        {/* Address - FIXED HEIGHT for alignment */}
+        <div className="flex items-start gap-2 mb-2 h-[3.5rem]">
           <MapPin className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
           <div className="text-xs text-gray-700 leading-tight line-clamp-3 overflow-hidden">
             <p>{clinic.address}</p>
@@ -60,7 +60,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
         </div>
 
         {/* Primary Action Buttons - Website & Google Reviews - ALWAYS 2 columns for alignment */}
-        <div className="grid grid-cols-2 gap-2 mb-3">
+        <div className="grid grid-cols-2 gap-2 mb-2">
           {/* Website Button - Always render, disable if no URL */}
           <a
             href={clinic.websiteUrl && clinic.websiteUrl !== 'N/A' ? clinic.websiteUrl : '#'}
@@ -93,48 +93,48 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
           </a>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-200 my-1"></div>
+        {/* Spacer to push footer group to bottom */}
+        <div className="flex-grow"></div>
 
-        {/* OraChope.org Concierge Section - SDA Compliant */}
-        <div className="mb-2">
-          <p className="text-xs text-gray-600 text-center mb-2 leading-tight">
-            Have questions?<br />
-            <span className="font-medium">Contact OraChope.org:</span>
-          </p>
+        {/* Footer Group - Concierge + Claim/Remove (no divider, tight spacing) */}
+        <div className="mt-auto">
+          {/* OraChope.org Concierge Section - SDA Compliant */}
+          <div className="mb-2">
+            <p className="text-xs text-gray-600 text-center mb-2 leading-tight">
+              Have questions?<br />
+              <span className="font-medium">Contact OraChope.org:</span>
+            </p>
           
-          <div className="grid grid-cols-2 gap-2">
-            {/* WhatsApp Button - Lighter green for better visibility */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-medium transition-colors"
-            >
-              <MessageCircle className="h-3 w-3" />
-              <span>WhatsApp</span>
-            </a>
+            <div className="grid grid-cols-2 gap-2">
+              {/* WhatsApp Button - Lighter green for better visibility */}
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-medium transition-colors"
+              >
+                <MessageCircle className="h-3 w-3" />
+                <span>WhatsApp</span>
+              </a>
 
-            {/* Email Button - Blue to match professional tone */}
-            <button
-              onClick={handleEmailClick}
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors"
-            >
-              <Mail className="h-3 w-3" />
-              <span>Email Us</span>
-            </button>
+              {/* Email Button - Blue to match professional tone */}
+              <button
+                onClick={handleEmailClick}
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors"
+              >
+                <Mail className="h-3 w-3" />
+                <span>Email Us</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Footer Section - Pinned to Bottom */}
-        <div className="mt-auto pt-4">
-        {/* Claim/Remove Button - Orange Warning Style */}
-        <button
-          onClick={handleClaimRemove}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-orange-400 rounded-md text-sm font-medium text-orange-700 hover:bg-orange-50 transition-colors"
-        >
-          <span>📝 Claim or Remove</span>
-        </button>
+          {/* Claim/Remove Button - Grouped with concierge */}
+          <button
+            onClick={handleClaimRemove}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-orange-400 rounded-md text-sm font-medium text-orange-700 hover:bg-orange-50 transition-colors"
+          >
+            <span>📝 Claim or Remove</span>
+          </button>
         </div>
       </CardContent>
     </Card>
