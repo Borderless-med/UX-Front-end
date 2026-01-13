@@ -59,27 +59,34 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
           </div>
         </div>
 
-        {/* Primary Action Buttons - Website & Google Reviews */}
+        {/* Primary Action Buttons - Website & Google Reviews - ALWAYS 2 columns for alignment */}
         <div className="grid grid-cols-2 gap-2 mb-3">
-          {/* Website Button */}
-          {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && (
-            <a
-              href={clinic.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-            >
-              <Globe className="h-3 w-3" />
-              <span>Website</span>
-            </a>
-          )}
+          {/* Website Button - Always render, disable if no URL */}
+          <a
+            href={clinic.websiteUrl && clinic.websiteUrl !== 'N/A' ? clinic.websiteUrl : '#'}
+            target={clinic.websiteUrl && clinic.websiteUrl !== 'N/A' ? '_blank' : '_self'}
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              if (!clinic.websiteUrl || clinic.websiteUrl === 'N/A') {
+                e.preventDefault();
+              }
+            }}
+            className={`flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-xs font-medium transition-colors ${
+              clinic.websiteUrl && clinic.websiteUrl !== 'N/A' 
+                ? 'text-gray-700 hover:bg-gray-200 cursor-pointer' 
+                : 'text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            <Globe className="h-3 w-3" />
+            <span>Website</span>
+          </a>
 
-          {/* Google Reviews Link - NO RATING DISPLAY */}
+          {/* Google Reviews Link - Google Blue for brand recognition */}
           <a
             href={googleReviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+            className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-md text-xs font-medium text-blue-600 hover:bg-blue-100 transition-colors"
           >
             <Star className="h-3 w-3" />
             <span>Google Reviews</span>
@@ -89,29 +96,29 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
         {/* Divider */}
         <div className="border-t border-gray-200 my-1"></div>
 
-        {/* OraChope.org Concierge Section - Lead Capture */}
+        {/* OraChope.org Concierge Section - SDA Compliant */}
         <div className="mb-2">
-          <p className="text-xs text-gray-600 text-center mb-2 leading-relaxed">
-            💡 Need help booking or comparing clinics?<br />
-            <span className="font-medium">Contact OraChope.org concierge:</span>
+          <p className="text-xs text-gray-600 text-center mb-2 leading-tight">
+            Have questions?<br />
+            <span className="font-medium">Contact OraChope.org:</span>
           </p>
           
           <div className="grid grid-cols-2 gap-2">
-            {/* WhatsApp Button */}
+            {/* WhatsApp Button - Lighter green for better visibility */}
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-md text-xs font-medium transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-medium transition-colors"
             >
               <MessageCircle className="h-3 w-3" />
               <span>WhatsApp</span>
             </a>
 
-            {/* Email Button */}
+            {/* Email Button - Blue to match professional tone */}
             <button
               onClick={handleEmailClick}
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-md text-xs font-medium transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors"
             >
               <Mail className="h-3 w-3" />
               <span>Email Us</span>
