@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import ClinicCard from './ClinicCard';
+import MinimalClinicCard from './MinimalClinicCard';
 
 interface ClinicGridProps {
   clinics: any[];
@@ -45,6 +46,14 @@ const ClinicGrid = ({
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-3 md:gap-4 mb-16 min-w-0 auto-rows-min">
       {clinics.map((clinic) => {
         const perClinicHideDistance = hideDistance || (selection === 'all' && clinic?.country === 'SG');
+        const isSingaporeClinic = clinic?.country === 'SG';
+        
+        // Render minimal card for Singapore clinics (HCSA compliance)
+        if (isSingaporeClinic) {
+          return <MinimalClinicCard key={clinic.id} clinic={clinic} />;
+        }
+        
+        // Render full card for JB/Malaysian clinics
         return (
         <ClinicCard
           key={clinic.id}
