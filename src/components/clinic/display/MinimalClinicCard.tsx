@@ -50,10 +50,10 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
           </h3>
         </div>
 
-        {/* Address - Fixed Height */}
-        <div className="flex items-start gap-2 mb-3 h-[3rem]">
+        {/* Address - Fixed Height Container for Perfect Alignment */}
+        <div className="flex items-start gap-2 mb-3 h-[3.5rem]">
           <MapPin className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
-          <div className="text-xs text-gray-700 leading-tight line-clamp-3">
+          <div className="text-xs text-gray-700 leading-tight line-clamp-3 overflow-hidden">
             <p>{clinic.address}</p>
           </div>
         </div>
@@ -66,7 +66,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
               href={clinic.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors"
             >
               <Globe className="h-3 w-3" />
               <span>Website</span>
@@ -78,7 +78,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             href={googleReviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors"
           >
             <Star className="h-3 w-3" />
             <span>Google Reviews</span>
@@ -101,7 +101,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-medium transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-md text-xs font-medium transition-colors"
             >
               <MessageCircle className="h-3 w-3" />
               <span>WhatsApp</span>
@@ -110,7 +110,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             {/* Email Button */}
             <button
               onClick={handleEmailClick}
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-md text-xs font-medium transition-colors"
             >
               <Mail className="h-3 w-3" />
               <span>Email Us</span>
@@ -123,23 +123,10 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
         {/* Claim/Remove Button - Orange Warning Style */}
         <button
           onClick={handleClaimRemove}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-orange-400 rounded-md text-sm font-medium text-orange-700 hover:bg-orange-50 transition-colors mb-2"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-orange-400 rounded-md text-sm font-medium text-orange-700 hover:bg-orange-50 transition-colors"
         >
           <span>📝 Claim or Remove</span>
         </button>
-
-        {/* Footer Opt-Out Notice */}
-        <div className="pt-2 border-t border-gray-100">
-          <p className="text-xs text-gray-500 text-center leading-relaxed">
-            Clinic owner?{' '}
-            <button
-              onClick={handleClaimRemove}
-              className="text-orange-600 hover:text-orange-700 underline font-medium"
-            >
-              Claim or remove listing
-            </button>
-          </p>
-        </div>
         </div>
       </CardContent>
     </Card>
