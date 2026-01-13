@@ -42,7 +42,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
   };
 
   return (
-    <Card className="relative flex flex-col h-[26rem] w-full shadow-sm hover:shadow-md transition-shadow border-gray-200">
+    <Card className="relative flex flex-col h-[22rem] w-full shadow-sm hover:shadow-md transition-shadow border-gray-200">
       <CardContent className="p-4 h-full flex flex-col">
         {/* Clinic Name - FIXED HEIGHT for alignment */}
         <div className="mb-2 h-[2.5rem]">
@@ -81,14 +81,14 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             <span>Website</span>
           </a>
 
-          {/* Google Reviews Link - Google Blue for brand recognition */}
+          {/* Google Reviews Link - Strong Google Blue */}
           <a
             href={googleReviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-md text-xs font-medium text-blue-600 hover:bg-blue-100 transition-colors"
+            className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 border border-blue-600 rounded-md text-xs font-medium text-white hover:bg-blue-700 transition-colors"
           >
-            <Star className="h-3 w-3" />
+            <Star className="h-3 w-3 fill-white" />
             <span>Google Reviews</span>
           </a>
         </div>
@@ -106,21 +106,21 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             </p>
           
             <div className="grid grid-cols-2 gap-2">
-              {/* WhatsApp Button - Lighter green for better visibility */}
+              {/* WhatsApp Button - Softer muted green */}
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-green-700 hover:bg-green-800 text-white rounded-md text-xs font-medium transition-colors"
               >
                 <MessageCircle className="h-3 w-3" />
                 <span>WhatsApp</span>
               </a>
 
-              {/* Email Button - Blue to match professional tone */}
+              {/* Email Button - Softer muted blue */}
               <button
                 onClick={handleEmailClick}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-md text-xs font-medium transition-colors"
               >
                 <Mail className="h-3 w-3" />
                 <span>Email Us</span>
