@@ -41,8 +41,8 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
   };
 
   return (
-    <Card className="relative overflow-hidden flex flex-col min-h-[20rem] max-h-[26rem] w-full shadow-sm hover:shadow-md transition-shadow border-gray-200">
-      <CardContent className="p-4 h-full flex flex-col gap-3">
+    <Card className="relative flex flex-col h-[28rem] w-full shadow-sm hover:shadow-md transition-shadow border-gray-200">
+      <CardContent className="p-4 h-full flex flex-col gap-3 overflow-y-auto">
         {/* Clinic Name */}
         <div className="mb-2">
           <h3 className="text-lg font-bold text-gray-900 leading-tight break-words">
@@ -81,7 +81,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
             <Star className="h-4 w-4" />
-            <span>Reviews</span>
+            <span>Google Reviews</span>
           </a>
         </div>
 
@@ -101,7 +101,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs font-medium transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-medium transition-colors"
             >
               <MessageCircle className="h-3 w-3" />
               <span>WhatsApp</span>
@@ -110,7 +110,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             {/* Email Button */}
             <button
               onClick={handleEmailClick}
-              className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-medium transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors"
             >
               <Mail className="h-3 w-3" />
               <span>Email Us</span>
@@ -118,9 +118,8 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
           </div>
         </div>
 
-        {/* Spacer to push footer to bottom */}
-        <div className="flex-1"></div>
-
+        {/* Footer Section - Pinned to Bottom */}
+        <div className="mt-auto pt-4">
         {/* Claim/Remove Button - Orange Warning Style */}
         <button
           onClick={handleClaimRemove}
@@ -140,6 +139,7 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
               Claim or remove listing
             </button>
           </p>
+        </div>
         </div>
       </CardContent>
     </Card>
