@@ -41,34 +41,34 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
   };
 
   return (
-    <Card className="relative flex flex-col h-[28rem] w-full shadow-sm hover:shadow-md transition-shadow border-gray-200">
-      <CardContent className="p-4 h-full flex flex-col gap-3 overflow-y-auto">
+    <Card className="relative flex flex-col h-[26rem] w-full shadow-sm hover:shadow-md transition-shadow border-gray-200">
+      <CardContent className="p-4 h-full flex flex-col">
         {/* Clinic Name */}
         <div className="mb-2">
-          <h3 className="text-lg font-bold text-gray-900 leading-tight break-words">
+          <h3 className="text-base font-bold text-gray-900 leading-tight break-words line-clamp-2">
             {clinic.name}
           </h3>
         </div>
 
-        {/* Address */}
-        <div className="flex items-start gap-2 mb-3">
-          <MapPin className="h-5 w-5 text-gray-500 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-gray-700 leading-relaxed">
+        {/* Address - Fixed Height */}
+        <div className="flex items-start gap-2 mb-3 h-[3rem]">
+          <MapPin className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+          <div className="text-xs text-gray-700 leading-tight line-clamp-3">
             <p>{clinic.address}</p>
           </div>
         </div>
 
         {/* Primary Action Buttons - Website & Google Reviews */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-2 mb-3">
           {/* Website Button */}
           {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && (
             <a
               href={clinic.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              <Globe className="h-4 w-4" />
+              <Globe className="h-3 w-3" />
               <span>Website</span>
             </a>
           )}
@@ -78,18 +78,18 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             href={googleReviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            <Star className="h-4 w-4" />
+            <Star className="h-3 w-3" />
             <span>Google Reviews</span>
           </a>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-200 my-2"></div>
+        <div className="border-t border-gray-200 my-1"></div>
 
         {/* OraChope.org Concierge Section - Lead Capture */}
-        <div className="mb-3">
+        <div className="mb-2">
           <p className="text-xs text-gray-600 text-center mb-2 leading-relaxed">
             💡 Need help booking or comparing clinics?<br />
             <span className="font-medium">Contact OraChope.org concierge:</span>
