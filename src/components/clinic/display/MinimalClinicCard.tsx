@@ -106,21 +106,21 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
             </p>
           
             <div className="grid grid-cols-2 gap-2">
-              {/* WhatsApp Button - Softer muted green */}
+              {/* WhatsApp Button - Lighter green */}
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-green-700 hover:bg-green-800 text-white rounded-md text-xs font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs font-medium transition-colors"
               >
                 <MessageCircle className="h-3 w-3" />
                 <span>WhatsApp</span>
               </a>
 
-              {/* Email Button - Softer muted blue */}
+              {/* Email Button - Lighter blue */}
               <button
                 onClick={handleEmailClick}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-md text-xs font-medium transition-colors"
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-medium transition-colors"
               >
                 <Mail className="h-3 w-3" />
                 <span>Email Us</span>
