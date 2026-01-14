@@ -1,7 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MapPin, Globe, Star, MessageCircle, Mail } from 'lucide-react';
+import { MapPin, Globe, Star, MessageCircle } from 'lucide-react';
 import { Clinic } from '@/types/clinic';
+import { InquiryForm } from '@/components/clinic/InquiryForm';
+import { useState } from 'react';
 
 interface MinimalClinicCardProps {
   clinic: Clinic;
@@ -25,20 +27,14 @@ interface MinimalClinicCardProps {
  * - Redundant footer text under Claim button
  */
 const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
+  const [isInquiryFormOpen, setIsInquiryFormOpen] = useState(false);
+  
   const googleReviewsUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${clinic.name} reviews Singapore`
   )}`;
 
-  const whatsappNumber = '+6591234567'; // Replace with actual OraChope.org WhatsApp number
-  const whatsappMessage = `Hi! I'd like to learn more about ${clinic.name} and compare dental options.`;
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-
   const handleClaimRemove = () => {
     window.location.href = `/opt-out-report?clinic=${encodeURIComponent(clinic.name)}&clinicId=${clinic.id}`;
-  };
-
-  const handleEmailClick = () => {
-    window.location.href = `mailto:support@orachope.org?subject=Inquiry about ${encodeURIComponent(clinic.name)}`;
   };
 
   return (
@@ -96,39 +92,24 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
         {/* Spacer to push footer group to bottom */}
         <div className="flex-grow"></div>
 
-        {/* Footer Group - Concierge + Claim/Remove (no divider, tight spacing) */}
+        {/* Footer Group - Contact Form Button */}
         <div className="mt-auto">
-          {/* OraChope.org Concierge Section - SDA Compliant */}
+          {/* Contact Button */}
           <div className="mb-2">
             <p className="text-xs text-gray-600 text-center mb-2 leading-tight">
-              Have questions?<br />
-              <span className="font-medium">Contact OraChope.org:</span>
+              Have questions?
             </p>
           
-            <div className="grid grid-cols-2 gap-2">
-              {/* WhatsApp Button - Light background, dark text */}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-green-100 hover:bg-green-200 border border-green-300 text-green-800 rounded-md text-xs font-medium transition-colors"
-              >
-                <MessageCircle className="h-3 w-3" />
-                <span>WhatsApp</span>
-              </a>
-
-              {/* Email Button - Light background, dark text */}
-              <button
-                onClick={handleEmailClick}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 border border-blue-300 text-blue-800 rounded-md text-xs font-medium transition-colors"
-              >
-                <Mail className="h-3 w-3" />
-                <span>Email Us</span>
-              </button>
-            </div>
+            <button
+              onClick={() => setIsInquiryFormOpen(true)}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span>Contact OraChope.org</span>
+            </button>
           </div>
 
-          {/* Claim/Remove Button - Grouped with concierge */}
+          {/* Claim/Remove Button */}
           <button
             onClick={handleClaimRemove}
             className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-orange-400 rounded-md text-sm font-medium text-orange-700 hover:bg-orange-50 transition-colors"
@@ -138,6 +119,12 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
         </div>
       </CardContent>
     </Card>
+    
+    <InquiryForm
+      clinic={clinic}
+      isOpen={isInquiryFormOpen}
+      onClose={() => setIsInquiryFormOpen(false)}
+    />
   );
 };
 
