@@ -141,7 +141,7 @@ const ResultsCount = ({
       {/* Quick Stats */}
       {filteredCount > 0 && (
         <div className="mt-3 pt-3 border-t border-gray-100">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className={`grid ${isSingapore ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-4'} gap-4 text-center`}>
             <div className="flex flex-col items-center">
               <Stethoscope className="h-4 w-4 text-blue-primary mb-1" />
               <span className="text-xs text-neutral-gray">Treatment Services</span>
@@ -158,22 +158,28 @@ const ResultsCount = ({
               </span>
             </div>
             
-            <div className="flex flex-col items-center">
-              <Star className="h-4 w-4 text-blue-primary mb-1" />
-              <span className="text-xs text-neutral-gray">Min Rating</span>
-              <span className="text-sm font-medium text-blue-dark">
-                {ratingFilter > 0 ? `${ratingFilter}+` : 'Any'}
-              </span>
-            </div>
+            {/* HCSA compliance: Don't show rating stats for SG clinics */}
+            {!isSingapore && (
+              <div className="flex flex-col items-center">
+                <Star className="h-4 w-4 text-blue-primary mb-1" />
+                <span className="text-xs text-neutral-gray">Min Rating</span>
+                <span className="text-sm font-medium text-blue-dark">
+                  {ratingFilter > 0 ? `${ratingFilter}+` : 'Any'}
+                </span>
+              </div>
+            )}
             
-            <div className="flex flex-col items-center">
-              <Shield className="h-4 w-4 text-blue-primary mb-1" />
-              <span className="text-xs text-neutral-gray">License Status</span>
-              <span className="text-sm font-medium text-blue-dark">
-                {mdaLicenseFilter === 'verified' ? 'Verified' : 
-                 mdaLicenseFilter === 'pending' ? 'Pending' : 'All'}
-              </span>
-            </div>
+            {/* HCSA compliance: Don't show license stats for SG clinics */}
+            {!isSingapore && (
+              <div className="flex flex-col items-center">
+                <Shield className="h-4 w-4 text-blue-primary mb-1" />
+                <span className="text-xs text-neutral-gray">License Status</span>
+                <span className="text-sm font-medium text-blue-dark">
+                  {mdaLicenseFilter === 'verified' ? 'Verified' : 
+                   mdaLicenseFilter === 'pending' ? 'Pending' : 'All'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       )}
