@@ -10,6 +10,7 @@ interface ResultsCountProps {
   selectedTownships?: string[];
   ratingFilter?: number;
   mdaLicenseFilter?: string;
+  isSingapore?: boolean; // HCSA compliance - hide rating/license filters
 }
 
 const ResultsCount = ({ 
@@ -19,7 +20,8 @@ const ResultsCount = ({
   selectedTreatments = [],
   selectedTownships = [],
   ratingFilter = 0,
-  mdaLicenseFilter = 'all'
+  mdaLicenseFilter = 'all',
+  isSingapore = false
 }: ResultsCountProps) => {
   const getFilterSummary = () => {
     const filters = [];
@@ -32,14 +34,18 @@ const ResultsCount = ({
       filters.push(`${selectedTownships.length} location${selectedTownships.length > 1 ? 's' : ''}`);
     }
     
-    if (ratingFilter > 0) {
+    // HCSA compliance: Don't show rating filter for SG clinics
+    if (!isSingapore && ratingFilter > 0) {
       filters.push(`${ratingFilter}+ star rating`);
     }
     
-    if (mdaLicenseFilter === 'verified') {
-      filters.push('verified license');
-    } else if (mdaLicenseFilter === 'pending') {
-      filters.push('pending verification');
+    // HCSA compliance: Don't show license filter for SG clinics
+    if (!isSingapore) {
+      if (mdaLicenseFilter === 'verified') {
+        filters.push('verified license');
+      } else if (mdaLicenseFilter === 'pending') {
+        filters.push('pending verification');
+      }
     }
     
     return filters;

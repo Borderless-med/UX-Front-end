@@ -122,6 +122,7 @@ const PrototypeClinicSidebar = ({
               selectedTownships={selectedTownships}
               ratingFilter={ratingFilter}
               mdaLicenseFilter={mdaLicenseFilter}
+              isSingapore={isSingapore}
             />
           </div>
 

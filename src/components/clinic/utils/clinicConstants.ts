@@ -1,78 +1,53 @@
 
 // Treatment categories and labels for the clinic directory
-// These are the most common essential services that almost all clinics offer
-export const basicServices = [
-  'dentalCheckup',
-  'dentalCleaning',
-  'toothFilling',
-  'simpleExtraction',
-  'wisdomTooth',
-  'dentalXrays',
-  'fluorideTreatment',
-  'dentalSealants',
-  'emergencyCare',
-  'gumTreatment',
-  'rootCanal',
-  'dentalCrown'
-];
+// IMPORTANT: All keys must match properties in Clinic.treatments interface
 
 export const specialServicesLabels = {
-  // Essential/Basic treatments (12 essential services)
-  dentalCheckup: 'Dental Checkup/Examination',
-  dentalCleaning: 'Dental Cleaning (Scaling & Polishing)',
+  // Basic treatments - matching Clinic.treatments properties
   toothFilling: 'Tooth Filling',
-  simpleExtraction: 'Simple Tooth Extraction',
-  wisdomTooth: 'Wisdom Tooth Extraction',
-  dentalXrays: 'Dental X-rays',
-  fluorideTreatment: 'Fluoride Treatment',
-  dentalSealants: 'Dental Sealants',
-  emergencyCare: 'Emergency Dental Care',
-  gumTreatment: 'Gum Treatment',
   rootCanal: 'Root Canal',
   dentalCrown: 'Dental Crown',
-  
-  // Additional common treatments
-  dentalImplant: 'Dental Implant',
+  wisdomTooth: 'Wisdom Tooth Extraction',
+  gumTreatment: 'Gum Treatment',
   teethWhitening: 'Teeth Whitening',
-  braces: 'Braces/Orthodontics',
+  
+  // Restorative treatments
+  dentalImplant: 'Dental Implant',
+  inlaysOnlays: 'Inlays/Onlays',
+  dentalBonding: 'Dental Bonding',
   
   // Cosmetic treatments
   compositeVeneers: 'Composite Veneers',
   porcelainVeneers: 'Porcelain Veneers',
-  dentalBonding: 'Dental Bonding',
   enamelShaping: 'Enamel Shaping',
   
-  // Advanced treatments
-  inlaysOnlays: 'Inlays/Onlays',
+  // Orthodontic
+  braces: 'Braces/Orthodontics',
+  
+  // Surgical treatments
   gingivectomy: 'Gingivectomy',
   boneGrafting: 'Bone Grafting',
   sinusLift: 'Sinus Lift',
   frenectomy: 'Frenectomy',
+  crownLengthening: 'Crown Lengthening',
+  alveoplasty: 'Alveoplasty',
+  
+  // Specialized treatments
   tmjTreatment: 'TMJ Treatment',
   sleepApneaAppliances: 'Sleep Apnea Appliances',
-  crownLengthening: 'Crown Lengthening',
-  oralCancerScreening: 'Oral Cancer Screening',
-  alveoplasty: 'Alveoplasty'
+  oralCancerScreening: 'Oral Cancer Screening'
 };
 
 export const treatmentCategories = {
   basic: {
     label: 'Basic Treatments',
     treatments: [
-      // All 12 essential services
-      'dentalCheckup',
-      'dentalCleaning',
+      // Only treatments that exist in Clinic.treatments interface
       'toothFilling',
-      'simpleExtraction',
-      'wisdomTooth',
-      'dentalXrays',
-      'fluorideTreatment',
-      'dentalSealants',
-      'emergencyCare',
-      'gumTreatment',
       'rootCanal',
       'dentalCrown',
-      // Additional common
+      'wisdomTooth',
+      'gumTreatment',
       'teethWhitening'
     ]
   },
