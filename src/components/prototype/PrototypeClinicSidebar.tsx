@@ -75,6 +75,9 @@ const PrototypeClinicSidebar = ({
   onSidebarResize: externalOnSidebarResize
 }: Props) => {
   const isMobile = useIsMobile();
+  
+  // Determine if showing Singapore clinics only (for HCSA compliance)
+  const isSingapore = selection === 'sg';
   const {
     sidebarWidth: internalSidebarWidth,
     setSidebarWidth: internalSetSidebarWidth,
@@ -135,6 +138,7 @@ const PrototypeClinicSidebar = ({
             mdaLicenseFilter={mdaLicenseFilter}
             onMdaLicenseFilterChange={onMdaLicenseFilterChange}
             hideDistanceSort={selection === 'sg'}
+            isSingapore={isSingapore}
           />
 
           <ClinicAdvancedFilters
@@ -145,6 +149,7 @@ const PrototypeClinicSidebar = ({
             selectedCredentials={selectedCredentials}
             onCredentialsChange={onCredentialsChange}
             hideDistanceFilter={selection === 'sg'}
+            isSingapore={isSingapore}
           />
         </div>
       </div>

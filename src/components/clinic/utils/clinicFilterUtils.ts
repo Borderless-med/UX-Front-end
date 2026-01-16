@@ -73,6 +73,8 @@ export const sortClinics = (clinics: Clinic[], sortBy: string) => {
         return b.reviews - a.reviews; // Sort by Google reviews count (most first)
       case 'name':
         return a.name.localeCompare(b.name);
+      case 'township':
+        return a.township.localeCompare(b.township); // Sort by location/area (alphabetical)
       default:
         return 0;
     }

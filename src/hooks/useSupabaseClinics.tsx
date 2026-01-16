@@ -20,15 +20,28 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const abortControllerRef = useRef<AbortController>();
   const fetchInProgressRef = useRef(false);
+  const currentSourceRef = useRef<ClinicSource>(source);
+  const hasInitialDataRef = useRef(false);
 
   useEffect(() => {
     console.log('[useSupabaseClinics] useEffect triggered for source:', source, 'at', new Date().toISOString());
     
-    // FIX: Prevent duplicate fetches on re-renders (4G fix)
-    if (fetchInProgressRef.current) {
-      console.log('[useSupabaseClinics] ⚠️ Fetch already in progress, skipping duplicate request');
+    // FIX: Prevent duplicate fetches for the SAME source
+    if (fetchInProgressRef.current && currentSourceRef.current === source) {
+      console.log('[useSupabaseClinics] ⚠️ Fetch already in progress for same source, skipping duplicate request');
       return;
     }
+    
+    // FIX: If we already have data and cache is still valid, don't refetch unnecessarily
+    const cacheKey = source;
+    const cached = CLINICS_CACHE[cacheKey];
+    if (hasInitialDataRef.current && cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS && currentSourceRef.current === source) {
+      console.log('[useSupabaseClinics] ⚠️ Already have valid data for this source, skipping unnecessary refetch');
+      return;
+    }
+    
+    // Update current source
+    currentSourceRef.current = source;
     
     const fetchClinics = async () => {
       const startTime = performance.now();
@@ -37,6 +50,20 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
       fetchInProgressRef.current = true;
       
       try {
+        // Check cache FIRST before setting loading state
+        const cacheKey = source;
+        const cached = CLINICS_CACHE[cacheKey];
+        if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
+          console.log(`[useSupabaseClinics] ✅ Using cached clinic data for '${source}' (age ${(Date.now() - cached.timestamp)/1000}s)`);
+          setClinics(cached.data);
+          setLoading(false);
+          setError(null);
+          fetchInProgressRef.current = false;
+          hasInitialDataRef.current = true;
+          return; // skip network fetch
+        }
+        
+        // Only set loading=true if we don't have valid cached data
         setLoading(true);
         // FIX: DON'T clear existing clinics during loading (keeps data visible on 4G)
         // setClinics([]); // ← REMOVED - prevents flickering on slow connections
@@ -60,7 +87,12 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         timeoutRef.current = setTimeout(() => {
           console.error(`⚠️ HARD TIMEOUT after ${timeoutDuration/1000}s - clinic fetch failed for source: ${source}`);
           abortControllerRef.current?.abort();
-          setError(`Unable to load clinic data. Please check your connection and try again.`);
+          // FIX: Don't set error if we already have clinics displayed (background refresh timeout)
+          if (clinics.length === 0) {
+            setError(`Unable to load clinic data. Please check your connection and try again.`);
+          } else {
+            console.warn('⚠️ Timeout on background refresh, keeping existing clinics visible');
+          }
           setLoading(false);
         }, timeoutDuration);
         
@@ -81,16 +113,6 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
             }, { timeout: 8000, retries: 1 });
           }
         };
-
-        // Check cache first
-        const cacheKey = source;
-        const cached = CLINICS_CACHE[cacheKey];
-        if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
-          console.log(`[useSupabaseClinics] ✅ Using cached clinic data for '${source}' (age ${(Date.now() - cached.timestamp)/1000}s)`);
-          setClinics(cached.data);
-          setLoading(false);
-          return; // skip network fetch
-        }
 
         // Deterministic per your schema:
         // - JB -> clinics_data
@@ -259,6 +281,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
 
         const totalTime = performance.now() - startTime;
         console.log('✅ Successfully transformed', transformedClinics.length, 'clinics in', totalTime.toFixed(1) + 'ms');
+        hasInitialDataRef.current = true;
         setClinics(transformedClinics);
         // Store in cache
         CLINICS_CACHE[cacheKey] = { data: transformedClinics, timestamp: Date.now() };
@@ -285,15 +308,24 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
           }
         }
         
-        // IMPORTANT: Check if we have stale cached data - if so, use it instead of showing error
+        // CRITICAL FIX: Preserve existing clinics on error - never show empty state if we have data
         const cacheKey = source;
         const staleCache = CLINICS_CACHE[cacheKey];
-        if (staleCache && staleCache.data.length > 0) {
-          console.warn('⚠️ Fetch failed, but using stale cached data from', new Date(staleCache.timestamp).toISOString());
+        
+        // Priority 1: Keep currently displayed clinics (don't clear state on background refresh failures)
+        if (clinics.length > 0) {
+          console.warn('⚠️ Fetch failed, but keeping currently displayed clinics to prevent UI from going blank');
+          setError(null); // Don't show error if we already have data displayed
+        }
+        // Priority 2: Use stale cache if available
+        else if (staleCache && staleCache.data.length > 0) {
+          console.warn('⚠️ Fetch failed, using stale cached data from', new Date(staleCache.timestamp).toISOString());
           setClinics(staleCache.data);
-          // Don't show error if we have cached data to display
           setError(null);
-        } else {
+        } 
+        // Priority 3: Only show error if we have no data at all
+        else {
+          console.error('❌ No cached or existing data available, showing error to user');
           setError(err instanceof Error ? err.message : 'Failed to fetch clinics');
         }
       } finally {
@@ -305,20 +337,23 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
 
     fetchClinics();
     
-    // FIX: Simplified cleanup - only reset state, don't abort unless unmounting
+    // Cleanup function - only aborts when source changes or component unmounts
+    // This prevents clinics from disappearing during normal re-renders
     return () => {
+      console.log('[useSupabaseClinics] 🧹 Cleanup triggered');
+      // Mark fetch as not in progress to allow new fetches
       fetchInProgressRef.current = false;
-      // Only abort if component is truly unmounting (not just re-rendering)
+      // Abort in-flight requests when source changes or component unmounts
       if (abortControllerRef.current) {
-        console.log('[useSupabaseClinics] 🧹 Cleanup: Aborting request on unmount');
+        console.log('[useSupabaseClinics] ⏹️ Aborting request due to cleanup');
         abortControllerRef.current.abort();
       }
+      // Clear timeout to prevent memory leaks
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      // NOTE: We don't clear clinics state here to prevent cards from disappearing
     };
-    // AMENDMENT: Dependency array includes [source] to refetch when source changes.
-    // AbortController ensures previous requests are cancelled to prevent race conditions.
   }, [source]);
 
   return { clinics, loading, error };

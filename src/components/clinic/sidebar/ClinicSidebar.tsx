@@ -53,6 +53,9 @@ interface ClinicSidebarProps {
   // Resize functionality
   sidebarWidth?: number;
   onSidebarResize?: (width: number) => void;
+  
+  // Compliance
+  selection?: 'sg' | 'jb' | 'all'; // For country-specific filter behavior
 }
 
 const ClinicSidebar = ({
@@ -85,10 +88,14 @@ const ClinicSidebar = ({
   isOpen = true,
   onClose,
   sidebarWidth: externalSidebarWidth,
-  onSidebarResize: externalOnSidebarResize
+  onSidebarResize: externalOnSidebarResize,
+  selection = 'all'
 }: ClinicSidebarProps) => {
   const isMobile = useIsMobile();
   const ENABLE_SIDEBAR_RESIZE = false; // disable desktop resize feature
+  
+  // Determine if showing Singapore clinics only (for HCSA compliance)
+  const isSingapore = selection === 'sg';
   const {
     sidebarWidth: internalSidebarWidth,
     setSidebarWidth: internalSetSidebarWidth,
@@ -161,6 +168,7 @@ const ClinicSidebar = ({
               onSortChange={onSortChange}
               mdaLicenseFilter={mdaLicenseFilter}
               onMdaLicenseFilterChange={onMdaLicenseFilterChange}
+              isSingapore={isSingapore}
             />
           </div>
 
@@ -173,6 +181,7 @@ const ClinicSidebar = ({
               onMinReviewsChange={onMinReviewsChange}
               selectedCredentials={selectedCredentials}
               onCredentialsChange={onCredentialsChange}
+              isSingapore={isSingapore}
             />
           </div>
         </div>

@@ -12,6 +12,7 @@ interface ClinicGridProps {
   activeFiltersCount: number;
   hideDistance?: boolean; // global override
   selection?: 'sg' | 'jb' | 'all'; // to allow per-clinic distance hiding logic
+  selectedTreatments?: string[]; // For Option 4 conditional display on SG cards
 }
 
 const ClinicGrid = ({ 
@@ -22,7 +23,8 @@ const ClinicGrid = ({
   onClearAllFilters,
   activeFiltersCount,
   hideDistance = false,
-  selection
+  selection,
+  selectedTreatments = []
 }: ClinicGridProps) => {
   if (clinics.length === 0) {
     return (
@@ -50,7 +52,13 @@ const ClinicGrid = ({
         
         // Render minimal card for Singapore clinics (HCSA compliance)
         if (isSingaporeClinic) {
-          return <MinimalClinicCard key={clinic.id} clinic={clinic} />;
+          return (
+            <MinimalClinicCard 
+              key={clinic.id} 
+              clinic={clinic} 
+              selectedTreatments={selectedTreatments}
+            />
+          );
         }
         
         // Render full card for JB/Malaysian clinics

@@ -227,6 +227,7 @@ const FindClinicsPrototype1 = () => {
                     activeFiltersCount={activeFiltersCount}
                     hideDistance={selection === 'sg'}
                     selection={selection}
+                    selectedTreatments={selectedTreatments}
                   />
                 </>
               )}

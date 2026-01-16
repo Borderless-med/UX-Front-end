@@ -10,6 +10,7 @@ interface ClinicAdvancedFiltersProps {
   selectedCredentials: string[];
   onCredentialsChange: (credentials: string[]) => void;
   hideDistanceFilter?: boolean; // when true, hide the distance slider block
+  isSingapore?: boolean; // HCSA compliance - hide review/credential filters for SG
 }
 
 const ClinicAdvancedFilters = ({
@@ -19,8 +20,14 @@ const ClinicAdvancedFilters = ({
   onMinReviewsChange,
   selectedCredentials,
   onCredentialsChange,
-  hideDistanceFilter = false
+  hideDistanceFilter = false,
+  isSingapore = false
 }: ClinicAdvancedFiltersProps) => {
+  // Hide entire Advanced Filters section for Singapore clinics (HCSA compliance)
+  if (isSingapore) {
+    return null;
+  }
+  
   return (
     <div className="pt-4 border-t border-sidebar-border">
       <h3 className="text-lg font-medium text-sidebar-muted-foreground mb-4">Advanced Filters</h3>

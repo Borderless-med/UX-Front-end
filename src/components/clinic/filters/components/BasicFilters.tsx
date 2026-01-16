@@ -13,6 +13,7 @@ interface BasicFiltersProps {
   mdaLicenseFilter: string;
   onMdaLicenseFilterChange: (filter: string) => void;
   hideDistanceSort?: boolean; // when true, remove distance sort option
+  isSingapore?: boolean; // when true, hide promotional filters (HCSA compliance)
 }
 
 const BasicFilters = ({
@@ -25,7 +26,8 @@ const BasicFilters = ({
   onSortChange,
   mdaLicenseFilter,
   onMdaLicenseFilterChange,
-  hideDistanceSort = false
+  hideDistanceSort = false,
+  isSingapore = false
 }: BasicFiltersProps) => {
   const handleTownshipChange = (value: string) => {
     if (value === 'all') {
@@ -63,47 +65,51 @@ const BasicFilters = ({
           </Select>
         </div>
 
-        {/* Rating Filter */}
-        <div>
-          <label className="block text-base font-medium text-sidebar-foreground mb-2 flex items-center">
-            <Star className="h-4 w-4 mr-2" />
-            Minimum Google Rating
-          </label>
-          <Select value={ratingFilter.toString()} onValueChange={(value) => onRatingChange(Number(value))}>
-            <SelectTrigger className="h-11">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0">Any Rating</SelectItem>
-              <SelectItem value="3">3+ Stars</SelectItem>
-              <SelectItem value="4">4+ Stars</SelectItem>
-              <SelectItem value="4.5">4.5+ Stars</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Rating Filter - Hidden for SG clinics (HCSA Reg 14 compliance) */}
+        {!isSingapore && (
+          <div>
+            <label className="block text-base font-medium text-sidebar-foreground mb-2 flex items-center">
+              <Star className="h-4 w-4 mr-2" />
+              Minimum Google Rating
+            </label>
+            <Select value={ratingFilter.toString()} onValueChange={(value) => onRatingChange(Number(value))}>
+              <SelectTrigger className="h-11">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">Any Rating</SelectItem>
+                <SelectItem value="3">3+ Stars</SelectItem>
+                <SelectItem value="4">4+ Stars</SelectItem>
+                <SelectItem value="4.5">4.5+ Stars</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       {/* Secondary Filters Section */}
       <div className="pt-4 border-t border-sidebar-border">
         <h4 className="text-base font-medium text-sidebar-muted-foreground mb-4">Additional Filters</h4>
         <div className="space-y-4">
-          {/* License Status Filter */}
-          <div>
-            <label className="block text-base font-medium text-sidebar-foreground mb-2 flex items-center">
-              <Shield className="h-4 w-4 mr-2" />
-              License Status
-            </label>
-            <Select value={mdaLicenseFilter} onValueChange={onMdaLicenseFilterChange}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Clinics</SelectItem>
-                <SelectItem value="verified">Verified License</SelectItem>
-                <SelectItem value="pending">Pending Verification</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {/* License Status Filter - Hidden for SG clinics (endorsement/ranking) */}
+          {!isSingapore && (
+            <div>
+              <label className="block text-base font-medium text-sidebar-foreground mb-2 flex items-center">
+                <Shield className="h-4 w-4 mr-2" />
+                License Status
+              </label>
+              <Select value={mdaLicenseFilter} onValueChange={onMdaLicenseFilterChange}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Clinics</SelectItem>
+                  <SelectItem value="verified">Verified License</SelectItem>
+                  <SelectItem value="pending">Pending Verification</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* Sort By */}
           <div>
@@ -118,9 +124,18 @@ const BasicFilters = ({
                 {!hideDistanceSort && (
                   <SelectItem value="distance">Distance from CIQ</SelectItem>
                 )}
-                <SelectItem value="rating">Rating</SelectItem>
-                <SelectItem value="reviews">Reviews Count</SelectItem>
-                <SelectItem value="name">Name</SelectItem>
+                {/* Hide rating/review sorting for SG clinics (SDC 4.1.1 - no ranking) */}
+                {!isSingapore && (
+                  <>
+                    <SelectItem value="rating">Rating</SelectItem>
+                    <SelectItem value="reviews">Reviews Count</SelectItem>
+                  </>
+                )}
+                <SelectItem value="name">Name (A-Z)</SelectItem>
+                {/* Location/Area sort for SG clinics (neutral) */}
+                {isSingapore && (
+                  <SelectItem value="township">Location (Area)</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>

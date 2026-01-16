@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 interface MinimalClinicCardProps {
   clinic: Clinic;
+  selectedTreatments?: string[]; // For Option 4: Show services when filter active
 }
 
 /**
@@ -26,7 +27,7 @@ interface MinimalClinicCardProps {
  * - Verification status (ranking)
  * - Redundant footer text under Claim button
  */
-const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
+const MinimalClinicCard = ({ clinic, selectedTreatments = [] }: MinimalClinicCardProps) => {
   const [isInquiryFormOpen, setIsInquiryFormOpen] = useState(false);
   
   const googleReviewsUrl = `https://www.google.com/search?q=${encodeURIComponent(
@@ -55,6 +56,34 @@ const MinimalClinicCard = ({ clinic }: MinimalClinicCardProps) => {
               <p>{clinic.address}</p>
             </div>
           </div>
+
+          {/* OPTION 4: Conditional Service Display - Show only when treatment filter active */}
+          {selectedTreatments.length > 0 && (() => {
+            // Filter selected treatments to only those the clinic actually offers
+            const matchingTreatments = selectedTreatments.filter(treatment => 
+              clinic.treatments[treatment as keyof typeof clinic.treatments]
+            );
+            
+            if (matchingTreatments.length === 0) return null;
+            
+            return (
+              <div className="mb-2 pb-2 border-b border-gray-200">
+                <p className="text-xs text-gray-500 italic mb-1">Matches filter:</p>
+                <div className="flex flex-wrap gap-1">
+                  {matchingTreatments.slice(0, 3).map(treatment => (
+                    <span key={treatment} className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded border border-blue-200">
+                      {treatment.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </span>
+                  ))}
+                  {matchingTreatments.length > 3 && (
+                    <span className="inline-block px-2 py-0.5 text-xs text-gray-500">
+                      +{matchingTreatments.length - 3} more
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Primary Action Buttons - Website & Google Reviews - ALWAYS 2 columns for alignment */}
           <div className="grid grid-cols-2 gap-2 mb-2">

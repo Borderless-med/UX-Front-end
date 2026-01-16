@@ -15,6 +15,7 @@ interface ClinicMainFiltersProps {
   mdaLicenseFilter: string;
   onMdaLicenseFilterChange: (filter: string) => void;
   hideDistanceSort?: boolean;
+  isSingapore?: boolean; // HCSA compliance flag
 }
 
 const ClinicMainFilters = ({
@@ -29,7 +30,8 @@ const ClinicMainFilters = ({
   onSortChange,
   mdaLicenseFilter,
   onMdaLicenseFilterChange,
-  hideDistanceSort = false
+  hideDistanceSort = false,
+  isSingapore = false
 }: ClinicMainFiltersProps) => {
   return (
     <div className="space-y-6">
@@ -49,6 +51,7 @@ const ClinicMainFilters = ({
         mdaLicenseFilter={mdaLicenseFilter}
         onMdaLicenseFilterChange={onMdaLicenseFilterChange}
         hideDistanceSort={hideDistanceSort}
+        isSingapore={isSingapore}
       />
     </div>
   );
