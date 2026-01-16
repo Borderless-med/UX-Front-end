@@ -2,6 +2,16 @@
 // Treatment categories and labels for the clinic directory
 // IMPORTANT: All keys must match properties in Clinic.treatments interface
 
+// Basic services list - used to distinguish specialty services
+export const basicServices = [
+  'toothFilling',
+  'rootCanal',
+  'dentalCrown',
+  'wisdomTooth',
+  'gumTreatment',
+  'teethWhitening'
+];
+
 export const specialServicesLabels = {
   // Basic treatments - matching Clinic.treatments properties
   toothFilling: 'Tooth Filling',
