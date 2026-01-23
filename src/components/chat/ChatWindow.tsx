@@ -51,7 +51,7 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: `Hi! I'm your AI dental concierge for Singapore and JB.\n\nPlanning dental treatment? I can help you:\n\n• Find clinics that offer your service\n• Explore options in each location\n• Check operating hours and directions\n• Book appointments instantly\n\n💡 I search across hundreds of verified clinics to find options that match your needs.\n\n${!user ? "**Please sign up to start chatting** (FREE account with 40 conversations per month)" : "What treatment are you looking for? (e.g., root canal, implants, scaling)"}`,
+      text: `Hi! I'm your AI dental concierge for Singapore and JB.\n\nPlanning dental treatment? I can help you:\n\n• Find clinics that offer your service\n\n• Explore options in each location\n\n• Check operating hours and directions\n\n• Book appointments instantly\n\n💡 I search across hundreds of verified clinics to find options that match your needs.\n\n${!user ? "**Please sign up to start chatting** (FREE account with 40 conversations per month)" : "What treatment are you looking for? (e.g., root canal, implants, scaling)"}`,
       sender: 'ai',
       timestamp: new Date(),
     },
