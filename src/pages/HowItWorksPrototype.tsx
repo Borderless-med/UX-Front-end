@@ -57,7 +57,7 @@ const HowItWorksPrototype = () => {
               <h3 className="mt-2 text-xl md:text-2xl font-bold">1. Let Our AI Concierge Guide You</h3>
               <div className="mt-2"><AIIcon size={28} /></div>
               <p className="mt-3 text-slate-700">
-                Perfect for when you're not sure where to start. Tell our AI your needs—it analyzes thousands of data points, including real patient reviews, to give you a personalized, unbiased recommendation in seconds.
+                Not sure where to start? Tell our AI search tool your needs—it quickly filters clinics based on your preferences for services, location, ratings, and reviews. You choose what matters most.
               </p>
               <div className="mt-5">
                 <button onClick={openAIConcierge} className="btn-primary">
