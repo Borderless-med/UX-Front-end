@@ -37,7 +37,7 @@ const HomePrototype_v2: React.FC = () => {
   };
 
   return (
-  <MasterTemplate title="See All Your Dental Options." subtitle="Make the Smartest Choice.">
+  <MasterTemplate title="See All Your Dental Options." subtitle="Make an Informed Choice.">
 
       {/* Hero CTA Section */}
       <section className="flex flex-col items-center justify-center py-12 bg-blue-50">
@@ -148,7 +148,7 @@ const HomePrototype_v2: React.FC = () => {
 
       {/* Final CTA */}
       <section className="py-8 bg-blue-50 flex flex-col items-center">
-        <h4 className="text-lg font-semibold text-blue-800 mb-4">Your Smartest Dental Decision Awaits.</h4>
+        <h4 className="text-lg font-semibold text-blue-800 mb-4">Your Dental Decision Made Easier.</h4>
         <div className="flex gap-4">
           <Button onClick={goToCompare} className="btn-primary px-6">Compare Clinics Now</Button>
           <Button onClick={openAIConcierge} className="btn-secondary px-6 inline-flex items-center gap-2">
