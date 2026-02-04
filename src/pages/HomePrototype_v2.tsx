@@ -97,8 +97,8 @@ const HomePrototype_v2: React.FC = () => {
               <div className="bg-white rounded-lg shadow w-full flex items-center justify-center px-8 py-8" style={{ minHeight: '150px' }}>
               <div className="flex flex-row items-center justify-center w-full">
                   <h2 className="text-2xl font-bold text-blue-800 text-center leading-tight mb-0 mr-6">
-                    Still Not Sure. Get Reliable<br/>
-                    Answers with Our AI Concierge
+                    Or, use our AI search tool<br/>
+                    to help find clinics
                   </h2>
                 <img
                   src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjF0em8wNnhjY29oZmNoYXFmbzh4bWl4dnNka3NxdWx5MTl3dDVhMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Js7Bw7gfhhzpzACnfq/giphy.gif"
@@ -110,17 +110,17 @@ const HomePrototype_v2: React.FC = () => {
             </div>
           </div>
           <div className="w-full flex flex-col items-start mt-6">
-            <p className="text-lg text-gray-700 mb-2 text-left">Ask anything—our expert-trained assistant recommends the best clinics and helps you book in minutes.</p>
+            <p className="text-lg text-gray-700 mb-2 text-left">This tool helps you:</p>
             <ul className="list-disc pl-5 text-gray-600 mb-4 text-left">
-              <li>Unbiased Recommendations</li>
-              <li>Save Time & Money</li>
-              <li>24/7 Expert Access</li>
+              <li>Find clinics offering specific services</li>
+              <li>Check locations and operating hours</li>
+              <li>Request appointments with participating clinics</li>
             </ul>
             <Button onClick={openAIConcierge} className="btn-primary w-full text-lg mb-2 inline-flex items-center justify-center gap-2">
               <AIIcon className="text-white" size={18} />
-              Ask The AI Concierge — Free
+              Try AI Search Tool
             </Button>
-            <p className="text-xs text-gray-500 mt-2 text-left">To use - simply sign up for free. No credit card needed.</p>
+            <p className="text-xs text-gray-500 mt-2 text-left italic">This AI tool provides general information only, not medical advice. Final treatment decisions should be made in consultation with a registered dental practitioner.</p>
           </div>
         </div>
       </section>
