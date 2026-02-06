@@ -74,7 +74,7 @@ const ComparePrototype = () => {
             </p>
             <div className="mt-6">
               <button onClick={openAIConcierge} className="btn-primary px-6 py-3 rounded-lg shadow">
-                Start Your Search — Free
+                Start AI Search — Free
               </button>
             </div>
           </div>

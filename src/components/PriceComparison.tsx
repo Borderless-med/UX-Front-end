@@ -75,7 +75,7 @@ const PriceComparison = () => {
                 }}
                 className="bg-blue-primary hover:bg-blue-accent text-white font-semibold px-6 py-2 rounded-lg transition-all duration-200 hover:shadow-lg"
               >
-                Ask AI Concierge
+                Use AI Search
               </Button>
             </div>
           </div>

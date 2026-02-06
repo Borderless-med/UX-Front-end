@@ -61,7 +61,7 @@ const HowItWorksPrototype = () => {
               </p>
               <div className="mt-5">
                 <button onClick={openAIConcierge} className="btn-primary">
-                  Ask The AI Concierge
+                  Use AI Search
                 </button>
               </div>
             </div>

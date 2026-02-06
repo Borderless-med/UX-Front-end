@@ -51,7 +51,7 @@ const HomePrototype_v2: React.FC = () => {
           <div className="mt-4">
             <span className="text-sm text-gray-600">Or, </span>
             <button className="text-sm text-blue-600 underline font-medium bg-transparent p-0 border-none cursor-pointer">
-              ask our AI Concierge to help you choose
+              use our AI search to find clinics
             </button>
           </div>
         </div>
@@ -153,7 +153,7 @@ const HomePrototype_v2: React.FC = () => {
           <Button onClick={goToCompare} className="btn-primary px-6">Compare Clinics Now</Button>
           <Button onClick={openAIConcierge} className="btn-secondary px-6 inline-flex items-center gap-2">
             <AIIcon size={16} />
-            Chat with AI Concierge
+            Use AI Search
           </Button>
         </div>
       </section>
