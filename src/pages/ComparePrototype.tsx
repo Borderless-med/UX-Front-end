@@ -1,7 +1,5 @@
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import ChatWidget from '@/components/ChatWidget';
-import PriceComparisonTable from '@/components/PriceComparisonTable';
-import { proceduresData } from '@/data/proceduresData';
 import MasterTemplate from '@/components/layout/MasterTemplate';
 import ChatHelperTextbox from '@/components/chat/ChatHelperTextbox';
 
@@ -12,7 +10,7 @@ const ComparePrototype = () => {
     setTimeout(() => {
       const chatInput = document.querySelector('textarea[placeholder*="Type your message"]') as HTMLTextAreaElement | null;
       if (chatInput) {
-        chatInput.value = 'I am deciding between Singapore vs Johor Bahru for dental care. Can you give me a personal recommendation?';
+        chatInput.value = 'I am deciding between Singapore vs Johor Bahru for dental care. Can you help me find options?';
         chatInput.dispatchEvent(new Event('input', { bubbles: true }));
         chatInput.focus();
       }
@@ -70,13 +68,13 @@ const ComparePrototype = () => {
       <section className="py-12 bg-white">
         <div className="max-w-5xl mx-auto px-4">
           <div className="border border-slate-200 rounded-xl p-8 text-center">
-            <h2 className="text-2xl md:text-4xl font-bold text-blue-800">Still Unsure? Get a Personal Recommendation.</h2>
+            <h2 className="text-2xl md:text-4xl font-bold text-blue-800">Still Unsure? Find Your Match in Seconds.</h2>
             <p className="mt-3 text-base md:text-lg text-slate-600">
-              Our AI Concierge can analyze your specific needs—including treatment type, budget, and travel preferences—to give you a data-driven recommendation in seconds.
+              Our search tool can quickly filter hundreds of clinics based on your treatment type, location preferences, and other priorities. You choose what matters most to you.
             </p>
             <div className="mt-6">
               <button onClick={openAIConcierge} className="btn-primary px-6 py-3 rounded-lg shadow">
-                Ask The AI Concierge — Free
+                Start Your Search — Free
               </button>
             </div>
           </div>
