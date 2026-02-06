@@ -54,14 +54,14 @@ const HowItWorksPrototype = () => {
             {/* AI Guided Path */}
             <div className="rounded-xl ring-1 ring-slate-200 p-6 bg-white">
               <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Recommended for New Users</div>
-              <h3 className="mt-2 text-xl md:text-2xl font-bold">1. Let Our AI Concierge Guide You</h3>
+              <h3 className="mt-2 text-xl md:text-2xl font-bold">1. Let Our AI Assistant Guide You</h3>
               <div className="mt-2"><AIIcon size={28} /></div>
               <p className="mt-3 text-slate-700">
-                Not sure where to start? Tell our AI search tool your needs—it quickly filters clinics based on your preferences for services, location, ratings, and reviews. You choose what matters most.
+                Not sure where to start? Tell our AI assistant your needs—it quickly filters clinics based on your preferences for services, location, ratings, and reviews. You choose what matters most.
               </p>
               <div className="mt-5">
                 <button onClick={openAIConcierge} className="btn-primary">
-                  Use AI Search
+                  Use AI Assistant
                 </button>
               </div>
             </div>
@@ -117,7 +117,7 @@ const HowItWorksPrototype = () => {
           <div className="text-center">
             <h2 className="text-2xl md:text-4xl font-bold text-blue-800">Ready to Find Your Clinic?</h2>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-              <button onClick={openAIConcierge} className="btn-primary">Use AI Search</button>
+              <button onClick={openAIConcierge} className="btn-primary">Use AI Assistant</button>
               <button onClick={() => navigate('/clinics?sel=all')} className="btn-secondary">Explore All Clinics</button>
             </div>
           </div>

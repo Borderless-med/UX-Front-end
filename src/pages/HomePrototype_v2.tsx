@@ -51,7 +51,7 @@ const HomePrototype_v2: React.FC = () => {
           <div className="mt-4">
             <span className="text-sm text-gray-600">Or, </span>
             <button className="text-sm text-blue-600 underline font-medium bg-transparent p-0 border-none cursor-pointer">
-              use our AI search to find clinics
+              use our AI assistant to find clinics
             </button>
           </div>
         </div>
@@ -97,7 +97,7 @@ const HomePrototype_v2: React.FC = () => {
               <div className="bg-white rounded-lg shadow w-full flex items-center justify-center px-8 py-8" style={{ minHeight: '150px' }}>
               <div className="flex flex-row items-center justify-center w-full">
                   <h2 className="text-2xl font-bold text-blue-800 text-center leading-tight mb-0 mr-6">
-                    Or, use our AI search tool<br/>
+                    Or, use our AI assistant<br/>
                     to help find clinics
                   </h2>
                 <img
@@ -118,9 +118,9 @@ const HomePrototype_v2: React.FC = () => {
             </ul>
             <Button onClick={openAIConcierge} className="btn-primary w-full text-lg mb-2 inline-flex items-center justify-center gap-2">
               <AIIcon className="text-white" size={18} />
-              Try AI Search Tool
+              Try AI Assistant
             </Button>
-            <p className="text-xs text-gray-500 mt-2 text-left italic">This AI tool provides general information only, not medical advice. Final treatment decisions should be made in consultation with a registered dental practitioner.</p>
+            <p className="text-xs text-gray-500 mt-2 text-left italic">This AI assistant provides general information only, not medical advice. Final treatment decisions should be made in consultation with a registered dental practitioner.</p>
           </div>
         </div>
       </section>
@@ -153,7 +153,7 @@ const HomePrototype_v2: React.FC = () => {
           <Button onClick={goToCompare} className="btn-primary px-6">Compare Clinics Now</Button>
           <Button onClick={openAIConcierge} className="btn-secondary px-6 inline-flex items-center gap-2">
             <AIIcon size={16} />
-            Use AI Search
+            Use AI Assistant
           </Button>
         </div>
       </section>

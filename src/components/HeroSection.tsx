@@ -158,7 +158,7 @@ const HeroSection = ({ onAuthClick }: HeroSectionProps) => {
                 onClick={handleAIPath}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 mb-3"
               >
-                Sign Up & Use AI Search
+                Sign Up & Use AI Assistant
               </Button>
               <div className="text-sm text-gray-600">
                 Free account • 40 conversations per month • No credit card needed

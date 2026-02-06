@@ -70,11 +70,11 @@ const ComparePrototype = () => {
           <div className="border border-slate-200 rounded-xl p-8 text-center">
             <h2 className="text-2xl md:text-4xl font-bold text-blue-800">Still Unsure? Find Your Match in Seconds.</h2>
             <p className="mt-3 text-base md:text-lg text-slate-600">
-              Our search tool can quickly filter hundreds of clinics based on your treatment type, location preferences, and other priorities. You choose what matters most to you.
+              Our AI assistant can quickly filter hundreds of clinics based on your treatment type, location preferences, and other priorities. You choose what matters most to you.
             </p>
             <div className="mt-6">
               <button onClick={openAIConcierge} className="btn-primary px-6 py-3 rounded-lg shadow">
-                Start AI Search — Free
+                Start AI Assistant — Free
               </button>
             </div>
           </div>
