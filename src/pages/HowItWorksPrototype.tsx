@@ -115,9 +115,9 @@ const HowItWorksPrototype = () => {
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center">
-            <h2 className="text-2xl md:text-4xl font-bold text-blue-800">Ready to Make the Smartest Choice?</h2>
+            <h2 className="text-2xl md:text-4xl font-bold text-blue-800">Ready to Find Your Clinic?</h2>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-              <button onClick={openAIConcierge} className="btn-primary">Ask The AI Concierge</button>
+              <button onClick={openAIConcierge} className="btn-primary">Use AI Search</button>
               <button onClick={() => navigate('/clinics?sel=all')} className="btn-secondary">Explore All Clinics</button>
             </div>
           </div>
