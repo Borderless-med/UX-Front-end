@@ -58,12 +58,12 @@ async function recordScanInitiation(
     resolvedName = profile?.full_name || null;
   }
 
-  const { error } = await supabase.from('ai_scans').insert({
-    user_id: userId,
-    scan_id: scanId,
-    status: 'initiated',
-    user_name: resolvedName,
-    user_email: userEmail || null,
+  // Use RPC function to bypass PostgREST schema cache issues with new columns
+  const { error } = await supabase.rpc('record_ai_scan', {
+    p_user_id: userId,
+    p_scan_id: scanId,
+    p_user_name: resolvedName,
+    p_user_email: userEmail || null,
   } as any);
 
   if (error) {
