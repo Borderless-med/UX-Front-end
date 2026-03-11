@@ -46,18 +46,30 @@ async function recordScanInitiation(
   userEmail?: string
 ): Promise<string> {
   const scanId = generateScanId();
-  try {
-    await supabase.from('ai_scans').insert({
-      user_id: userId,
-      scan_id: scanId,
-      status: 'initiated',
-      user_name: userName || null,
-      user_email: userEmail || null,
-    });
-  } catch (err) {
-    // Non-blocking — if table doesn't exist yet, still redirect
-    console.warn('ai_scans insert failed (table may not exist yet):', err);
+
+  // Fallback: look up user_profiles if name not passed in
+  let resolvedName = userName || null;
+  if (!resolvedName) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('full_name')
+      .eq('id', userId)
+      .single();
+    resolvedName = profile?.full_name || null;
   }
+
+  const { error } = await supabase.from('ai_scans').insert({
+    user_id: userId,
+    scan_id: scanId,
+    status: 'initiated',
+    user_name: resolvedName,
+    user_email: userEmail || null,
+  } as any);
+
+  if (error) {
+    console.warn('ai_scans insert error:', error.message);
+  }
+
   return scanId;
 }
 
