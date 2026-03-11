@@ -60,6 +60,7 @@ export default function AIScanPage() {
   const navigate = useNavigate();
 
   const [mode, setMode] = useState<'signup' | 'login'>('signup');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
@@ -77,6 +78,10 @@ export default function AIScanPage() {
 
   // ── Validate: need at least email OR mobile ─────────────────────────────────
   const validate = () => {
+    if (mode === 'signup' && !name.trim()) {
+      setError('Please enter your name.');
+      return false;
+    }
     if (mode === 'signup' && !email && !mobile) {
       setError('Please enter at least your email address or mobile number.');
       return false;
@@ -110,6 +115,7 @@ export default function AIScanPage() {
       password,
       options: {
         data: {
+          full_name: name.trim(),
           mobile: mobile || null,
           email_provided: !!email,
           source: 'ai-scan-page',
@@ -119,7 +125,15 @@ export default function AIScanPage() {
     });
 
     if (authError) {
-      setError(authError.message);
+      // If already registered, auto-switch to login mode
+      if (authError.message.toLowerCase().includes('already registered') ||
+          authError.message.toLowerCase().includes('already been registered') ||
+          authError.message.toLowerCase().includes('user already')) {
+        setMode('login');
+        setError('You already have an account. Please log in below.');
+      } else {
+        setError(authError.message);
+      }
       setIsLoading(false);
       return;
     }
@@ -279,10 +293,26 @@ export default function AIScanPage() {
                 {mode === 'signup' ? 'Get Started in 30 Seconds' : 'Welcome Back'}
               </h2>
               {mode === 'signup' && (
-                <p className="text-sm text-gray-500 mb-5">Enter email or mobile — at least one required</p>
+                <p className="text-sm text-gray-500 mb-5">Name required · Email or mobile — at least one required</p>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
+
+                {/* Name (signup only) */}
+                {mode === 'signup' && (
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                      Your Name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="First name or full name"
+                      className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
+                    />
+                  </div>
+                )}
 
                 {/* Email */}
                 <div>
@@ -294,7 +324,7 @@ export default function AIScanPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your.email@example.com"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors"
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
                   />
                 </div>
 
@@ -309,7 +339,7 @@ export default function AIScanPage() {
                       value={mobile}
                       onChange={(e) => setMobile(e.target.value)}
                       placeholder="+65 9123 4567"
-                      className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors"
+                      className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
                     />
                   </div>
                 )}
@@ -322,7 +352,7 @@ export default function AIScanPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={mode === 'signup' ? 'Min. 8 characters' : 'Your password'}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors"
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
                   />
                 </div>
 
