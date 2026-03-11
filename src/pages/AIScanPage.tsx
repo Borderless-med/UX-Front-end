@@ -40,13 +40,19 @@ function generateScanId(): string {
 }
 
 // Record scan initiation in Supabase
-async function recordScanInitiation(userId: string): Promise<string> {
+async function recordScanInitiation(
+  userId: string,
+  userName?: string,
+  userEmail?: string
+): Promise<string> {
   const scanId = generateScanId();
   try {
     await supabase.from('ai_scans').insert({
       user_id: userId,
       scan_id: scanId,
       status: 'initiated',
+      user_name: userName || null,
+      user_email: userEmail || null,
     });
   } catch (err) {
     // Non-blocking — if table doesn't exist yet, still redirect
@@ -72,7 +78,11 @@ export default function AIScanPage() {
   const handleStartScan = async () => {
     if (!user) return;
     setIsLoading(true);
-    await recordScanInitiation(user.id);
+    await recordScanInitiation(
+      user.id,
+      user.user_metadata?.full_name,
+      user.email
+    );
     window.location.href = ORALLINK_URL;
   };
 
@@ -140,7 +150,7 @@ export default function AIScanPage() {
 
     const userId = data.user?.id;
     if (userId) {
-      await recordScanInitiation(userId);
+      await recordScanInitiation(userId, name.trim(), signUpEmail);
       window.location.href = ORALLINK_URL;
     } else {
       // Email confirmation required — inform user
@@ -169,7 +179,11 @@ export default function AIScanPage() {
 
     const userId = data.user?.id;
     if (userId) {
-      await recordScanInitiation(userId);
+      await recordScanInitiation(
+        userId,
+        data.user.user_metadata?.full_name,
+        email
+      );
       window.location.href = ORALLINK_URL;
     }
   };
