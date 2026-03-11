@@ -40,30 +40,13 @@ function generateScanId(): string {
 }
 
 // Record scan initiation in Supabase
-async function recordScanInitiation(
-  userId: string,
-  userName?: string,
-  userEmail?: string
-): Promise<string> {
+// DB function looks up name+email itself from auth.users + user_profiles
+async function recordScanInitiation(userId: string): Promise<string> {
   const scanId = generateScanId();
 
-  // Fallback: look up user_profiles if name not passed in
-  let resolvedName = userName || null;
-  if (!resolvedName) {
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('full_name')
-      .eq('id', userId)
-      .single();
-    resolvedName = profile?.full_name || null;
-  }
-
-  // Use RPC function to bypass PostgREST schema cache issues with new columns
   const { error } = await supabase.rpc('record_ai_scan', {
     p_user_id: userId,
     p_scan_id: scanId,
-    p_user_name: resolvedName,
-    p_user_email: userEmail || null,
   } as any);
 
   if (error) {
@@ -90,11 +73,7 @@ export default function AIScanPage() {
   const handleStartScan = async () => {
     if (!user) return;
     setIsLoading(true);
-    await recordScanInitiation(
-      user.id,
-      user.user_metadata?.full_name,
-      user.email
-    );
+    await recordScanInitiation(user.id);
     window.location.href = ORALLINK_URL;
   };
 
@@ -162,7 +141,7 @@ export default function AIScanPage() {
 
     const userId = data.user?.id;
     if (userId) {
-      await recordScanInitiation(userId, name.trim(), signUpEmail);
+      await recordScanInitiation(userId);
       window.location.href = ORALLINK_URL;
     } else {
       // Email confirmation required — inform user
@@ -191,11 +170,7 @@ export default function AIScanPage() {
 
     const userId = data.user?.id;
     if (userId) {
-      await recordScanInitiation(
-        userId,
-        data.user.user_metadata?.full_name,
-        email
-      );
+      await recordScanInitiation(userId);
       window.location.href = ORALLINK_URL;
     }
   };
