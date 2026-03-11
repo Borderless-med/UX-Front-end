@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
@@ -47,11 +48,12 @@ interface ChatWindowProps {
 
 const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
   const { user, session, sessionId, setSessionId } = useAuth();
+  const navigate = useNavigate();
 
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: `Hi! I'm your AI dental concierge for Singapore and JB.\n\nPlanning dental treatment? I can help you:\n\n• Find clinics that offer your service\n\n• Explore options in each location\n\n• Check operating hours and directions\n\n• Book appointments instantly\n\n💡 I search across hundreds of verified clinics to find options that match your needs.\n\n${!user ? "**Please sign up to start chatting** (FREE account with 40 conversations per month)" : "What treatment are you looking for? (e.g., root canal, implants, scaling)"}`,
+      text: `Hi! I'm your AI dental concierge for Singapore and JB.\n\nPlanning dental treatment? I can help you:\n\n• Find clinics that offer your service\n\n• Explore options in each location\n\n• Check operating hours and directions\n\n• Book appointments instantly\n\n🦷 **New: Not sure what treatment you need?** Try our FREE AI Dental Scan — take 5 photos and get an instant analysis!\n\n${!user ? "**Please sign up to start chatting** (FREE account with 40 conversations per month)" : "What treatment are you looking for? (e.g., root canal, implants, scaling)"}`,
       sender: 'ai',
       timestamp: new Date(),
     },
@@ -455,7 +457,18 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           onSend={handleSendMessage}
           disabled={isTyping}
         />
-        
+
+        {/* AI Scan CTA — always visible */}
+        <div className="px-3 pb-2 pt-1 border-t border-teal-100 bg-teal-50">
+          <button
+            onClick={() => { onClose(); navigate('/ai-scan'); }}
+            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all text-sm flex items-center justify-center gap-2"
+          >
+            🦷 Try FREE AI Dental Scan
+          </button>
+          <p className="text-[10px] text-teal-700 text-center mt-1">Powered by OralLink · Takes 2 minutes</p>
+        </div>
+
         {/* Sign-up CTA for unauthenticated users */}
         {!user && onAuthClick && (
           <div className="p-4 bg-blue-50 border-t border-blue-100">
