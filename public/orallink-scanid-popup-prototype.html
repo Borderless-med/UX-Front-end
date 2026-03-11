@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope + OralLink - Scan ID Pop-up Flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .demo-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .chat-window {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        .message {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .message.bot {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-right: 60px;
+        }
+
+        .message.user {
+            background: #e8f5e9;
+            margin-left: 60px;
+            text-align: right;
+        }
+
+        .scan-button {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .scan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6);
+        }
+
+        /* Scan ID Modal/Pop-up */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            text-align: center;
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .modal h3 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal p {
+            font-size: 16px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .scan-id-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .scan-id-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .scan-id-value {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .copy-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-button:hover {
+            transform: scale(1.05);
+        }
+
+        .copy-button.copied {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Return Flow Demo */
+        .return-demo {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px dashed #ddd;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        /* Analysis Section */
+        .analysis {
+            margin-top: 40px;
+        }
+
+        .analysis h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .pros-cons-box {
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .pros-box {
+            background: #d4edda;
+            border: 2px solid #2ecc71;
+        }
+
+        .cons-box {
+            background: #f8d7da;
+            border: 2px solid #e74c3c;
+        }
+
+        .pros-cons-box h4 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .pros-box h4 {
+            color: #27ae60;
+        }
+
+        .cons-box h4 {
+            color: #c0392b;
+        }
+
+        .pros-cons-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros-cons-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .pros-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .cons-box li:before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .technical-flow {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .step {
+            padding: 10px 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-section {
+                padding: 20px;
+            }
+
+            .modal {
+                padding: 30px 20px;
+            }
+
+            .scan-id-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦷 OraChope + OralLink Integration</h1>
+            <p>Scan ID Pop-up System - Dead End Workaround</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>📱 Demo: User Flow with Scan ID Pop-up</h2>
+            
+            <div class="chat-window">
+                <div class="message bot">
+                    Hi! I'm OraChope AI. I can help you find the best dental clinics in JB. 
+                    Want a FREE AI dental scan to know exactly what treatment you need?
+                </div>
+                <div class="message user">
+                    Yes, I'd like a free scan!
+                </div>
+                <div class="message bot" style="text-align: center; padding: 25px;">
+                    <button class="scan-button" onclick="showScanIDPopup()">
+                        🔬 Get FREE AI Scan
+                    </button>
+                </div>
+            </div>
+
+            <p style="color: #666; margin-bottom: 20px;">
+                <strong>👆 Click the button above to see the Scan ID pop-up in action</strong>
+            </p>
+
+            <!-- Return Flow Demo -->
+            <div class="return-demo">
+                <h3 style="margin-bottom: 15px;">🔄 When User Returns (Later)</h3>
+                <div class="chat-window">
+                    <div class="message bot">
+                        Welcome back! Did you complete your AI dental scan?
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="scanIdInput" placeholder="Enter your Scan ID (e.g., OL-2026-4521)" />
+                        <button onclick="verifyScanId()">Submit</button>
+                    </div>
+                    <div class="success-message" id="successMessage">
+                        <strong>✓ Scan Found!</strong><br>
+                        Great! I see you were scanned for: <strong>2 cavities, mild gum inflammation</strong>.<br>
+                        Let me find the best clinics in JB for your treatments...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan ID Modal/Pop-up -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-icon">⚠️</div>
+                <h3>Save Your Scan ID!</h3>
+                <p>
+                    You're about to leave OraChope to complete your AI scan. 
+                    <strong>Save this ID to return and get your clinic recommendations.</strong>
+                </p>
+                
+                <div class="scan-id-box">
+                    <div class="scan-id-label">YOUR SCAN ID</div>
+                    <div class="scan-id-value" id="scanIdDisplay">OL-2026-4521</div>
+                    <button class="copy-button" id="copyButton" onclick="copyScanId()">
+                        📋 Copy ID
+                    </button>
+                </div>
+
+                <p style="font-size: 14px; color: #999; margin-bottom: 25px;">
+                    💡 Tip: Screenshot this or write it down!
+                </p>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="closeScanIDPopup()">Cancel</button>
+                    <button class="btn btn-primary" onclick="proceedToScan()">Continue to Scan →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Explanation -->
+        <div class="demo-section">
+            <h2>⚙️ How It Works</h2>
+            
+            <div class="technical-flow">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    User clicks "Get FREE AI Scan" in chatbot
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Generate unique Scan ID: OL-[year]-[random]
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Store in database: scan_id, user_session, timestamp, status='initiated'
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Show pop-up with Scan ID (big, copyable)
+                </div>
+                <div class="step">
+                    <span class="step-number">5</span>
+                    User copies/screenshots ID, clicks "Continue"
+                </div>
+                <div class="step">
+                    <span class="step-number">6</span>
+                    Redirect: window.location = "orallink.health?ref=" + scan_id
+                </div>
+                <div class="step">
+                    <span class="step-number">7</span>
+                    User completes scan on Kells → DEAD END
+                </div>
+                <div class="step">
+                    <span class="step-number">8</span>
+                    User manually returns to OraChope (hours/days later)
+                </div>
+                <div class="step">
+                    <span class="step-number">9</span>
+                    Chatbot asks: "Did you complete scan? Enter Scan ID:"
+                </div>
+                <div class="step">
+                    <span class="step-number">10</span>
+                    Lookup scan_id in database → fetch scan details
+                </div>
+                <div class="step">
+                    <span class="step-number">11</span>
+                    Chatbot: "I see you need [treatments]. Let me find clinics..."
+                </div>
+            </div>
+        </div>
+
+        <!-- Pros & Cons Analysis -->
+        <div class="demo-section analysis">
+            <h2>📊 Pros & Cons Analysis</h2>
+            
+            <div class="pros-cons">
+                <div class="pros-cons-box pros-box">
+                    <h4>✓ PROS</h4>
+                    <ul>
+                        <li>Zero cost (no Kells dev fees)</li>
+                        <li>You control entire UX</li>
+                        <li>No dependency on OralLink</li>
+                        <li>Can track scan initiations</li>
+                        <li>Simple to implement (1 day)</li>
+                        <li>Can add email follow-up later</li>
+                        <li>Clear user expectation (they know they're leaving)</li>
+                    </ul>
+                </div>
+                
+                <div class="pros-cons-box cons-box">
+                    <h4>✗ CONS</h4>
+                    <ul>
+                        <li>40-50% abandonment rate (users forget/lose ID)</li>
+                        <li>High friction (manual ID entry)</li>
+                        <li>Looks unprofessional/clunky</li>
+                        <li>User frustration ("why can't it be automatic?")</li>
+                        <li>No way to verify scan actually completed</li>
+                        <li>Lost users = lost bookings</li>
+                        <li>Reflects badly on OraChope brand</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 25px; background: #fff3cd; border-radius: 12px; border-left: 4px solid #ffc107;">
+                <h4 style="color: #856404; margin-bottom: 10px;">⚡ Expected Performance</h4>
+                <p style="color: #856404; line-height: 1.6; margin-bottom: 15px;">
+                    If 1,000 users click "Get AI Scan":
+                </p>
+                <ul style="color: #856404; line-height: 1.8;">
+                    <li><strong>1,000</strong> see Scan ID pop-up</li>
+                    <li><strong>850</strong> proceed to OralLink (15% cancel at pop-up)</li>
+                    <li><strong>600</strong> complete scan on Kells (30% drop-off during scan)</li>
+                    <li><strong>300</strong> return and enter Scan ID (50% abandonment - forget/lose ID)</li>
+                    <li><strong>60</strong> book clinic after returning (20% conversion)</li>
+                </ul>
+                <p style="color: #856404; line-height: 1.6; margin-top: 15px;">
+                    <strong>Bottom line:</strong> 300 lost users who completed scan but never returned = 60 lost bookings.
+                </p>
+            </div>
+        </div>
+
+        <!-- Comparison with Alternative Approaches -->
+        <div class="demo-section">
+            <h2>🔀 Comparison: All Return Path Options</h2>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 15px; text-align: left; border-bottom: 2px solid #ddd;">Approach</th>
+                        <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Return Rate</th>
+                        <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Cost</th>
+                        <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Complexity</th>
+                        <th style="padding: 15px; text-align: left; border-bottom: 2px solid #ddd;">Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;"><strong>Scan ID Pop-up</strong> (this)</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #e67e22;">40-50%</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #27ae60;">$0</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #27ae60;">Low</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">Budget-conscious, testing MVP</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;"><strong>Kells Custom Redirect</strong></td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #27ae60;">85-90%</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #e74c3c;">$500-2k</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #e67e22;">Medium</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">Serious launch, high ROI expected</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;"><strong>Email Follow-up</strong></td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #e67e22;">50-60%</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #27ae60;">$0</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #e67e22;">Medium</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">Secondary layer (combine with Scan ID)</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;"><strong>Scan ID + Email Combo</strong></td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #27ae60;">60-70%</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #27ae60;">$0</td>
+                        <td style="padding: 15px; text-align: center; border-bottom: 1px solid #eee; color: #e74c3c;">High</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">Best free option (more dev work)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 30px; padding: 25px; background: #e8f4fd; border-radius: 12px; border-left: 4px solid #2196F3;">
+                <h4 style="color: #0d47a1; margin-bottom: 10px;">💡 Recommendation</h4>
+                <p style="color: #0d47a1; line-height: 1.8;">
+                    <strong>Phase 1 (MVP):</strong> Launch with Scan ID pop-up. It's free, fast to build, and proves concept.<br><br>
+                    <strong>Phase 2 (Optimize):</strong> Add email follow-up 30 min after scan initiation → improves return rate to 60-70%.<br><br>
+                    <strong>Phase 3 (Scale):</strong> If ROI is positive, pay Kells for custom redirect → 85-90% return rate makes revenue jump significantly.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScanId = 'OL-2026-4521';
+
+        function showScanIDPopup() {
+            // Generate new scan ID
+            const timestamp = Date.now().toString().slice(-4);
+            currentScanId = `OL-2026-${timestamp}`;
+            document.getElementById('scanIdDisplay').textContent = currentScanId;
+            
+            // Show modal
+            document.getElementById('modalOverlay').classList.add('active');
+            
+            // Reset copy button
+            const copyButton = document.getElementById('copyButton');
+            copyButton.textContent = '📋 Copy ID';
+            copyButton.classList.remove('copied');
+        }
+
+        function closeScanIDPopup() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function copyScanId() {
+            const scanId = document.getElementById('scanIdDisplay').textContent;
+            navigator.clipboard.writeText(scanId).then(() => {
+                const button = document.getElementById('copyButton');
+                button.textContent = '✓ Copied!';
+                button.classList.add('copied');
+            });
+        }
+
+        function proceedToScan() {
+            alert(`In production:\n\n1. Store scan ID in database (status: 'initiated')\n2. Redirect to: https://orachope.orallink.health?ref=${currentScanId}\n3. User completes scan on Kells\n4. User manually returns later\n\nFor demo purposes, just closing this popup.`);
+            closeScanIDPopup();
+        }
+
+        function verifyScanId() {
+            const input = document.getElementById('scanIdInput').value.trim();
+            const successMessage = document.getElementById('successMessage');
+            
+            if (input && input.match(/^OL-\d{4}-\d{4}$/)) {
+                successMessage.classList.add('active');
+                document.getElementById('scanIdInput').value = '';
+            } else {
+                alert('Invalid Scan ID format. Should be like: OL-2026-4521');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeScanIDPopup();
+            }
+        });
+    </script>
+</body>
+</html>

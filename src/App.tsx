@@ -32,12 +32,14 @@ import BookNow from "./pages/BookNow";
 import { Analytics } from '@vercel/analytics/react'; // --- CHANGE 1 of 2: Added this import line ---
 import CreatePassword from "./pages/CreatePassword";
 import AuthCallback from "./pages/AuthCallback";
-import HomePrototype_v2 from "./pages/HomePrototype_v2";
+import HomePrototype_v2 from "./pages/HomePrototype_v2";  // ← REVERT TARGET: swap back in line below to revert
+import HomeV3_OralLink from "./pages/HomeV3_OralLink";     // ← ACTIVE: new 3-card homepage
 import HomePrototype from "./pages/HomePrototype";
 import FindClinicsPrototype1 from "./pages/FindClinicsPrototype1";
 import PrototypeHub from "./pages/PrototypeHub";
 import TemplateDemo from "./pages/TemplateDemo";
 import TravelGuide from "./pages/TravelGuide";
+import AIScanPage from "./pages/AIScanPage";
 
 const queryClient = new QueryClient();
 
@@ -54,7 +56,7 @@ const App = () => (
               const usePrototypes = (import.meta as any).env?.VITE_USE_PROTOTYPES === 'true' || (import.meta as any).env?.MODE === 'development';
               return (
             <Routes>
-              <Route path="/" element={usePrototypes ? <HomePrototype_v2 /> : <Index />} />
+              <Route path="/" element={usePrototypes ? <HomeV3_OralLink /> : <Index />} />  {/* REVERT: change HomeV3_OralLink → HomePrototype_v2 to restore original */}
               <Route path="/book-now" element={<BookNow />} />
               <Route path="/compare" element={usePrototypes ? <ComparePrototype /> : <Compare />} />
               <Route path="/clinics" element={usePrototypes ? <FindClinicsPrototype1 /> : <Clinics />} />
@@ -78,6 +80,7 @@ const App = () => (
               <Route path="/template-demo" element={<TemplateDemo />} />
               <Route path="/find-clinics-prototype1" element={<FindClinicsPrototype1 />} />
               <Route path="/travel-guide" element={<TravelGuide />} />
+              <Route path="/ai-scan" element={<AIScanPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
               );

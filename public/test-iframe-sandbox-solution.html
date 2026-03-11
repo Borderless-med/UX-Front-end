@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iframe Sandbox Test - Does It Work?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .test-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .test-section h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .iframe-container {
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 600px;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .status-bar {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .status-bar strong {
+            color: #667eea;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .warning h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .warning p {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #e74c3c;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .error h3 {
+            color: #c0392b;
+            margin-bottom: 10px;
+        }
+
+        .error p {
+            color: #c0392b;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #2ecc71;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .code-block .keyword {
+            color: #66d9ef;
+        }
+
+        .code-block .string {
+            color: #a6e22e;
+        }
+
+        .code-block .comment {
+            color: #75715e;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 10px 0 0;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Iframe Sandbox Test</h1>
+            <p>Testing if sandbox="allow-same-origin allow-scripts allow-forms allow-popups" prevents redirect escape</p>
+        </div>
+
+        <!-- Test 1: Regular Iframe (No Sandbox) -->
+        <div class="test-section">
+            <h2>Test 1: Regular Iframe (Control Group)</h2>
+            <div class="status-bar">
+                <strong>Code:</strong> &lt;iframe src="test-page.html"&gt;&lt;/iframe&gt;<br>
+                <strong>Behavior:</strong> Redirect will escape iframe and navigate parent window
+            </div>
+            <button onclick="loadTest1()">Load Test 1</button>
+            <div id="iframe1-container" style="display:none;">
+                <div class="iframe-container">
+                    <iframe id="iframe1"></iframe>
+                </div>
+                <div class="warning">
+                    <h3>⚠️ Expected Result</h3>
+                    <p>When you click "Redirect to Google" inside iframe, the ENTIRE page (parent window) navigates to Google. Iframe "escapes".</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 2: Sandboxed Iframe -->
+        <div class="test-section">
+            <h2>Test 2: Sandboxed Iframe (Suggested Solution)</h2>
+            <div class="status-bar">
+                <strong>Code:</strong> &lt;iframe sandbox="allow-same-origin allow-scripts allow-forms allow-popups"&gt;&lt;/iframe&gt;<br>
+                <strong>Behavior:</strong> Redirect is BLOCKED (no allow-top-navigation)
+            </div>
+            <button onclick="loadTest2()">Load Test 2</button>
+            <div id="iframe2-container" style="display:none;">
+                <div class="iframe-container">
+                    <iframe id="iframe2" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
+                </div>
+                <div class="error">
+                    <h3>❌ Expected Result</h3>
+                    <p>When you click "Redirect to Google" inside iframe, nothing happens or you see browser error: "Navigation blocked by sandbox". User is STUCK - cannot proceed to external site (Kells).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 3: Sandbox with Top Navigation -->
+        <div class="test-section">
+            <h2>Test 3: Sandbox WITH allow-top-navigation</h2>
+            <div class="status-bar">
+                <strong>Code:</strong> &lt;iframe sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"&gt;&lt;/iframe&gt;<br>
+                <strong>Behavior:</strong> Same as Test 1 (redirect escapes)
+            </div>
+            <button onclick="loadTest3()">Load Test 3</button>
+            <div id="iframe3-container" style="display:none;">
+                <div class="iframe-container">
+                    <iframe id="iframe3" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"></iframe>
+                </div>
+                <div class="warning">
+                    <h3>⚠️ Expected Result</h3>
+                    <p>Adding allow-top-navigation permission = back to square one. Redirect escapes iframe just like Test 1. Sandbox provides no benefit.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="test-section">
+            <h2>📊 Analysis: Why Sandbox Doesn't Solve The Problem</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Can User Complete Scan?</th>
+                        <th>Return Path</th>
+                        <th>Verdict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>No Sandbox</strong></td>
+                        <td style="color: #27ae60;">✓ Yes (redirects to Kells)</td>
+                        <td style="color: #e74c3c;">✗ Lost (redirect escapes iframe)</td>
+                        <td style="color: #e67e22;">40-60% abandonment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>With Sandbox (no top-nav)</strong></td>
+                        <td style="color: #e74c3c;">✗ No (redirect blocked)</td>
+                        <td style="color: #e74c3c;">✗ N/A (can't reach Kells)</td>
+                        <td style="color: #e74c3c;">100% failure</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sandbox + allow-top-nav</strong></td>
+                        <td style="color: #27ae60;">✓ Yes (redirects to Kells)</td>
+                        <td style="color: #e74c3c;">✗ Lost (redirect escapes iframe)</td>
+                        <td style="color: #e67e22;">Same as no sandbox</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="error" style="margin-top: 30px;">
+                <h3>🚫 The Fundamental Problem</h3>
+                <p style="margin-bottom: 15px;">
+                    <strong>Your user flow REQUIRES the redirect to Kells:</strong>
+                </p>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #c0392b;">
+                    <li>User enters email on orallink.health (in iframe)</li>
+                    <li>OralLink redirects to getkells.com (NECESSARY for scan)</li>
+                    <li>User takes photos and submits scan on Kells</li>
+                    <li>User needs to return to OraChope somehow</li>
+                </ol>
+                <p style="margin-top: 15px;">
+                    <strong>Sandbox breaks step 2:</strong> If you block redirects, users cannot reach Kells to complete scan. The entire flow dies.
+                </p>
+            </div>
+
+            <div class="warning" style="margin-top: 20px;">
+                <h3>📱 About the "Header Section" Comment</h3>
+                <p>
+                    The suggestion mentions "mobile should work if we have a header section". This likely refers to keeping your OraChope header visible above the iframe. While this provides visual continuity, it does NOT solve:
+                </p>
+                <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8; color: #856404;">
+                    <li><strong>Camera permission issues:</strong> iOS Safari restricts camera access in iframes regardless of headers</li>
+                    <li><strong>The redirect problem:</strong> Headers don't prevent iframe content from redirecting parent window</li>
+                    <li><strong>The dead end:</strong> After Kells redirect, header disappears anyway (user left your site)</li>
+                </ul>
+            </div>
+
+            <div class="success" style="margin-top: 20px;">
+                <h3>✓ What Actually Works</h3>
+                <p style="color: #155724; line-height: 1.8;">
+                    Since OralLink won't fund custom Kells redirect, your realistic options are:
+                </p>
+                <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8; color: #155724;">
+                    <li><strong>Scan ID pop-up system:</strong> Accept 40-50% abandonment, build manual return flow (free, 1 day)</li>
+                    <li><strong>Email follow-up:</strong> Send return link 30 min after scan initiation (boosts to 60%, 3 days)</li>
+                    <li><strong>Pay Kells directly:</strong> Get quote for custom redirect ($500-2k, 85-90% return rate)</li>
+                    <li><strong>Find alternative provider:</strong> Skip OralLink, find scan provider with better API</li>
+                </ul>
+            </div>
+
+            <div class="code-block" style="margin-top: 30px;">
+                <span class="comment">// What happens when OralLink redirects to Kells:</span><br><br>
+                
+                <span class="comment">// Inside iframe (orallink.health):</span><br>
+                <span class="keyword">function</span> startScan() {<br>
+                &nbsp;&nbsp;<span class="comment">// User submitted email, now redirect to Kells</span><br>
+                &nbsp;&nbsp;window.location.href = <span class="string">"https://partner.getkells.com/orallink"</span>;<br>
+                &nbsp;&nbsp;<span class="comment">// ↑ This navigates ENTIRE browser window</span><br>
+                &nbsp;&nbsp;<span class="comment">// Sandbox without allow-top-navigation BLOCKS this</span><br>
+                &nbsp;&nbsp;<span class="comment">// Result: Error or nothing happens → User stuck</span><br>
+                }<br><br>
+                
+                <span class="comment">// What you NEED for sandbox to be useful:</span><br>
+                <span class="keyword">function</span> startScanProper() {<br>
+                &nbsp;&nbsp;<span class="comment">// OralLink would need to use target="_blank" or window.open()</span><br>
+                &nbsp;&nbsp;window.open(<span class="string">"https://partner.getkells.com/orallink"</span>, <span class="string">"_blank"</span>);<br>
+                &nbsp;&nbsp;<span class="comment">// Opens in new tab (allowed by sandbox="allow-popups")</span><br>
+                &nbsp;&nbsp;<span class="comment">// But OralLink probably doesn't do this</span><br>
+                }
+            </div>
+        </div>
+
+        <!-- Conclusion -->
+        <div class="test-section">
+            <h2>🎯 Bottom Line</h2>
+            <p style="font-size: 18px; line-height: 1.8; color: #333;">
+                The sandbox suggestion is <strong style="color: #e74c3c;">technically clever but practically useless</strong> because:
+            </p>
+            <ol style="margin: 20px 0 20px 30px; font-size: 16px; line-height: 2; color: #666;">
+                <li>Blocking redirect = blocking the required user flow (users can't complete scan)</li>
+                <li>Allowing redirect = iframe escape happens anyway (back to original problem)</li>
+                <li>Mobile camera issues still exist regardless of sandbox settings</li>
+                <li>You have no control over how OralLink/Kells implement their redirect</li>
+            </ol>
+            <p style="font-size: 18px; line-height: 1.8; color: #333; margin-top: 20px;">
+                <strong style="color: #667eea;">Recommendation:</strong> Skip nesting entirely. Use simple redirect + Scan ID pop-up system. Accept 40-50% return rate as Phase 1, improve with email follow-up in Phase 2.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function loadTest1() {
+            document.getElementById('iframe1-container').style.display = 'block';
+            document.getElementById('iframe1').srcdoc = getTestHTML('Regular Iframe', false);
+        }
+
+        function loadTest2() {
+            document.getElementById('iframe2-container').style.display = 'block';
+            document.getElementById('iframe2').srcdoc = getTestHTML('Sandboxed Iframe (Redirect Blocked)', true);
+        }
+
+        function loadTest3() {
+            document.getElementById('iframe3-container').style.display = 'block';
+            document.getElementById('iframe3').srcdoc = getTestHTML('Sandboxed with Top Navigation', false);
+        }
+
+        function getTestHTML(title, isBlocked) {
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            padding: 40px;
+                            text-align: center;
+                            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+                        }
+                        h2 { color: #333; margin-bottom: 20px; }
+                        button {
+                            background: #e74c3c;
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            font-size: 18px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            margin: 20px 0;
+                        }
+                        button:hover { background: #c0392b; }
+                        .status {
+                            background: white;
+                            padding: 20px;
+                            border-radius: 8px;
+                            margin-top: 20px;
+                            font-size: 16px;
+                        }
+                        ${isBlocked ? '.blocked { color: #e74c3c; font-weight: bold; }' : ''}
+                    </style>
+                </head>
+                <body>
+                    <h2>${title}</h2>
+                    <p>This simulates OralLink page in iframe</p>
+                    <button onclick="attemptRedirect()">🚀 Redirect to Google (Simulates Kells Redirect)</button>
+                    <div class="status" id="status">Click button to test redirect behavior</div>
+                    
+                    <script>
+                        function attemptRedirect() {
+                            document.getElementById('status').innerHTML = 'Attempting redirect...';
+                            try {
+                                window.top.location.href = 'https://www.google.com';
+                            } catch (e) {
+                                document.getElementById('status').innerHTML = 
+                                    '<span class="blocked">❌ REDIRECT BLOCKED BY SANDBOX</span><br>' +
+                                    'Error: ' + e.message + '<br><br>' +
+                                    '<strong>In real flow: User cannot reach Kells = Cannot complete scan</strong>';
+                            }
+                        }
+                    </script>
+                </body>
+                </html>
+            `;
+        }
+    </script>
+</body>
+</html>

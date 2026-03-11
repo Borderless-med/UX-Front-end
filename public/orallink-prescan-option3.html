@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dental Scan - OralLink for OraChope</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .orallink-container {
+            overflow: hidden;
+            height: 110px;
+        }
+        img[alt="OralLink"] {
+            height: 128px;
+            margin-top: -15px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <div class="orallink-container">
+                        <img src="OralLink Logo.png" alt="OralLink">
+                    </div>
+                    <span class="text-gray-300 text-2xl font-light">×</span>
+                    <div class="px-2">
+                        <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-16">
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-lg border-2 border-blue-200">
+                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    <span class="text-sm font-semibold text-blue-600">Return to OraChope →</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-sm text-gray-600 mb-6">
+            <a href="https://orachope.org" class="hover:text-blue-600">OraChope</a>
+            <span>›</span>
+            <span class="text-gray-900 font-semibold">Free AI Dental Scan</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <!-- Main Content - Left (60%) -->
+            <div class="lg:col-span-3">
+                <!-- Hero -->
+                <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-xl p-8 mb-6 shadow-xl">
+                    <h1 class="text-3xl font-bold mb-3">Know What You Need Before You Book</h1>
+                    <p class="text-blue-100 mb-6">Take a free AI dental scan in 2 minutes. We'll detect potential issues and help you find the right clinic on OraChope.</p>
+                    
+                    <div class="flex items-center gap-6 text-sm">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>100% Free</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>2 Minutes</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Instant Results</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">How Your Scan Works</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex gap-4 items-start">
+                            <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                                1
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-900">Create Free Account</h3>
+                                <p class="text-sm text-gray-600">Quick email sign-up to save your results</p>
+                            </div>
+                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">30 sec</span>
+                        </div>
+
+                        <div class="flex gap-4 items-start">
+                            <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                                2
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-900">Take 5 Photos</h3>
+                                <p class="text-sm text-gray-600">Use your phone: front view, left, right, upper, lower</p>
+                            </div>
+                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">1 min</span>
+                        </div>
+
+                        <div class="flex gap-4 items-start">
+                            <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                                3
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-900">AI Analyzes Your Teeth</h3>
+                                <p class="text-sm text-gray-600">Machine learning detects cavities, gum issues, alignment</p>
+                            </div>
+                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">Instant</span>
+                        </div>
+
+                        <div class="flex gap-4 items-start">
+                            <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                                4
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-900">Return to OraChope</h3>
+                                <p class="text-sm text-gray-600">Find clinics that treat your needs with transparent prices</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What We Detect -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">What Our AI Detects</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="text-3xl mb-2">🦷</div>
+                            <h3 class="font-semibold text-gray-900 mb-1">Cavities</h3>
+                            <p class="text-xs text-gray-600">Dark spots, tooth decay, enamel damage</p>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="text-3xl mb-2">❤️</div>
+                            <h3 class="font-semibold text-gray-900 mb-1">Gum Health</h3>
+                            <p class="text-xs text-gray-600">Inflammation, redness, recession</p>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="text-3xl mb-2">📏</div>
+                            <h3 class="font-semibold text-gray-900 mb-1">Alignment</h3>
+                            <p class="text-xs text-gray-600">Crowding, gaps, bite issues</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar - Sign Up (40%) -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl border-2 border-blue-200 p-6 shadow-lg sticky top-4">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Start Your Free Scan</h2>
+                    
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="email" placeholder="your.email@example.com" 
+                                class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                            <input type="password" placeholder="Min. 8 characters" 
+                                class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                            <input type="password" placeholder="Re-enter password" 
+                                class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none">
+                        </div>
+
+                        <div class="flex items-start gap-2 text-xs text-gray-600">
+                            <input type="checkbox" id="terms2" class="mt-1">
+                            <label for="terms2">
+                                I agree to <a href="#" class="text-blue-600 hover:underline">Terms</a> and understand this is a screening tool, not diagnosis.
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg transition-colors shadow-md">
+                            Start Scan →
+                        </button>
+                    </form>
+
+                    <div class="border-t border-gray-200 mt-4 pt-4 text-center">
+                        <p class="text-sm text-gray-600">Have an account? <a href="#" class="text-blue-600 font-semibold hover:underline">Log In</a></p>
+                    </div>
+
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mt-4">
+                        <p class="text-sm text-emerald-800 font-semibold mb-2">✓ After your scan:</p>
+                        <p class="text-xs text-emerald-700">We'll guide you back to OraChope to find clinics that treat your specific conditions—with transparent pricing and real patient reviews.</p>
+                    </div>
+
+                    <div class="mt-4 space-y-2 text-xs text-gray-600">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>No credit card required</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>PDPA compliant & encrypted</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Works on any smartphone</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-8 rounded-r-lg">
+            <p class="text-sm text-yellow-800">
+                <strong>Medical Disclaimer:</strong> This AI scan is a screening tool only and does not constitute professional dental diagnosis. All findings must be confirmed by a licensed dentist. After your scan, use OraChope to compare clinics and book your appointment.
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-12">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm text-gray-400">OralLink × OraChope Partnership • Powered by AI • © 2026</p>
+        </div>
+    </footer>
+</body>
+</html>

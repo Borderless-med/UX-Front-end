@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Integration - Option C: Always-Available Button</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Option C: Always-Available Button</h1>
+            <p class="text-gray-600 mb-4">Persistent scan button in chat UI - user-initiated only</p>
+            <div class="flex gap-2 text-sm">
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">✓ Non-Intrusive</span>
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">✓ Clean UI</span>
+                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">✗ Low Discovery</span>
+            </div>
+        </div>
+
+        <!-- Main Chatbot Interface -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Normal Conversation State -->
+            <div>
+                <h2 class="text-xl font-bold mb-4 text-gray-800">Variant 1: Button in Header</h2>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden border-2 border-purple-500">
+                    <!-- Chat Header with Button -->
+                    <div class="bg-gradient-to-r from-blue-600 to-teal-600 text-white p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-2xl">🦷</div>
+                                <div>
+                                    <div class="font-semibold">OraChope AI Concierge</div>
+                                    <div class="text-xs text-blue-100">Online • Ready to help</div>
+                                </div>
+                            </div>
+                            <button class="text-white hover:bg-white/20 rounded p-1">✕</button>
+                        </div>
+                        
+                        <!-- Scan Button in Header -->
+                        <button class="w-full bg-white/20 hover:bg-white/30 backdrop-blur border border-white/30 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2">
+                            <span class="text-xl">🦷</span>
+                            <span>Get Free AI Scan</span>
+                            <span class="bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full">FREE</span>
+                        </button>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="bg-gray-50 p-4 h-80 overflow-y-auto">
+                        <!-- Bot Welcome (No Scan Mention) -->
+                        <div class="flex gap-3 mb-4">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold">AI</div>
+                            <div class="bg-white rounded-lg p-4 shadow-sm max-w-sm border border-gray-200">
+                                <p class="text-gray-800 text-sm leading-relaxed">
+                                    Hi! I'm your AI dental concierge for Singapore and JB. 👋
+                                </p>
+                                <p class="text-gray-700 text-sm mt-2">
+                                    What treatment are you looking for? (e.g., root canal, implants, scaling)
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Example conversation -->
+                        <div class="flex justify-end gap-3 mb-4">
+                            <div class="bg-blue-600 text-white rounded-lg p-3 shadow-sm max-w-xs">
+                                <p class="text-sm">I need dental implants</p>
+                            </div>
+                            <div class="w-8 h-8 bg-gray-400 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold">U</div>
+                        </div>
+
+                        <div class="flex gap-3 mb-4">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold">AI</div>
+                            <div class="bg-white rounded-lg p-4 shadow-sm max-w-sm border border-gray-200">
+                                <p class="text-gray-800 text-sm leading-relaxed">
+                                    Great! I'll find you the best dental implant clinics. Would you prefer Singapore or Johor Bahru?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-t border-gray-200 p-3">
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Type your message..." class="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-blue-500" />
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700">Send</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 p-3 bg-purple-50 border border-purple-200 rounded text-xs text-gray-600">
+                    <strong>Pros:</strong> Always visible, clean placement<br>
+                    <strong>Cons:</strong> Takes header space, may get ignored
+                </div>
+            </div>
+
+            <!-- Alternative: Floating Button -->
+            <div>
+                <h2 class="text-xl font-bold mb-4 text-gray-800">Variant 2: Floating Action Button</h2>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden border-2 border-indigo-500 relative">
+                    <!-- Chat Header (Clean) -->
+                    <div class="bg-gradient-to-r from-blue-600 to-teal-600 text-white p-4 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-2xl">🦷</div>
+                            <div>
+                                <div class="font-semibold">OraChope AI Concierge</div>
+                                <div class="text-xs text-blue-100">Online • Ready to help</div>
+                            </div>
+                        </div>
+                        <button class="text-white hover:bg-white/20 rounded p-1">✕</button>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="bg-gray-50 p-4 h-80 overflow-y-auto">
+                        <div class="flex gap-3 mb-4">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold">AI</div>
+                            <div class="bg-white rounded-lg p-4 shadow-sm max-w-sm border border-gray-200">
+                                <p class="text-gray-800 text-sm leading-relaxed">
+                                    Hi! I'm your AI dental concierge for Singapore and JB. 👋
+                                </p>
+                                <p class="text-gray-700 text-sm mt-2">
+                                    What treatment are you looking for?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Scan Button (Inside Chat) -->
+                    <div class="absolute bottom-20 right-4">
+                        <button class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-3 px-4 rounded-full shadow-lg text-sm flex items-center gap-2 transition-all hover:scale-105">
+                            <span class="text-xl">🦷</span>
+                            <span>Free Scan</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-white border-t border-gray-200 p-3">
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Type your message..." class="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-blue-500" />
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700">Send</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 p-3 bg-indigo-50 border border-indigo-200 rounded text-xs text-gray-600">
+                    <strong>Pros:</strong> Eye-catching, doesn't clutter header<br>
+                    <strong>Cons:</strong> May cover messages, mobile unfriendly
+                </div>
+            </div>
+        </div>
+
+        <!-- User Clicks Button -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">What Happens When User Clicks Button</h2>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden border-2 border-green-500">
+                <div class="bg-gradient-to-r from-blue-600 to-teal-600 text-white p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-2xl">🦷</div>
+                            <div>
+                                <div class="font-semibold">OraChope AI Concierge</div>
+                                <div class="text-xs text-blue-100">Scan initiated...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+                        <span class="text-xl">🦷</span>
+                        <span>Scan in Progress...</span>
+                    </button>
+                </div>
+
+                <div class="bg-gray-50 p-4 h-80 overflow-y-auto">
+                    <!-- System message appears -->
+                    <div class="flex gap-3 mb-4">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold">AI</div>
+                        <div class="bg-gradient-to-br from-teal-50 to-blue-50 rounded-lg p-4 shadow-sm max-w-md border-2 border-teal-300">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-2xl">✨</span>
+                                <p class="text-gray-800 text-sm font-semibold">
+                                    Sending you to OralLink!
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white border border-teal-200 rounded-lg p-3 mb-3">
+                                <p class="text-sm font-semibold text-gray-800 mb-2">What to expect:</p>
+                                <div class="text-xs text-gray-600 space-y-1">
+                                    <div>1️⃣ Create quick account (30 seconds)</div>
+                                    <div>2️⃣ Take 5 phone photos (2 minutes)</div>
+                                    <div>3️⃣ Get AI analysis (instant)</div>
+                                    <div>4️⃣ Return here for clinic matching!</div>
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-gray-500 italic text-center">
+                                Redirecting in 3 seconds...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variant 3: Quick Actions Menu -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">Variant 3: Quick Actions Menu</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden border-2 border-pink-500">
+                    <div class="bg-gradient-to-r from-blue-600 to-teal-600 text-white p-4 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-2xl">🦷</div>
+                            <div>
+                                <div class="font-semibold">OraChope AI Concierge</div>
+                            </div>
+                        </div>
+                        <button class="text-white hover:bg-white/20 rounded p-1">✕</button>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 h-80 overflow-y-auto">
+                        <div class="flex gap-3 mb-4">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold">AI</div>
+                            <div class="bg-white rounded-lg p-4 shadow-sm max-w-md border border-gray-200">
+                                <p class="text-gray-800 text-sm leading-relaxed mb-3">
+                                    Hi! I'm your AI dental concierge. How can I help? 👋
+                                </p>
+                                
+                                <!-- Quick Actions Grid -->
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button class="bg-gradient-to-br from-teal-50 to-blue-50 hover:from-teal-100 hover:to-blue-100 border-2 border-teal-300 rounded-lg p-3 text-center transition-all">
+                                        <div class="text-2xl mb-1">🦷</div>
+                                        <div class="text-xs font-semibold text-gray-800">Free AI Scan</div>
+                                    </button>
+                                    <button class="bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg p-3 text-center">
+                                        <div class="text-2xl mb-1">🔍</div>
+                                        <div class="text-xs font-semibold text-gray-800">Find Clinics</div>
+                                    </button>
+                                    <button class="bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg p-3 text-center">
+                                        <div class="text-2xl mb-1">💰</div>
+                                        <div class="text-xs font-semibold text-gray-800">Compare Prices</div>
+                                    </button>
+                                    <button class="bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg p-3 text-center">
+                                        <div class="text-2xl mb-1">📅</div>
+                                        <div class="text-xs font-semibold text-gray-800">Book Now</div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-t border-gray-200 p-3">
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Or type your question..." class="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-blue-500" />
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center p-6 bg-pink-50 border-2 border-pink-300 rounded-lg">
+                    <h3 class="text-lg font-bold text-pink-900 mb-3">Quick Actions Approach</h3>
+                    <div class="space-y-2 text-sm text-gray-700">
+                        <p><strong>✓ Pros:</strong> Multiple entry points, educational (shows all features), clickable menu = low cognitive load</p>
+                        <p><strong>✗ Cons:</strong> Takes up message space, scan competes with other actions, only shows once in welcome</p>
+                        <p><strong>Best for:</strong> Feature discovery, first-time users who don't know what OraChope offers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Notes -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-bold text-blue-900 mb-3">Implementation Notes - Option C Summary</h3>
+            <div class="space-y-3 text-sm text-gray-700">
+                <div>
+                    <p class="font-semibold mb-1">Overall Pros:</p>
+                    <ul class="list-disc list-inside space-y-1 text-xs pl-2">
+                        <li>Non-intrusive: doesn't interrupt conversation flow</li>
+                        <li>Always accessible: user can click anytime</li>
+                        <li>Clean UX: no forced messaging</li>
+                        <li>Respects user autonomy</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-semibold mb-1">Overall Cons:</p>
+                    <ul class="list-disc list-inside space-y-1 text-xs pl-2">
+                        <li><strong>LOW DISCOVERY:</strong> Users may not notice button (banner blindness)</li>
+                        <li>Passive approach = lower conversion rates</li>
+                        <li>Misses users who need scan but don't realize it</li>
+                        <li>No contextual nudging</li>
+                    </ul>
+                </div>
+                <div class="pt-2 border-t border-blue-300">
+                    <p class="font-semibold">Recommended IF:</p>
+                    <p class="text-xs">You prioritize clean UX over conversion, already have scan CTA on homepage, or want to A/B test passive vs active approaches</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

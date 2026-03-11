@@ -1,0 +1,105 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PAGE 1: PRE-SCAN SIGNUP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 GOAL: Convert visitors to scan users with zero friction
+
+🔑 KEY ELEMENTS:
+1. Dual branding = mutual credibility boost
+2. Minimal signup (2 fields) = 3x higher conversion
+3. "Return to OraChope" message = sets expectations
+
+🤝 WIN-WIN:
+• OralLink gets 10K+ monthly warm leads
+• OraChope gets AI-qualified users
+• Users get free scan + easier booking
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PAGE 2: POST-SCAN RESULTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 GOAL: Convert results into bookings at peak motivation
+
+🔑 KEY ELEMENTS:
+1. Scan ID in body (easy chatbot reference)
+2. Prominent return CTA after results (5x higher clicks)
+3. Two pathways: mobile chatbot or desktop PDF
+
+🤝 WIN-WIN:
+• OralLink proves partnership value via return rate
+• OraChope gets users at PEAK motivation
+• Users get instant results + easy clinic matching
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 NEXT STEPS (3-4 Weeks)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 ORALLINK (Week 1-2):
+✅ Setup: subdomain orachope.orallink.health
+✅ Build approved pages + return URL
+✅ Mobile testing + staging environment
+✅ Share metrics: scans → completions → returns
+
+⚖️ LEGAL (Parallel):
+✅ Partnership agreement + PDPA compliance
+
+🔧 ORACHOPE (Week 1-2):
+✅ Handle return URL → auto-open chatbot
+✅ Train chatbot on scan findings
+✅ Track conversions: scan users vs non-scan
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 SUCCESS METRICS (3 Months)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 SHARED TARGETS:
+📈 Scan → booking: 15%+ conversion
+📈 Return rate: 70%+ (proves value)
+📈 User satisfaction: 4.0+ / 5.0
+📈 Volume: 50 → 100 → 200 scans/month
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 DESIGN PRINCIPLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ Transparency (users know the partnership flow)
+2️⃣ User-first (minimal friction, mobile-optimized)
+3️⃣ Mutual value (both parties + users win)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 QUESTIONS FOR ORALLINK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ Timeline: 3-4 weeks feasible?
+❓ Subdomain: orachope.orallink.health okay?
+❓ URL params: Can pass scan findings?
+❓ Analytics: Will share conversion metrics?
+❓ Branding: Any design concerns?
+❓ Legal: Who drafts agreement?
+
+📞 NEXT: Technical integration call

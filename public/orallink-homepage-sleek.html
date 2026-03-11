@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope x OralLink - Homepage Integration (Sleek Design)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .btn-primary {
+            @apply bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold transition-all duration-300;
+        }
+        
+        .card-hover {
+            transition: all 300ms ease;
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.03);
+        }
+        
+        .scan-badge {
+            animation: subtle-pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
+        }
+
+        .option-toggle {
+            display: none;
+        }
+
+        .option-toggle:checked + label {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-color: #2563eb;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 antialiased">
+    
+    <!-- Mockup Selection Bar -->
+    <div class="fixed top-0 left-0 right-0 bg-purple-900 text-white z-50 px-4 py-2 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div>
+                <h1 class="text-sm font-bold">🔬 OralLink Integration - Sleek Homepage Options</h1>
+            </div>
+            <div class="flex gap-2 text-xs">
+                <a href="#option-a" class="bg-purple-700 hover:bg-purple-600 px-2 py-1 rounded">Option A</a>
+                <a href="#option-b" class="bg-purple-700 hover:bg-purple-600 px-2 py-1 rounded">Option B</a>
+                <a href="#option-c" class="bg-purple-700 hover:bg-purple-600 px-2 py-1 rounded">Option C</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-12">
+        
+        <!-- ============================================================ -->
+        <!-- OPTION A: Three-Path Approach (AI Scan as 3rd Equal Option) -->
+        <!-- ============================================================ -->
+        <section id="option-a" class="border-b-8 border-purple-500 pb-16">
+            <div class="bg-blue-50 py-3">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl font-bold text-purple-900">📌 OPTION A: Three-Path Hero</h2>
+                    <p class="text-sm text-purple-700">AI Scan as equal 3rd pathway alongside AI Concierge & Browse</p>
+                </div>
+            </div>
+
+            <!-- Navigation (matches your design) -->
+            <nav class="bg-white border-b">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="flex items-center gap-2">
+                            <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-8">
+                        </div>
+                        <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
+                            <a href="#" class="hover:text-blue-600">Find Clinics</a>
+                            <a href="#" class="hover:text-blue-600">Compare</a>
+                            <a href="#" class="hover:text-blue-600">How It Works</a>
+                            <a href="#" class="hover:text-blue-600">Travel Guide</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="pt-8 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
+                <div class="max-w-7xl mx-auto">
+                    
+                    <!-- Hero Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                            World-Class Dental Care<br />
+                            Smart Savings & <span class="text-blue-600">AI Powered</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                            Compare dental options with intelligent guidance every step of the way
+                        </p>
+                    </div>
+
+                    <!-- Choose Your Experience -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Choose Your Preferred Experience</h2>
+                    </div>
+
+                    <!-- Three Pathway Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
+                        
+                        <!-- Card 1: AI Dental Scan (NEW) -->
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-300 card-hover shadow-lg relative">
+                            <div class="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full scan-badge">
+                                NEW
+                            </div>
+                            
+                            <div class="text-center mb-6">
+                                <div class="bg-green-500 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">AI Dental Scan</h3>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Identify your dental needs before booking
+                                </p>
+                            </div>
+
+                            <div class="text-xs text-green-800 font-semibold mb-4 text-center">
+                                Perfect for: Uncertain about treatment needs
+                            </div>
+
+                            <div class="space-y-2 mb-6 text-sm text-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>5-photo smartphone scan</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Instant risk assessment</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Matched clinic recommendations</span>
+                                </div>
+                            </div>
+
+                            <a href="https://orallink.health?ref=orachope&source=homepage-optionA" 
+                               class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg text-center text-sm transition-all">
+                                Start AI Scan (Free)
+                            </a>
+                            
+                            <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-semibold text-center mt-3">
+                                2 min • No login required
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Smart AI Concierge -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200 card-hover shadow-lg">
+                            <div class="text-center mb-6">
+                                <div class="bg-blue-500 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">Smart AI Concierge</h3>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Get personalized clinic recommendations
+                                </p>
+                            </div>
+
+                            <div class="text-xs text-blue-800 font-semibold mb-4 text-center">
+                                Perfect for: First-time JB patients
+                            </div>
+
+                            <div class="space-y-2 mb-6 text-sm text-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Ask anything about JB dental care</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Real reviews sentiment analysis</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Book appointments instantly</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg text-sm transition-all">
+                                Sign Up to Use AI Concierge
+                            </button>
+                            
+                            <div class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-semibold text-center mt-3">
+                                🔐 Free signup - 40 chats/month
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Browse & Compare -->
+                        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border-2 border-gray-200 card-hover shadow-lg">
+                            <div class="text-center mb-6">
+                                <div class="bg-gray-600 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">Browse & Compare</h3>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Explore clinics at your own pace
+                                </p>
+                            </div>
+
+                            <div class="text-xs text-gray-700 font-semibold mb-4 text-center">
+                                Perfect for: Experienced patients
+                            </div>
+
+                            <div class="space-y-2 mb-6 text-sm text-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Browse all verified clinics</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Advanced search & filtering</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Compare clinics side-by-side</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg text-sm transition-all">
+                                Start Browsing Clinics
+                            </button>
+                            
+                            <div class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full font-semibold text-center mt-3">
+                                💡 No account required
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Subtle Value Prop -->
+                    <div class="text-center mt-8 text-sm text-gray-600">
+                        <p>Trusted by 5,000+ Singaporeans • 98% satisfaction rate • PDPA compliant</p>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- OPTION B: Two-Path + Embedded Scan Suggestion -->
+        <!-- ============================================================ -->
+        <section id="option-b" class="border-b-8 border-purple-500 pb-16 bg-gray-50">
+            <div class="bg-blue-50 py-3">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl font-bold text-purple-900">📌 OPTION B: Integrated Scan Suggestion</h2>
+                    <p class="text-sm text-purple-700">Scan appears above 2-path choice with "Start Here if Unsure" positioning</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="bg-white border-b">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="flex items-center gap-2">
+                            <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-8">
+                        </div>
+                        <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
+                            <a href="#" class="hover:text-blue-600">Find Clinics</a>
+                            <a href="#" class="hover:text-blue-600">Compare</a>
+                            <a href="#" class="hover:text-blue-600">How It Works</a>
+                            <a href="#" class="hover:text-blue-600">Travel Guide</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="pt-8 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
+                <div class="max-w-7xl mx-auto">
+                    
+                    <!-- Hero Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                            World-Class Dental Care<br />
+                            Smart Savings & <span class="text-blue-600">AI Powered</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                            Compare dental options with intelligent guidance every step of the way
+                        </p>
+                    </div>
+
+                    <!-- Pre-Path Scan Suggestion -->
+                    <div class="max-w-2xl mx-auto mb-8">
+                        <div class="bg-gradient-to-r from-green-50 via-blue-50 to-green-50 border-2 border-green-300 rounded-xl p-5 shadow-md">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h3 class="font-bold text-gray-900 text-lg">Unsure what treatment you need?</h3>
+                                        <span class="bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW</span>
+                                    </div>
+                                    <p class="text-sm text-gray-700 mb-3">Take a 2-minute AI dental scan to identify your needs before browsing clinics</p>
+                                    <div class="flex items-center gap-3">
+                                        <a href="https://orallink.health?ref=orachope&source=homepage-optionB" 
+                                           class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-5 rounded-lg text-sm transition-all inline-flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Start Free AI Scan
+                                        </a>
+                                        <div class="text-xs text-gray-600">
+                                            <span class="font-semibold">2 min</span> • No login • Instant results
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="flex items-center max-w-2xl mx-auto mb-8">
+                        <div class="flex-1 border-t border-gray-300"></div>
+                        <span class="px-4 text-sm text-gray-500 font-medium">Or choose your path</span>
+                        <div class="flex-1 border-t border-gray-300"></div>
+                    </div>
+
+                    <!-- Two Pathway Cards (Original Design) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                        
+                        <!-- Smart AI Concierge -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 border-2 border-blue-200 card-hover shadow-lg">
+                            <div class="text-center mb-6">
+                                <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-3">Smart AI Concierge</h3>
+                                <p class="text-base text-gray-700 leading-relaxed">
+                                    Get personalized recommendations based on thousands of reviews
+                                </p>
+                            </div>
+
+                            <div class="text-sm text-blue-800 font-semibold mb-6 text-center">
+                                Perfect for: First-time JB patients, those seeking guidance
+                            </div>
+
+                            <div class="space-y-3 mb-6 text-sm text-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>"Should I get my root canal in JB or Singapore?"</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>"Which clinic has the best implant reviews?"</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>"Help me book an appointment that fits my schedule"</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all">
+                                Sign Up to Use AI Concierge
+                            </button>
+                            
+                            <div class="bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-full font-semibold text-center mt-3">
+                                🔐 Sign up FREE - 40 conversations per month
+                            </div>
+                        </div>
+
+                        <!-- Browse & Compare -->
+                        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-8 border-2 border-gray-200 card-hover shadow-lg">
+                            <div class="text-center mb-6">
+                                <div class="bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-3">Browse & Compare</h3>
+                                <p class="text-base text-gray-700 leading-relaxed">
+                                    Explore verified clinics and book when ready
+                                </p>
+                            </div>
+
+                            <div class="text-sm text-gray-700 font-semibold mb-6 text-center">
+                                Perfect for: Experienced patients, those who prefer to research first
+                            </div>
+
+                            <div class="space-y-3 mb-6 text-sm text-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Browse all verified clinics</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Advanced search & filtering</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Compare clinics side-by-side</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all">
+                                Start Browsing Clinics
+                            </button>
+                            
+                            <div class="bg-gray-100 text-gray-700 text-xs px-3 py-2 rounded-full font-semibold text-center mt-3">
+                                💡 No account required - Browse freely
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Trust Indicators -->
+                    <div class="text-center mt-8 text-sm text-gray-600">
+                        <p>Trusted by 5,000+ Singaporeans • 98% satisfaction rate • PDPA compliant</p>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- OPTION C: Enhanced AI Concierge Card with Scan -->
+        <!-- ============================================================ -->
+        <section id="option-c" class="border-b-8 border-purple-500 pb-16">
+            <div class="bg-blue-50 py-3">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl font-bold text-purple-900">📌 OPTION C: Enhanced AI Card</h2>
+                    <p class="text-sm text-purple-700">Scan integrated into AI Concierge card with toggle/pathway choice</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="bg-white border-b">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="flex items-center gap-2">
+                            <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-8">
+                        </div>
+                        <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
+                            <a href="#" class="hover:text-blue-600">Find Clinics</a>
+                            <a href="#" class="hover:text-blue-600">Compare</a>
+                            <a href="#" class="hover:text-blue-600">How It Works</a>
+                            <a href="#" class="hover:text-blue-600">Travel Guide</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="pt-8 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
+                <div class="max-w-7xl mx-auto">
+                    
+                    <!-- Hero Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                            World-Class Dental Care<br />
+                            Smart Savings & <span class="text-blue-600">AI Powered</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                            Compare dental options with intelligent guidance every step of the way
+                        </p>
+                    </div>
+
+                    <!-- Choose Your Experience -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Choose Your Preferred Experience</h2>
+                    </div>
+
+                    <!-- Two Pathway Cards with Enhanced AI Card -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                        
+                        <!-- Enhanced AI Card with Scan Option -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200 card-hover shadow-lg">
+                            <div class="text-center mb-6">
+                                <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 relative">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                                    </svg>
+                                    <div class="absolute -top-1 -right-1 bg-green-500 w-5 h-5 rounded-full flex items-center justify-center">
+                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-3">AI-Powered Guidance</h3>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    Get personalized help - from diagnosis to booking
+                                </p>
+                                <div class="inline-block bg-green-100 border border-green-300 rounded-lg px-3 py-1 text-xs font-semibold text-green-800">
+                                    ✨ NEW: Includes AI dental screening
+                                </div>
+                            </div>
+
+                            <div class="text-sm text-blue-800 font-semibold mb-4 text-center">
+                                Perfect for: First-time patients, unsure about treatment needs
+                            </div>
+
+                            <!-- Two AI Options -->
+                            <div class="bg-white rounded-lg p-4 mb-4 border border-blue-200">
+                                <div class="text-xs font-bold text-gray-600 mb-3 text-center">Choose your starting point:</div>
+                                
+                                <div class="space-y-2">
+                                    <!-- Option 1: AI Scan -->
+                                    <div class="bg-green-50 border-2 border-green-300 rounded-lg p-3">
+                                        <div class="flex items-start gap-3">
+                                            <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="font-bold text-gray-900 text-sm mb-1">AI Dental Scan</div>
+                                                <div class="text-xs text-gray-600 mb-2">Identify your needs first (2 min scan)</div>
+                                                <a href="https://orallink.health?ref=orachope&source=homepage-optionC-scan" 
+                                                   class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-1.5 px-4 rounded text-xs transition-all">
+                                                    Start Scan →
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Option 2: AI Chat -->
+                                    <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-3">
+                                        <div class="flex items-start gap-3">
+                                            <div class="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="font-bold text-gray-900 text-sm mb-1">AI Concierge Chat</div>
+                                                <div class="text-xs text-gray-600 mb-2">Ask questions & get recommendations</div>
+                                                <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-4 rounded text-xs transition-all">
+                                                    Start Chat →
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 text-xs text-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Personalized recommendations from reviews</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Instant appointment booking assistance</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-full font-semibold text-center mt-4">
+                                🔐 Sign up FREE - 40 AI conversations/month
+                            </div>
+                        </div>
+
+                        <!-- Browse & Compare (unchanged) -->
+                        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border-2 border-gray-200 card-hover shadow-lg">
+                            <div class="text-center mb-6">
+                                <div class="bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-3">Browse & Compare</h3>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Explore clinics and book when you're ready
+                                </p>
+                            </div>
+
+                            <div class="text-sm text-gray-700 font-semibold mb-6 text-center">
+                                Perfect for: Experienced patients who prefer self-research
+                            </div>
+
+                            <div class="space-y-3 mb-6 text-sm text-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Browse all verified clinics</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Advanced search & filtering</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Compare clinics side-by-side</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-gray-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Book directly from clinic pages</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all">
+                                Start Browsing Clinics
+                            </button>
+                            
+                            <div class="bg-gray-100 text-gray-700 text-xs px-3 py-2 rounded-full font-semibold text-center mt-3">
+                                💡 No account required - Browse freely
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Trust Indicators -->
+                    <div class="text-center mt-8 text-sm text-gray-600">
+                        <p>Trusted by 5,000+ Singaporeans • 98% satisfaction rate • PDPA compliant</p>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+
+        <!-- Summary Comparison -->
+        <section class="bg-purple-900 text-white py-12">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl font-bold mb-8 text-center">📊 Design Options Comparison</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3 text-center">A</div>
+                        <h3 class="font-bold mb-2 text-center">Three-Path Hero</h3>
+                        <ul class="text-sm text-purple-200 space-y-2">
+                            <li>✓ AI Scan gets equal prominence</li>
+                            <li>✓ Clear differentiation of all 3 options</li>
+                            <li>✓ Symmetrical, balanced layout</li>
+                            <li>⚠️ More visual complexity</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3 text-center">B</div>
+                        <h3 class="font-bold mb-2 text-center">Integrated Suggestion</h3>
+                        <ul class="text-sm text-purple-200 space-y-2">
+                            <li>✓ Preserves existing 2-path design</li>
+                            <li>✓ "Start here if unsure" guidance</li>
+                            <li>✓ Least disruptive to current UX</li>
+                            <li>⚠️ Scan might be skipped</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3 text-center">C</div>
+                        <h3 class="font-bold mb-2 text-center">Enhanced AI Card</h3>
+                        <ul class="text-sm text-purple-200 space-y-2">
+                            <li>✓ Positions scan within AI ecosystem</li>
+                            <li>✓ Clear scan + chat differentiation</li>
+                            <li>✓ Maintains 2-card balance</li>
+                            <li>✓ "AI-powered" brand strengthening</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-purple-800 rounded-xl p-6">
+                    <h4 class="font-bold text-lg mb-3 text-center">💡 Recommendation</h4>
+                    <p class="text-center text-purple-100">
+                        <strong class="text-white">Option C (Enhanced AI Card)</strong> offers the best balance:<br/>
+                        Maintains your clean 2-path design while clearly positioning AI Scan as part of the "AI-powered" value proposition.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

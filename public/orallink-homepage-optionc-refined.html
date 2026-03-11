@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option C Refined - Perfect Symmetry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .card-hover {
+            transition: all 300ms ease;
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.03);
+        }
+        
+        .scan-badge {
+            animation: subtle-pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        /* Ensure equal height cards */
+        .equal-height-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .equal-height-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-features {
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 antialiased">
+    
+    <!-- Mockup Navigation -->
+    <div class="fixed top-0 left-0 right-0 bg-purple-900 text-white z-50 px-4 py-2 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div>
+                <h1 class="text-sm font-bold">🔬 Option C Refined - Perfect Symmetry (3 Variations)</h1>
+            </div>
+            <div class="flex gap-2 text-xs">
+                <a href="#c1" class="bg-purple-700 hover:bg-purple-600 px-2 py-1 rounded">C1: Vertical</a>
+                <a href="#c2" class="bg-purple-700 hover:bg-purple-600 px-2 py-1 rounded">C2: Tabs</a>
+                <a href="#c3" class="bg-purple-700 hover:bg-purple-600 px-2 py-1 rounded">C3: Buttons</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-12">
+        
+        <!-- ============================================================ -->
+        <!-- VARIATION C1: Vertical Scan/Chat Options (Perfectly Aligned) -->
+        <!-- ============================================================ -->
+        <section id="c1" class="border-b-8 border-purple-500 pb-16">
+            <div class="bg-blue-50 py-3">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl font-bold text-purple-900">📌 VARIATION C1: Vertical Layout + Perfect Symmetry</h2>
+                    <p class="text-sm text-purple-700">Scan and Chat stacked vertically in AI card. All elements perfectly aligned.</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="bg-white border-b">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="flex items-center gap-2">
+                            <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-8">
+                        </div>
+                        <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
+                            <a href="#" class="hover:text-blue-600">Find Clinics</a>
+                            <a href="#" class="hover:text-blue-600">Compare</a>
+                            <a href="#" class="hover:text-blue-600">How It Works</a>
+                            <a href="#" class="hover:text-blue-600">Travel Guide</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="pt-8 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
+                <div class="max-w-7xl mx-auto">
+                    
+                    <!-- Hero Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                            World-Class Dental Care<br />
+                            Smart Savings & <span class="text-blue-600">AI Powered</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                            Compare dental options with intelligent guidance every step of the way
+                        </p>
+                    </div>
+
+                    <!-- Choose Your Experience -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Choose Your Preferred Experience</h2>
+                    </div>
+
+                    <!-- Two Equal Cards -->
+                    <div class="equal-height-container max-w-5xl mx-auto">
+                        
+                        <!-- LEFT CARD: AI-Powered Guidance -->
+                        <div class="equal-height-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-2 border-blue-200 card-hover shadow-lg p-8">
+                            <div class="card-content">
+                                <!-- Header Section (ALIGNED) -->
+                                <div class="text-center mb-6">
+                                    <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 relative">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                        <div class="absolute -top-1 -right-1 bg-green-500 w-5 h-5 rounded-full flex items-center justify-center scan-badge">
+                                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-4">AI-Powered Guidance</h3>
+                                    <p class="text-base text-gray-700 leading-relaxed mb-4">
+                                        From diagnosis to booking - we guide you
+                                    </p>
+                                </div>
+
+                                <!-- Subtitle (ALIGNED) -->
+                                <div class="text-sm text-blue-800 font-semibold mb-6 text-center">
+                                    Perfect for: First-time patients, unsure about needs
+                                </div>
+
+                                <!-- Features Section (ALIGNED HEIGHT) -->
+                                <div class="card-features mb-6">
+                                    <!-- Subtitle -->
+                                    <div class="text-xs font-bold text-gray-600 mb-4 text-center">Choose your starting point:</div>
+                                    
+                                    <!-- Two Mini-Cards Side by Side -->
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <!-- Mini-Card 1: AI Scan -->
+                                        <div class="bg-green-50 border-2 border-green-300 rounded-lg p-3 flex flex-col">
+                                            <div class="text-center mb-3">
+                                                <div class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="font-bold text-gray-900 text-sm mb-1">AI Dental Scan</div>
+                                                <div class="text-xs text-gray-600">Photo-based diagnosis</div>
+                                            </div>
+                                            
+                                            <!-- Bullet points -->
+                                            <div class="flex-1 space-y-2 text-xs text-gray-700 mb-3">
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>5 photos, 2 min</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Instant risk report</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Clinic matches</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>No login needed</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- CTA -->
+                                            <a href="https://orallink.health?ref=orachope&source=optionC1-scan" 
+                                               class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg text-sm transition-all text-center block">
+                                                Start AI Scan →
+                                            </a>
+                                        </div>
+
+                                        <!-- Mini-Card 2: AI Chat -->
+                                        <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-3 flex flex-col">
+                                            <div class="text-center mb-3">
+                                                <div class="bg-blue-500 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="font-bold text-gray-900 text-sm mb-1">AI Concierge</div>
+                                                <div class="text-xs text-gray-600">Conversational guidance</div>
+                                            </div>
+                                            
+                                            <!-- Bullet points -->
+                                            <div class="flex-1 space-y-2 text-xs text-gray-700 mb-3">
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Ask any question</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Compare options</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Instant booking</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>40 free chats/mo</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- CTA -->
+                                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded text-xs transition-all">
+                                                Start Chatting →
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Footer Badge (ALIGNED) -->
+                                <div class="mt-auto">
+                                    <div class="bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-full font-semibold text-center">
+                                        🔐 Sign up FREE - 40 conversations/month
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT CARD: Browse & Compare (PERFECTLY ALIGNED) -->
+                        <div class="equal-height-card bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 card-hover shadow-lg p-8">
+                            <div class="card-content">
+                                <!-- Header Section (ALIGNED) -->
+                                <div class="text-center mb-6">
+                                    <div class="bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Browse & Compare</h3>
+                                    <p class="text-base text-gray-700 leading-relaxed mb-4">
+                                        Explore clinics and book when you're ready
+                                    </p>
+                                </div>
+
+                                <!-- Subtitle (ALIGNED) -->
+                                <div class="text-sm text-gray-700 font-semibold mb-6 text-center">
+                                    Perfect for: Experienced patients, self-researchers
+                                </div>
+
+                                <!-- Features Section (ALIGNED HEIGHT) -->
+                                <div class="card-features mb-6">
+                                    <div class="space-y-3 text-sm text-gray-700 mb-6">
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Browse all verified clinics</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Advanced search & filtering</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Compare clinics side-by-side</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Book directly from clinic pages</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Read real patient reviews</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>View transparent pricing</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CTA Button (ALIGNED) -->
+                                <div class="mt-auto">
+                                    <button class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all mb-3">
+                                        Start Browsing Clinics
+                                    </button>
+                                    
+                                    <div class="bg-gray-100 text-gray-700 text-xs px-3 py-2 rounded-full font-semibold text-center">
+                                        💡 No account required - Browse freely
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Trust Indicators -->
+                    <div class="text-center mt-8 text-sm text-gray-600">
+                        <p>Trusted by 5,000+ Singaporeans • 98% satisfaction rate • PDPA compliant</p>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- VARIATION C2: Tabbed Interface (Scan/Chat Toggle) -->
+        <!-- ============================================================ -->
+        <section id="c2" class="border-b-8 border-purple-500 pb-16 bg-gray-50">
+            <div class="bg-blue-50 py-3">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl font-bold text-purple-900">📌 VARIATION C2: Tabbed Interface</h2>
+                    <p class="text-sm text-purple-700">Scan and Chat as toggleable tabs. Cleaner look, user chooses one path.</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="bg-white border-b">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="flex items-center gap-2">
+                            <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-8">
+                        </div>
+                        <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
+                            <a href="#" class="hover:text-blue-600">Find Clinics</a>
+                            <a href="#" class="hover:text-blue-600">Compare</a>
+                            <a href="#" class="hover:text-blue-600">How It Works</a>
+                            <a href="#" class="hover:text-blue-600">Travel Guide</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="pt-8 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
+                <div class="max-w-7xl mx-auto">
+                    
+                    <!-- Hero Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                            World-Class Dental Care<br />
+                            Smart Savings & <span class="text-blue-600">AI Powered</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                            Compare dental options with intelligent guidance every step of the way
+                        </p>
+                    </div>
+
+                    <!-- Choose Your Experience -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Choose Your Preferred Experience</h2>
+                    </div>
+
+                    <!-- Two Equal Cards -->
+                    <div class="equal-height-container max-w-5xl mx-auto">
+                        
+                        <!-- LEFT CARD: AI-Powered Guidance with Tabs -->
+                        <div class="equal-height-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-2 border-blue-200 card-hover shadow-lg p-8">
+                            <div class="card-content">
+                                <!-- Header Section -->
+                                <div class="text-center mb-6">
+                                    <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 relative">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                        <div class="absolute -top-1 -right-1 bg-green-500 w-5 h-5 rounded-full flex items-center justify-center scan-badge">
+                                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-3">AI-Powered Guidance</h3>
+                                    <p class="text-base text-gray-700 leading-relaxed h-12 flex items-center justify-center">
+                                        From diagnosis to booking - we guide you
+                                    </p>
+                                </div>
+
+                                <!-- Subtitle -->
+                                <div class="text-sm text-blue-800 font-semibold mb-6 text-center h-10 flex items-center justify-center">
+                                    Perfect for: First-time patients, unsure about needs
+                                </div>
+
+                                <!-- Tab Toggle -->
+                                <div class="card-features mb-6">
+                                    <div class="flex gap-2 mb-4">
+                                        <button onclick="showTab('scan-c2')" id="btn-scan-c2" class="flex-1 bg-green-500 text-white font-semibold py-2 px-4 rounded-lg transition-all">
+                                            🔬 AI Scan
+                                        </button>
+                                        <button onclick="showTab('chat-c2')" id="btn-chat-c2" class="flex-1 bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-all">
+                                            💬 AI Chat
+                                        </button>
+                                    </div>
+
+                                    <!-- Scan Tab Content -->
+                                    <div id="tab-scan-c2" class="bg-white rounded-lg p-4 border border-blue-200">
+                                        <h4 class="font-bold text-gray-900 mb-2">AI Dental Scan</h4>
+                                        <p class="text-sm text-gray-700 mb-4">Take 5 photos with your phone, get instant risk assessment</p>
+                                        <div class="space-y-2 text-xs text-gray-700 mb-4">
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>Identify dental issues</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>2 minutes, no login</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>Matched clinic recommendations</span>
+                                            </div>
+                                        </div>
+                                        <a href="https://orallink.health?ref=orachope&source=optionC2-scan" 
+                                           class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-all">
+                                            Start AI Scan
+                                        </a>
+                                    </div>
+
+                                    <!-- Chat Tab Content (hidden by default) -->
+                                    <div id="tab-chat-c2" class="bg-white rounded-lg p-4 border border-blue-200 hidden">
+                                        <h4 class="font-bold text-gray-900 mb-2">AI Companion Chat</h4>
+                                        <p class="text-sm text-gray-700 mb-4">Ask questions, get recommendations based on thousands of reviews</p>
+                                        <div class="space-y-2 text-xs text-gray-700 mb-4">
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>Compare JB vs SG clinics</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>Book appointments instantly</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>40 free conversations/month</span>
+                                            </div>
+                                        </div>
+                                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all">
+                                            Sign Up & Start Chatting
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Footer Badge -->
+                                <div class="mt-auto">
+                                    <div class="bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-full font-semibold text-center">
+                                        🔐 Sign up FREE - 40 conversations/month
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT CARD: Browse & Compare (IDENTICAL TO C1) -->
+                        <div class="equal-height-card bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 card-hover shadow-lg p-8">
+                            <div class="card-content">
+                                <!-- Header Section -->
+                                <div class="text-center mb-6">
+                                    <div class="bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Browse & Compare</h3>
+                                    <p class="text-base text-gray-700 leading-relaxed h-12 flex items-center justify-center">
+                                        Explore clinics and book when you're ready
+                                    </p>
+                                </div>
+
+                                <!-- Subtitle -->
+                                <div class="text-sm text-gray-700 font-semibold mb-6 text-center h-10 flex items-center justify-center">
+                                    Perfect for: Experienced patients, self-researchers
+                                </div>
+
+                                <!-- Features Section -->
+                                <div class="card-features mb-6">
+                                    <div class="space-y-3 text-sm text-gray-700 mb-6">
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Browse all verified clinics</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Advanced search & filtering</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Compare clinics side-by-side</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Book directly from clinic pages</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Read real patient reviews</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>View transparent pricing</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CTA Button -->
+                                <div class="mt-auto">
+                                    <button class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all mb-3">
+                                        Start Browsing Clinics
+                                    </button>
+                                    
+                                    <div class="bg-gray-100 text-gray-700 text-xs px-3 py-2 rounded-full font-semibold text-center">
+                                        💡 No account required - Browse freely
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Trust Indicators -->
+                    <div class="text-center mt-8 text-sm text-gray-600">
+                        <p>Trusted by 5,000+ Singaporeans • 98% satisfaction rate • PDPA compliant</p>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- VARIATION C3: Side-by-Side Buttons (Simplest) -->
+        <!-- ============================================================ -->
+        <section id="c3" class="border-b-8 border-purple-500 pb-16">
+            <div class="bg-blue-50 py-3">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl font-bold text-purple-900">📌 VARIATION C3: Side-by-Side Buttons</h2>
+                    <p class="text-sm text-purple-700">Scan and Chat as equal side-by-side buttons. Cleanest, simplest approach.</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="bg-white border-b">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="flex items-center gap-2">
+                            <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-8">
+                        </div>
+                        <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
+                            <a href="#" class="hover:text-blue-600">Find Clinics</a>
+                            <a href="#" class="hover:text-blue-600">Compare</a>
+                            <a href="#" class="hover:text-blue-600">How It Works</a>
+                            <a href="#" class="hover:text-blue-600">Travel Guide</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="pt-8 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
+                <div class="max-w-7xl mx-auto">
+                    
+                    <!-- Hero Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                            World-Class Dental Care<br />
+                            Smart Savings & <span class="text-blue-600">AI Powered</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                            Compare dental options with intelligent guidance every step of the way
+                        </p>
+                    </div>
+
+                    <!-- Choose Your Experience -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Choose Your Preferred Experience</h2>
+                    </div>
+
+                    <!-- Two Equal Cards -->
+                    <div class="equal-height-container max-w-5xl mx-auto">
+                        
+                        <!-- LEFT CARD: AI-Powered Guidance with Side-by-Side -->
+                        <div class="equal-height-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-2 border-blue-200 card-hover shadow-lg p-8">
+                            <div class="card-content">
+                                <!-- Header Section -->
+                                <div class="text-center mb-6">
+                                    <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 relative">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                        <div class="absolute -top-1 -right-1 bg-green-500 w-5 h-5 rounded-full flex items-center justify-center scan-badge">
+                                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-3">AI-Powered Guidance</h3>
+                                    <p class="text-base text-gray-700 leading-relaxed h-12 flex items-center justify-center">
+                                        From diagnosis to booking - we guide you
+                                    </p>
+                                </div>
+
+                                <!-- Subtitle -->
+                                <div class="text-sm text-blue-800 font-semibold mb-6 text-center h-10 flex items-center justify-center">
+                                    Perfect for: First-time patients, unsure about needs
+                                </div>
+
+                                <!-- Features Section -->
+                                <div class="card-features mb-6">
+                                    <!-- Subtitle -->
+                                    <div class="text-xs font-bold text-gray-600 mb-4 text-center">Choose your starting point:</div>
+                                    
+                                    <!-- Two Mini-Cards Side by Side -->
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <!-- Mini-Card 1: AI Scan -->
+                                        <div class="bg-green-50 border-2 border-green-300 rounded-lg p-3 flex flex-col">
+                                            <div class="text-center mb-3">
+                                                <div class="bg-green-500 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="font-bold text-gray-900 text-sm mb-1">AI Dental Scan</div>
+                                                <div class="text-xs text-gray-600">Photo-based diagnosis</div>
+                                            </div>
+                                            
+                                            <!-- Bullet points -->
+                                            <div class="flex-1 space-y-2 text-xs text-gray-700 mb-3">
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>5 photos, 2 min</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Instant risk report</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Clinic matches</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>No login needed</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- CTA -->
+                                            <a href="https://orallink.health?ref=orachope&source=optionC3-scan" 
+                                               class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded text-xs transition-all text-center block">
+                                                Start AI Scan →
+                                            </a>
+                                        </div>
+
+                                        <!-- Mini-Card 2: AI Chat -->
+                                        <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-3 flex flex-col">
+                                            <div class="text-center mb-3">
+                                                <div class="bg-blue-500 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="font-bold text-gray-900 text-sm mb-1">AI Concierge</div>
+                                                <div class="text-xs text-gray-600">Conversational guidance</div>
+                                            </div>
+                                            
+                                            <!-- Bullet points -->
+                                            <div class="flex-1 space-y-2 text-xs text-gray-700 mb-3">
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Ask any question</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Compare options</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>Instant booking</span>
+                                                </div>
+                                                <div class="flex items-start gap-1.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <span>40 free chats/mo</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- CTA -->
+                                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded text-xs transition-all">
+                                                Start Chatting →
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Footer Badge -->
+                                <div class="mt-auto">
+                                    <div class="bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-full font-semibold text-center">
+                                        🔐 Sign up FREE - 40 conversations/month
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT CARD: Browse & Compare (IDENTICAL) -->
+                        <div class="equal-height-card bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 card-hover shadow-lg p-8">
+                            <div class="card-content">
+                                <!-- Header Section -->
+                                <div class="text-center mb-6">
+                                    <div class="bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Browse & Compare</h3>
+                                    <p class="text-base text-gray-700 leading-relaxed h-12 flex items-center justify-center">
+                                        Explore clinics and book when you're ready
+                                    </p>
+                                </div>
+
+                                <!-- Subtitle -->
+                                <div class="text-sm text-gray-700 font-semibold mb-6 text-center h-10 flex items-center justify-center">
+                                    Perfect for: Experienced patients, self-researchers
+                                </div>
+
+                                <!-- Features Section -->
+                                <div class="card-features mb-6">
+                                    <div class="space-y-3 text-sm text-gray-700 mb-6">
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Browse all verified clinics</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Advanced search & filtering</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Compare clinics side-by-side</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Book directly from clinic pages</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>Read real patient reviews</span>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <svg class="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span>View transparent pricing</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CTA Button -->
+                                <div class="mt-auto">
+                                    <button class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all mb-3">
+                                        Start Browsing Clinics
+                                    </button>
+                                    
+                                    <div class="bg-gray-100 text-gray-700 text-xs px-3 py-2 rounded-full font-semibold text-center">
+                                        💡 No account required - Browse freely
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Trust Indicators -->
+                    <div class="text-center mt-8 text-sm text-gray-600">
+                        <p>Trusted by 5,000+ Singaporeans • 98% satisfaction rate • PDPA compliant</p>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+
+        <!-- Summary Comparison -->
+        <section class="bg-purple-900 text-white py-12">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl font-bold mb-8 text-center">📊 Variation Comparison</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3 text-center">C1</div>
+                        <h3 class="font-bold mb-2 text-center">Vertical Stacked</h3>
+                        <ul class="text-sm text-purple-200 space-y-2">
+                            <li>✓ Perfect symmetry achieved</li>
+                            <li>✓ Both options clearly visible</li>
+                            <li>✓ Clean, professional layout</li>
+                            <li>✓ Easy to scan visually</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3 text-center">C2</div>
+                        <h3 class="font-bold mb-2 text-center">Tabbed Interface</h3>
+                        <ul class="text-sm text-purple-200 space-y-2">
+                            <li>✓ Cleanest overall look</li>
+                            <li>✓ One choice at a time</li>
+                            <li>✓ Modern UI pattern</li>
+                            <li>⚠️ Hides one option initially</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3 text-center">C3</div>
+                        <h3 class="font-bold mb-2 text-center">Side-by-Side Buttons</h3>
+                        <ul class="text-sm text-purple-200 space-y-2">
+                            <li>✓ Simplest to understand</li>
+                            <li>✓ Equal visual weight</li>
+                            <li>✓ Fast decision-making</li>
+                            <li>✓ Great for mobile</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-purple-800 rounded-xl p-6">
+                    <h4 class="font-bold text-lg mb-3 text-center">✨ All Issues Fixed</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-purple-100">
+                        <div>
+                            <div class="font-semibold text-white mb-2">Symmetry Achieved:</div>
+                            <ul class="space-y-1">
+                                <li>✓ Identical card heights (flexbox)</li>
+                                <li>✓ Aligned headers & icons</li>
+                                <li>✓ Matched subtitle heights</li>
+                                <li>✓ Equal padding (p-8 all cards)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-white mb-2">Professional Polish:</div>
+                            <ul class="space-y-1">
+                                <li>✓ Clean typography hierarchy</li>
+                                <li>✓ Consistent spacing system</li>
+                                <li>✓ Proper hover states</li>
+                                <li>✓ Mobile-responsive design</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Tab switching for C2
+        function showTab(tabName) {
+            if (tabName === 'scan-c2') {
+                document.getElementById('tab-scan-c2').classList.remove('hidden');
+                document.getElementById('tab-chat-c2').classList.add('hidden');
+                document.getElementById('btn-scan-c2').className = 'flex-1 bg-green-500 text-white font-semibold py-2 px-4 rounded-lg transition-all';
+                document.getElementById('btn-chat-c2').className = 'flex-1 bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-all';
+            } else {
+                document.getElementById('tab-scan-c2').classList.add('hidden');
+                document.getElementById('tab-chat-c2').classList.remove('hidden');
+                document.getElementById('btn-scan-c2').className = 'flex-1 bg-green-200 text-green-700 font-semibold py-2 px-4 rounded-lg transition-all';
+                document.getElementById('btn-chat-c2').className = 'flex-1 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition-all';
+            }
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

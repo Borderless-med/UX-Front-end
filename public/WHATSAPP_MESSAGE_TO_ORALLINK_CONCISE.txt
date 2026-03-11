@@ -1,0 +1,43 @@
+Hi OralLink Team,
+
+Ready to integrate the AI scan! Just 3 critical questions:
+
+**Q1: After user completes scan on Kells, where do they go?**
+   • Does Kells redirect to a URL you specify?
+   • Or dead end (user just closes browser)?
+   • Or email link only?
+
+WHY: This determines if users can return to OraChope automatically or get lost. Without automatic return → 40-60% abandonment.
+
+---
+
+**Q2: Can Kells redirect to our completion page?**
+   Example: orachope.orallink.health/complete?scan_id=XXX
+   
+   • We'll host a "Scan Complete" page there
+   • Has "Return to OraChope →" button
+   • Makes return seamless
+
+WHY: With automatic redirect → ~90% return rate. Without → ~40% return rate.
+
+---
+
+**Q3: When can we test the full flow?**
+   • Timeline for subdomain orachope.orallink.health?
+   • Can you provide test credentials?
+
+WHY: Need to verify end-to-end before sending real users.
+
+---
+
+**BONUS: If Kells sends result email, can you customize it?**
+Add link: "Discuss your results with OraChope: [link]"
+
+WHY: Gives secondary return path if automatic redirect doesn't work.
+
+---
+
+Once we know the return flow (#1-2), integration is straightforward. Let me know!
+
+Thanks,
+[Your Name]

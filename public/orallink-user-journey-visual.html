@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OralLink Integration - User Journey Flow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header h1 { font-size: 36px; color: #333; margin-bottom: 10px; }
+        .header p { font-size: 18px; color: #666; }
+        
+        .journey-step {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-left: 8px solid;
+        }
+        .step-your-page { border-color: #3498db; }
+        .step-external { border-color: #e67e22; opacity: 0.85; }
+        .step-dead-end { border-color: #e74c3c; opacity: 0.7; }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .step-title {
+            flex: 1;
+        }
+        .step-title h2 { font-size: 24px; color: #333; margin-bottom: 5px; }
+        .step-title p { font-size: 14px; color: #666; }
+        
+        .step-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .badge-yours { background: #e3f2fd; color: #1976d2; }
+        .badge-external { background: #fff3e0; color: #f57c00; }
+        .badge-unused { background: #ffebee; color: #c62828; }
+        
+        .step-content {
+            padding-left: 65px;
+        }
+        .step-url {
+            background: #f5f5f5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+        .step-features {
+            margin-bottom: 15px;
+        }
+        .step-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .step-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+            font-size: 15px;
+        }
+        .step-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 40px;
+            color: white;
+            margin: 15px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .timeline-divider {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .timeline-line {
+            flex: 1;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, white, transparent);
+        }
+        .timeline-text {
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .warning-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .warning-box p {
+            color: #664d03;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .summary-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary-box h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .summary-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .summary-card h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .summary-card .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .status-used { background: #d4edda; color: #155724; }
+        .status-archived { background: #fff3cd; color: #856404; }
+        
+        @media (max-width: 768px) {
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ OralLink Integration User Journey</h1>
+            <p>How Your 3 Pages Fit Into the Complete Flow</p>
+        </div>
+
+        <!-- STEP 1: HOMEPAGE -->
+        <div class="journey-step step-your-page">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title">
+                    <h2>Homepage Discovery</h2>
+                    <p>User arrives at OraChope and discovers AI Scan option</p>
+                </div>
+                <span class="step-badge badge-yours">✅ YOUR PAGE</span>
+            </div>
+            <div class="step-content">
+                <div class="step-url">📄 orallink-homepage-final.html → Deploy to orachope.org</div>
+                <div class="step-features">
+                    <strong>User sees:</strong>
+                    <ul>
+                        <li>3 pathway cards: AI Scan | AI Chatbot | Browse Clinics</li>
+                        <li>AI Scan card has "NEW" badge with subtle animation</li>
+                        <li>Value prop: "Scan → Analyze → Recommend"</li>
+                        <li>Button: [Start AI Scan]</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>User action:</strong>
+                    <ul>
+                        <li>Clicks [Start AI Scan] button</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>What happens:</strong>
+                    <ul>
+                        <li>Browser navigates to /ai-scan-intro</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-down">↓</div>
+
+        <!-- STEP 2: PRE-SCAN LANDING -->
+        <div class="journey-step step-your-page">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title">
+                    <h2>Pre-Scan Preparation</h2>
+                    <p>User learns about AI scan and provides basic info</p>
+                </div>
+                <span class="step-badge badge-yours">✅ YOUR PAGE</span>
+            </div>
+            <div class="step-content">
+                <div class="step-url">📄 orallink-prescan-option2.html → Deploy to orachope.org/ai-scan-intro</div>
+                <div class="step-features">
+                    <strong>User sees:</strong>
+                    <ul>
+                        <li>Dual logo header (OralLink + OraChope)</li>
+                        <li>"Welcome from OraChope!" green badge</li>
+                        <li>Trust signals: Free Forever, 100% Private, No Commitment</li>
+                        <li>Form: Name + Email (2 fields only)</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>User action:</strong>
+                    <ul>
+                        <li>Enters name: "John Doe"</li>
+                        <li>Enters email: "john@example.com"</li>
+                        <li>Clicks [Start Your Scan] button</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>What happens (backend):</strong>
+                    <ul>
+                        <li>JavaScript calls: POST /api/scans/initiate</li>
+                        <li>API generates Scan ID: "OL-2026-4521"</li>
+                        <li>API saves to database: ai_scans table (status: initiated)</li>
+                        <li>API returns: { scanId: "OL-2026-4521" }</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>What happens (frontend):</strong>
+                    <ul>
+                        <li>Pop-up modal appears on same page</li>
+                        <li>Shows large Scan ID: OL-2026-4521</li>
+                        <li>Shows [Copy to Clipboard] and [Continue] buttons</li>
+                        <li>User clicks Copy (saves to clipboard)</li>
+                        <li>User clicks Continue</li>
+                        <li>Browser redirects to: orachope.orallink.health?ref=OL-2026-4521</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-down">↓</div>
+
+        <!-- TIMELINE DIVIDER -->
+        <div class="timeline-divider">
+            <div class="timeline-line"></div>
+            <div class="timeline-text">📍 USER LEAVES YOUR SITE</div>
+            <div class="timeline-line"></div>
+        </div>
+
+        <!-- STEP 3: ORALLINK ACCOUNT -->
+        <div class="journey-step step-external">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title">
+                    <h2>OralLink Account Creation</h2>
+                    <p>User creates account on OralLink's subdomain</p>
+                </div>
+                <span class="step-badge badge-external">🔗 EXTERNAL</span>
+            </div>
+            <div class="step-content">
+                <div class="step-url">🌐 orachope.orallink.health (OralLink hosts this)</div>
+                <div class="step-features">
+                    <strong>User sees:</strong>
+                    <ul>
+                        <li>OralLink branding</li>
+                        <li>"Welcome from OraChope" message (referral tracked)</li>
+                        <li>Signup form: Email + Password</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>User action:</strong>
+                    <ul>
+                        <li>Creates account: john@example.com, password123</li>
+                        <li>Clicks "Continue to AI Scan"</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>What happens:</strong>
+                    <ul>
+                        <li>OralLink redirects to Kells.ai (actual scan provider)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-down">↓</div>
+
+        <!-- STEP 4: KELLS AI SCAN -->
+        <div class="journey-step step-external">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title">
+                    <h2>AI Scan Process</h2>
+                    <p>User completes actual dental scan on Kells platform</p>
+                </div>
+                <span class="step-badge badge-external">🔗 EXTERNAL</span>
+            </div>
+            <div class="step-content">
+                <div class="step-url">🌐 getkells.com (Kells.ai hosts this)</div>
+                <div class="step-features">
+                    <strong>User completes scan:</strong>
+                    <ul>
+                        <li>Upload 4 photos: front, left side, right side, teeth closeup</li>
+                        <li>AI analyzes photos (2-3 minutes)</li>
+                        <li>Results displayed: "Possible cavity, needs root canal treatment"</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>Scan complete page loads:</strong>
+                    <ul>
+                        <li>Shows: "Scan complete" with Kells branding</li>
+                        <li>Shows: AI analysis results summary</li>
+                    </ul>
+                </div>
+                <div class="warning-box">
+                    <h4>⚠️ DEAD END PROBLEM</h4>
+                    <p><strong>Issue:</strong> Kells does NOT automatically redirect back to OraChope.<br>
+                    <strong>Why:</strong> Custom redirect costs $500-2,000 that OralLink won't pay (Phase 1).<br>
+                    <strong>Result:</strong> User is stranded on Kells site. No "Return to OraChope" button.<br>
+                    <strong>Expected:</strong> 50-60% of users abandon here. 40-50% manually return.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-down" style="color: #f39c12;">⚠️</div>
+
+        <!-- TIMELINE DIVIDER -->
+        <div class="timeline-divider">
+            <div class="timeline-line"></div>
+            <div class="timeline-text">📍 USER MUST MANUALLY RETURN (40-50% DO)</div>
+            <div class="timeline-line"></div>
+        </div>
+
+        <!-- STEP 5: RETURN TO CHATBOT -->
+        <div class="journey-step step-your-page">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title">
+                    <h2>User Returns to Chatbot</h2>
+                    <p>User manually navigates back to OraChope and enters Scan ID</p>
+                </div>
+                <span class="step-badge badge-yours">✅ YOUR PAGE</span>
+            </div>
+            <div class="step-content">
+                <div class="step-url">🌐 orachope.org (user navigates back manually)</div>
+                <div class="step-features">
+                    <strong>User action:</strong>
+                    <ul>
+                        <li>Manually types orachope.org in browser</li>
+                        <li>Opens chatbot widget</li>
+                        <li>Chatbot detects: "Did you complete your AI scan?"</li>
+                        <li>User clicks: Yes</li>
+                        <li>Chatbot shows input field: "Enter your Scan ID"</li>
+                        <li>User pastes from clipboard: OL-2026-4521</li>
+                        <li>User clicks Submit</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>What happens (backend):</strong>
+                    <ul>
+                        <li>GET /api/scans/OL-2026-4521 (verify scan exists)</li>
+                        <li>POST /api/scans/OL-2026-4521/return (mark as returned)</li>
+                        <li>Database updates: status = "returned", returned_at = NOW()</li>
+                    </ul>
+                </div>
+                <div class="step-features">
+                    <strong>What happens (chatbot):</strong>
+                    <ul>
+                        <li>Chatbot says: "Welcome back! Based on your scan results, you need root canal."</li>
+                        <li>Chatbot shows: 3 clinics near you specializing in root canal</li>
+                        <li>User proceeds to book appointment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-down">↓</div>
+
+        <!-- STEP 6: UNUSED PAGE -->
+        <div class="journey-step step-dead-end">
+            <div class="step-header">
+                <div class="step-number">❌</div>
+                <div class="step-title">
+                    <h2>Post-Scan Landing (Not Used)</h2>
+                    <p>This page exists but won't be used due to dead-end problem</p>
+                </div>
+                <span class="step-badge badge-unused">⚠️ ARCHIVED</span>
+            </div>
+            <div class="step-content">
+                <div class="step-url">📄 orallink-landing-option2.html (Keep for Phase 3 reference)</div>
+                <div class="step-features">
+                    <strong>What this page would do (if Kells allowed redirect):</strong>
+                    <ul>
+                        <li>Show: "Scan Complete!" success banner</li>
+                        <li>Display: Scan ID for reference</li>
+                        <li>Big button: [Return to OraChope]</li>
+                        <li>Click would redirect back to orachope.org</li>
+                        <li>Would increase return rate from 40% → 85-90%</li>
+                    </ul>
+                </div>
+                <div class="warning-box">
+                    <h4>💡 WHY NOT USED IN PHASE 1</h4>
+                    <p><strong>Technical constraint:</strong> Kells doesn't support custom redirect URLs without paying $500-2,000.<br>
+                    <strong>OralLink stance:</strong> Won't pay for custom redirect.<br>
+                    <strong>Your acceptance:</strong> Accept 40-50% return rate in Phase 1, improve in Phase 2 with email follow-up.<br>
+                    <strong>Future use:</strong> If ROI justifies cost in Phase 3, negotiate with Kells to enable custom redirect, deploy this page.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUMMARY BOX -->
+        <div class="summary-box">
+            <h3>📊 Summary: How Your 3 Pages Fit</h3>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h4>Page 1: Homepage</h4>
+                    <p style="color: #666; font-size: 14px; margin: 10px 0;">orallink-homepage-final.html</p>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;"><strong>Entry Point:</strong> User discovers AI Scan option among 3 pathways</p>
+                    <span class="status status-used">✅ USED ALWAYS</span>
+                </div>
+                <div class="summary-card">
+                    <h4>Page 2: Pre-Scan</h4>
+                    <p style="color: #666; font-size: 14px; margin: 10px 0;">orallink-prescan-option2.html</p>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;"><strong>Preparation:</strong> User submits name/email, gets Scan ID, redirects to OralLink</p>
+                    <span class="status status-used">✅ USED ALWAYS</span>
+                </div>
+                <div class="summary-card">
+                    <h4>Page 3: Post-Scan</h4>
+                    <p style="color: #666; font-size: 14px; margin: 10px 0;">orallink-landing-option2.html</p>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;"><strong>Return Path:</strong> Would redirect user back, but not used due to dead-end</p>
+                    <span class="status status-archived">⚠️ PHASE 3</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

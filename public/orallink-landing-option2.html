@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Complete - OralLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .orallink-container {
+            overflow: hidden;
+            height: 110px;
+        }
+        img[alt="OralLink"] {
+            height: 128px;
+            margin-top: -15px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-cyan-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <div class="orallink-container">
+                        <img src="OralLink Logo.png" alt="OralLink">
+                    </div>
+                    <span class="text-gray-400 text-sm">in partnership with</span>
+                    <a href="https://orachope.org" class="px-2 hover:opacity-80 transition-opacity">
+                        <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-16">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen">
+        <!-- Success Banner -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-teal-500 rounded-full mb-6">
+                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-3">Your Scan is Complete</h1>
+            <p class="text-gray-600 text-lg mb-2">Analysis completed in 2.3 seconds</p>
+            <p class="text-sm text-gray-500">Scan ID: <span class="font-mono font-semibold text-gray-700">#OL-2026-4521</span></p>
+        </div>
+
+        <!-- Results Summary Box -->
+        <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8 shadow-lg">
+            <h2 class="text-2xl font-bold mb-6">Scan Summary</h2>
+            
+            <div class="space-y-4 mb-6">
+                <div class="flex items-start gap-4">
+                    <div class="bg-yellow-500 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-900 mb-1">Potential Cavities Detected</h3>
+                        <p class="text-gray-600 text-sm">2 areas identified requiring professional assessment</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="bg-orange-500 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 9a1 1 0 012 0v4a1 1 0 11-2 0V9zm1-5a1 1 0 100 2 1 1 0 000-2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-900 mb-1">Gum Health Concerns</h3>
+                        <p class="text-gray-600 text-sm">Mild inflammation detected, cleaning recommended</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="bg-blue-500 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-900 mb-1">Recommended Treatments</h3>
+                        <p class="text-gray-600 text-sm">Dental fillings, professional cleaning, gum treatment consultation</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-4">
+                <p class="text-sm text-gray-700">
+                    <strong class="text-blue-700">Next Step:</strong> Consult with a qualified dentist to confirm these findings and discuss treatment options.
+                </p>
+            </div>
+        </div>
+
+        <!-- Prominent Return CTA -->
+        <div class="bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-xl p-6 shadow-xl mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Ready to Find the Right Clinic?</h3>
+                    <p class="text-blue-100">Use OraChope to compare clinics, prices & reviews</p>
+                </div>
+                <a href="https://orachope.org/?from_scan=true&scan_id=OL-2026-4521" 
+                   class="bg-white hover:bg-gray-50 text-blue-600 font-bold py-4 px-8 rounded-xl shadow-lg transition-all hover:shadow-xl whitespace-nowrap">
+                    Return to OraChope →
+                </a>
+            </div>
+        </div>
+
+        <!-- OraChope CTA Card -->
+        <div class="bg-gradient-to-br from-blue-500 to-teal-500 text-white rounded-xl p-8 shadow-2xl border-2 border-blue-400">
+            <!-- OraChope Logo/Brand -->
+            <div class="text-center mb-6">
+                <div class="inline-block bg-white px-6 py-4 rounded-lg shadow-md mb-4">
+                    <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-12 mx-auto">
+                </div>
+                <h2 class="text-3xl font-bold mb-3">Find Clinics That Treat Your Condition</h2>
+                <p class="text-blue-50 text-lg">Compare verified clinics in Singapore & Johor Bahru</p>
+            </div>
+
+            <!-- Benefits -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="text-center p-4 bg-white/20 backdrop-blur rounded-lg">
+                    <div class="text-3xl mb-2">💰</div>
+                    <h3 class="font-semibold mb-1">Transparent Pricing</h3>
+                    <p class="text-sm text-blue-50">Compare costs across clinics</p>
+                </div>
+                <div class="text-center p-4 bg-white/20 backdrop-blur rounded-lg">
+                    <div class="text-3xl mb-2">⭐</div>
+                    <h3 class="font-semibold mb-1">Patient Reviews</h3>
+                    <p class="text-sm text-blue-50">Real experiences from real patients</p>
+                </div>
+                <div class="text-center p-4 bg-white/20 backdrop-blur rounded-lg">
+                    <div class="text-3xl mb-2">🗺️</div>
+                    <h3 class="font-semibold mb-1">SG & JB Options</h3>
+                    <p class="text-sm text-blue-50">Choose what works for you</p>
+                </div>
+            </div>
+
+            <!-- Two Pathways Explanation -->
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg mb-3">How to share your results:</h3>
+                <div class="space-y-3">
+                    <div class="bg-white/30 backdrop-blur border-l-4 border-white p-3 rounded-r">
+                        <div class="font-semibold mb-1">📱 Quick & Easy (Mobile-Friendly)</div>
+                        <p class="text-sm text-blue-50">Simply tell our AI chatbot what conditions were detected</p>
+                    </div>
+                    <div class="bg-white/30 backdrop-blur border-l-4 border-white p-3 rounded-r">
+                        <div class="font-semibold mb-1">📄 Detailed (Desktop)</div>
+                        <p class="text-sm text-blue-50">Upload your PDF report for comprehensive recommendations</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Primary CTA Button -->
+            <a href="https://orachope.org/clinics" class="block w-full bg-white hover:bg-gray-50 text-blue-600 font-bold py-5 px-8 rounded-xl text-xl shadow-lg transition-all hover:shadow-xl mb-4 text-center">
+                Find Your Clinic on OraChope →
+            </a>
+
+            <p class="text-center text-sm text-blue-100">
+                Free comparison • Transparent pricing • Real patient reviews
+            </p>
+        </div>
+
+        <!-- Secondary Actions -->
+        <div class="text-center mt-8 space-y-4">
+            <button class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                📥 Download Report (PDF)
+            </button>
+            <span class="text-gray-400 mx-4">|</span>
+            <button class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                ← Retake Scan
+            </button>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="bg-white border border-gray-200 rounded-lg p-4 mt-12 text-xs text-gray-600">
+            <strong class="text-gray-800">Disclaimer:</strong> OraChope is an independent clinic comparison platform. This AI screening is provided by OralLink and does not constitute professional dental diagnosis. All findings must be confirmed by a licensed dentist.
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-6">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-600">
+            © 2026 OralLink.health • <a href="#" class="text-blue-600 hover:text-blue-700">Privacy Policy</a> • <a href="#" class="text-blue-600 hover:text-blue-700">Terms of Service</a>
+        </div>
+    </footer>
+</body>
+</html>

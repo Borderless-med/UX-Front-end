@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope x OralLink Integration - UX Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        .scan-badge {
+            animation: bounce 1s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .sticky-footer {
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        }
+        .view-section {
+            scroll-margin-top: 100px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Fixed Navigation for Mockup Views -->
+    <div class="fixed top-0 left-0 right-0 bg-purple-900 text-white z-50 px-6 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold">🔬 OraChope x OralLink Integration Mockup</h1>
+                <p class="text-xs text-purple-200">Phase 1: Hyperlink Strategy - Visual Preview Only</p>
+            </div>
+            <div class="flex gap-3 text-sm">
+                <a href="#homepage" class="bg-purple-700 hover:bg-purple-600 px-3 py-1 rounded">Homepage</a>
+                <a href="#chatbot" class="bg-purple-700 hover:bg-purple-600 px-3 py-1 rounded">Chatbot</a>
+                <a href="#search" class="bg-purple-700 hover:bg-purple-600 px-3 py-1 rounded">Search Results</a>
+                <a href="#clinic" class="bg-purple-700 hover:bg-purple-600 px-3 py-1 rounded">Clinic Page</a>
+                <a href="#results" class="bg-purple-700 hover:bg-purple-600 px-3 py-1 rounded">Results Page</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ========== VIEW 1: HOMEPAGE HERO ========== -->
+        <section id="homepage" class="view-section bg-white border-b-8 border-purple-500 pb-12">
+            <div class="max-w-7xl mx-auto px-6 py-8">
+                <div class="bg-purple-100 border-l-4 border-purple-600 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-purple-900">📍 VIEW 1: Homepage Hero Section</h2>
+                    <p class="text-purple-700">Option 1C: Risk-First Positioning - Dual CTA Strategy</p>
+                </div>
+
+                <!-- Mock Navigation -->
+                <header class="flex items-center justify-between px-6 py-4 bg-white shadow rounded-lg mb-8">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-blue-600 rounded"></div>
+                        <span class="font-bold text-lg text-blue-700">OraChope.org</span>
+                    </div>
+                    <nav class="flex gap-6 text-gray-700 text-sm">
+                        <a href="#" class="hover:text-blue-600">Find Clinics</a>
+                        <a href="#" class="hover:text-blue-600">Compare</a>
+                        <a href="#" class="hover:text-blue-600">How It Works</a>
+                        <a href="#" class="hover:text-blue-600">Travel Guide</a>
+                    </nav>
+                </header>
+
+                <!-- Hero Section with AI Scan Emphasis -->
+                <div class="text-center py-12 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl shadow-xl px-8">
+                    <div class="max-w-3xl mx-auto">
+                        <!-- NEW: AI Scan Badge -->
+                        <div class="inline-flex items-center gap-2 bg-green-100 border border-green-300 rounded-full px-4 py-2 mb-4 scan-badge">
+                            <span class="text-2xl">✨</span>
+                            <span class="text-sm font-bold text-green-800">NEW: Free AI Dental Screening</span>
+                        </div>
+
+                        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                            Not Sure What<br/>Treatment You Need?
+                        </h1>
+                        
+                        <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                            Take a 2-minute AI scan, then compare clinics matched to your needs.<br/>
+                            <span class="text-blue-600 font-semibold">Free • No login • Instant results</span>
+                        </p>
+
+                        <!-- Dual CTA Buttons -->
+                        <div class="flex flex-col md:flex-row gap-4 justify-center items-center mb-6">
+                            <!-- PRIMARY CTA: AI Scan -->
+                            <a href="https://orallink.health?ref=orachope&source=homepage" 
+                               class="group flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-5 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 font-bold text-lg">
+                                <span class="text-3xl">🔬</span>
+                                <div class="text-left">
+                                    <div>AI Teeth Check</div>
+                                    <div class="text-xs font-normal text-blue-100">2 min • Free • No login</div>
+                                </div>
+                                <span class="text-2xl group-hover:translate-x-1 transition-transform">→</span>
+                            </a>
+
+                            <!-- SECONDARY CTA: Browse Clinics -->
+                            <a href="/clinics" 
+                               class="flex items-center gap-2 bg-white hover:bg-gray-50 text-blue-700 px-8 py-5 rounded-xl shadow-md hover:shadow-lg transition-all border-2 border-blue-200 font-semibold text-lg">
+                                <span class="text-2xl">🏥</span>
+                                <span>Browse All Clinics</span>
+                            </a>
+                        </div>
+
+                        <!-- Trust Indicators -->
+                        <div class="flex justify-center items-center gap-6 text-sm text-gray-600">
+                            <div class="flex items-center gap-1">
+                                <span>✅</span>
+                                <span>1,000+ scans completed</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span>⭐</span>
+                                <span>4.8/5 rating</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span>🔒</span>
+                                <span>PDPA compliant</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <div class="mt-12 bg-white rounded-xl shadow-md p-8">
+                    <h3 class="text-2xl font-bold text-center text-gray-900 mb-8">How AI Screening Works</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">📱</div>
+                            <div class="font-bold text-gray-900 mb-2">1. Take 5 Photos</div>
+                            <div class="text-sm text-gray-600">Use your phone camera</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🤖</div>
+                            <div class="font-bold text-gray-900 mb-2">2. AI Analysis</div>
+                            <div class="text-sm text-gray-600">Get risk assessment</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🏥</div>
+                            <div class="font-bold text-gray-900 mb-2">3. Clinic Match</div>
+                            <div class="text-sm text-gray-600">See recommended clinics</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">📅</div>
+                            <div class="font-bold text-gray-900 mb-2">4. Book Online</div>
+                            <div class="text-sm text-gray-600">Instant confirmation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== VIEW 2: CHATBOT INTEGRATION ========== -->
+        <section id="chatbot" class="view-section bg-gray-50 border-b-8 border-purple-500 py-12">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="bg-purple-100 border-l-4 border-purple-600 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-purple-900">💬 VIEW 2: Chatbot Widget with AI Scan Trigger</h2>
+                    <p class="text-purple-700">Option 3A & 5C: Proactive triggers + Contextual inline cards</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Chatbot Widget - Closed State -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="font-bold text-lg mb-4 text-gray-900">Closed State: Entry Point</h3>
+                        <div class="relative h-96 bg-gray-100 rounded-lg p-4 flex items-end justify-end">
+                            <div class="text-center text-gray-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                [Rest of page content]
+                            </div>
+                            <!-- Floating Chatbot Button with Scan Badge -->
+                            <div class="relative">
+                                <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold pulse-animation">
+                                    NEW
+                                </div>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl px-6 py-4 flex items-center gap-3 transition-transform hover:scale-105">
+                                    <span class="text-2xl">💬</span>
+                                    <div class="text-left text-sm">
+                                        <div class="font-bold">AI Assistant</div>
+                                        <div class="text-xs text-blue-100">Chat or Scan</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chatbot Widget - Open with Scan Trigger -->
+                    <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+                        <div class="bg-blue-600 text-white px-6 py-4 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🤖</span>
+                                <div>
+                                    <div class="font-bold">OraChope AI Assistant</div>
+                                    <div class="text-xs text-blue-100">Online • Typically replies instantly</div>
+                                </div>
+                            </div>
+                            <button class="text-2xl hover:bg-blue-700 rounded p-1">×</button>
+                        </div>
+
+                        <div class="h-96 overflow-y-auto p-4 bg-gray-50 space-y-4">
+                            <!-- Bot message -->
+                            <div class="flex gap-2">
+                                <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">🤖</div>
+                                <div class="bg-white rounded-2xl rounded-tl-none px-4 py-3 shadow-sm max-w-xs">
+                                    <p class="text-sm text-gray-900">Hi! I'm here to help you find the perfect dental clinic. What brings you here today?</p>
+                                </div>
+                            </div>
+
+                            <!-- User message (trigger) -->
+                            <div class="flex gap-2 justify-end">
+                                <div class="bg-blue-100 rounded-2xl rounded-tr-none px-4 py-3 max-w-xs">
+                                    <p class="text-sm text-gray-900">My gums have been bleeding when I brush. I'm not sure if it's serious.</p>
+                                </div>
+                            </div>
+
+                            <!-- Bot response with AI SCAN CARD -->
+                            <div class="flex gap-2">
+                                <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm flex-shrink-0">🤖</div>
+                                <div class="space-y-3 max-w-md">
+                                    <div class="bg-white rounded-2xl rounded-tl-none px-4 py-3 shadow-sm">
+                                        <p class="text-sm text-gray-900">Bleeding gums can indicate gum inflammation or early periodontal disease. Let me help you understand the severity.</p>
+                                    </div>
+
+                                    <!-- INLINE AI SCAN CARD -->
+                                    <div class="bg-gradient-to-br from-green-50 to-blue-50 border-2 border-blue-300 rounded-xl p-4 shadow-md">
+                                        <div class="flex items-start gap-3 mb-3">
+                                            <div class="bg-blue-600 text-white rounded-lg p-2 text-2xl">🔬</div>
+                                            <div>
+                                                <div class="font-bold text-gray-900">Get Instant AI Analysis</div>
+                                                <div class="text-xs text-gray-600 mt-1">Take 5 photos → Get personalized risk assessment</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="https://orallink.health?ref=orachope&source=chatbot&concern=gum-bleeding" 
+                                           class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-md">
+                                            Start AI Scan (2 mins, free)
+                                        </a>
+                                        
+                                        <div class="flex items-center justify-center gap-4 mt-3 text-xs text-gray-600">
+                                            <span>✓ No login required</span>
+                                            <span>✓ Results in 1 minute</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-white rounded-2xl rounded-tl-none px-4 py-3 shadow-sm">
+                                        <p class="text-sm text-gray-900">Or I can show you scaling/periodontal specialists without the scan. What would you prefer?</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white border-t p-4">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Type your message..." 
+                                       class="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button class="bg-blue-600 text-white rounded-full px-6 py-2 font-semibold hover:bg-blue-700">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trigger Logic Examples -->
+                <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
+                    <h4 class="font-bold text-gray-900 mb-3">🎯 Automatic Scan Triggers (Behind the Scenes)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="bg-white rounded-lg p-3">
+                            <div class="font-semibold text-red-600 mb-1">Pain Keywords:</div>
+                            <div class="text-gray-600">"hurts", "pain", "ache", "sensitive", "throbbing"</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3">
+                            <div class="font-semibold text-orange-600 mb-1">Uncertainty:</div>
+                            <div class="text-gray-600">"not sure", "don't know", "should I", "is this serious"</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3">
+                            <div class="font-semibold text-purple-600 mb-1">Visual Symptoms:</div>
+                            <div class="text-gray-600">"bleeding", "swelling", "discolored", "hole", "crack"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== VIEW 3: CLINIC SEARCH RESULTS PAGE ========== -->
+        <section id="search" class="view-section bg-white border-b-8 border-purple-500 py-12">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="bg-purple-100 border-l-4 border-purple-600 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-purple-900">🔍 VIEW 3: Clinic Search Results with Sidebar Widget</h2>
+                    <p class="text-purple-700">Option 6B: Persistent sidebar widget (desktop) / Top card (mobile)</p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <!-- Left Sidebar: AI Scan Widget -->
+                    <div class="lg:w-80 flex-shrink-0">
+                        <div class="sticky top-24 bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-300 rounded-xl p-6 shadow-lg">
+                            <div class="text-center mb-4">
+                                <div class="bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3 text-3xl">
+                                    🔬
+                                </div>
+                                <h3 class="font-bold text-lg text-gray-900">Not Sure You Need This?</h3>
+                                <p class="text-sm text-gray-600 mt-2">Get AI-powered diagnosis before booking</p>
+                            </div>
+
+                            <div class="bg-white rounded-lg p-4 mb-4 shadow-sm">
+                                <div class="text-xs text-gray-600 space-y-2">
+                                    <div class="flex items-start gap-2">
+                                        <span class="text-green-600 mt-0.5">✓</span>
+                                        <span>Upload 5 photos from your phone</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="text-green-600 mt-0.5">✓</span>
+                                        <span>Get instant risk assessment</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="text-green-600 mt-0.5">✓</span>
+                                        <span>See clinics matched to your needs</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="https://orallink.health?ref=orachope&source=clinic-search&treatment=root-canal" 
+                               class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-4 rounded-lg font-bold transition-all transform hover:scale-105 shadow-md mb-3">
+                                Take AI Scan (Free)
+                            </a>
+
+                            <div class="text-center space-y-1">
+                                <div class="text-xs text-gray-600 flex items-center justify-center gap-2">
+                                    <span>⏱️ 2 minutes</span>
+                                    <span>•</span>
+                                    <span>🔒 Private</span>
+                                </div>
+                                <div class="text-xs text-blue-600 font-semibold">
+                                    1,234 scans completed this month
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content: Clinic Results -->
+                    <div class="flex-1">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-2">Root Canal Specialists</h2>
+                            <div class="flex items-center gap-4 text-sm text-gray-600">
+                                <span>12 clinics found</span>
+                                <span>•</span>
+                                <span>Johor Bahru</span>
+                                <span>•</span>
+                                <span>Sorted by: Best Value</span>
+                            </div>
+                        </div>
+
+                        <!-- Clinic Cards -->
+                        <div class="space-y-4">
+                            <!-- Clinic 1 -->
+                            <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-bold text-lg text-gray-900">JB Dental Specialist Centre</h3>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-yellow-500">★★★★★</span>
+                                            <span class="text-sm text-gray-600">4.8 (156 reviews)</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-2xl font-bold text-blue-600">$280</div>
+                                        <div class="text-xs text-gray-500">~SGD 280</div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 mb-4 text-sm text-gray-600">
+                                    <span>📍 15 min from checkpoint</span>
+                                    <span>🕐 Open until 8pm</span>
+                                </div>
+                                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold">
+                                    Book Now
+                                </button>
+                            </div>
+
+                            <!-- Clinic 2 -->
+                            <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-bold text-lg text-gray-900">City Square Dental Clinic</h3>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-yellow-500">★★★★☆</span>
+                                            <span class="text-sm text-gray-600">4.6 (89 reviews)</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-2xl font-bold text-blue-600">$320</div>
+                                        <div class="text-xs text-gray-500">~SGD 320</div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 mb-4 text-sm text-gray-600">
+                                    <span>📍 10 min from checkpoint</span>
+                                    <span>🕐 Open 24/7</span>
+                                </div>
+                                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== VIEW 4: INDIVIDUAL CLINIC PAGE ========== -->
+        <section id="clinic" class="view-section bg-gray-50 border-b-8 border-purple-500 py-12">
+            <div class="max-w-4xl mx-auto px-6">
+                <div class="bg-purple-100 border-l-4 border-purple-600 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-purple-900">🏥 VIEW 4: Individual Clinic Page</h2>
+                    <p class="text-purple-700">Pre-booking verification CTA - Reduces no-shows</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <!-- Clinic Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-8">
+                        <h1 class="text-3xl font-bold mb-2">JB Dental Specialist Centre</h1>
+                        <div class="flex items-center gap-4">
+                            <span class="text-yellow-300">★★★★★ 4.8</span>
+                            <span>•</span>
+                            <span>156 reviews</span>
+                            <span>•</span>
+                            <span>📍 15 min from checkpoint</span>
+                        </div>
+                    </div>
+
+                    <!-- Service Pricing -->
+                    <div class="p-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Root Canal Treatment</h2>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <div class="text-3xl font-bold text-blue-600">$280</div>
+                                    <div class="text-sm text-gray-600">Save ~60% vs Singapore ($800-1,200)</div>
+                                </div>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-bold text-lg">
+                                    Book Now
+                                </button>
+                            </div>
+
+                            <!-- VERIFICATION CTA -->
+                            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 flex items-start gap-4">
+                                <div class="bg-yellow-400 text-yellow-900 rounded-full w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0">
+                                    💡
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-bold text-gray-900 mb-1">Not 100% sure you need a Root Canal?</div>
+                                    <div class="text-sm text-gray-700 mb-3">Get a free AI scan to confirm. Takes 2 minutes, prevents wrong bookings.</div>
+                                    <a href="https://orallink.health?ref=orachope&source=clinic-page&treatment=root-canal&clinic=jb-dental-specialist" 
+                                       class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 px-4 py-2 rounded-lg font-semibold text-sm transition-all">
+                                        <span>🔬</span>
+                                        <span>Verify with AI Scan (Free)</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clinic Details -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-3">Opening Hours</h3>
+                                <div class="text-sm text-gray-600 space-y-1">
+                                    <div>Mon-Fri: 9am - 8pm</div>
+                                    <div>Sat-Sun: 9am - 5pm</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-3">Location</h3>
+                                <div class="text-sm text-gray-600">
+                                    <div>123 Jalan Tebrau</div>
+                                    <div>Johor Bahru, 80300</div>
+                                    <div class="text-blue-600 mt-1">View map →</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== VIEW 5: PERSONALIZED RESULTS PAGE ========== -->
+        <section id="results" class="view-section bg-white border-b-8 border-purple-500 py-12">
+            <div class="max-w-5xl mx-auto px-6">
+                <div class="bg-purple-100 border-l-4 border-purple-600 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-purple-900">📊 VIEW 5: Post-Scan Personalized Landing Page</h2>
+                    <p class="text-purple-700">Option 11B: URL parameter-driven personalization</p>
+                </div>
+
+                <!-- Results Header -->
+                <div class="bg-gradient-to-br from-green-50 to-blue-50 border-2 border-green-300 rounded-xl p-8 mb-8">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-green-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-3xl flex-shrink-0">
+                            ✓
+                        </div>
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-2">Your AI Scan is Complete!</h2>
+                            <p class="text-gray-700 mb-4">We've analyzed your dental photos and found some areas that need attention.</p>
+                            
+                            <!-- Risk Summary -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-white rounded-lg p-4 border border-orange-200">
+                                    <div class="text-2xl mb-1">⚠️</div>
+                                    <div class="font-bold text-orange-600 mb-1">Moderate Caries Risk</div>
+                                    <div class="text-sm text-gray-600">Risk level: 3/5</div>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-red-200">
+                                    <div class="text-2xl mb-1">🔴</div>
+                                    <div class="font-bold text-red-600 mb-1">High Gum Inflammation</div>
+                                    <div class="text-sm text-gray-600">Risk level: 4/5</div>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-green-200">
+                                    <div class="text-2xl mb-1">✅</div>
+                                    <div class="font-bold text-green-600 mb-1">Good Alignment</div>
+                                    <div class="text-sm text-gray-600">No issues detected</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-gray-50 border border-gray-300 rounded-lg p-4 mb-6 text-sm text-gray-600">
+                    <span class="font-semibold">⚠️ Important:</span> This AI screening is for educational purposes only and does not constitute medical diagnosis. Please consult a licensed dentist for professional examination and treatment advice.
+                </div>
+
+                <!-- Recommended Actions -->
+                <div class="bg-white border border-blue-200 rounded-xl p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">📋 Recommended Next Steps</h3>
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-start gap-3">
+                            <div class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">1</div>
+                            <div>
+                                <div class="font-semibold text-gray-900">Schedule Scaling/Root Planing</div>
+                                <div class="text-sm text-gray-600">Address gum inflammation before it worsens</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">2</div>
+                            <div>
+                                <div class="font-semibold text-gray-900">Consider Filling or Root Canal</div>
+                                <div class="text-sm text-gray-600">Dentist will confirm if cavity requires treatment</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">3</div>
+                            <div>
+                                <div class="font-semibold text-gray-900">Timeline: Within 2 weeks</div>
+                                <div class="text-sm text-gray-600">Book soon to prevent complications</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expert Handoff CTA -->
+                    <div class="bg-purple-50 border border-purple-300 rounded-lg p-4 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl">
+                                👨‍⚕️
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-900">Want expert verification?</div>
+                                <div class="text-sm text-gray-600">Dr. Gerald Tan can review your scan</div>
+                            </div>
+                        </div>
+                        <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold whitespace-nowrap">
+                            Send to Expert
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Matched Clinics -->
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">🏥 Clinics Matched to Your Needs</h3>
+                    <p class="text-gray-600 mb-6">Based on your scan results (gum inflammation + possible cavity), here are specialists we recommend:</p>
+
+                    <div class="space-y-4">
+                        <!-- Matched Clinic 1 -->
+                        <div class="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-400 rounded-xl p-6 relative">
+                            <div class="absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                BEST MATCH
+                            </div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-xl text-gray-900">JB Dental Specialist Centre</h4>
+                                    <div class="flex items-center gap-3 mt-2 text-sm">
+                                        <span class="text-yellow-500">★★★★★ 4.8</span>
+                                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Periodontal Specialist</span>
+                                        <span class="text-gray-600">📍 15 min from checkpoint</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-600">Starting from</div>
+                                    <div class="text-2xl font-bold text-blue-600">$180</div>
+                                    <div class="text-xs text-gray-500">Scaling + Check-up</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold">
+                                    Book Now
+                                </button>
+                                <button class="px-6 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 rounded-lg font-semibold">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Matched Clinic 2 -->
+                        <div class="bg-white border border-gray-200 rounded-xl p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-xl text-gray-900">City Square Dental</h4>
+                                    <div class="flex items-center gap-3 mt-2 text-sm">
+                                        <span class="text-yellow-500">★★★★☆ 4.6</span>
+                                        <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">General Dentistry</span>
+                                        <span class="text-gray-600">📍 10 min from checkpoint</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-600">Starting from</div>
+                                    <div class="text-2xl font-bold text-blue-600">$150</div>
+                                    <div class="text-xs text-gray-500">Basic scaling</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold">
+                                    Book Now
+                                </button>
+                                <button class="px-6 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 rounded-lg font-semibold">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Sent Confirmation -->
+                <div class="mt-8 bg-blue-50 border border-blue-300 rounded-lg p-6">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-3xl">📧</span>
+                        <div>
+                            <div class="font-bold text-gray-900">We've emailed your full report</div>
+                            <div class="text-sm text-gray-600">Check your inbox for detailed results + clinic recommendations</div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        Didn't receive it? Check spam folder or <a href="#" class="text-blue-600 underline">resend email</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== MOBILE STICKY FOOTER (Shows on all pages) ========== -->
+        <div class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 sticky-footer lg:hidden z-40">
+            <div class="flex items-center justify-between max-w-lg mx-auto">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🔬</span>
+                    <div class="text-sm">
+                        <div class="font-bold">Free AI Dental Scan</div>
+                        <div class="text-xs text-blue-100">2 mins • Instant results</div>
+                    </div>
+                </div>
+                <a href="https://orallink.health?ref=orachope&source=mobile-footer" 
+                   class="bg-white text-blue-600 px-6 py-2 rounded-lg font-bold text-sm hover:bg-blue-50 transition-all">
+                    Scan Now
+                </a>
+            </div>
+        </div>
+
+        <!-- Summary Panel -->
+        <section class="bg-purple-900 text-white py-12">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-3xl font-bold mb-8 text-center">📊 Integration Summary</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3">🏠</div>
+                        <h3 class="font-bold mb-2">Homepage Hero</h3>
+                        <p class="text-sm text-purple-200">Risk-first positioning with dual CTA. Primary: AI Scan. Secondary: Browse Clinics.</p>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3">💬</div>
+                        <h3 class="font-bold mb-2">Chatbot Triggers</h3>
+                        <p class="text-sm text-purple-200">Automatic detection of pain, uncertainty, visual symptoms. Contextual inline scan cards.</p>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3">🔍</div>
+                        <h3 class="font-bold mb-2">Search Results</h3>
+                        <p class="text-sm text-purple-200">Persistent sidebar widget (desktop) encouraging pre-booking verification.</p>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3">🏥</div>
+                        <h3 class="font-bold mb-2">Clinic Pages</h3>
+                        <p class="text-sm text-purple-200">Yellow alert box before "Book Now" button to verify treatment necessity.</p>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3">📱</div>
+                        <h3 class="font-bold mb-2">Mobile Footer</h3>
+                        <p class="text-sm text-purple-200">Sticky bottom bar on mobile devices. Always visible, high-contrast CTA.</p>
+                    </div>
+
+                    <div class="bg-purple-800 rounded-lg p-6">
+                        <div class="text-4xl mb-3">📊</div>
+                        <h3 class="font-bold mb-2">Results Page</h3>
+                        <p class="text-sm text-purple-200">Personalized landing with risk summary, matched clinics, and expert handoff option.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-purple-800 rounded-xl p-6">
+                    <h4 class="font-bold text-lg mb-4 text-center">🎯 All CTAs Link To:</h4>
+                    <div class="bg-purple-700 rounded-lg p-4 text-center font-mono text-sm">
+                        https://orallink.health?ref=orachope&source=[entry-point]&concern=[user-context]
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 text-xs">
+                        <div class="bg-purple-700 rounded p-2 text-center">
+                            <div class="font-semibold">Homepage</div>
+                            <div class="text-purple-300">source=homepage</div>
+                        </div>
+                        <div class="bg-purple-700 rounded p-2 text-center">
+                            <div class="font-semibold">Chatbot</div>
+                            <div class="text-purple-300">source=chatbot</div>
+                        </div>
+                        <div class="bg-purple-700 rounded p-2 text-center">
+                            <div class="font-semibold">Search</div>
+                            <div class="text-purple-300">source=clinic-search</div>
+                        </div>
+                        <div class="bg-purple-700 rounded p-2 text-center">
+                            <div class="font-semibold">Mobile</div>
+                            <div class="text-purple-300">source=mobile-footer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

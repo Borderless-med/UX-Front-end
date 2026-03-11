@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OralLink iFrame Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .status.checking {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .iframe-container {
+            border: 3px dashed #ccc;
+            padding: 20px;
+            background: #fafafa;
+            margin: 20px 0;
+            min-height: 600px;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .test-urls {
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .test-urls input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .test-urls button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .test-urls button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 OralLink iFrame Compatibility Test</h1>
+        <p>This page tests whether <strong>orallink.health</strong> can be embedded in an iframe</p>
+        
+        <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #ffc107;">
+            <strong>📍 Note:</strong> Testing with <code>orallink.health</code> (their main site) since <code>orachope.orallink.health</code> doesn't exist yet.
+            <br><strong>✅ If the main site allows iframe → the subdomain will likely work too!</strong>
+        </div>
+        
+        <div id="status" class="status checking">
+            ⏳ Testing... Please wait 3 seconds for results
+        </div>
+
+        <div class="instructions">
+            <h3>📋 How to Interpret Results:</h3>
+            <ul>
+                <li><strong>✅ SUCCESS:</strong> You see OralLink website below = iframe embedding works!</li>
+                <li><strong>❌ BLOCKED:</strong> You see error message or blank box = iframe NOT allowed</li>
+                <li><strong>🔒 Security Error:</strong> Browser console shows "X-Frame-Options" = blocked by server</li>
+            </ul>
+            <p style="margin-top: 10px; color: #0056b3;">
+                <strong>💡 Why this matters:</strong> If <code>orallink.health</code> works in iframe, 
+                then <code>orachope.orallink.health</code> (once created) will likely work the same way.
+            </p>
+        </div>
+
+        <div class="test-urls">
+            <h3>🔗 Test URLs:</h3>
+            <label>Testing URL:</label>
+            <input type="text" id="testUrl" value="https://orallink.health" placeholder="https://orallink.health">
+            <button onclick="testNewUrl()">🔄 Reload Test</button>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                <strong>Current test:</strong> orallink.health (main site)
+                <br><strong>Future test:</strong> Once OralLink creates orachope.orallink.health, update URL above and retest
+            </p>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🖼️ iFrame Test Window:</h2>
+        <p>If iframe embedding is allowed, you'll see the OralLink website below:</p>
+        
+        <div class="iframe-container">
+            <iframe 
+                id="testFrame"
+                src="https://orallink.health"
+                sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+                loading="eager">
+            </iframe>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔍 Browser Console Check</h2>
+        <div class="instructions">
+            <h3>How to check browser console for errors:</h3>
+            <ol>
+                <li><strong>Windows/Linux:</strong> Press <code>F12</code> or <code>Ctrl+Shift+I</code></li>
+                <li><strong>Mac:</strong> Press <code>Cmd+Option+I</code></li>
+                <li>Click the <strong>"Console"</strong> tab</li>
+                <li>Look for red error messages</li>
+            </ol>
+            <h3>❌ If you see these errors, iframe is BLOCKED:</h3>
+            <ul>
+                <li><code>Refused to display in a frame because it set 'X-Frame-Options' to 'deny'</code></li>
+                <li><code>Refused to display in a frame because it set 'X-Frame-Options' to 'sameorigin'</code></li>
+                <li><code>Refused to frame because it violates the following Content Security Policy</code></li>
+            </ul>
+            <h3>✅ If no errors and you see content, iframe WORKS!</h3>
+        </div>
+        
+        <div id="consoleOutput" style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 12px; margin-top: 20px;">
+            <div style="color: #4fc1ff;">Console output will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        // Test iframe loading
+        const iframe = document.getElementById('testFrame');
+        const statusDiv = document.getElementById('status');
+        const consoleDiv = document.getElementById('consoleOutput');
+        
+        let loadSuccess = false;
+        
+        // Capture console errors
+        const originalError = console.error;
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            consoleDiv.innerHTML += `<div style="color: #f48771;">❌ ERROR: ${args.join(' ')}</div>`;
+        };
+        
+        // Test iframe load
+        iframe.onload = function() {
+            loadSuccess = true;
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = '✅ SUCCESS! iFrame loaded successfully. OralLink CAN be embedded!';
+            consoleDiv.innerHTML += `<div style="color: #89d185;">✅ iframe loaded successfully at ${new Date().toLocaleTimeString()}</div>`;
+        };
+        
+        iframe.onerror = function() {
+            statusDiv.className = 'status error';
+            statusDiv.innerHTML = '❌ ERROR: iFrame failed to load. OralLink blocks iframe embedding.';
+            consoleDiv.innerHTML += `<div style="color: #f48771;">❌ iframe failed to load at ${new Date().toLocaleTimeString()}</div>`;
+        };
+        
+        // Check after 3 seconds
+        setTimeout(() => {
+            if (!loadSuccess) {
+                // Try to access iframe content to check for cross-origin issues
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    if (iframeDoc) {
+                        statusDiv.className = 'status success';
+                        statusDiv.innerHTML = '✅ SUCCESS! iFrame loaded (detected via timeout check)';
+                        consoleDiv.innerHTML += `<div style="color: #89d185;">✅ iframe appears to be working (timeout check)</div>`;
+                    }
+                } catch (e) {
+                    // Cross-origin error expected, but iframe might still be displaying
+                    if (iframe.contentWindow) {
+                        statusDiv.className = 'status success';
+                        statusDiv.innerHTML = '✅ LIKELY SUCCESS! iFrame loaded but cross-origin (normal for external sites)';
+                        consoleDiv.innerHTML += `<div style="color: #d7ba7d;">⚠️ Cross-origin restriction (normal): ${e.message}</div>`;
+                    } else {
+                        statusDiv.className = 'status error';
+                        statusDiv.innerHTML = '❌ ERROR: iFrame blocked or failed to load';
+                        consoleDiv.innerHTML += `<div style="color: #f48771;">❌ iframe blocked: ${e.message}</div>`;
+                    }
+                }
+            }
+        }, 3000);
+        
+        // Function to test new URL
+        function testNewUrl() {
+            const newUrl = document.getElementById('testUrl').value;
+            if (!newUrl) {
+                alert('Please enter a URL');
+                return;
+            }
+            
+            statusDiv.className = 'status checking';
+            statusDiv.innerHTML = '⏳ Testing new URL... Please wait 3 seconds';
+            consoleDiv.innerHTML += `<div style="color: #4fc1ff;">🔄 Testing new URL: ${newUrl}</div>`;
+            
+            loadSuccess = false;
+            iframe.src = newUrl;
+        }
+        
+        // Log initial test
+        consoleDiv.innerHTML = `<div style="color: #4fc1ff;">🧪 Starting iframe test at ${new Date().toLocaleTimeString()}</div>`;
+        consoleDiv.innerHTML += `<div style="color: #d4d4d4;">Testing URL: ${iframe.src}</div>`;
+    </script>
+</body>
+</html>

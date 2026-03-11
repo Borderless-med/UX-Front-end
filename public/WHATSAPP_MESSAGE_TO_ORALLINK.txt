@@ -1,0 +1,182 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 WHATSAPP MESSAGE TO ORALLINK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Hi! Thanks for the clarifications on how OralLink works. Based on your technical setup, here's what I'd like to propose:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 WHAT WE PLAN TO DO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create a seamless integration where:
+
+1. OraChope users click "Get FREE AI Scan" in our chatbot
+2. They're redirected to orachope.orallink.health (your subdomain with token)
+3. They create account + take scan on your Kells page
+4. After scan completes, they return to OraChope chatbot
+5. Our chatbot helps them book the right clinic for their findings
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🤝 THE GOAL (WIN-WIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FOR ORALLINK:
+✅ Get 10K+ qualified monthly leads from OraChope
+✅ Automatic attribution via subdomain token (zero tracking work)
+✅ Users arrive PRE-SOLD on AI scan (our chatbot recommends it)
+✅ High completion rates (users motivated before clicking)
+
+FOR ORACHOPE:
+✅ Offer cutting-edge AI scan to our users (differentiation)
+✅ Users return with SPECIFIC needs identified (better conversions)
+✅ Higher clinic booking rates (users know what treatment they need)
+✅ Premium service offering at zero cost to users
+
+FOR USERS:
+✅ FREE AI dental scan (saves $50-200 consultation)
+✅ Know what they need BEFORE booking clinic
+✅ One seamless journey: AI scan → compare clinics → book
+✅ Transparent pricing + reviews for their specific treatment
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 WHY THIS PATH (RESPECTING YOUR CONSTRAINTS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Based on what you told me:
+✅ You don't call APIs → We won't ask you to build custom integrations
+✅ You redirect to unique Kells page → We'll work with that flow
+✅ Subdomain has automatic token → Perfect! Zero tracking code needed
+✅ Email is unique user ID → We'll use that for user identification
+
+This approach requires MINIMAL work from you:
+• Just create the subdomain: orachope.orallink.health
+• Point it to your existing Kells partnership page
+• That's it! We handle everything else on our side
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PROPOSED USER FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: On OraChope
+User in chatbot → clicks "Get FREE AI Scan"
+
+STEP 2: Redirect to OralLink
+→ https://orachope.orallink.health
+(Subdomain automatically tracks as OraChope referral)
+
+STEP 3: Your Existing Flow
+→ User creates email + password
+→ Clicks "AI Scan"
+→ Redirects to unique Kells page
+→ Takes photos + uploads
+→ Kells processes scan
+
+STEP 4: Return to OraChope
+❓ THIS IS WHERE I NEED YOUR HELP (see questions below)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❓ QUESTIONS TO FINALIZE INTEGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔴 CRITICAL QUESTION:
+
+1️⃣ **After user completes scan on Kells, what happens next?**
+   A) User stays on Kells results page (dead end?)
+   B) Kells redirects back to OralLink page?
+   C) User just closes browser / receives email?
+   D) Something else?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🟠 RETURN PATH OPTIONS (Pick what works for you):
+
+2️⃣ **OPTION A: Automatic Redirect**
+   Can Kells redirect users back to OraChope after scan?
+   Example: After scan → https://orachope.org/scan-complete?scan_id=XXX
+   
+   If yes: What do you need from us to set this up?
+   If no: Move to Option B ↓
+
+3️⃣ **OPTION B: Manual Return with Scan ID**
+   Can you display the Scan ID prominently on results page?
+   Plus add text: "Return to OraChope.org and share this ID with chatbot"
+   
+   (User manually navigates back, enters ID in chatbot)
+   
+   Is this doable on your end?
+
+4️⃣ **OPTION C: Email Link Return**
+   In the scan results email, can you include custom link?
+   Example: "Book your clinic on OraChope: https://orachope.org/scan-results?scan_id=XXX"
+   
+   (User clicks email link → returns to chatbot)
+   
+   Can you customize the email template?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🟢 TECHNICAL DETAILS:
+
+5️⃣ **Scan Results API**
+   Is there an API endpoint where we can retrieve scan results by scan_id?
+   
+   Use case: User returns to chatbot and says "My scan ID is OL-2026-4521"
+   Can our backend call: GET /api/scan/{scan_id} to fetch results?
+   
+   If yes: Please share API documentation
+   If no: Users will just verbally describe findings (that's fine too!)
+
+6️⃣ **What info is included in scan result emails?**
+   - Scan ID?
+   - Findings summary?
+   - PDF report attachment?
+   - Link to view results online?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔵 TESTING & LAUNCH:
+
+7️⃣ **Timeline**
+   How long to create orachope.orallink.health subdomain?
+   Can we get a staging/test link first to test the flow?
+
+8️⃣ **Test Accounts**
+   Can you provide test credentials so we can:
+   - Complete a full test scan
+   - See the post-scan experience
+   - Verify the user journey end-to-end
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ DO YOU AGREE WITH THIS APPROACH?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The proposed architecture:
+• OraChope sends users → orachope.orallink.health (your subdomain)
+• You handle signup + scan (existing flow, no changes)
+• Users return to OraChope via [chosen option from Q2-4]
+• OraChope helps users book clinics based on scan findings
+
+Minimal work for you:
+✅ Create subdomain (5 mins DNS config)
+✅ Choose return path option (Q2, Q3, or Q4)
+✅ Share test credentials (Q8)
+
+Is this workable from your side?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📎 PARTNERSHIP AGREEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You mentioned: "if you have a draft I can edit, that would be great!"
+
+Once we align on the technical integration above, I'll send a simple partnership agreement covering:
+• Revenue share structure
+• User data handling (PDPA compliance)
+• Liability / disclaimers
+• Partnership term & termination
+
+Sound good?
+
+Let me know your thoughts on the questions above, especially the return path options (Q2-4) - that's the key decision point!
+
+Looking forward to making this work 🤝

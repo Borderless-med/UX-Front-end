@@ -1,0 +1,24 @@
+### Test WhatsApp API
+POST https://graph.facebook.com/v22.0/987884714412226/messages
+Authorization: EAAWyzt38hNUBQ0Yu7LbMBZCljWkgr2QTWlwIuRR8qdkGUwgvoXdpJCcGtbhgG9UddZAoZA4P69VAcMZCalWuxeeCNW4ZBFZCqi8lgcOYOc7KR8rZBFqkllU0lNPHxCXfCAL0jFIcPjCoGjg3eGqLzyNekgw6y6ZADiaZBdsvy2YNltiXdq0Cb94atTEVIcA4IFQZDZD
+Content-Type: application/json
+
+{
+  "messaging_product": "whatsapp",
+  "to": "6582229202",
+  "type": "template",
+  "template": {
+    "name": "booking_confirmation",
+    "language": { "code": "en" },
+    "components": [
+      {
+        "type": "body",
+        "parameters": [
+          { "type": "text", "text": "John Doe" },
+          { "type": "text", "text": "March 15th" },
+          { "type": "text", "text": "OR-9982" }
+        ]
+      }
+    ]
+  }
+}
