@@ -31,7 +31,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-const ORALLINK_URL = 'https://orallink.health?ref=orachope&source=ai-scan-page';
+const ORALLINK_URL = 'https://scan.orallink.health?ref=orachope&source=ai-scan-page';
 
 // Generate Scan ID: OL-2026-XXXX
 function generateScanId(): string {
