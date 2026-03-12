@@ -85,7 +85,7 @@ export default function HomeV3_OralLink() {
               </div>
 
               <ul className="space-y-3 mb-6 text-sm text-gray-700 flex-1">
-                {['5-photo smartphone scan', 'Instant risk assessment', 'Matched clinic recommendations', '2 minutes to complete'].map((item) => (
+                {['5-photo smartphone scan', 'Instant risk assessment', 'Matched clinic recommendations'].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckIcon color="text-emerald-600" />
                     <span>{item}</span>

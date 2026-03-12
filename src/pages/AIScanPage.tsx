@@ -231,7 +231,7 @@ export default function AIScanPage() {
             Your Free AI Dental Scan Awaits
           </h1>
           <p className="text-xl text-gray-600 mb-6">
-            2 minutes to scan · Instant AI analysis · Find the perfect clinic on OraChope
+            Instant AI analysis · Find the perfect clinic on OraChope
           </p>
           <div className="flex items-center justify-center gap-8 text-sm text-gray-600 flex-wrap">
             {['100% Free', 'Secure & Private', 'No Medical Diagnosis'].map((item) => (

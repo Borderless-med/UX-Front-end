@@ -466,7 +466,7 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           >
             🦷 Try FREE AI Dental Scan
           </button>
-          <p className="text-[10px] text-teal-700 text-center mt-1">Powered by OralLink · Takes 2 minutes</p>
+          <p className="text-[10px] text-teal-700 text-center mt-1">Powered by OralLink</p>
         </div>
 
         {/* Sign-up CTA for unauthenticated users */}
