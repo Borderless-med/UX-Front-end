@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOCKUP v3 — OraChope.org Homepage (Healthcare Design)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1E293B; }
+        .card-hover { transition: box-shadow 250ms ease, transform 250ms ease; }
+        .card-hover:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.10); transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-white antialiased">
+
+    <!-- MOCKUP BANNER -->
+    <div style="background:#1e3a5f;" class="text-white text-center text-xs font-medium py-1.5 px-4 tracking-wide">
+        MOCKUP v3 — FOR ORALLINK REVIEW ONLY — NOT LIVE — March 2026
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-7 w-auto">
+                <div class="hidden md:flex items-center gap-8 text-sm text-gray-600 font-medium">
+                    <a href="#" class="hover:text-blue-700 transition-colors">Find Clinics</a>
+                    <a href="#" class="hover:text-blue-700 transition-colors">Compare</a>
+                    <a href="#" class="hover:text-blue-700 transition-colors">How It Works</a>
+                    <a href="#" class="hover:text-blue-700 transition-colors">Travel Guide</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="text-sm text-gray-600 hover:text-blue-700 font-medium">Log in</a>
+                    <a href="#premium" class="text-sm font-semibold px-4 py-2 rounded-md border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white transition-colors">
+                        Start Free Trial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Slim Promotion Notice -->
+    <div class="bg-blue-50 border-b border-blue-100 text-center py-2.5 px-4">
+        <p class="text-sm text-blue-800 font-medium">
+            Launch Promotion: 30-day free trial for new members — 
+            <a href="#premium" class="underline font-semibold">Learn more</a>
+        </p>
+    </div>
+
+    <!-- Hero -->
+    <section class="pt-14 pb-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-semibold text-slate-800 mb-4 leading-tight tracking-tight">
+                    World-Class Dental Care<br />
+                    Smart Savings &amp; <span style="color:#2E5FA3;">AI Guidance</span>
+                </h1>
+                <p class="text-lg text-slate-500 max-w-2xl mx-auto font-normal">
+                    Compare dental clinics across Singapore and Johor Bahru with intelligent, patient-centred guidance.
+                </p>
+            </div>
+
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-3">Choose Your Experience</h2>
+                <p class="text-base text-slate-500 max-w-xl mx-auto">Select the path that best suits your needs — you can always switch later</p>
+            </div>
+
+            <!-- Three Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+
+                <!-- Card 1: AI Dental Scan -->
+                <div class="rounded-xl p-7 border card-hover shadow-sm flex flex-col relative" style="background:#EFF6FF; border-color:#BFDBFE;">
+                    <!-- Premium Label -->
+                    <div class="absolute top-4 right-4">
+                        <span style="background:#EFF6FF; color:#2E5FA3;" class="text-xs font-semibold px-2.5 py-1 rounded-md">Premium</span>
+                    </div>
+
+                    <div class="mb-5">
+                        <div style="background:#EFF6FF;" class="rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" style="color:#2E5FA3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">AI Dental Scan</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Identify your dental needs before booking a clinic</p>
+                    </div>
+
+                    <p class="text-xs font-medium text-slate-400 mb-4">Best for: Patients uncertain about their treatment needs</p>
+
+                    <ul class="space-y-2.5 mb-6 flex-1">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            5-photo smartphone scan
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Instant AI risk assessment
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Matched clinic recommendations
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Full scan history and tracking
+                        </li>
+                    </ul>
+
+                    <a href="#premium" style="background:#2E5FA3;" class="block w-full hover:opacity-90 text-white font-medium py-3 px-5 rounded-md text-center text-sm transition-opacity mt-auto">
+                        Start Free 30-Day Trial
+                    </a>
+                    <p class="text-center text-xs text-slate-400 mt-2">Included with Premium · SGD 10/year after trial</p>
+                </div>
+
+                <!-- Card 2: Smart AI Companion -->
+                <div class="rounded-xl p-7 border card-hover shadow-sm flex flex-col" style="background:#F0FDFA; border-color:#99F6E4;">
+                    <div class="mb-5">
+                        <div style="background:#F0FDFA;" class="rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" style="color:#0D7A7A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Smart AI Companion</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Personalised recommendations and answers instantly</p>
+                    </div>
+
+                    <p class="text-xs font-medium text-slate-400 mb-4">Best for: First-time patients seeking guidance</p>
+
+                    <ul class="space-y-2.5 mb-6 flex-1">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Ask any dental question
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Compare JB vs Singapore clinics
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Book appointments directly
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Powered by patient reviews
+                        </li>
+                    </ul>
+
+                    <button style="background:#0D7A7A;" class="w-full hover:opacity-90 text-white font-medium py-3 px-5 rounded-md text-sm transition-opacity mt-auto">
+                        Start Chatting — Free Account
+                    </button>
+                    <p class="text-center text-xs text-slate-400 mt-2">40 queries/month · No credit card required</p>
+                </div>
+
+                <!-- Card 3: Browse & Compare -->
+                <div class="rounded-xl p-7 border card-hover shadow-sm flex flex-col" style="background:#F8FAFC; border-color:#CBD5E1;">
+                    <div class="mb-5">
+                        <div class="bg-slate-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Browse &amp; Compare</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Explore clinics at your own pace, no guidance needed</p>
+                    </div>
+
+                    <p class="text-xs font-medium text-slate-400 mb-4">Best for: Experienced patients and self-researchers</p>
+
+                    <ul class="space-y-2.5 mb-6 flex-1">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Browse all verified clinics
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Advanced search and filtering
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Compare clinics side by side
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Read real patient reviews
+                        </li>
+                    </ul>
+
+                    <button class="w-full bg-slate-700 hover:bg-slate-800 text-white font-medium py-3 px-5 rounded-md text-sm transition-colors mt-auto">
+                        Browse Clinics
+                    </button>
+                    <p class="text-center text-xs text-slate-400 mt-2">No account required</p>
+                </div>
+
+            </div>
+
+            <p class="text-center text-xs text-slate-400 mt-10">
+                Empowering patients with transparent information to make informed dental care decisions
+            </p>
+        </div>
+    </section>
+
+    <!-- Premium Membership Section -->
+    <section id="premium" class="py-20 bg-slate-50 border-t border-slate-100">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="text-center mb-12">
+                <span style="background:#EFF6FF; color:#2E5FA3;" class="text-xs font-semibold px-4 py-1.5 rounded-md uppercase tracking-wider">OraChope Premium</span>
+                <h2 class="text-3xl font-semibold text-slate-800 mt-5 mb-3 tracking-tight">Your Dental Health Companion</h2>
+                <p class="text-slate-500 text-base">Everything you need to make the right dental decision, in one place</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+
+                <!-- Free Tier -->
+                <div class="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-700">Free Account</h3>
+                        <div class="text-3xl font-semibold text-slate-800 mt-3">SGD 0</div>
+                        <div class="text-slate-400 text-sm mt-1">always free</div>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Browse and compare all clinics</li>
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>40 AI chatbot queries per month</li>
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Standard clinic booking</li>
+                        <li class="flex items-center gap-3 text-slate-300"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>AI Dental Scan</li>
+                        <li class="flex items-center gap-3 text-slate-300"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Human expert response</li>
+                        <li class="flex items-center gap-3 text-slate-300"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Priority booking queue</li>
+                    </ul>
+                    <button class="w-full mt-8 border border-slate-300 text-slate-600 hover:bg-slate-50 font-medium py-3 rounded-md text-sm transition-colors">
+                        Create Free Account
+                    </button>
+                </div>
+
+                <!-- Premium Tier -->
+                <div class="bg-white rounded-xl p-8 border-2 shadow-md relative" style="border-color:#2E5FA3;">
+                    <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2">
+                        <span style="background:#2E5FA3;" class="text-white text-xs font-semibold px-4 py-1.5 rounded-md">Launch Promotion</span>
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-700">Premium Member</h3>
+                        <div class="text-3xl font-semibold text-slate-800 mt-3">SGD 10</div>
+                        <div class="text-slate-400 text-sm mt-1">per year · cancel anytime</div>
+                        <div style="background:#EFF6FF; color:#2E5FA3;" class="text-xs font-semibold px-3 py-1.5 rounded-md mt-3 inline-block">
+                            First 30 days free — no charge today
+                        </div>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Everything in Free</li>
+                        <li class="flex items-center gap-3 font-medium text-slate-700"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>1 AI Dental Scan per year (via OralLink)</li>
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>120 AI chatbot queries per month</li>
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Human expert response within 24 hours</li>
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Priority clinic booking queue</li>
+                        <li class="flex items-center gap-3"><svg class="w-4 h-4 flex-shrink-0" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>Full scan history and tracking</li>
+                    </ul>
+                    <button style="background:#2E5FA3;" class="w-full mt-8 hover:opacity-90 text-white font-medium py-3 rounded-md text-sm transition-opacity">
+                        Start Free 30-Day Trial
+                    </button>
+                    <p class="text-center text-xs text-slate-400 mt-2">No charge for 30 days. SGD 10 billed annually after trial.</p>
+                </div>
+
+            </div>
+
+            <!-- Fine Print -->
+            <div class="mt-10 max-w-2xl mx-auto text-center">
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    <strong class="text-slate-500">Promotional offer:</strong> The 30-day free trial is available during OraChope's launch phase only. This offer is subject to availability and may be withdrawn at any time without prior notice. AI Dental Scan powered by OralLink. Results are for informational purposes only and do not constitute a medical diagnosis.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Why OraChope -->
+    <section class="py-16 bg-white border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-semibold text-slate-800 mb-3">Why OraChope?</h2>
+                <p class="text-slate-500 text-sm">Transparent information for informed dental care decisions</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div style="background:#EFF6FF;" class="rounded-lg w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6" style="color:#2E5FA3;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 mb-2">Patient-Reviewed Clinics</h3>
+                    <p class="text-slate-500 text-sm">Authentic ratings from real patients — not paid placements</p>
+                </div>
+                <div class="text-center">
+                    <div style="background:#F0FDFA;" class="rounded-lg w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6" style="color:#0D7A7A;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 mb-2">Transparent Pricing</h3>
+                    <p class="text-slate-500 text-sm">Compare costs with clear, upfront pricing across all clinics</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-slate-100 rounded-lg w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 mb-2">AI-Powered Guidance</h3>
+                    <p class="text-slate-500 text-sm">Smart tools to help you decide before spending a dollar</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-8 text-center text-xs">
+        <p class="text-slate-300 font-medium mb-1">OraChope.org</p>
+        <p>Dental Care Intelligence for Singapore Patients</p>
+        <p class="mt-3 text-slate-500">AI Dental Scan powered by OralLink · Not a medical diagnosis · For informational use only</p>
+        <p class="mt-2 text-slate-500">© 2026 CuraSphere Lab · <a href="#" class="hover:text-slate-300">Privacy Policy</a> · <a href="#" class="hover:text-slate-300">Terms of Service</a></p>
+    </footer>
+
+</body>
+</html>

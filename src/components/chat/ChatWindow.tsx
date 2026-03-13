@@ -458,15 +458,15 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
           disabled={isTyping}
         />
 
-        {/* AI Scan CTA — always visible */}
+        {/* Premium Trial CTA — always visible */}
         <div className="px-3 pb-2 pt-1 border-t border-teal-100 bg-teal-50">
           <button
             onClick={() => { onClose(); navigate('/ai-scan'); }}
             className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all text-sm flex items-center justify-center gap-2"
           >
-            🦷 Try FREE AI Dental Scan
+            🦷 Start Free 30-Day Trial
           </button>
-          <p className="text-[10px] text-teal-700 text-center mt-1">Powered by OralLink</p>
+          <p className="text-[10px] text-teal-700 text-center mt-1">Includes AI Dental Scan · Powered by OralLink</p>
         </div>
 
         {/* Sign-up CTA for unauthenticated users */}

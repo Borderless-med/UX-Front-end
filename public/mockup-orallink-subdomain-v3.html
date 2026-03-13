@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOCKUP v3 — orallink.orachope.org (UX Fixes Applied)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1E293B; }
+        .card-hover { transition: box-shadow 250ms ease; }
+        .card-hover:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body class="bg-white antialiased">
+
+    <!-- MOCKUP BANNER -->
+    <div style="background:#1e3a5f;" class="text-white text-center text-xs font-medium py-1.5 px-4 tracking-wide">
+        MOCKUP v3 — FOR ORALLINK REVIEW ONLY — NOT LIVE — March 2026
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Co-brand -->
+                <div class="flex items-center gap-3">
+                    <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-7 w-auto">
+                    <span class="text-slate-200 font-light text-lg">|</span>
+                    <span style="color:#0D7A7A;" class="font-semibold text-base">OralLink</span>
+                </div>
+                <span class="text-xs text-slate-400 hidden sm:block">OraChope.org &rsaquo; <span class="text-slate-600 font-medium">AI Dental Scan</span></span>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="text-sm text-slate-500 hover:text-blue-700 font-medium">Log in</a>
+                    <a href="#signup" style="background:#2E5FA3;" class="text-sm font-semibold px-4 py-2 rounded-md text-white hover:opacity-90 transition-opacity">
+                        Start Free Trial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Slim Promo Bar -->
+    <div class="bg-blue-50 border-b border-blue-100 text-center py-2.5 px-4">
+        <p class="text-sm text-blue-800 font-medium">
+            Launch Promotion: 30-day free trial for new members —
+            <a href="#signup" class="underline font-semibold">Get started</a>
+        </p>
+    </div>
+
+    <!-- Hero — Light Clinical -->
+    <section style="background:#F8FAFC;" class="py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+        <div class="max-w-4xl mx-auto text-center">
+
+            <h1 class="text-4xl md:text-5xl font-semibold text-slate-800 mb-5 leading-tight tracking-tight">
+                AI Dental Scan<br />
+                <span style="color:#2E5FA3;">Know Your Dental Health</span><br />
+                Before You Book
+            </h1>
+
+            <p class="text-lg text-slate-500 mb-10 max-w-2xl mx-auto font-normal leading-relaxed">
+                Use your smartphone to complete a clinical-grade AI dental scan. 
+                Receive a personalised assessment and matched clinic recommendations on OraChope.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+                <a href="#how-it-works" style="background:#2E5FA3;" class="hover:opacity-90 text-white font-semibold text-base px-8 py-3.5 rounded-md transition-opacity shadow-sm">
+                    See How It Works
+                </a>
+                <a href="#signup" class="border border-slate-300 text-slate-600 hover:bg-slate-50 font-medium text-base px-8 py-3.5 rounded-md transition-colors">
+                    Start Free 30-Day Trial
+                </a>
+            </div>
+
+            <p class="text-slate-400 text-sm">
+                AI Scan included with OraChope Premium · SGD 10/year · No charge for first 30 days
+            </p>
+
+            <!-- Trust row -->
+            <div class="flex flex-wrap justify-center gap-6 mt-8 text-sm text-slate-500">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    No surprise charges
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    Cancel anytime before Day 30
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    Clinical-grade technology
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4" style="color:#0D7A7A;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    Informational use only
+                </div>
+            </div>
+            <!-- Credential footnote: subordinate context, after all CTAs -->
+            <div class="mt-8 pt-6 border-t border-slate-200">
+                <p class="text-xs text-slate-400 max-w-xl mx-auto leading-relaxed">
+                    AI Dental Scan is powered by <strong class="text-slate-500">OralLink</strong>, a clinical dental imaging platform used by dental professionals across Southeast Asia, in an official technology partnership with OraChope.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What You Get -->
+    <section class="py-16 bg-white border-b border-slate-100">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-semibold text-slate-800 mb-2">What the AI Scan Tells You</h2>
+                <p class="text-slate-500 text-sm">Powered by OralLink's clinical imaging analysis technology</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+                <div class="bg-slate-50 rounded-xl p-6 text-center border border-slate-100 card-hover">
+                    <div style="background:#EFF6FF;" class="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" style="color:#2E5FA3;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 mb-1.5 text-sm">Cavity Detection</h3>
+                    <p class="text-xs text-slate-500">Identifies visible signs of tooth decay early</p>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-6 text-center border border-slate-100 card-hover">
+                    <div style="background:#F0FDFA;" class="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" style="color:#0D7A7A;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 mb-1.5 text-sm">Gum Health</h3>
+                    <p class="text-xs text-slate-500">Assesses gum condition and inflammation signs</p>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-6 text-center border border-slate-100 card-hover">
+                    <div class="bg-slate-100 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 mb-1.5 text-sm">Risk Score</h3>
+                    <p class="text-xs text-slate-500">Overall dental health risk profile, low to high</p>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-6 text-center border border-slate-100 card-hover">
+                    <div style="background:#EFF6FF;" class="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" style="color:#2E5FA3;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-800 mb-1.5 text-sm">Clinic Match</h3>
+                    <p class="text-xs text-slate-500">Recommended OraChope clinics based on your results</p>
+                </div>
+            </div>
+            <p class="text-center text-xs text-slate-400 mt-8">
+                Results are for informational purposes only and do not constitute a clinical diagnosis. Always consult a licensed dentist.
+            </p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-16" style="background:#F8FAFC;">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-semibold text-slate-800 mb-2">How It Works</h2>
+                <p class="text-slate-500 text-sm">From sign-up to scan results in four simple steps</p>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-start gap-5 bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                    <div style="background:#2E5FA3;" class="text-white font-semibold text-sm rounded-md w-8 h-8 flex items-center justify-center flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 mb-1 text-sm">Start your free trial on OraChope</h3>
+                        <p class="text-sm text-slate-500">Create your Premium account — email and mobile only. No charge for 30 days.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-5 bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                    <div style="background:#0D7A7A;" class="text-white font-semibold text-sm rounded-md w-8 h-8 flex items-center justify-center flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 mb-1 text-sm">Click "Start AI Dental Scan" on your dashboard</h3>
+                        <p class="text-sm text-slate-500">You will be securely redirected to OralLink's platform at <span class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">scan.orallink.health</span> to complete your 5-photo scan.</p>
+                        <p class="text-xs text-slate-400 mt-2 bg-slate-50 border border-slate-100 rounded-md px-3 py-2">The 5 photos are: front teeth, left side, right side, upper jaw, lower jaw — taken with your phone camera in good lighting. No dentist or special equipment needed.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-5 bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                    <div style="background:#2E5FA3;" class="text-white font-semibold text-sm rounded-md w-8 h-8 flex items-center justify-center flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 mb-1 text-sm">Receive your personalised dental assessment</h3>
+                        <p class="text-sm text-slate-500">OralLink's AI analyses your photos and returns a risk profile. Results are saved to your OraChope scan history.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-5 bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                    <div style="background:#0D7A7A;" class="text-white font-semibold text-sm rounded-md w-8 h-8 flex items-center justify-center flex-shrink-0">4</div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 mb-1 text-sm">Get matched to the right clinic on OraChope</h3>
+                        <p class="text-sm text-slate-500">Based on your results, OraChope recommends verified clinics in Singapore or JB suited to your needs and budget.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sign-up CTA -->
+    <section id="signup" class="py-20 bg-white border-t border-slate-100">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="text-center mb-8">
+                <span style="background:#EFF6FF; color:#2E5FA3;" class="text-xs font-semibold px-4 py-1.5 rounded-md uppercase tracking-wider">Launch Promotion</span>
+                <h2 class="text-2xl font-semibold text-slate-800 mt-4 mb-2">Try OraChope Premium Free for 30 Days</h2>
+                <p class="text-slate-500 text-sm">Includes your first AI Dental Scan, 120 chatbot queries per month, priority clinic matching, and human expert access.</p>
+            </div>
+
+            <!-- Social proof -->
+            <div class="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-4">
+                    <p class="text-sm text-slate-600 italic leading-relaxed">"I had no idea I needed a root canal until the scan flagged it. Saved me from booking the wrong clinic entirely."</p>
+                    <p class="text-xs text-slate-400 mt-2 font-medium">— Rachel T., Singapore</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-4">
+                    <p class="text-sm text-slate-600 italic leading-relaxed">"Easy to use, clear results. OraChope matched me to a JB specialist that was exactly right for my case."</p>
+                    <p class="text-xs text-slate-400 mt-2 font-medium">— Marcus L., Singapore</p>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-8">
+                <h3 class="text-slate-800 font-semibold mb-6 text-base">Create your Premium account</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Full Name</label>
+                        <input type="text" placeholder="Your name" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" style="--tw-ring-color:#2E5FA3;" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Email Address</label>
+                        <input type="email" placeholder="you@email.com" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Mobile Number</label>
+                        <input type="tel" placeholder="+65 XXXX XXXX" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" />
+                        <p class="text-xs text-slate-400 mt-1">Used only for appointment confirmations. Never shared with third parties.</p>
+                    </div>
+
+                    <!-- Trial timeline -->
+                    <div class="bg-slate-50 border border-slate-100 rounded-lg p-4">
+                        <div class="grid grid-cols-3 gap-3 text-center text-xs text-slate-600">
+                            <div>
+                                <div class="font-semibold text-slate-700 mb-0.5">Today</div>
+                                <div class="text-slate-400">Trial starts · Scan available immediately</div>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-slate-700 mb-0.5">Day 28</div>
+                                <div class="text-slate-400">Reminder email with easy cancel option</div>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-slate-700 mb-0.5">Day 30</div>
+                                <div class="text-slate-400">SGD 10 charged if not cancelled</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button style="background:#2E5FA3;" class="w-full hover:opacity-90 text-white font-semibold py-3.5 rounded-md text-sm transition-opacity">
+                        Start Free Trial — Access AI Scan Now
+                    </button>
+
+                    <p class="text-center text-xs text-slate-400">
+                        Already a member? <a href="#" style="color:#2E5FA3;" class="font-semibold underline">Log in here</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Fine Print -->
+            <div class="mt-6 text-center">
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    <strong class="text-slate-500">Promotional offer:</strong> The 30-day free trial is available during OraChope's launch phase only and is subject to availability. This offer may be withdrawn at any time without prior notice. Payment processed securely. By signing up you agree to OraChope's Terms of Service and Privacy Policy.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partnership Trust -->
+    <section class="py-10 bg-slate-50 border-t border-slate-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-5">Technology partnership</p>
+            <div class="flex justify-center items-center gap-6">
+                <img src="https://www.orachope.org/orachope.png" alt="OraChope" class="h-7 w-auto opacity-70">
+                <span class="text-slate-300 text-xl font-light">×</span>
+                <span style="color:#0D7A7A;" class="font-semibold text-base opacity-70">OralLink</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-5 max-w-xl mx-auto leading-relaxed">
+                AI Dental Scan is an informational tool only and does not constitute a clinical diagnosis. OraChope is not a healthcare provider. Always consult a licensed dentist for professional advice.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-8 text-center text-xs">
+        <p class="text-slate-300 font-medium mb-1">OraChope.org · orallink.orachope.org</p>
+        <p class="mt-2 text-slate-500">
+            <a href="#" class="hover:text-slate-300">Privacy Policy</a> ·
+            <a href="#" class="hover:text-slate-300 ml-2">Terms of Service</a> ·
+            <a href="https://www.orachope.org" class="hover:text-slate-300 ml-2">Back to OraChope.org</a>
+        </p>
+        <p class="mt-2 text-slate-600">© 2026 CuraSphere Lab</p>
+    </footer>
+
+</body>
+</html>
