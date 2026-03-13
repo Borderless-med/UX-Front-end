@@ -43,6 +43,11 @@ import AIScanPage from "./pages/AIScanPage";
 
 const queryClient = new QueryClient();
 
+// Subdomain routing: orallink.orachope.org → serve the OralLink mockup page
+if (typeof window !== 'undefined' && window.location.hostname === 'orallink.orachope.org') {
+  window.location.replace('/mockup-orallink-subdomain-v3.html');
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>

@@ -10,17 +10,6 @@
       ],
       "destination": "https://orachope.org/:path*",
       "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "orallink.orachope.org"
-        }
-      ],
-      "destination": "https://www.orachope.org/mockup-orallink-subdomain-v3.html",
-      "permanent": false
     }
   ],
   "rewrites": [
