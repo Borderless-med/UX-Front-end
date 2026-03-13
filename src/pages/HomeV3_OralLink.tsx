@@ -47,26 +47,27 @@ export default function HomeV3_OralLink() {
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
               World-Class Dental Care<br />
-              Smart Savings &amp; <span className="text-blue-600">AI Powered</span>
+              Smart Savings &amp; <span className="text-blue-600">AI Guidance</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-              Compare dental options with intelligent guidance every step of the way
+              Compare dental clinics across Singapore and Johor Bahru with intelligent, patient-centred guidance.
             </p>
           </div>
 
           {/* Choose Your Experience */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Choose Your Preferred Experience</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Choose Your Experience</h2>
+            <p className="text-sm text-gray-500 mt-2">Select the path that best suits your needs — you can always switch later</p>
           </div>
 
           {/* ── Three Pathway Cards ──────────────────────────────────────────── */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 
             {/* Card 1: AI Dental Scan ──────────────────────────────────────── */}
-            <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-8 border-2 border-emerald-200 shadow-lg relative flex flex-col transition-all duration-300 hover:scale-[1.03] hover:shadow-xl">
-              {/* NEW badge */}
-              <span className="absolute -top-3 -right-3 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
-                NEW
+            <div className="rounded-xl p-8 border shadow-sm relative flex flex-col card-hover" style={{background:'#EFF6FF', borderColor:'#BFDBFE'}}>
+              {/* Premium badge */}
+              <span className="absolute -top-3 right-4 text-xs font-semibold px-3 py-1 rounded-md shadow-sm" style={{background:'#2E5FA3', color:'#fff'}}>
+                Premium
               </span>
 
               <div className="text-center mb-6">
@@ -96,18 +97,16 @@ export default function HomeV3_OralLink() {
               {/* CTA → /ai-scan (our login-gated page, then redirects to orallink.health) */}
               <button
                 onClick={() => navigate('/ai-scan')}
-                className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-lg text-center text-sm transition-all shadow-md hover:shadow-lg mt-auto"
+                className="block w-full text-white font-semibold py-3 px-6 rounded-lg text-center text-sm transition-opacity hover:opacity-90 shadow-sm mt-auto"
+                style={{background:'#2E5FA3'}}
               >
-                Start Free AI Scan →
+                Start Free 30-Day Trial
               </button>
-
-              <div className="bg-emerald-100 text-emerald-800 text-xs px-3 py-2 rounded-full font-semibold text-center mt-4">
-                🎯 Identify issues first, then book
-              </div>
+              <p className="text-center text-xs text-slate-400 mt-2">Included with Premium · SGD 10/year after trial</p>
             </div>
 
             {/* Card 2: Smart AI Companion ─────────────────────────────────── */}
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 border-2 border-blue-200 shadow-lg flex flex-col transition-all duration-300 hover:scale-[1.03] hover:shadow-xl">
+            <div className="rounded-xl p-8 border shadow-sm flex flex-col card-hover" style={{background:'#F0FDFA', borderColor:'#99F6E4'}}>
               <div className="text-center mb-6">
                 <div className="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,18 +132,16 @@ export default function HomeV3_OralLink() {
 
               <button
                 onClick={openChatWidget}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg text-sm transition-all shadow-md hover:shadow-lg mt-auto"
+                className="w-full text-white font-semibold py-3 px-6 rounded-lg text-sm transition-opacity hover:opacity-90 shadow-sm mt-auto"
+                style={{background:'#0D7A7A'}}
               >
-                Start Chatting with AI →
+                Start Chatting — Free Account
               </button>
-
-              <div className="bg-blue-100 text-blue-800 text-xs px-3 py-2 rounded-full font-semibold text-center mt-4">
-                🔐 Free signup · 40 chats/month
-              </div>
+              <p className="text-center text-xs text-slate-400 mt-2">40 queries/month · No credit card required</p>
             </div>
 
             {/* Card 3: Browse & Compare ────────────────────────────────────── */}
-            <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-xl p-8 border-2 border-slate-200 shadow-lg flex flex-col transition-all duration-300 hover:scale-[1.03] hover:shadow-xl">
+            <div className="rounded-xl p-8 border shadow-sm flex flex-col card-hover" style={{background:'#F8FAFC', borderColor:'#E2E8F0'}}>
               <div className="text-center mb-6">
                 <div className="bg-slate-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,14 +167,11 @@ export default function HomeV3_OralLink() {
 
               <button
                 onClick={() => navigate('/clinics')}
-                className="w-full bg-slate-600 hover:bg-slate-700 text-white font-semibold py-4 px-6 rounded-lg text-sm transition-all shadow-md hover:shadow-lg mt-auto"
+                className="w-full bg-slate-700 hover:bg-slate-800 text-white font-semibold py-3 px-6 rounded-lg text-sm transition-opacity hover:opacity-90 shadow-sm mt-auto"
               >
-                Start Browsing Clinics →
+                Browse Clinics
               </button>
-
-              <div className="bg-slate-100 text-slate-800 text-xs px-3 py-2 rounded-full font-semibold text-center mt-4">
-                💡 No account required
-              </div>
+              <p className="text-center text-xs text-slate-400 mt-2">No account required</p>
             </div>
 
           </div>{/* end grid */}
@@ -230,6 +224,61 @@ export default function HomeV3_OralLink() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Premium Pricing Section ─────────────────────────────────────────── */}
+      <section id="premium" className="py-20 bg-white border-t border-slate-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <span className="text-xs font-semibold px-4 py-1.5 rounded-md uppercase tracking-wider" style={{background:'#EFF6FF', color:'#2E5FA3'}}>OraChope Premium</span>
+            <h2 className="text-2xl font-semibold text-slate-800 mt-4 mb-2">Your Dental Health Companion</h2>
+            <p className="text-slate-500 text-sm">Everything you need to make the right dental decision, in one place</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Free */}
+            <div className="rounded-xl border border-slate-200 p-8 bg-white">
+              <h3 className="text-slate-500 font-medium text-sm mb-1">Free Account</h3>
+              <p className="text-3xl font-bold text-slate-800 mb-1">SGD 0</p>
+              <p className="text-xs text-slate-400 mb-6">always free</p>
+              <ul className="space-y-3 text-sm text-slate-600">
+                {['Browse and compare all clinics','40 AI chatbot queries per month','Standard clinic booking'].map(i => (
+                  <li key={i} className="flex items-center gap-3">
+                    <svg className="w-4 h-4 flex-shrink-0" style={{color:'#0D7A7A'}} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                    {i}
+                  </li>
+                ))}
+                {['AI Dental Scan','Human expert response','Priority booking queue'].map(i => (
+                  <li key={i} className="flex items-center gap-3 text-slate-300">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+                    {i}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => {}} className="mt-8 w-full border border-slate-300 text-slate-600 hover:bg-slate-50 font-medium py-3 px-6 rounded-md text-sm transition-colors">Create Free Account</button>
+            </div>
+            {/* Premium */}
+            <div className="rounded-xl border-2 p-8 relative" style={{borderColor:'#2E5FA3', background:'#F8FAFC'}}>
+              <span className="absolute -top-3 right-4 text-xs font-semibold px-3 py-1 rounded-md" style={{background:'#2E5FA3', color:'#fff'}}>Launch Promotion</span>
+              <h3 className="font-medium text-sm mb-1" style={{color:'#2E5FA3'}}>Premium Member</h3>
+              <p className="text-3xl font-bold text-slate-800 mb-1">SGD 10</p>
+              <p className="text-xs text-slate-400 mb-1">per year · cancel anytime</p>
+              <p className="text-xs font-semibold mb-6" style={{color:'#0D7A7A'}}>First 30 days free — no charge today</p>
+              <ul className="space-y-3 text-sm text-slate-700">
+                {['Everything in Free','1 AI Dental Scan per year (via OralLink)','120 AI chatbot queries per month','Human expert response within 24 hours','Priority clinic booking queue','Full scan history and tracking'].map(i => (
+                  <li key={i} className="flex items-center gap-3 font-medium">
+                    <svg className="w-4 h-4 flex-shrink-0" style={{color:'#0D7A7A'}} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                    {i}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => navigate('/ai-scan')} className="mt-8 w-full text-white font-semibold py-3 px-6 rounded-md text-sm hover:opacity-90 transition-opacity" style={{background:'#2E5FA3'}}>Start Free 30-Day Trial</button>
+              <p className="text-center text-xs text-slate-400 mt-2">No charge for 30 days. SGD 10 billed annually after trial.</p>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 text-center mt-6 leading-relaxed">
+            <strong className="text-slate-500">Promotional offer:</strong> The 30-day free trial is available during OraChope's launch phase only. This offer is subject to availability and may be withdrawn at any time. AI Dental Scan powered by OralLink. Results are for informational purposes only and do not constitute a medical diagnosis.
+          </p>
         </div>
       </section>
 
