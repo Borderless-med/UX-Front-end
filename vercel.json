@@ -12,14 +12,14 @@
       "permanent": true
     },
     {
-      "source": "/",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "orallink.orachope.org"
         }
       ],
-      "destination": "https://orallink.orachope.org/ai-scan",
+      "destination": "/mockup-orallink-subdomain-v3.html",
       "permanent": false
     }
   ],

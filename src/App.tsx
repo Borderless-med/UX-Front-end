@@ -53,14 +53,13 @@ const App = () => (
             <Sonner />
             <BrowserRouter>
             {(() => {
-              const usePrototypes = (import.meta as any).env?.VITE_USE_PROTOTYPES === 'true' || (import.meta as any).env?.MODE === 'development';
               return (
             <Routes>
-              <Route path="/" element={usePrototypes ? <HomeV3_OralLink /> : <Index />} />  {/* REVERT: change HomeV3_OralLink → HomePrototype_v2 to restore original */}
+              <Route path="/" element={<HomeV3_OralLink />} />  {/* REVERT: swap HomeV3_OralLink → HomePrototype_v2 to restore original OraChope homepage */}
               <Route path="/book-now" element={<BookNow />} />
-              <Route path="/compare" element={usePrototypes ? <ComparePrototype /> : <Compare />} />
-              <Route path="/clinics" element={usePrototypes ? <FindClinicsPrototype1 /> : <Clinics />} />
-              <Route path="/how-it-works" element={usePrototypes ? <HowItWorksPrototype /> : <HowItWorks />} />
+              <Route path="/compare" element={<ComparePrototype />} />
+              <Route path="/clinics" element={<FindClinicsPrototype1 />} />
+              <Route path="/how-it-works" element={<HowItWorksPrototype />} />
               <Route path="/qa" element={<QA />} />
               <Route path="/partner-application" element={<PartnerApplication />} />
               <Route path="/opt-out-report" element={<OptOutReport />} />
