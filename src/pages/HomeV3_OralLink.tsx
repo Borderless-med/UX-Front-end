@@ -94,9 +94,8 @@ export default function HomeV3_OralLink() {
                 ))}
               </ul>
 
-              {/* CTA → /ai-scan (our login-gated page, then redirects to orallink.health) */}
               <button
-                onClick={() => navigate('/ai-scan')}
+                onClick={() => window.location.href = 'https://orallink.orachope.org'}
                 className="block w-full text-white font-semibold py-3 px-6 rounded-lg text-center text-sm transition-opacity hover:opacity-90 shadow-sm mt-auto"
                 style={{background:'#2E5FA3'}}
               >
@@ -272,7 +271,7 @@ export default function HomeV3_OralLink() {
                   </li>
                 ))}
               </ul>
-              <button onClick={() => navigate('/ai-scan')} className="mt-8 w-full text-white font-semibold py-3 px-6 rounded-md text-sm hover:opacity-90 transition-opacity" style={{background:'#2E5FA3'}}>Start Free 30-Day Trial</button>
+              <button onClick={() => window.location.href = 'https://orallink.orachope.org'} className="mt-8 w-full text-white font-semibold py-3 px-6 rounded-md text-sm hover:opacity-90 transition-opacity" style={{background:'#2E5FA3'}}>Start Free 30-Day Trial</button>
               <p className="text-center text-xs text-slate-400 mt-2">No charge for 30 days. SGD 10 billed annually after trial.</p>
             </div>
           </div>
