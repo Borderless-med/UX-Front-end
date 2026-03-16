@@ -216,15 +216,15 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Full Name</label>
-                        <input type="text" placeholder="Your name" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" style="--tw-ring-color:#2E5FA3;" />
+                        <input id="field-name" type="text" placeholder="Your name" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" style="--tw-ring-color:#2E5FA3;" />
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Email Address</label>
-                        <input type="email" placeholder="you@email.com" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" />
+                        <input id="field-email" type="email" placeholder="you@email.com" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" />
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Mobile Number</label>
-                        <input type="tel" placeholder="+65 XXXX XXXX" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" />
+                        <input id="field-mobile" type="tel" placeholder="+65 XXXX XXXX" class="w-full border border-slate-200 rounded-md px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:border-transparent" />
                         <p class="text-xs text-slate-400 mt-1">Used only for appointment confirmations. Never shared with third parties.</p>
                     </div>
 
@@ -246,9 +246,10 @@
                         </div>
                     </div>
 
-                    <a href="https://scan.orallink.health" style="background:#2E5FA3;" class="block w-full text-center hover:opacity-90 text-white font-semibold py-3.5 rounded-md text-sm transition-opacity">
+                    <button id="submit-btn" disabled style="background:#94a3b8;" class="block w-full text-center text-white font-semibold py-3.5 rounded-md text-sm cursor-not-allowed transition-all">
                         Start Free Trial — Access AI Scan Now
-                    </a>
+                    </button>
+                    <p id="submit-hint" class="text-center text-xs text-slate-400 mt-1">Please fill in all fields above to continue.</p>
 
                     <p class="text-center text-xs text-slate-400">
                         Already a member? <a href="#" style="color:#2E5FA3;" class="font-semibold underline">Log in here</a>
@@ -290,6 +291,73 @@
         </p>
         <p class="mt-2 text-slate-600">© 2026 CuraSphere Lab</p>
     </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  var SUPABASE_URL = 'https://uzppuebjzqxeavgmwtvr.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cHB1ZWJqenF4ZWF2Z213dHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MDMxNTQsImV4cCI6MjA2NTk3OTE1NH0.kxPUYZ1LO1kcGiOy7Vtf2MwAfdi_dv4lzJQMdHGnmbA';
+  var client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  var nameEl   = document.getElementById('field-name');
+  var emailEl  = document.getElementById('field-email');
+  var mobileEl = document.getElementById('field-mobile');
+  var btn      = document.getElementById('submit-btn');
+  var hint     = document.getElementById('submit-hint');
+
+  function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  }
+
+  function checkForm() {
+    var nameOk   = nameEl.value.trim().length > 0;
+    var emailOk  = isValidEmail(emailEl.value);
+    var mobileOk = mobileEl.value.replace(/\s/g, '').length >= 8;
+    if (nameOk && emailOk && mobileOk) {
+      btn.disabled = false;
+      btn.style.background = '#2E5FA3';
+      btn.style.cursor = 'pointer';
+      btn.classList.remove('cursor-not-allowed');
+      hint.style.display = 'none';
+    } else {
+      btn.disabled = true;
+      btn.style.background = '#94a3b8';
+      btn.style.cursor = 'not-allowed';
+      btn.classList.add('cursor-not-allowed');
+      hint.style.display = 'block';
+    }
+  }
+
+  [nameEl, emailEl, mobileEl].forEach(function (el) {
+    el.addEventListener('input', checkForm);
+  });
+
+  btn.addEventListener('click', async function () {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    btn.style.background = '#94a3b8';
+
+    try {
+      var payload = {
+        full_name: nameEl.value.trim(),
+        email:     emailEl.value.trim().toLowerCase(),
+        mobile:    mobileEl.value.trim(),
+        status:    'trial',
+        source:    'orallink.orachope.org'
+      };
+      var result = await client.from('premium_members').insert([payload]);
+      if (result.error) {
+        console.error('Supabase insert error:', result.error);
+      }
+    } catch (e) {
+      console.error('Unexpected error:', e);
+    }
+
+    window.location.href = 'https://scan.orallink.health';
+  });
+}());
+</script>
 
 </body>
 </html>
