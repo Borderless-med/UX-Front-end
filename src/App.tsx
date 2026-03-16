@@ -84,7 +84,6 @@ const App = () => (
               <Route path="/template-demo" element={<TemplateDemo />} />
               <Route path="/find-clinics-prototype1" element={<FindClinicsPrototype1 />} />
               <Route path="/travel-guide" element={<TravelGuide />} />
-              <Route path="/ai-scan" element={<AIScanPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
               );

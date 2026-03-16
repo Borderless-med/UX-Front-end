@@ -461,7 +461,7 @@ const ChatWindow = ({ onClose, onAuthClick }: ChatWindowProps) => {
         {/* Premium Trial CTA — always visible */}
         <div className="px-3 pb-2 pt-1 border-t border-teal-100 bg-teal-50">
           <button
-            onClick={() => { onClose(); navigate('/ai-scan'); }}
+            onClick={() => { onClose(); window.location.href = 'https://orallink.orachope.org'; }}
             className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all text-sm flex items-center justify-center gap-2"
           >
             🦷 Start Free 30-Day Trial
