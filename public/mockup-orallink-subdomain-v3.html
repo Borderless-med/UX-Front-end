@@ -250,6 +250,7 @@
                         Start Free Trial — Access AI Scan Now
                     </button>
                     <p id="submit-hint" class="text-center text-xs text-slate-400 mt-1">Please fill in all fields above to continue.</p>
+                    <p id="submit-error" style="display:none;" class="text-center text-xs text-red-500 mt-2 font-semibold"></p>
 
                     <p class="text-center text-xs text-slate-400">
                         Already a member? <a href="#" style="color:#2E5FA3;" class="font-semibold underline">Log in here</a>
@@ -338,6 +339,8 @@
     btn.textContent = 'Saving...';
     btn.style.background = '#94a3b8';
 
+    var errorDiv = document.getElementById('submit-error');
+
     try {
       var payload = {
         full_name: nameEl.value.trim(),
@@ -349,9 +352,21 @@
       var result = await client.from('premium_members').insert([payload]);
       if (result.error) {
         console.error('Supabase insert error:', result.error);
+        errorDiv.textContent = 'Save error: ' + result.error.message + ' (code: ' + result.error.code + ')';
+        errorDiv.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Start Free Trial — Access AI Scan Now';
+        btn.style.background = '#2E5FA3';
+        return;
       }
     } catch (e) {
       console.error('Unexpected error:', e);
+      errorDiv.textContent = 'Unexpected error: ' + e.message;
+      errorDiv.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Start Free Trial — Access AI Scan Now';
+      btn.style.background = '#2E5FA3';
+      return;
     }
 
     window.location.href = 'https://scan.orallink.health';
