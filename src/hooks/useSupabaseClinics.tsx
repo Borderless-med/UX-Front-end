@@ -12,6 +12,104 @@ interface CacheEntry { data: Clinic[]; timestamp: number }
 const CLINICS_CACHE: Record<string, CacheEntry> = {};
 const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes (increased from 5 minutes)
 
+// ========== MOBILE FIX: localStorage Persistence Layer ==========
+// Survives tab suspension on mobile browsers (4G/5G network switches)
+const STORAGE_KEY_PREFIX = 'orachope_clinics_';
+const STORAGE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days max age
+
+/**
+ * Save clinic data to localStorage to survive mobile tab suspension
+ * Falls back gracefully if localStorage is full or unavailable
+ */
+const saveToLocalStorage = (source: ClinicSource, data: Clinic[]): void => {
+  try {
+    const storageKey = `${STORAGE_KEY_PREFIX}${source}`;
+    const payload = JSON.stringify({
+      data,
+      timestamp: Date.now(),
+      version: '1.0' // For future schema migrations
+    });
+    localStorage.setItem(storageKey, payload);
+    console.log(`[localStorage] ✅ Saved ${data.length} clinics for source '${source}'`);
+  } catch (error) {
+    // QuotaExceededError or localStorage disabled - graceful degradation
+    console.warn('[localStorage] ⚠️ Failed to save (quota exceeded or disabled):', error);
+    // App continues to work with in-memory cache only
+  }
+};
+
+/**
+ * Restore clinic data from localStorage
+ * Returns null if not found, expired, or corrupted
+ */
+const loadFromLocalStorage = (source: ClinicSource): { data: Clinic[]; timestamp: number } | null => {
+  try {
+    const storageKey = `${STORAGE_KEY_PREFIX}${source}`;
+    const stored = localStorage.getItem(storageKey);
+    
+    if (!stored) {
+      console.log(`[localStorage] No cached data for source '${source}'`);
+      return null;
+    }
+    
+    const parsed = JSON.parse(stored);
+    const age = Date.now() - parsed.timestamp;
+    
+    // Check if data is too old (7 days)
+    if (age > STORAGE_TTL_MS) {
+      console.log(`[localStorage] ⏰ Cache expired (${(age / (24 * 60 * 60 * 1000)).toFixed(1)} days old), removing`);
+      localStorage.removeItem(storageKey);
+      return null;
+    }
+    
+    // Validate data structure
+    if (!Array.isArray(parsed.data) || parsed.data.length === 0) {
+      console.warn('[localStorage] ⚠️ Invalid data structure, removing');
+      localStorage.removeItem(storageKey);
+      return null;
+    }
+    
+    const ageInMinutes = Math.floor(age / (60 * 1000));
+    console.log(`[localStorage] ✅ Restored ${parsed.data.length} clinics (${ageInMinutes} min old)`);
+    
+    return { data: parsed.data, timestamp: parsed.timestamp };
+  } catch (error) {
+    // JSON parse error or corrupted data
+    console.error('[localStorage] ❌ Corrupted cache, clearing:', error);
+    try {
+      localStorage.removeItem(`${STORAGE_KEY_PREFIX}${source}`);
+    } catch {
+      // localStorage not available
+    }
+    return null;
+  }
+};
+
+/**
+ * Clear all clinic caches (both memory and localStorage)
+ * Useful for debugging or manual refresh
+ */
+const clearAllCaches = (): void => {
+  // Clear in-memory cache
+  Object.keys(CLINICS_CACHE).forEach(key => delete CLINICS_CACHE[key]);
+  
+  // Clear localStorage cache
+  try {
+    ['sg', 'jb', 'all'].forEach(source => {
+      localStorage.removeItem(`${STORAGE_KEY_PREFIX}${source}`);
+    });
+    console.log('[localStorage] 🧹 All caches cleared');
+  } catch (error) {
+    console.warn('[localStorage] Failed to clear:', error);
+  }
+};
+
+// Expose clear function globally for debugging in browser console
+if (typeof window !== 'undefined') {
+  (window as any).clearClinicCaches = clearAllCaches;
+}
+// ========== End localStorage Layer ==========
+
 export const useSupabaseClinics = (source: ClinicSource = 'all') => {
   console.log('[useSupabaseClinics] Hook initialized for source:', source, 'at', new Date().toISOString());
   const [clinics, setClinics] = useState<Clinic[]>([]);
@@ -22,6 +120,34 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
   const fetchInProgressRef = useRef(false);
   const currentSourceRef = useRef<ClinicSource>(source);
   const hasInitialDataRef = useRef(false);
+
+  // MOBILE FIX: Page Visibility API - Handle tab reactivation after suspension
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // Tab became visible again
+        console.log('[useSupabaseClinics] 👁️ Tab became visible');
+        
+        // If we have no clinics and not currently loading, try to restore from localStorage
+        if (clinics.length === 0 && !loading && !fetchInProgressRef.current) {
+          console.log('[useSupabaseClinics] 🔄 No clinics visible after tab reactivation, attempting localStorage restore');
+          const restored = loadFromLocalStorage(source);
+          if (restored && restored.data.length > 0) {
+            console.log('[useSupabaseClinics] ✅ Restored clinics from localStorage after tab reactivation');
+            setClinics(restored.data);
+            CLINICS_CACHE[source] = restored;
+            setError(null);
+            hasInitialDataRef.current = true;
+          } else {
+            console.log('[useSupabaseClinics] ⚠️ No localStorage backup found, clinics may have been cleared by browser');
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [source, clinics.length, loading]); // Dependencies ensure we react to state changes
 
   useEffect(() => {
     console.log('[useSupabaseClinics] useEffect triggered for source:', source, 'at', new Date().toISOString());
@@ -50,17 +176,41 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
       fetchInProgressRef.current = true;
       
       try {
-        // Check cache FIRST before setting loading state
+        // MOBILE FIX: Check cache layers (memory → localStorage → network)
         const cacheKey = source;
-        const cached = CLINICS_CACHE[cacheKey];
-        if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
-          console.log(`[useSupabaseClinics] ✅ Using cached clinic data for '${source}' (age ${(Date.now() - cached.timestamp)/1000}s)`);
-          setClinics(cached.data);
+        
+        // Layer 1: Check in-memory cache (fastest)
+        const memoryCached = CLINICS_CACHE[cacheKey];
+        if (memoryCached && (Date.now() - memoryCached.timestamp) < CACHE_TTL_MS) {
+          console.log(`[useSupabaseClinics] ✅ Using memory cache for '${source}' (age ${(Date.now() - memoryCached.timestamp)/1000}s)`);
+          setClinics(memoryCached.data);
           setLoading(false);
           setError(null);
           fetchInProgressRef.current = false;
           hasInitialDataRef.current = true;
           return; // skip network fetch
+        }
+        
+        // Layer 2: Check localStorage (survives tab suspension)
+        const localStorageCached = loadFromLocalStorage(source);
+        if (localStorageCached && (Date.now() - localStorageCached.timestamp) < CACHE_TTL_MS) {
+          console.log(`[useSupabaseClinics] ✅ Restored from localStorage for '${source}' - tab suspension recovery`);
+          setClinics(localStorageCached.data);
+          // Restore to memory cache as well
+          CLINICS_CACHE[cacheKey] = localStorageCached;
+          setLoading(false);
+          setError(null);
+          fetchInProgressRef.current = false;
+          hasInitialDataRef.current = true;
+          
+          // OPTIMIZATION: Background refresh if data is >30 min old
+          const ageMinutes = (Date.now() - localStorageCached.timestamp) / (60 * 1000);
+          if (ageMinutes > 30) {
+            console.log(`[useSupabaseClinics] 🔄 Data is ${ageMinutes.toFixed(0)} min old, triggering background refresh`);
+            // Continue to network fetch below (non-blocking)
+          } else {
+            return; // Data is fresh enough, skip network fetch
+          }
         }
         
         // Only set loading=true if we don't have valid cached data
@@ -283,8 +433,12 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         console.log('✅ Successfully transformed', transformedClinics.length, 'clinics in', totalTime.toFixed(1) + 'ms');
         hasInitialDataRef.current = true;
         setClinics(transformedClinics);
-        // Store in cache
+        
+        // Store in memory cache
         CLINICS_CACHE[cacheKey] = { data: transformedClinics, timestamp: Date.now() };
+        
+        // MOBILE FIX: Store in localStorage to survive tab suspension
+        saveToLocalStorage(source, transformedClinics);
       } catch (err) {
         // Clear timeout on error
         if (timeoutRef.current) {
@@ -310,20 +464,29 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         
         // CRITICAL FIX: Preserve existing clinics on error - never show empty state if we have data
         const cacheKey = source;
-        const staleCache = CLINICS_CACHE[cacheKey];
+        const staleMemoryCache = CLINICS_CACHE[cacheKey];
+        const staleLocalStorageCache = loadFromLocalStorage(source);
         
         // Priority 1: Keep currently displayed clinics (don't clear state on background refresh failures)
         if (clinics.length > 0) {
           console.warn('⚠️ Fetch failed, but keeping currently displayed clinics to prevent UI from going blank');
           setError(null); // Don't show error if we already have data displayed
         }
-        // Priority 2: Use stale cache if available
-        else if (staleCache && staleCache.data.length > 0) {
-          console.warn('⚠️ Fetch failed, using stale cached data from', new Date(staleCache.timestamp).toISOString());
-          setClinics(staleCache.data);
+        // Priority 2: Use stale memory cache if available
+        else if (staleMemoryCache && staleMemoryCache.data.length > 0) {
+          console.warn('⚠️ Fetch failed, using stale memory cache from', new Date(staleMemoryCache.timestamp).toISOString());
+          setClinics(staleMemoryCache.data);
           setError(null);
-        } 
-        // Priority 3: Only show error if we have no data at all
+        }
+        // Priority 3: MOBILE FIX - Use localStorage even if expired (better than nothing)
+        else if (staleLocalStorageCache && staleLocalStorageCache.data.length > 0) {
+          const ageHours = (Date.now() - staleLocalStorageCache.timestamp) / (60 * 60 * 1000);
+          console.warn(`⚠️ Fetch failed, using localStorage backup (${ageHours.toFixed(1)}h old)`);
+          setClinics(staleLocalStorageCache.data);
+          // Show staleness warning to user
+          setError('Showing cached clinic data. Please check your internet connection to see latest updates.');
+        }
+        // Priority 4: Only show error if we have no data at all
         else {
           console.error('❌ No cached or existing data available, showing error to user');
           setError(err instanceof Error ? err.message : 'Failed to fetch clinics');
