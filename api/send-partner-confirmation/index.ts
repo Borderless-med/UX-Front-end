@@ -55,18 +55,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       email,
       phone,
       city,
+      address,
       mdcRegistrationNumber,
       clinicLicense,
-      services
+      services,
+      sentimentAnalysisInterest,
+      marketAnalysisInterest,
+      otherAiFeatures
     } = req.body;
     // Confirmation email to clinic owner
     const ownerHtml = `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.6;color:#333;">
-        <h2 style="color:#2563eb;">Welcome to OraChope.org!</h2>
-        <p>Dear ${contactName},</p>
-        <p>Your clinic <strong>${clinicName}</strong> has successfully signed up as a partner.</p>
-        <p>We will review your application and contact you soon.</p>
-        <p>Thank you for joining our network!</p>
+        <div style="background:linear-gradient(135deg,#2563eb,#1e40af);padding:20px;text-align:center;">
+          <h2 style="color:#fff;margin:0;">Welcome to OraChope.org!</h2>
+        </div>
+        <div style="padding:24px;background:#f9fafb;">
+          <p style="margin:0 0 12px;">Dear <strong>${contactName}</strong>,</p>
+          <p style="margin:0 0 16px;">Thank you for registering <strong>${clinicName}</strong> with us.</p>
+          
+          <div style="background:#dbeafe;border-left:4px solid #2563eb;padding:12px;margin:16px 0;">
+            <p style="margin:0;font-weight:600;color:#1e40af;">What's Next?</p>
+            <p style="margin:6px 0 0;font-size:14px;color:#1e3a8a;">
+              • We'll verify your credentials within 24 hours<br/>
+              • Contact you at <strong>${email}</strong> or <strong>${phone}</strong><br/>
+              • Send platform access and onboarding details
+            </p>
+          </div>
+          
+          <p style="margin:16px 0 0;font-size:13px;color:#6b7280;">
+            Questions? Contact us at <a href="mailto:contact@orachope.org" style="color:#2563eb;">contact@orachope.org</a>
+          </p>
+          
+          <p style="margin:16px 0 0;font-size:12px;color:#9ca3af;text-align:center;border-top:1px solid #e5e7eb;padding-top:12px;">
+            OraChope.org • Your Trusted Dental Partner Network
+          </p>
+        </div>
       </div>
     `;
     await emailService.sendMail({
@@ -85,9 +108,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           <tr><td style="padding:4px 0;font-weight:600;">Email</td><td>${email}</td></tr>
           <tr><td style="padding:4px 0;font-weight:600;">Phone</td><td>${phone}</td></tr>
           <tr><td style="padding:4px 0;font-weight:600;">City</td><td>${city}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;">Address</td><td style="font-size:13px;">${address || 'Not provided'}</td></tr>
           <tr style="background:#eff6ff;"><td style="padding:8px 4px;font-weight:600;">Clinic License (Form 7)</td><td style="font-family:monospace;font-weight:bold;color:#1e40af;">${clinicLicense}</td></tr>
           <tr style="background:#eff6ff;"><td style="padding:8px 4px;font-weight:600;">MDC Registration</td><td style="font-family:monospace;font-weight:bold;color:#1e40af;">${mdcRegistrationNumber}</td></tr>
           <tr><td style="padding:4px 0;font-weight:600;">Services</td><td>${services}</td></tr>
+          <tr><td style="padding:4px 0;font-weight:600;">AI Features</td><td style="font-size:13px;">
+            ${sentimentAnalysisInterest ? '✓ Sentiment Analysis<br/>' : ''}${marketAnalysisInterest ? '✓ Market Analysis<br/>' : ''}${otherAiFeatures ? `✓ Other: ${otherAiFeatures}` : ''}${!sentimentAnalysisInterest && !marketAnalysisInterest && !otherAiFeatures ? 'None selected' : ''}
+          </td></tr>
         </table>
         <div style="margin:20px 0;padding:12px;background:#fef3c7;border-left:4px solid #f59e0b;">
           <p style="margin:0;font-weight:600;color:#92400e;">Action Required:</p>

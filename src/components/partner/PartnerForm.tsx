@@ -204,9 +204,13 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
               email: data.email,
               phone: data.phone,
               city: data.city,
+              address: data.address,
               mdcRegistrationNumber: data.mdcRegistrationNumber,
               clinicLicense: data.clinicLicense,
               services: data.services,
+              sentimentAnalysisInterest: data.sentimentAnalysisInterest,
+              marketAnalysisInterest: data.marketAnalysisInterest,
+              otherAiFeatures: data.otherAiFeatures,
             }),
           });
           // Optionally show a toast or message for email success
