@@ -89,6 +89,33 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
         password: data.password,
       });
 
+      // Check for signup error FIRST
+      if (signUpError) {
+        console.error('Supabase signup error:', signUpError);
+        
+        // Handle specific error cases
+        if (signUpError.message.includes('already registered') || signUpError.message.includes('already exists')) {
+          toast({
+            title: "Email Already Registered",
+            description: "This email is already registered. Please use a different email or try logging in.",
+            variant: "destructive",
+          });
+        } else if (signUpError.message.includes('password')) {
+          toast({
+            title: "Password Invalid",
+            description: "Password must be at least 6 characters long.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Signup Failed",
+            description: signUpError.message || "Unable to create account. Please try again.",
+            variant: "destructive",
+          });
+        }
+        return; // Stop form submission
+      }
+
       const ownerUserId = signUpData.user?.id;
 
       if (!ownerUserId) {
