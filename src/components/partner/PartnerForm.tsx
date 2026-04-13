@@ -19,12 +19,13 @@ interface PartnerFormData {
   phone: string;
   address: string;
   city: string;
-  registrationNumber: string;
+  mdcRegistrationNumber: string;
+  clinicLicense: string;
   services: string;
-  experience: string;
-  whyJoin: string;
   sentimentAnalysisInterest: boolean;
+  marketAnalysisInterest: boolean;
   aiChatbotInterest: boolean;
+  otherAiFeatures: string;
 }
 
 interface PartnerFormProps {
@@ -45,12 +46,13 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
       phone: '',
       address: '',
       city: '',
-      registrationNumber: '',
+      mdcRegistrationNumber: '',
+      clinicLicense: '',
       services: '',
-      experience: '',
-      whyJoin: '',
       sentimentAnalysisInterest: false,
+      marketAnalysisInterest: false,
       aiChatbotInterest: false,
+      otherAiFeatures: '',
     },
   });
 
@@ -104,12 +106,13 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             phone: data.phone,
             address: data.address,
             city: data.city,
-            registration_number: data.registrationNumber,
+            mdc_registration_number: data.mdcRegistrationNumber,
+            clinic_license: data.clinicLicense,
             services: data.services,
-            experience: data.experience,
-            why_join: data.whyJoin,
             sentiment_analysis_interest: data.sentimentAnalysisInterest,
+            market_analysis_interest: data.marketAnalysisInterest,
             ai_chatbot_interest: data.aiChatbotInterest,
+            other_ai_features: data.otherAiFeatures,
             owner_user_id: ownerUserId,
           }
         ]);
@@ -159,10 +162,9 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
               email: data.email,
               phone: data.phone,
               city: data.city,
-              registrationNumber: data.registrationNumber,
+              mdcRegistrationNumber: data.mdcRegistrationNumber,
+              clinicLicense: data.clinicLicense,
               services: data.services,
-              experience: data.experience,
-              whyJoin: data.whyJoin,
             }),
           });
           // Optionally show a toast or message for email success

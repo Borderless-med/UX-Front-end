@@ -55,10 +55,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       email,
       phone,
       city,
-      registrationNumber,
-      services,
-      experience,
-      whyJoin
+      mdcRegistrationNumber,
+      clinicLicense,
+      services
     } = req.body;
     // Confirmation email to clinic owner
     const ownerHtml = `
@@ -86,11 +85,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           <tr><td style="padding:4px 0;font-weight:600;">Email</td><td>${email}</td></tr>
           <tr><td style="padding:4px 0;font-weight:600;">Phone</td><td>${phone}</td></tr>
           <tr><td style="padding:4px 0;font-weight:600;">City</td><td>${city}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;">Registration Number</td><td>${registrationNumber}</td></tr>
+          <tr style="background:#eff6ff;"><td style="padding:8px 4px;font-weight:600;">Clinic License (Form 7)</td><td style="font-family:monospace;font-weight:bold;color:#1e40af;">${clinicLicense}</td></tr>
+          <tr style="background:#eff6ff;"><td style="padding:8px 4px;font-weight:600;">MDC Registration</td><td style="font-family:monospace;font-weight:bold;color:#1e40af;">${mdcRegistrationNumber}</td></tr>
           <tr><td style="padding:4px 0;font-weight:600;">Services</td><td>${services}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;">Experience</td><td>${experience}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;">Why Join</td><td>${whyJoin}</td></tr>
         </table>
+        <div style="margin:20px 0;padding:12px;background:#fef3c7;border-left:4px solid #f59e0b;">
+          <p style="margin:0;font-weight:600;color:#92400e;">Action Required:</p>
+          <p style="margin:4px 0 0;font-size:13px;color:#78350f;">1. Verify MDC number at <a href="https://www.mdc.org.my/" target="_blank">mdc.org.my</a></p>
+          <p style="margin:0;font-size:13px;color:#78350f;">2. Confirm Form 7 clinic license validity</p>
+          <p style="margin:0;font-size:13px;color:#78350f;">3. Contact partner within 24 hours</p>
+        </div>
         <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Automated notification • Do not forward externally.</p>
       </div>
     `;

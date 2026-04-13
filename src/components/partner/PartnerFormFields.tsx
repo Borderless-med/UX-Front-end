@@ -15,12 +15,13 @@ interface PartnerFormData {
   phone: string;
   address: string;
   city: string;
-  registrationNumber: string;
+  mdcRegistrationNumber: string;
+  clinicLicense: string;
   services: string;
-  experience: string;
-  whyJoin: string;
   sentimentAnalysisInterest: boolean;
+  marketAnalysisInterest: boolean;
   aiChatbotInterest: boolean;
+  otherAiFeatures: string;
 }
 
 interface PartnerFormFieldsProps {
@@ -104,20 +105,41 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
             </FormItem>
           )}
         />
+      </div>
 
-        <FormField
-          control={form.control}
-          name="registrationNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-gray-800 font-semibold">Registration Information *</FormLabel>
-              <FormControl>
-                <Input placeholder="Professional Registration Details" {...field} required className="text-gray-900 placeholder:text-gray-500" />
-              </FormControl>
-              <FormMessage className="text-red-600 font-medium" />
-            </FormItem>
-          )}
-        />
+      <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4">
+        <h3 className="text-sm font-bold text-gray-900 mb-3">Professional Registration Details</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="clinicLicense"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-gray-800 font-semibold">🏥 Clinic License (Form 7) *</FormLabel>
+                <FormControl>
+                  <Input placeholder="JHR/DC/2023/0045" {...field} required className="text-gray-900 placeholder:text-gray-500 font-mono" />
+                </FormControl>
+                <FormMessage className="text-red-600 font-medium" />
+                <p className="text-xs text-gray-600 mt-1">Ministry of Health Form 7 clinic license number</p>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="mdcRegistrationNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-gray-800 font-semibold">👨‍⚕️ Dentist License (MDC) *</FormLabel>
+                <FormControl>
+                  <Input placeholder="DEN/12345" pattern="DEN\/\d{4,6}" {...field} required className="text-gray-900 placeholder:text-gray-500 font-mono" />
+                </FormControl>
+                <FormMessage className="text-red-600 font-medium" />
+                <p className="text-xs text-gray-600 mt-1">Malaysian Dental Council registration number</p>
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
 
       <FormField
@@ -128,34 +150,6 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
             <FormLabel className="text-gray-800 font-semibold">Services Offered *</FormLabel>
             <FormControl>
               <Textarea placeholder="General Dentistry, Orthodontics, Dental Implants, etc." {...field} required className="text-gray-900 placeholder:text-gray-500 min-h-[100px]" />
-            </FormControl>
-            <FormMessage className="text-red-600 font-medium" />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="experience"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-gray-800 font-semibold">Years of Experience *</FormLabel>
-            <FormControl>
-              <Input placeholder="10 years" {...field} required className="text-gray-900 placeholder:text-gray-500" />
-            </FormControl>
-            <FormMessage className="text-red-600 font-medium" />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="whyJoin"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-gray-800 font-semibold">Why do you want to join our network? *</FormLabel>
-            <FormControl>
-              <Textarea placeholder="Tell us about your motivation to serve Singapore patients..." {...field} required className="text-gray-900 placeholder:text-gray-500 min-h-[120px]" />
             </FormControl>
             <FormMessage className="text-red-600 font-medium" />
           </FormItem>
@@ -179,7 +173,27 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-gray-800 font-medium">
-                      I want early access to sentiment analysis dashboard for patient insights
+                      Clinic's Sentiment Analysis - Patient review insights dashboard
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="marketAnalysisInterest"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-gray-800 font-medium">
+                      Market Analysis - Competitive insights and trends
                     </FormLabel>
                   </div>
                 </FormItem>
@@ -199,9 +213,23 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-gray-800 font-medium">
-                      I'm interested in AI chatbot integration for my clinic operations
+                      AI Chatbot integration for clinic operations
                     </FormLabel>
                   </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="otherAiFeatures"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-800 font-medium">Others (please specify):</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Specify other AI features you're interested in..." {...field} className="text-gray-900 placeholder:text-gray-500" />
+                  </FormControl>
+                  <FormMessage className="text-red-600 font-medium" />
                 </FormItem>
               )}
             />
