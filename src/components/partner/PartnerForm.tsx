@@ -252,7 +252,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
         <Button 
           type="submit" 
           disabled={isLoading}
-          className="w-full bg-[#FF6F61] hover:bg-[#FF6F61]/90 text-white font-semibold py-6 text-lg rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:transform-none disabled:hover:scale-100"
+          className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-semibold py-6 text-lg rounded-lg shadow-[0_8px_20px_rgba(59,130,246,0.4)] hover:shadow-[0_10px_25px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
