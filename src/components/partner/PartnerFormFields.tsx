@@ -82,9 +82,16 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
         name="address"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-gray-800 font-semibold">Clinic Address *</FormLabel>
+            <FormLabel className="text-gray-800 font-semibold">
+              📍 Clinic Address <span className="text-xs font-normal text-blue-600">(auto-filled)</span>
+            </FormLabel>
             <FormControl>
-              <Input placeholder="123 Medical Center, Johor Bahru" {...field} required className="text-gray-900 placeholder:text-gray-500" />
+              <Input 
+                {...field} 
+                readOnly 
+                placeholder="Select a clinic to auto-fill address" 
+                className="text-gray-900 placeholder:text-gray-500 bg-blue-50 border-blue-200 cursor-not-allowed" 
+              />
             </FormControl>
             <FormMessage className="text-red-600 font-medium" />
           </FormItem>

@@ -64,6 +64,21 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   const sortedJbClinics = [...jbClinics].sort((a, b) => a.name.localeCompare(b.name));
   const sortedSgClinics = [...sgClinics].sort((a, b) => a.name.localeCompare(b.name));
 
+  // Auto-fill address when clinic is selected
+  const watchedClinicId = form.watch('clinicId');
+  const watchedClinicSource = form.watch('clinicSource');
+
+  React.useEffect(() => {
+    if (watchedClinicId) {
+      const clinicList = watchedClinicSource === 'jb' ? jbClinics : sgClinics;
+      const selectedClinic = clinicList.find(c => String(c.id) === watchedClinicId);
+      
+      if (selectedClinic && selectedClinic.address) {
+        form.setValue('address', selectedClinic.address);
+      }
+    }
+  }, [watchedClinicId, watchedClinicSource, jbClinics, sgClinics, form]);
+
   const onSubmit = async (data: PartnerFormData) => {
     try {
       console.log('Submitting partner application:', data);
