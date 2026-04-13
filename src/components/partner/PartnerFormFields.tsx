@@ -124,10 +124,10 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
               <FormItem>
                 <FormLabel className="text-gray-800 font-semibold">🏥 Clinic License (Form 7) *</FormLabel>
                 <FormControl>
-                  <Input placeholder="JHR/DC/2023/0045" {...field} required className="text-gray-900 placeholder:text-gray-500 font-mono" />
+                  <Input placeholder="230102-00157-12" {...field} required className="text-gray-900 placeholder:text-gray-500 font-mono" />
                 </FormControl>
                 <FormMessage className="text-red-600 font-medium" />
-                <p className="text-xs text-gray-600 mt-1">Ministry of Health Form 7 clinic license number</p>
+                <p className="text-xs text-gray-600 mt-1">Format: <span className="font-mono text-blue-600">230102-00157-12</span> (Ministry of Health Form 7)</p>
               </FormItem>
             )}
           />
@@ -139,7 +139,7 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
               <FormItem>
                 <FormLabel className="text-gray-800 font-semibold">👨‍⚕️ Dentist License (MDC) *</FormLabel>
                 <FormControl>
-                  <Input placeholder="DEN/12345" pattern="DEN\/\d{4,6}" {...field} required className="text-gray-900 placeholder:text-gray-500 font-mono" />
+                  <Input placeholder="Enter your MDC registration number" {...field} required className="text-gray-900 placeholder:text-gray-500" />
                 </FormControl>
                 <FormMessage className="text-red-600 font-medium" />
                 <p className="text-xs text-gray-600 mt-1">Malaysian Dental Council registration number</p>
