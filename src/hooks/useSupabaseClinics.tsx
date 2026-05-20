@@ -386,6 +386,9 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
             googleMapsHref,
             hasReviewsLink,
             operatingHours: clinic.operating_hours || '',
+            contactEmail: clinic.contact_email || undefined,
+            whatsappNumber: clinic.whatsapp_number || undefined,
+            isVerifiedPartner: clinic.is_verified_partner || false,
             treatments: {
               toothFilling: clinic.tooth_filling || false,
               rootCanal: clinic.root_canal || false,

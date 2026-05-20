@@ -26,6 +26,10 @@ const ClinicGrid = ({
   selection,
   selectedTreatments = []
 }: ClinicGridProps) => {
+  // Dual ranking: Separate verified partners from regular clinics
+  const verifiedPartners = clinics.filter(clinic => clinic.isVerifiedPartner === true);
+  const regularClinics = clinics.filter(clinic => !clinic.isVerifiedPartner);
+
   if (clinics.length === 0) {
     return (
       <div className="text-center py-12">
@@ -45,34 +49,95 @@ const ClinicGrid = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-3 md:gap-4 mb-16 min-w-0 auto-rows-min">
-      {clinics.map((clinic) => {
-        const perClinicHideDistance = hideDistance || (selection === 'all' && clinic?.country === 'SG');
-        const isSingaporeClinic = clinic?.country === 'SG';
-        
-        // Render minimal card for Singapore clinics (HCSA compliance)
-        if (isSingaporeClinic) {
-          return (
-            <MinimalClinicCard 
-              key={clinic.id} 
-              clinic={clinic} 
-              selectedTreatments={selectedTreatments}
-            />
-          );
-        }
-        
-        // Render full card for JB/Malaysian clinics
-        return (
-        <ClinicCard
-          key={clinic.id}
-          clinic={clinic}
-          isAuthenticated={isAuthenticated}
-          onSignInClick={onSignInClick}
-          onViewPractitionerDetails={onViewPractitionerDetails}
-          hideDistance={perClinicHideDistance}
-        />
-      );})}
-    </div>
+    <>
+      {/* Pricing Disclaimer */}
+      <div className="mb-4 px-2 py-2 bg-amber-50 border-l-4 border-amber-500 rounded">
+        <p className="text-sm text-gray-700 italic">
+          Prices shown are estimated and subject to change. Always confirm with the clinic before booking.
+        </p>
+      </div>
+
+      {/* Verified Partners Section */}
+      {verifiedPartners.length > 0 && (
+        <div className="mb-8">
+          <div className="mb-4 px-4 py-3 bg-green-50 border-l-4 border-green-600 rounded">
+            <h3 className="text-lg font-semibold text-green-800 flex items-center">
+              ✅ Verified Partners ({verifiedPartners.length})
+              <span className="ml-2 text-sm font-normal text-green-700">
+                - 2-hour response guarantee
+              </span>
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-3 md:gap-4 min-w-0 auto-rows-min">
+            {verifiedPartners.map((clinic) => {
+              const perClinicHideDistance = hideDistance || (selection === 'all' && clinic?.country === 'SG');
+              const isSingaporeClinic = clinic?.country === 'SG';
+            
+              if (isSingaporeClinic) {
+                return (
+                  <MinimalClinicCard 
+                    key={clinic.id} 
+                    clinic={clinic} 
+                    selectedTreatments={selectedTreatments}
+                  />
+                );
+              }
+            
+              return (
+                <ClinicCard
+                  key={clinic.id}
+                  clinic={clinic}
+                  isAuthenticated={isAuthenticated}
+                  onSignInClick={onSignInClick}
+                  onViewPractitionerDetails={onViewPractitionerDetails}
+                  hideDistance={perClinicHideDistance}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Regular Clinics Section */}
+      {regularClinics.length > 0 && (
+        <div>
+          {verifiedPartners.length > 0 && (
+            <div className="mb-4 px-4 py-2 bg-gray-50 border-l-4 border-gray-400 rounded">
+              <h3 className="text-lg font-semibold text-gray-700">
+                Other Clinics ({regularClinics.length})
+              </h3>
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-3 md:gap-4 mb-16 min-w-0 auto-rows-min">
+            {regularClinics.map((clinic) => {
+              const perClinicHideDistance = hideDistance || (selection === 'all' && clinic?.country === 'SG');
+              const isSingaporeClinic = clinic?.country === 'SG';
+            
+              if (isSingaporeClinic) {
+                return (
+                  <MinimalClinicCard 
+                    key={clinic.id} 
+                    clinic={clinic} 
+                    selectedTreatments={selectedTreatments}
+                  />
+                );
+              }
+            
+              return (
+                <ClinicCard
+                  key={clinic.id}
+                  clinic={clinic}
+                  isAuthenticated={isAuthenticated}
+                  onSignInClick={onSignInClick}
+                  onViewPractitionerDetails={onViewPractitionerDetails}
+                  hideDistance={perClinicHideDistance}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

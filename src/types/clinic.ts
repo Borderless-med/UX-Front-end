@@ -31,6 +31,11 @@ export interface Clinic {
   // Convenience flag indicating whether a reviews link exists
   hasReviewsLink?: boolean;
   operatingHours: string;
+  // Clinic contact information (for booking notifications)
+  contactEmail?: string;
+  whatsappNumber?: string;
+  // Verified partner status (shows "✅ Verified Partner" badge)
+  isVerifiedPartner?: boolean;
   treatments: {
     toothFilling: boolean;
     rootCanal: boolean;

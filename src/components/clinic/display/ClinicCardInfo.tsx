@@ -1,5 +1,5 @@
 
-import { MapPin, Clock, Shield, AlertCircle } from 'lucide-react';
+import { MapPin, Clock, Shield, AlertCircle, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -8,6 +8,7 @@ interface ClinicCardInfoProps {
     distance: number;
     operatingHours: string;
     mdaLicense: string;
+    isVerifiedPartner?: boolean;
   };
   hideDistance?: boolean;
 }
@@ -157,18 +158,19 @@ const ClinicCardInfo = ({ clinic, hideDistance = false }: ClinicCardInfoProps) =
         </div>
       </div>
 
-      {/* License Status - Fixed Height */}
-      <div className="flex items-center justify-end h-8 mt-2">
-        {clinic.mdaLicense && clinic.mdaLicense !== 'Pending verification' && clinic.mdaLicense !== 'Pending Application' ? (
-          <div className="flex items-center text-sm text-green-600">
-            <Shield className="h-4 w-4 mr-1" />
-            <span>Verified</span>
-          </div>
-        ) : (
-          <div className="flex items-center text-sm text-orange-600">
-            <AlertCircle className="h-4 w-4 mr-1" />
-            <span>Pending Verification</span>
-          </div>
+      {/* Verified Partner Badges - Fixed Height */}
+      <div className="flex flex-col items-end gap-1 min-h-[3rem] mt-2">
+        {clinic.isVerifiedPartner && (
+          <>
+            <div className="flex items-center text-sm text-green-600 font-medium">
+              <Shield className="h-4 w-4 mr-1" />
+              <span>✅ Verified Partner</span>
+            </div>
+            <div className="flex items-center text-xs text-blue-600">
+              <Timer className="h-3 w-3 mr-1" />
+              <span>2-hour response guarantee</span>
+            </div>
+          </>
         )}
       </div>
     </>
