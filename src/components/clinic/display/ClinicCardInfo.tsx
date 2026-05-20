@@ -168,7 +168,7 @@ const ClinicCardInfo = ({ clinic, hideDistance = false }: ClinicCardInfoProps) =
             </div>
             <div className="flex items-center text-xs text-blue-600">
               <Timer className="h-3 w-3 mr-1" />
-              <span>2-hour response guarantee</span>
+              <span>24-hour response guarantee</span>
             </div>
           </>
         )}

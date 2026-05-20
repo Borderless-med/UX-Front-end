@@ -64,7 +64,7 @@ const ClinicGrid = ({
             <h3 className="text-lg font-semibold text-green-800 flex items-center">
               ✅ Verified Partners ({verifiedPartners.length})
               <span className="ml-2 text-sm font-normal text-green-700">
-                - 2-hour response guarantee
+                - 24-hour response guarantee
               </span>
             </h3>
           </div>
