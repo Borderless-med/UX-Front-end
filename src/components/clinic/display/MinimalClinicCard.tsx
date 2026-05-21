@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MapPin, Globe, Star, MessageCircle } from 'lucide-react';
+import { MapPin, Globe, Star, MessageCircle, Shield, Timer } from 'lucide-react';
 import { Clinic } from '@/types/clinic';
 import { InquiryForm } from '@/components/clinic/InquiryForm';
 import { useState } from 'react';
@@ -14,6 +14,7 @@ interface MinimalClinicCardProps {
  * Minimal clinic card for Singapore clinics (HCSA compliant)
  * Features:
  * - Name, address, postal code (directory info only)
+ * - Verified Partner badge (factual partnership status - SDC/MOH license checked)
  * - Website link (neutral gateway) with subtle bg-gray-50
  * - Google Reviews link (no rating display) with subtle bg-gray-50
  * - WhatsApp/Email OraChope.org concierge (emerald-700/slate-600 - softer colors)
@@ -24,8 +25,6 @@ interface MinimalClinicCardProps {
  * - Phone number (direct bypass)
  * - Rating display (testimonials)
  * - Service badges (promotional)
- * - Verification status (ranking)
- * - Redundant footer text under Claim button
  */
 const MinimalClinicCard = ({ clinic, selectedTreatments = [] }: MinimalClinicCardProps) => {
   const [isInquiryFormOpen, setIsInquiryFormOpen] = useState(false);
@@ -48,6 +47,20 @@ const MinimalClinicCard = ({ clinic, selectedTreatments = [] }: MinimalClinicCar
               {clinic.name}
             </h3>
           </div>
+
+          {/* Verified Partner Badge */}
+          {clinic.isVerifiedPartner && (
+            <div className="mb-2 flex flex-col gap-1">
+              <div className="flex items-center text-sm text-green-600 font-medium">
+                <Shield className="h-4 w-4 mr-1" />
+                <span>✅ Verified Partner</span>
+              </div>
+              <div className="flex items-center text-xs text-blue-600">
+                <Timer className="h-3 w-3 mr-1" />
+                <span>24-hour response guarantee</span>
+              </div>
+            </div>
+          )}
 
           {/* Address - FIXED HEIGHT for alignment */}
           <div className="flex items-start gap-2 mb-2 h-[3.5rem]">
