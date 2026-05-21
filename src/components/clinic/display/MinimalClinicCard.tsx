@@ -152,12 +152,16 @@ const MinimalClinicCard = ({ clinic, selectedTreatments = [] }: MinimalClinicCar
               </button>
             </div>
 
-            {/* Claim/Remove Button */}
+            {/* Update/Claim Button - Verified partners get "Update", non-verified get "Claim or Remove" */}
             <button
               onClick={handleClaimRemove}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-orange-400 rounded-md text-sm font-medium text-orange-700 hover:bg-orange-50 transition-colors"
+              className={`w-full flex items-center justify-center gap-2 px-4 py-2 border-2 rounded-md text-sm font-medium transition-colors ${
+                clinic.isVerifiedPartner
+                  ? 'border-green-600 text-green-600 hover:bg-green-50'
+                  : 'border-orange-400 text-orange-700 hover:bg-orange-50'
+              }`}
             >
-              <span>📝 Claim or Remove</span>
+              <span>{clinic.isVerifiedPartner ? 'Update' : '📝 Claim or Remove'}</span>
             </button>
           </div>
         </CardContent>
