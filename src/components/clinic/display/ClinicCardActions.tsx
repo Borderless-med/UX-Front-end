@@ -7,7 +7,6 @@ interface ClinicCardActionsProps {
     name: string;
     websiteUrl: string;
     phone?: string;
-    whatsappNumber?: string;
     isVerifiedPartner?: boolean;
   };
   isAuthenticated: boolean;
@@ -33,44 +32,25 @@ const ClinicCardActions = ({
     }
   };
 
-  const handleWhatsAppClick = () => {
-    if (clinic.whatsappNumber) {
-      // Format: Remove all non-digit characters and ensure country code
-      const cleanNumber = clinic.whatsappNumber.replace(/\D/g, '');
-      const message = encodeURIComponent(`Hi, I found your clinic on OraChope.com and would like to inquire about dental services at ${clinic.name}.`);
-      window.open(`https://wa.me/${cleanNumber}?text=${message}`, '_blank');
-    }
-  };
-
   return (
     <TooltipProvider>
       <div className="flex flex-col gap-3 pb-2">
-        {/* Verified Partner: WhatsApp + Book Now (side by side) */}
-        {clinic.isVerifiedPartner && clinic.whatsappNumber ? (
-          <div className="flex gap-2 w-full">
-            <Button
-              onClick={handleWhatsAppClick}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white flex items-center justify-center text-sm py-2.5"
-            >
-              <MessageCircle className="h-4 w-4 mr-2" />
-              WhatsApp
-            </Button>
-            <Button
-              onClick={onBookNow}
-              className="flex-1 bg-blue-primary hover:bg-blue-primary/90 text-white flex items-center justify-center text-sm py-2.5"
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Book
-            </Button>
-          </div>
-        ) : (
-          /* Regular Clinic: Book Now only */
+        {/* Primary CTA: Verified partners get Book Now, non-verified get Contact OraChope */}
+        {clinic.isVerifiedPartner ? (
           <Button
             onClick={onBookNow}
             className="w-full bg-blue-primary hover:bg-blue-primary/90 text-white flex items-center justify-center text-sm py-2.5"
           >
             <Calendar className="h-4 w-4 mr-2" />
             Book Now
+          </Button>
+        ) : (
+          <Button
+            onClick={onBookNow}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center text-sm py-2.5"
+          >
+            <MessageCircle className="h-4 w-4 mr-2" />
+            Contact OraChope
           </Button>
         )}
 
