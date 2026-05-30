@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope Partner Flyer - Professional V3</title>
+    <style>
+        /* Print-optimized A4 flyer - Professional Medical Design */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Arial', 'Helvetica', sans-serif;
+            background: white;
+            color: #1f2937;
+            line-height: 1.5;
+        }
+        
+        .flyer {
+            width: 210mm;
+            height: 297mm;
+            padding: 18mm;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* HEADER - Clean logo only, no text duplication */
+        .header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 18px;
+        }
+        
+        .logo {
+            height: 18mm;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        /* HERO SECTION - Light, inviting sky blue (not dark corporate blue) */
+        .hero {
+            background: linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%);
+            border-radius: 12px;
+            padding: 22mm 12mm;
+            text-align: center;
+            color: white;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(96, 165, 250, 0.15);
+        }
+        
+        .hero-headline {
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1.25;
+            margin-bottom: 10px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-subtext {
+            font-size: 17px;
+            opacity: 0.98;
+            font-weight: 500;
+        }
+        
+        /* SOCIAL PROOF - Trust builder */
+        .social-proof {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .social-proof-text {
+            font-size: 15px;
+            color: #065f46;
+            font-weight: 600;
+        }
+        
+        .social-proof-clinics {
+            font-size: 13px;
+            color: #047857;
+            margin-top: 4px;
+        }
+        
+        /* BENEFITS - Tighter, cleaner */
+        .benefits {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        
+        .benefit {
+            text-align: center;
+            padding: 14px 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .benefit-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        
+        .benefit-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 4px;
+        }
+        
+        .benefit-text {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.3;
+        }
+        
+        /* PRICING - Subtle cream, not gaudy yellow */
+        .pricing {
+            background: #fffbeb;
+            border: 2px solid #fbbf24;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-headline {
+            font-size: 20px;
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 6px;
+        }
+        
+        .pricing-details {
+            font-size: 15px;
+            color: #78350f;
+            font-weight: 500;
+        }
+        
+        /* QR CODE SECTION - Clean, dominant CTA */
+        .qr-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: #f8fafc;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 18px;
+        }
+        
+        .qr-code-container {
+            flex-shrink: 0;
+        }
+        
+        .qr-code {
+            width: 45mm;
+            height: 45mm;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .qr-text {
+            text-align: left;
+            flex: 1;
+        }
+        
+        .qr-headline {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+        
+        .qr-url {
+            font-size: 14px;
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .qr-action {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        /* URGENCY - Soft red, not alarm red */
+        .urgency {
+            background: #fef2f2;
+            border-left: 6px solid #ef4444;
+            border-radius: 6px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        
+        .urgency-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #991b1b;
+            line-height: 1.3;
+        }
+        
+        .urgency-spots {
+            font-size: 18px;
+            font-weight: bold;
+            color: #dc2626;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        
+        /* FOOTER - Clean contact */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 2px solid #e5e7eb;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .footer-contact {
+            display: flex;
+            gap: 18px;
+        }
+        
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .footer-tagline {
+            font-style: italic;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .flyer {
+                margin: 0;
+                padding: 18mm;
+                page-break-after: always;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer">
+        <!-- HEADER - Logo only, no text duplication -->
+        <div class="header">
+            <img src="orachope-logo.png" alt="OraChope" class="logo">
+        </div>
+        
+        <!-- HERO - Light sky blue, inviting (not dark corporate) -->
+        <div class="hero">
+            <div class="hero-headline">
+                4,000+ Singapore Patients<br>
+                Visit JB Dentists Every Month
+            </div>
+            <div class="hero-subtext">
+                Is YOUR clinic getting found?
+            </div>
+        </div>
+        
+        <!-- SOCIAL PROOF - Trust builder -->
+        <div class="social-proof">
+            <div class="social-proof-text">🏆 Join 3 Top JB Clinics Already Taking Direct Bookings from Singapore</div>
+            <div class="social-proof-clinics">Verified partners serving 50,000+ cross-border patients annually</div>
+        </div>
+        
+        <!-- BENEFITS - Tighter layout -->
+        <div class="benefits">
+            <div class="benefit">
+                <div class="benefit-icon">💰</div>
+                <div class="benefit-title">Free Listing</div>
+                <div class="benefit-text">Zero monthly fees<br>Zero setup costs</div>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-icon">📱</div>
+                <div class="benefit-title">Direct Bookings</div>
+                <div class="benefit-text">Instant notifications<br>No middleman</div>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-icon">⭐</div>
+                <div class="benefit-title">Featured Placement</div>
+                <div class="benefit-text">Top search results<br>Verified badge</div>
+            </div>
+        </div>
+        
+        <!-- PRICING - Professional cream, not gaudy yellow -->
+        <div class="pricing">
+            <div class="pricing-headline">10% Commission Only • No Monthly Fees</div>
+            <div class="pricing-details">Patient books RM 1,000 → You pay RM 100 → You earn RM 900</div>
+        </div>
+        
+        <!-- QR CODE - Dominant CTA with benefit-focused message -->
+        <div class="qr-section">
+            <div class="qr-code-container">
+                <img src="qr-code.png" alt="Scan to Apply" class="qr-code">
+            </div>
+            
+            <div class="qr-text">
+                <div class="qr-headline">Start Getting Singapore<br>Bookings This Week</div>
+                <div class="qr-url">👉 www.orachope.org/partner</div>
+                <div class="qr-action">5-minute signup • Instant approval • Zero risk</div>
+            </div>
+        </div>
+        
+        <!-- URGENCY - Soft red background -->
+        <div class="urgency">
+            <div class="urgency-text">⏰ First 10 Partners: Lifetime Featured Placement + Premium Listing Forever</div>
+            <div class="urgency-spots">7 SPOTS LEFT</div>
+        </div>
+        
+        <!-- FOOTER - Clean contact -->
+        <div class="footer">
+            <div class="footer-contact">
+                <div class="footer-item">📧 contact@orachope.org</div>
+                <div class="footer-item">📱 +65-81926158</div>
+                <div class="footer-item">🌐 www.orachope.org</div>
+            </div>
+            <div class="footer-tagline">Verified • Transparent • Results-Driven</div>
+        </div>
+    </div>
+</body>
+</html>

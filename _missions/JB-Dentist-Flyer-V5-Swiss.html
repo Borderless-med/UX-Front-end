@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope Partner Program - Swiss Medical Design</title>
+    <style>
+        /* SWISS MEDICAL DESIGN: One color (black), perfect typography, generous white space */
+        
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: white;
+            color: #000000;
+            line-height: 1.6;
+        }
+        
+        .page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            position: relative;
+        }
+        
+        /* PROFESSIONAL DOUBLE-LINE BORDER FRAME */
+        .flyer {
+            width: 100%;
+            height: 100%;
+            padding: 18mm;
+            border: 4px double #000000;
+            box-shadow: inset 0 0 0 1px #000000;
+            position: relative;
+        }
+        
+        /* INNER CONTENT with correct padding to prevent overflow */
+        .content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* HEADER - Logo LARGE (100mm width, not height!) */
+        .header {
+            margin-bottom: 20mm;
+            padding-bottom: 8mm;
+            border-bottom: 1px solid #000000;
+        }
+        
+        .logo {
+            width: 100mm;
+            height: auto;
+            display: block;
+        }
+        
+        /* HERO - Clean typography, no backgrounds */
+        .hero {
+            margin-bottom: 15mm;
+            text-align: left;
+            padding: 12mm 0;
+            border-top: 2px solid #000000;
+            border-bottom: 2px solid #000000;
+        }
+        
+        .hero-label {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8mm;
+            color: #666666;
+        }
+        
+        .hero-headline {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 6mm;
+            letter-spacing: -0.5px;
+        }
+        
+        .hero-subtext {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.4;
+            color: #333333;
+        }
+        
+        /* BENEFITS - Professional list, no icons */
+        .benefits {
+            margin-bottom: 15mm;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10mm;
+        }
+        
+        .benefit {
+            border-left: 3px solid #000000;
+            padding-left: 6mm;
+        }
+        
+        .benefit-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .benefit-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #333333;
+        }
+        
+        /* PRICING - Minimal box */
+        .pricing {
+            margin-bottom: 15mm;
+            padding: 8mm;
+            border: 2px solid #000000;
+            background: #f9f9f9;
+        }
+        
+        .pricing-headline {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4mm;
+        }
+        
+        .pricing-details {
+            font-size: 15px;
+            color: #333333;
+        }
+        
+        /* QR CODE - Clean professional layout */
+        .qr-section {
+            display: grid;
+            grid-template-columns: 55mm 1fr;
+            gap: 10mm;
+            margin-bottom: 15mm;
+            padding: 10mm;
+            background: #f5f5f5;
+            border: 1px solid #000000;
+        }
+        
+        .qr-code {
+            width: 55mm;
+            height: 55mm;
+            display: block;
+            border: 1px solid #cccccc;
+        }
+        
+        .qr-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .qr-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-bottom: 4mm;
+            color: #666666;
+        }
+        
+        .qr-headline {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4mm;
+            line-height: 1.2;
+        }
+        
+        .qr-url {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3mm;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .qr-action {
+            font-size: 13px;
+            color: #333333;
+        }
+        
+        /* URGENCY - Minimal, professional */
+        .urgency {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6mm 8mm;
+            margin-bottom: 12mm;
+            border-top: 1px solid #000000;
+            border-bottom: 1px solid #000000;
+            background: #fafafa;
+        }
+        
+        .urgency-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .urgency-spots {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 4mm 8mm;
+            border: 2px solid #000000;
+            background: white;
+        }
+        
+        /* FOOTER - Clean contact */
+        .footer {
+            margin-top: auto;
+            padding-top: 8mm;
+            border-top: 1px solid #000000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+            font-size: 12px;
+        }
+        
+        .footer-contact div {
+            font-weight: 500;
+        }
+        
+        .footer-tagline {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666666;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .page {
+                margin: 0;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="flyer">
+            <div class="content">
+                <!-- HEADER - Logo 100mm WIDTH (not height!) -->
+                <div class="header">
+                    <img src="orachope-logo.png" alt="OraChope" class="logo">
+                </div>
+                
+                <!-- HERO - Swiss typography, no decoration -->
+                <div class="hero">
+                    <div class="hero-label">Partner Opportunity</div>
+                    <div class="hero-headline">
+                        4,000+ Singapore Patients<br>
+                        Search for JB Dentists Monthly
+                    </div>
+                    <div class="hero-subtext">
+                        Join Malaysia's leading dental directory connecting cross-border patients with verified JB clinics.
+                    </div>
+                </div>
+                
+                <!-- BENEFITS - No emojis, professional text only -->
+                <div class="benefits">
+                    <div class="benefits-grid">
+                        <div class="benefit">
+                            <div class="benefit-title">Free Platform</div>
+                            <div class="benefit-text">Zero monthly fees. Zero setup costs. Forever.</div>
+                        </div>
+                        
+                        <div class="benefit">
+                            <div class="benefit-title">Direct Bookings</div>
+                            <div class="benefit-text">Instant email notifications. Patient contact details.</div>
+                        </div>
+                        
+                        <div class="benefit">
+                            <div class="benefit-title">Featured Listing</div>
+                            <div class="benefit-text">Priority search results. Verified partner badge.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PRICING - Clean and simple -->
+                <div class="pricing">
+                    <div class="pricing-headline">Transparent Commission Model</div>
+                    <div class="pricing-details">10% commission on successful bookings only. No hidden fees.</div>
+                </div>
+                
+                <!-- QR CODE - Professional grid layout -->
+                <div class="qr-section">
+                    <img src="qr-code.png" alt="Partner Application QR Code" class="qr-code">
+                    
+                    <div class="qr-text">
+                        <div class="qr-label">Scan to Apply</div>
+                        <div class="qr-headline">Start Receiving Bookings This Week</div>
+                        <div class="qr-url">www.orachope.org/partner</div>
+                        <div class="qr-action">Application takes 5 minutes • Instant approval for qualified clinics</div>
+                    </div>
+                </div>
+                
+                <!-- URGENCY - Minimal design -->
+                <div class="urgency">
+                    <div class="urgency-text">Limited Offer: First 10 Partners Receive Lifetime Featured Placement</div>
+                    <div class="urgency-spots">7 REMAINING</div>
+                </div>
+                
+                <!-- FOOTER - Professional contact -->
+                <div class="footer">
+                    <div class="footer-contact">
+                        <div>Email: contact@orachope.org</div>
+                        <div>WhatsApp: +65-81926158</div>
+                        <div>Website: www.orachope.org</div>
+                    </div>
+                    <div class="footer-tagline">Verified Professional Network</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

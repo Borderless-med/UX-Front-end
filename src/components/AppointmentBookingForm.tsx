@@ -156,7 +156,6 @@ const AppointmentBookingForm = () => {
       'veneers': 'Composite Veneers',
       'porcelain_veneers': 'Porcelain Veneers',
       'dental_bonding': 'Dental Bonding',
-      'dental_bonding': 'Dental Bonding',
       'tmj_treatment': 'TMJ Treatment',
       
       // New essential treatments

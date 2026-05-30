@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope Partner Flyer - JB Dentists</title>
+    <style>
+        /* Print-optimized A4 flyer */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: white;
+            color: #1f2937;
+            line-height: 1.4;
+        }
+        
+        .flyer {
+            width: 210mm;
+            height: 297mm;
+            padding: 15mm;
+            background: white;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+        
+        /* Section Headers */
+        .section {
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #3b82f6;
+        }
+        
+        .section-title .emoji {
+            margin-right: 6px;
+        }
+        
+        /* Problem Section */
+        .problem-box {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .problem-box ul {
+            margin-left: 20px;
+            font-size: 11px;
+        }
+        
+        .problem-box li {
+            margin-bottom: 4px;
+        }
+        
+        /* Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .benefit-card {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .benefit-card h3 {
+            font-size: 13px;
+            color: #1e40af;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        
+        .benefit-card ul {
+            margin-left: 16px;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+        
+        /* Pricing Box */
+        .pricing-box {
+            background: #fef3c7;
+            border: 3px solid #f59e0b;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .pricing-box .big-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #b45309;
+            margin-bottom: 10px;
+        }
+        
+        .pricing-box .features {
+            text-align: left;
+            margin: 10px 0;
+            font-size: 11px;
+        }
+        
+        .pricing-box .example {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        /* Why Join Section */
+        .why-join {
+            background: #d1fae5;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .why-join ul {
+            margin-left: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+        
+        /* Steps Section */
+        .steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .step {
+            background: #f3f4f6;
+            border: 2px solid #6b7280;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .step-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b82f6;
+            margin-bottom: 6px;
+        }
+        
+        .step-text {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .step-detail {
+            font-size: 9px;
+            color: #6b7280;
+        }
+        
+        /* QR Code Section */
+        .qr-section {
+            background: white;
+            border: 3px dashed #3b82f6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .qr-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #f3f4f6;
+            border: 2px solid #9ca3af;
+            border-radius: 8px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #6b7280;
+        }
+        
+        .website-url {
+            font-size: 13px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-top: 8px;
+        }
+        
+        /* Limited Offer Box */
+        .limited-offer {
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .limited-offer h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .limited-offer ul {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .spots-remaining {
+            background: white;
+            color: #dc2626;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        /* Footer Contact */
+        .footer {
+            background: #1f2937;
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .footer h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .footer .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+        
+        .footer .tagline {
+            font-size: 10px;
+            opacity: 0.8;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        /* Utility */
+        .checkmark {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .flyer {
+                margin: 0;
+                padding: 15mm;
+                page-break-after: always;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer">
+        <!-- Header -->
+        <div class="header">
+            <h1>🦷 GET MORE SINGAPORE PATIENTS TO YOUR JB CLINIC</h1>
+            <p>Are you a JB dentist missing out on Singapore patients?<br>
+            Thousands search for affordable dental care in JB every month. <strong>But they can't find YOU.</strong></p>
+        </div>
+        
+        <!-- Problem Section -->
+        <div class="section">
+            <div class="section-title"><span class="emoji">😟</span>THE PROBLEM</div>
+            <div class="problem-box">
+                <ul>
+                    <li><span class="cross">❌</span> Singapore patients Google "dentist JB" → find outdated listings</li>
+                    <li><span class="cross">❌</span> Your clinic has NO visibility to cross-border patients</li>
+                    <li><span class="cross">❌</span> Competitors with better online presence get all the bookings</li>
+                    <li><span class="cross">❌</span> You rely on word-of-mouth only (limited growth)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Solution Section -->
+        <div class="section">
+            <div class="section-title"><span class="emoji">✅</span>THE SOLUTION: ORACHOPE.ORG</div>
+            <p style="font-size: 12px; margin-bottom: 10px; text-align: center; font-weight: bold;">Malaysia's #1 platform connecting Singapore patients with JB dental clinics</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>⭐ PREMIUM CLINIC PROFILE</h3>
+                    <ul>
+                        <li>Google ratings prominently displayed</li>
+                        <li>Full service list and pricing</li>
+                        <li>Photos, hours, location map</li>
+                    </ul>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>📱 DIRECT PATIENT BOOKINGS</h3>
+                    <ul>
+                        <li>Patients book directly through OraChope</li>
+                        <li>Email notifications to your clinic</li>
+                        <li>WhatsApp integration (coming)</li>
+                    </ul>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>🌟 FEATURED PLACEMENT</h3>
+                    <ul>
+                        <li>Top of search results</li>
+                        <li>"Verified Partner" badge</li>
+                        <li>Priority in SEO rankings</li>
+                    </ul>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>📊 REAL RESULTS</h3>
+                    <ul>
+                        <li>200+ clinics listed (stand out!)</li>
+                        <li>AI-powered patient matching</li>
+                        <li>Growing Singapore user base</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pricing Section -->
+        <div class="section">
+            <div class="section-title"><span class="emoji">💰</span>WHAT IT COSTS</div>
+            <div class="pricing-box">
+                <div class="big-text">🎉 FREE FOR FIRST 10 JB CLINICS</div>
+                <div class="features">
+                    <div><span class="checkmark">✅</span> FREE listing forever</div>
+                    <div><span class="checkmark">✅</span> Only 10% commission per successful booking</div>
+                    <div><span class="checkmark">✅</span> No monthly fees, no setup costs</div>
+                    <div><span class="checkmark">✅</span> Cancel anytime</div>
+                </div>
+                <div class="example">
+                    Example: Patient books RM 1,000 root canal<br>
+                    → You pay RM 100 → <span style="color: #10b981;">You earn RM 900</span><br>
+                    <strong>ZERO RISK. PURE UPSIDE.</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Why Join Now -->
+        <div class="section">
+            <div class="section-title"><span class="emoji">📈</span>WHY JOIN NOW?</div>
+            <div class="why-join">
+                <ul>
+                    <li><span class="checkmark">✅</span> <strong>First-mover advantage</strong> - Be among first 10 verified partners</li>
+                    <li><span class="checkmark">✅</span> <strong>Featured placement</strong> - Top of search results permanently</li>
+                    <li><span class="checkmark">✅</span> <strong>Growing market</strong> - Post-pandemic cross-border boom</li>
+                    <li><span class="checkmark">✅</span> <strong>Weak SGD</strong> - Singaporeans saving 40-60% in JB</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Steps -->
+        <div class="section">
+            <div class="section-title"><span class="emoji">📱</span>JOIN IN 3 EASY STEPS</div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1️⃣</div>
+                    <div class="step-text">SCAN QR CODE</div>
+                    <div class="step-detail">(or visit website)</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2️⃣</div>
+                    <div class="step-text">FILL FORM</div>
+                    <div class="step-detail">(5 minutes)</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3️⃣</div>
+                    <div class="step-text">GO LIVE</div>
+                    <div class="step-detail">(instant)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- QR Code -->
+        <div class="qr-section">
+            <div class="qr-placeholder">
+                [INSERT QR CODE HERE]<br>
+                Generate at:<br>
+                qr-code-generator.com
+            </div>
+            <div class="website-url">👉 www.orachope.org/partner-application</div>
+        </div>
+        
+        <!-- Limited Offer -->
+        <div class="limited-offer">
+            <h3>⏰ LIMITED TIME OFFER</h3>
+            <ul>
+                <li>Lifetime featured placement</li>
+                <li>Free premium listing forever</li>
+                <li>Priority chatbot recommendations</li>
+                <li>Founding partner badge</li>
+            </ul>
+            <div class="spots-remaining">⚡ SPOTS REMAINING: 7 of 10</div>
+        </div>
+        
+        <!-- Footer Contact -->
+        <div class="footer">
+            <h3>📞 CONTACT US - ORACHOPE.ORG</h3>
+            <div class="contact-grid">
+                <div>📧 contact@orachope.org</div>
+                <div>🌐 www.orachope.org</div>
+                <div>📱 WhatsApp: +60 XX-XXXX-XXXX</div>
+                <div>🦷 Trusted by JB's Leading Clinics</div>
+            </div>
+            <div class="tagline">Verified • Transparent • Results-Driven</div>
+        </div>
+    </div>
+</body>
+</html>

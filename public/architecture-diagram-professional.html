@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SG Smile Saver - System Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 30px;
+        }
+        h1 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .subtitle {
+            color: #64748b;
+            font-size: 1.1em;
+        }
+        
+        /* SVG Container */
+        .architecture-diagram {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Component Boxes */
+        .component {
+            stroke: #334155;
+            stroke-width: 2;
+            fill: white;
+        }
+        .component-text {
+            font-family: 'Segoe UI', sans-serif;
+            fill: #1e293b;
+        }
+        .component-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .component-detail {
+            font-size: 13px;
+            fill: #475569;
+        }
+        .component-tech {
+            font-size: 11px;
+            fill: #64748b;
+            font-style: italic;
+        }
+        
+        /* Color Coding */
+        .client-layer { fill: #dbeafe; }
+        .presentation-layer { fill: #e0e7ff; }
+        .mcp-layer { fill: #fef3c7; stroke: #f59e0b; stroke-width: 3; }
+        .backend-layer { fill: #f3e8ff; }
+        .ai-layer { fill: #ffe4e6; }
+        .data-layer { fill: #d1fae5; }
+        
+        /* Arrows */
+        .arrow {
+            stroke: #2563eb;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        .arrow-bidirectional {
+            stroke: #059669;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead-green);
+            marker-start: url(#arrowhead-green-reverse);
+        }
+        .arrow-mcp {
+            stroke: #f59e0b;
+            stroke-width: 3;
+            fill: none;
+            marker-end: url(#arrowhead-orange);
+        }
+        .flow-label {
+            font-size: 12px;
+            fill: #475569;
+            font-weight: 500;
+        }
+        
+        /* Legend */
+        .legend {
+            margin-top: 50px;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .legend h3 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        .legend-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            border: 2px solid #334155;
+            flex-shrink: 0;
+        }
+        .legend-text {
+            flex: 1;
+        }
+        .legend-text strong {
+            display: block;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        .legend-text span {
+            color: #64748b;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SG Smile Saver</h1>
+            <p class="subtitle">System Architecture Diagram – Multi-Channel Dental Clinic Platform</p>
+        </div>
+        
+        <svg class="architecture-diagram" viewBox="0 0 1100 900" xmlns="http://www.w3.org/2000/svg">
+            <!-- Arrow Markers -->
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#2563eb" />
+                </marker>
+                <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#059669" />
+                </marker>
+                <marker id="arrowhead-green-reverse" markerWidth="10" markerHeight="10" refX="1" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <polygon points="10 0, 0 3, 10 6" fill="#059669" />
+                </marker>
+                <marker id="arrowhead-orange" markerWidth="12" markerHeight="12" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#f59e0b" />
+                </marker>
+            </defs>
+            
+            <!-- CLIENT LAYER -->
+            <g id="clients">
+                <!-- Web Users -->
+                <rect class="component client-layer" x="50" y="50" width="200" height="100" rx="8"/>
+                <text class="component-text component-title" x="150" y="85" text-anchor="middle">Web Browsers</text>
+                <text class="component-text component-detail" x="150" y="105" text-anchor="middle">Desktop & Mobile</text>
+                <text class="component-text component-tech" x="150" y="125" text-anchor="middle">Chrome, Safari, Firefox</text>
+                
+                <!-- AI Users -->
+                <rect class="component client-layer" x="850" y="50" width="200" height="100" rx="8"/>
+                <text class="component-text component-title" x="950" y="85" text-anchor="middle">AI Chat Apps</text>
+                <text class="component-text component-detail" x="950" y="105" text-anchor="middle">Claude Desktop, ChatGPT</text>
+                <text class="component-text component-tech" x="950" y="125" text-anchor="middle">MCP-enabled clients</text>
+            </g>
+            
+            <!-- PRESENTATION LAYER -->
+            <g id="frontend">
+                <rect class="component presentation-layer" x="50" y="220" width="400" height="120" rx="8"/>
+                <text class="component-text component-title" x="250" y="260" text-anchor="middle">React Web Application</text>
+                <text class="component-text component-detail" x="250" y="280" text-anchor="middle">User Interface • Clinic Search • Booking Forms</text>
+                <text class="component-text component-tech" x="250" y="300" text-anchor="middle">React 18 + TypeScript + Vite</text>
+                <text class="component-text component-tech" x="250" y="318" text-anchor="middle">Deployed on Vercel (Singapore Region)</text>
+            </g>
+            
+            <!-- MCP SERVER LAYER (HIGHLIGHTED) -->
+            <g id="mcp">
+                <rect class="component mcp-layer" x="650" y="220" width="400" height="120" rx="8"/>
+                <text class="component-text component-title" x="850" y="255" text-anchor="middle">MCP Server</text>
+                <text class="component-text component-detail" x="850" y="275" text-anchor="middle" style="fill: #92400e; font-weight: 600;">Protocol Gateway for AI Applications</text>
+                <text class="component-text component-detail" x="850" y="295" text-anchor="middle">Tools: answer_dental_question, find_clinic</text>
+                <text class="component-text component-tech" x="850" y="313" text-anchor="middle">Python 3.13 • MCP SDK 1.27.0 • JSON-RPC 2.0</text>
+            </g>
+            
+            <!-- BACKEND LAYER -->
+            <g id="backend">
+                <rect class="component backend-layer" x="50" y="420" width="400" height="120" rx="8"/>
+                <text class="component-text component-title" x="250" y="460" text-anchor="middle">Backend API Server</text>
+                <text class="component-text component-detail" x="250" y="480" text-anchor="middle">Business Logic • Flow Orchestration • Session Management</text>
+                <text class="component-text component-tech" x="250" y="500" text-anchor="middle">FastAPI (Python) • Render.com Hosting</text>
+                <text class="component-text component-tech" x="250" y="518" text-anchor="middle">Flows: QnA, Clinic Search, Booking, Travel Guide</text>
+            </g>
+            
+            <!-- MCP SERVER LAYER (2nd instance - LLM Gateway) -->
+            <g id="mcp-llm">
+                <rect class="component mcp-layer" x="650" y="420" width="400" height="120" rx="8"/>
+                <text class="component-text component-title" x="850" y="455" text-anchor="middle">MCP Server</text>
+                <text class="component-text component-detail" x="850" y="475" text-anchor="middle" style="fill: #92400e; font-weight: 600;">LLM Abstraction Layer</text>
+                <text class="component-text component-detail" x="850" y="495" text-anchor="middle">Swap models without code changes</text>
+                <text class="component-text component-tech" x="850" y="513" text-anchor="middle">Configurable: Gemini, GPT-4, Claude, etc.</text>
+            </g>
+            
+            <!-- AI LAYER -->
+            <g id="ai">
+                <rect class="component ai-layer" x="300" y="620" width="500" height="100" rx="8"/>
+                <text class="component-text component-title" x="550" y="655" text-anchor="middle">LLM Models & AI Services</text>
+                <text class="component-text component-detail" x="550" y="675" text-anchor="middle">Language Model • Embeddings • RAG</text>
+                <text class="component-text component-tech" x="550" y="695" text-anchor="middle">Currently: Gemini 2.0 Flash • gemini-embedding-001</text>
+            </g>
+            
+            <!-- DATABASE LAYER -->
+            <g id="database">
+                <rect class="component data-layer" x="650" y="620" width="400" height="100" rx="8"/>
+                <text class="component-text component-title" x="850" y="655" text-anchor="middle">PostgreSQL Database</text>
+                <text class="component-text component-detail" x="850" y="675" text-anchor="middle">211 Clinics (102 SG + 109 JB) • Reviews • Embeddings</text>
+                <text class="component-text component-tech" x="850" y="695" text-anchor="middle">Supabase • pgvector extension</text>
+            </g>
+            
+            <!-- ARROWS - Web Path -->
+            <path class="arrow" d="M 150 150 L 150 220"/>
+            <text class="flow-label" x="160" y="190" text-anchor="start">HTTPS</text>
+            
+            <path class="arrow" d="M 250 340 L 250 420"/>
+            <text class="flow-label" x="260" y="375" text-anchor="start">REST API</text>
+            
+            <!-- ARROWS - AI Path (Top MCP) -->
+            <path class="arrow" d="M 950 150 L 950 220"/>
+            <text class="flow-label" x="960" y="190" text-anchor="start">stdio</text>
+            
+            <path class="arrow-mcp" d="M 750 340 L 350 420"/>
+            <text class="flow-label" x="530" y="375" text-anchor="middle" style="fill: #92400e; font-weight: 600;">Shared Flows</text>
+            
+            <!-- ARROWS - Backend to MCP LLM Gateway -->
+            <path class="arrow-bidirectional" d="M 450 480 L 650 480"/>
+            <text class="flow-label" x="550" y="470" text-anchor="middle">Flow Requests</text>
+            
+            <!-- ARROWS - MCP to LLM Services -->
+            <path class="arrow-mcp" d="M 850 540 L 650 620"/>
+            <text class="flow-label" x="740" y="580" text-anchor="middle" style="fill: #92400e; font-weight: 600;">Model API Calls</text>
+            
+            <!-- ARROWS - Backend to Database -->
+            <path class="arrow-bidirectiona300" y="770" width="500" height="80" rx="8" style="fill: #f8fafc; stroke: #94a3b8; stroke-dasharray: 5,5;"/>
+                <text class="component-text component-title" x="550" y="800" text-anchor="middle">GitHub Repository</text>
+                <text class="component-text component-detail" x="550" y="820" text-anchor="middle">Auto-deploy to Vercel + Render</text>
+                <text class="component-text component-tech" x="550" y="838" text-anchor="middle">Source Control & CI/CD</text>
+            </g>
+            
+            <path class="arrow" d="M 200 340 L 200 380 L 325 380 L 325 770" style="stroke: #94a3b8; stroke-dasharray: 5,5;"/>
+            <path class="arrow" d="M 250 540 L 250 745 L 550 745 L 550 770" style="stroke: #94a3b8; stroke-dasharray: 5,5;"/>
+            <path class="arrow" d="M 850 340 L 850 360 L 775 360 L 775ent-detail" x="550" y="820" text-anchor="middle">Auto-deploy to Vercel + Render</text>
+                <text class="component-text component-tech" x="550" y="838" text-anchor="middle">Source Control & CI/CD</text>
+            </g>
+            
+            <path class="arrow" d="M 200 340 L 200 380 L 475 380 L 475 770" style="stroke: #94a3b8; stroke-dasharray: 5,5;"/>
+            <path class="arrow" d="M 550 540 L 550 770" style="stroke: #94a3b8; stroke-dasharray: 5,5;"/>
+        </svg>
+        
+        <div class="legend">
+            <h3>Architecture Components Explained</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-box mcp-layer" style="border-color: #f59e0b; border-width: 3px;"></div>
+                    <div class="legend-text"> - Dual Role)</strong>
+                        <span><strong>1) Tool Gateway:</strong> Enables AI apps (Claude, ChatGPT) to access dental platform tools. <strong>2) LLM Abstraction:</strong> Allows swapping LLM models (Gemini, GPT-4, Claude) without changing backend code - just update configuration
+                        <span>Enables AI applications to access our dental platform using Model Context Protocol. Shares the same business logic flows as the web app, ensuring consistency.</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box presentation-layer"></div>
+                    <div class="legend-text">
+                        <strong>React Frontend</strong>
+                        <span>Traditional web interface for users to search clinics, view details, and book appointments via browser.</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box backend-layer"></div>
+                    <div class="legend-text">
+                        <strong>Backend API Server</strong>
+                        <span>Core business logic and orchestration. Shared by both web and MCP channels to ensure consistent behavior.</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box ai-layer"></div>
+                    <div class="legend-text">
+                        <strong>LLM Models & AI Services</strong>
+                        <span>Currently using Google Gemini 2.0 Flash and gemini-embedding-001. Can be swapped for GPT-4, Claude, or other models via MCP Server configuration without code changes.</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box data-layer"></div>
+                    <div class="legend-text">
+                        <strong>Database</strong>
+                        <span>Stores clinic information, patient reviews, and vector embeddings for semantic search capabilities.</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box client-layer"></div>
+                    <div class="legend-text">
+                        <strong>Client Applications</strong>
+                        <span>Two access methods: Traditional web browsers and AI chat applications (Claude, ChatGPT) via MCP protocol.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope Partner Program - Founding Partner Offer</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #e5e7eb;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        /* DOUBLE BORDER — navy inner, sky outer */
+        .flyer {
+            width: 100%;
+            height: 100%;
+            padding: 10mm;
+            border: 3px solid #1e3a5f;
+            outline: 2px solid #93c5fd;
+            outline-offset: -7px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── HEADER ───────────────────────────────────────── */
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding-bottom: 4mm;
+            border-bottom: 1.5px solid #d1d5db;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            height: 12mm;
+            width: auto;
+            display: block;
+        }
+
+        .tagline {
+            font-size: 9px;
+            color: #2563eb;
+            font-weight: 600;
+            margin-top: 2mm;
+            letter-spacing: 0.2px;
+        }
+
+        .header-trust {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            text-align: right;
+            padding-top: 1mm;
+        }
+
+        .header-trust .dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
+        /* ── HERO ─────────────────────────────────────────── */
+        .hero {
+            background: #eff6ff;
+            border: 1.5px solid #93c5fd;
+            border-radius: 8px;
+            padding: 5mm 8mm;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .hero-label {
+            font-size: 8.5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #b45309;
+            margin-bottom: 2.5mm;
+        }
+
+        .hero-headline {
+            font-size: 25px;
+            font-weight: 800;
+            line-height: 1.15;
+            color: #1e3a5f;
+            margin-bottom: 3mm;
+        }
+
+        /* CHANGE 1: bullets instead of paragraph */
+        .hero-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hero-bullets li {
+            font-size: 12.5px;
+            color: #374151;
+            line-height: 1.5;
+            padding-left: 4mm;
+            position: relative;
+        }
+
+        .hero-bullets li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        /* ── BENEFITS GRID ────────────────────────────────── */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4mm;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .benefit {
+            border: 1.5px solid #93c5fd;
+            border-radius: 8px;
+            padding: 3.5mm 4mm;
+            background: #fafcff;
+        }
+
+        .benefit-icon {
+            font-size: 15px;
+            margin-bottom: 1.5mm;
+            line-height: 1;
+        }
+
+        .benefit-title {
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 1.5mm;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #1e3a5f;
+        }
+
+        .benefit-text {
+            font-size: 10.5px;
+            line-height: 1.4;
+            color: #374151;
+        }
+
+        /* ── SUBSCRIPTION MODEL ───────────────────────────── */
+        .pricing {
+            background: #f8fafc;
+            border: 1.5px solid #1e3a5f;
+            border-radius: 8px;
+            padding: 4mm 6mm;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .pricing-headline {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 3mm;
+        }
+
+        .tiers {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3.5mm;
+        }
+
+        /* CHANGE 2: Standard — prominent; others — muted */
+        .tier {
+            border: 1.5px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 3mm 4mm;
+            background: #f9fafb;
+            text-align: center;
+            opacity: 0.55;
+        }
+
+        .tier.active {
+            border: 2px solid #1e3a5f;
+            background: #eff6ff;
+            opacity: 1;
+        }
+
+        .tier-badge {
+            font-size: 7.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            background: #1e3a5f;
+            padding: 1px 5px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 1.5mm;
+        }
+
+        .tier-name {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 1mm;
+        }
+
+        .tier-name-muted {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #9ca3af;
+            margin-bottom: 1mm;
+        }
+
+        .tier-desc {
+            font-size: 9px;
+            color: #6b7280;
+            line-height: 1.3;
+        }
+
+        .tier-label-coming {
+            font-size: 7.5px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: inline-block;
+            margin-bottom: 1.5mm;
+        }
+
+        .zero-commission-bar {
+            margin-top: 3mm;
+            font-size: 10px;
+            color: #1e3a5f;
+            font-weight: 700;
+            text-align: center;
+            padding: 2mm 0;
+            border-top: 1px solid #d1d5db;
+        }
+
+        .zero-commission-bar span {
+            color: #16a34a;
+        }
+
+        .founding-access-note {
+            font-size: 9px;
+            color: #6b7280;
+            text-align: center;
+            margin-top: 1.5mm;
+            font-style: italic;
+        }
+
+        /* ── QR + CTA ─────────────────────────────────────── */
+        .qr-section {
+            display: grid;
+            grid-template-columns: 35mm 1fr;
+            gap: 6mm;
+            padding: 4mm 5.5mm;
+            background: white;
+            border: 1.5px solid #93c5fd;
+            border-radius: 8px;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .qr-code {
+            width: 35mm;
+            height: 35mm;
+            display: block;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+
+        .qr-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .qr-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 2mm;
+            color: #9ca3af;
+        }
+
+        .qr-headline {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 2mm;
+            line-height: 1.2;
+        }
+
+        .qr-url {
+            font-size: 11.5px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            color: #2563eb;
+            margin-bottom: 1.5mm;
+        }
+
+        .qr-action {
+            font-size: 10px;
+            color: #4b5563;
+            margin-bottom: 1mm;
+        }
+
+        /* CHANGE 4: setup reassurance line */
+        .qr-setup {
+            font-size: 9.5px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* ── URGENCY BAR — CHANGE 3: clinical blue, royal blue badge ── */
+        .urgency {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4mm 6mm;
+            margin-bottom: 4mm;
+            background: #dbeafe;
+            border: 2px solid #1e3a5f;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .urgency-text {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #1e3a5f;
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .urgency-text strong {
+            color: #b45309;
+        }
+
+        .urgency-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #2563eb;          /* Option B — Royal Blue */
+            border-radius: 6px;
+            padding: 3mm 6mm;
+            margin-left: 7mm;
+            min-width: 26mm;
+            flex-shrink: 0;
+        }
+
+        .urgency-count {
+            font-size: 26px;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .urgency-count-label {
+            font-size: 8.5px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1px;
+        }
+
+        /* ── FOOTER ───────────────────────────────────────── */
+        .footer {
+            margin-top: auto;
+            padding-top: 3.5mm;
+            border-top: 1.5px solid #d1d5db;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 4mm;
+            flex-shrink: 0;
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 1mm;
+        }
+
+        .footer-contact-item {
+            font-size: 8.5px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .footer-whatsapp {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #16a34a;
+        }
+
+        .footer-tagline {
+            font-size: 8.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9ca3af;
+            text-align: right;
+        }
+
+        /* ── PRINT ────────────────────────────────────────── */
+        @media print {
+            body { background: white; }
+            .page { margin: 0; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="flyer">
+
+            <!-- HEADER -->
+            <div class="header">
+                <div class="header-left">
+                    <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                    <div class="tagline">AI-Powered Dental Directory Connecting Singapore Patients with JB Clinics</div>
+                </div>
+                <div class="header-trust">
+                    <span class="dot"></span> Verified Professional Network
+                </div>
+            </div>
+
+            <!-- HERO -->
+            <div class="hero">
+                <div class="hero-label">Founding Partner Opportunity · April 2026</div>
+                <div class="hero-headline">
+                    4,000+ Singapore Patients<br>
+                    Are Searching for Your Clinic
+                </div>
+                <!-- CHANGE 1: bullets replacing paragraph -->
+                <ul class="hero-bullets">
+                    <li>Fill empty chairs with high-value Singapore patients — zero commission, forever.</li>
+                    <li>Direct bookings straight to your clinic. No middleman. No extra admin for your team.</li>
+                </ul>
+            </div>
+
+            <!-- BENEFITS -->
+            <div class="benefits-grid">
+                <div class="benefit">
+                    <div class="benefit-icon">🚫</div>
+                    <div class="benefit-title">Zero Commission</div>
+                    <div class="benefit-text">No booking fees. No referral cuts. You keep 100% of every appointment, forever.</div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">📩</div>
+                    <div class="benefit-title">Direct Bookings</div>
+                    <div class="benefit-text">Instant email notifications. Full patient contact details. No middleman, no delays.</div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">⭐</div>
+                    <div class="benefit-title">Featured Listing</div>
+                    <div class="benefit-text">Top search placement. Verified Partner badge. AI-matched to the right patients.</div>
+                </div>
+            </div>
+
+            <!-- SUBSCRIPTION MODEL -->
+            <div class="pricing">
+                <div class="pricing-headline">Transparent Subscription Model</div>
+                <!-- CHANGE 2: tiers — Standard prominent, others muted -->
+                <div class="tiers">
+                    <div class="tier active">
+                        <div class="tier-badge">Now Launching</div>
+                        <div class="tier-name">Standard</div>
+                        <div class="tier-desc">Core directory listing, direct bookings &amp; verified badge</div>
+                    </div>
+                    <div class="tier">
+                        <div class="tier-label-coming">Coming Soon</div>
+                        <div class="tier-name-muted">Professional</div>
+                    </div>
+                    <div class="tier">
+                        <div class="tier-label-coming">Coming Soon</div>
+                        <div class="tier-name-muted">Elite</div>
+                    </div>
+                </div>
+                <div class="zero-commission-bar">
+                    <span>✔ Zero commission on all bookings</span> — applies across all tiers, always
+                </div>
+                <div class="founding-access-note">Founding Partners receive priority access to Professional &amp; Elite tiers when launched.</div>
+            </div>
+
+            <!-- QR CODE + CTA -->
+            <div class="qr-section">
+                <img src="qr-code.png" alt="Scan to apply at orachope.org/partner" class="qr-code">
+                <div class="qr-text">
+                    <div class="qr-label">Scan to Apply</div>
+                    <div class="qr-headline">Get Discovered by<br>Singapore Patients</div>
+                    <div class="qr-url">www.orachope.org/partner</div>
+                    <div class="qr-action">Application takes 5 minutes · Instant approval for qualified clinics</div>
+                    <!-- CHANGE 4: setup reassurance -->
+                    <div class="qr-setup">Setup is easy and takes under 30 minutes. Your team responds to patient enquiries as usual.</div>
+                </div>
+            </div>
+
+            <!-- URGENCY — CHANGE 3: clinical blue background, royal blue badge -->
+            <div class="urgency">
+                <div class="urgency-text">
+                    <strong>Founding Partner Offer:</strong> Be among the first 7 clinics to join and receive
+                    6 months FREE on the Standard subscription. The 8th clinic onwards pays full monthly rate.
+                </div>
+                <div class="urgency-badge">
+                    <div class="urgency-count">7</div>
+                    <div class="urgency-count-label">Spots Left</div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <div class="footer-contact">
+                    <div class="footer-whatsapp">📲 WhatsApp: +65-81926158</div>
+                    <div class="footer-contact-item">Email: contact@orachope.org</div>
+                    <div class="footer-contact-item">Website: www.orachope.org</div>
+                </div>
+                <div class="footer-tagline">Verified Professional<br>Network</div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

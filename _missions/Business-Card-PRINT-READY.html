@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Card - PRINT READY (with Bleed)</title>
+    <style>
+        @page {
+            size: 96mm 60mm;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        body {
+            width: 96mm;
+            height: 60mm;
+            margin: 0;
+            padding: 0;
+            background: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        }
+        
+        /* Print-ready card with 3mm bleed on all sides */
+        .business-card {
+            width: 96mm;
+            height: 60mm;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: 6mm 11mm 5.5mm 11mm; /* 3mm + 3mm bleed = 6mm top, 8mm + 3mm = 11mm sides, 2.5mm + 3mm = 5.5mm bottom */
+            overflow: visible;
+        }
+        
+        /* Crop marks (optional - remove if printer doesn't need them) */
+        .crop-marks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .crop-mark {
+            position: absolute;
+            background: black;
+        }
+        
+        /* Top-left */
+        .crop-mark.tl-h { top: 2mm; left: 0; width: 5mm; height: 0.2mm; }
+        .crop-mark.tl-v { top: 0; left: 2mm; width: 0.2mm; height: 5mm; }
+        
+        /* Top-right */
+        .crop-mark.tr-h { top: 2mm; right: 0; width: 5mm; height: 0.2mm; }
+        .crop-mark.tr-v { top: 0; right: 2mm; width: 0.2mm; height: 5mm; }
+        
+        /* Bottom-left */
+        .crop-mark.bl-h { bottom: 2mm; left: 0; width: 5mm; height: 0.2mm; }
+        .crop-mark.bl-v { bottom: 0; left: 2mm; width: 0.2mm; height: 5mm; }
+        
+        /* Bottom-right */
+        .crop-mark.br-h { bottom: 2mm; right: 0; width: 5mm; height: 0.2mm; }
+        .crop-mark.br-v { bottom: 0; right: 2mm; width: 0.2mm; height: 5mm; }
+        
+        /* Trim guidelines (shows finished card size) */
+        .trim-guide {
+            position: absolute;
+            border: 0.5px dashed rgba(255, 0, 0, 0.3);
+            top: 3mm;
+            left: 3mm;
+            width: 90mm;
+            height: 54mm;
+            pointer-events: none;
+        }
+        
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8mm;
+            flex: 1;
+        }
+        
+        .text-zone {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo {
+            width: 45mm;
+            height: auto;
+            margin-bottom: 4mm;
+        }
+        
+        .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .title {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 3mm;
+            font-weight: 500;
+        }
+        
+        .contact {
+            font-size: 8.5px;
+            color: #374151;
+            line-height: 1.5;
+        }
+        
+        .qr-zone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qr-code {
+            width: 18mm;
+            height: 18mm;
+        }
+        
+        .company-section {
+            margin-top: auto;
+            padding-top: 3.5mm;
+            border-top: 2px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+        
+        .company {
+            font-size: 6px;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+        
+        /* Instructions (hide when printing) */
+        .instructions {
+            position: fixed;
+            top: 0;
+            left: 100mm;
+            width: 400px;
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #f59e0b;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        
+        .instructions h2 {
+            color: #92400e;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .instructions h3 {
+            color: #92400e;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .instructions ol, .instructions ul {
+            margin-left: 20px;
+            color: #78350f;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+        
+        .instructions strong {
+            color: #92400e;
+        }
+        
+        .instructions code {
+            background: #fde68a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+        
+        @media print {
+            .instructions {
+                display: none;
+            }
+            .trim-guide {
+                display: none; /* Hide trim guide when printing */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="business-card">
+        <!-- Trim guide (shows finished card boundary) -->
+        <div class="trim-guide"></div>
+        
+        <div class="top-section">
+            <div class="text-zone">
+                <img src="Logo-OraChope-600dpi.png" alt="OraChope" class="logo">
+                <div class="name">GOH SEOW PING</div>
+                <div class="title">Co-founder, CEO</div>
+                <div class="contact">
+                    M: +65-8192 6158<br>
+                    E: contact@orachope.org<br>
+                    W: www.orachope.org
+                </div>
+            </div>
+            <div class="qr-zone">
+                <img src="qrcode-orachope-600dpi.png" alt="QR Code" class="qr-code">
+            </div>
+        </div>
+        <div class="company-section">
+            <div class="company">
+                A division of CuraSphere Lab Pte Ltd (reg. pending)<br>
+                32 Pekin St, #05-01, Singapore 048762
+            </div>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h2>📄 PRINT-READY FILE INSTRUCTIONS</h2>
+        
+        <h3>FILE SPECIFICATIONS:</h3>
+        <ul>
+            <li><strong>Actual Size with Bleed:</strong> 96mm × 60mm</li>
+            <li><strong>Finished Size (after cutting):</strong> 90mm × 54mm</li>
+            <li><strong>Bleed Area:</strong> 3mm on all sides</li>
+            <li><strong>Format Required:</strong> High-resolution PDF</li>
+            <li><strong>Resolution:</strong> 300 DPI minimum</li>
+        </ul>
+        
+        <h3>HOW TO EXPORT PDF:</h3>
+        <ol>
+            <li>Press <code>Ctrl+P</code> to open Print dialog</li>
+            <li>Select <strong>"Save as PDF"</strong> or <strong>"Microsoft Print to PDF"</strong></li>
+            <li>Click <strong>"More settings"</strong></li>
+            <li>Set <strong>Paper size:</strong> Custom (96 x 60 mm)</li>
+            <li>Set <strong>Margins:</strong> None</li>
+            <li>Set <strong>Scale:</strong> 100% (Default)</li>
+            <li>Enable <strong>"Background graphics"</strong></li>
+            <li>Click <strong>"Save"</strong></li>
+            <li>File name: <code>OraChope-Business-Card-PRINT.pdf</code></li>
+        </ol>
+        
+        <h3>ALTERNATIVE (HIGHER QUALITY):</h3>
+        <p>Use Chrome browser:</p>
+        <ol>
+            <li>Open this file in <strong>Google Chrome</strong></li>
+            <li>Press <code>Ctrl+P</code></li>
+            <li>Destination: <strong>Save as PDF</strong></li>
+            <li>Paper size: <strong>Custom 96 x 60 mm</strong></li>
+            <li>Margins: <strong>None</strong></li>
+            <li>Options: Check <strong>"Background graphics"</strong></li>
+            <li>Save the PDF</li>
+        </ol>
+        
+        <h3>SEND TO PRINTER:</h3>
+        <ul>
+            <li>Format: <strong>PDF file (300 DPI or higher)</strong></li>
+            <li>Quantity: <strong>200 cards</strong></li>
+            <li>Material: <strong>300gsm art card, matte finish</strong></li>
+            <li>Sides: <strong>Single-sided (front only)</strong></li>
+            <li>Bleed: <strong>3mm included</strong></li>
+            <li>Trim size: <strong>90mm × 54mm</strong></li>
+        </ul>
+        
+        <p><strong>Note:</strong> The red dashed line shows where the card will be trimmed. The crop marks are optional - remove them if your printer doesn't need them.</p>
+    </div>
+</body>
+</html>

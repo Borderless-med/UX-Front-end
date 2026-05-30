@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Card V1 with QR on Front - 4 Variations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.4;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 13px;
+        }
+        
+        .card-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+        }
+        
+        .card-wrapper {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .version-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .design-note {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            line-height: 1.5;
+        }
+        
+        .business-card {
+            width: 90mm;
+            height: 54mm;
+            margin: 0 auto 20px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid #e5e7eb;
+        }
+        
+        /* VARIATION A: BALANCED SPLIT */
+        .card-a {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 7mm;
+            gap: 5mm;
+        }
+        
+        .card-a .text-zone {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-a .logo {
+            width: 28mm;
+            height: auto;
+            margin-bottom: 4mm;
+        }
+        
+        .card-a .name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1.5mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-a .title {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 3.5mm;
+            font-weight: 500;
+        }
+        
+        .card-a .contact {
+            font-size: 8px;
+            color: #374151;
+            line-height: 1.7;
+        }
+        
+        .card-a .company {
+            font-size: 7px;
+            color: #9ca3af;
+            margin-top: auto;
+            padding-top: 2.5mm;
+        }
+        
+        .card-a .qr-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-a .qr-code {
+            width: 28mm;
+            height: 28mm;
+            border: 2px solid #e5e7eb;
+            border-radius: 3mm;
+            padding: 2mm;
+        }
+        
+        .card-a .qr-label {
+            font-size: 7px;
+            color: #60a5fa;
+            text-align: center;
+            margin-top: 2mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        /* VARIATION B: COMPACT LEFT + LARGE QR */
+        .card-b {
+            display: grid;
+            grid-template-columns: 45mm 1fr;
+            height: 100%;
+        }
+        
+        .card-b .text-zone {
+            padding: 6mm 4mm 6mm 7mm;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-b .logo {
+            width: 25mm;
+            height: auto;
+            margin-bottom: 3.5mm;
+        }
+        
+        .card-b .name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-b .title {
+            font-size: 9px;
+            color: #6b7280;
+            margin-bottom: 3mm;
+            font-weight: 500;
+        }
+        
+        .card-b .contact {
+            font-size: 7.5px;
+            color: #374151;
+            line-height: 1.7;
+        }
+        
+        .card-b .company {
+            font-size: 6.5px;
+            color: #9ca3af;
+            margin-top: auto;
+        }
+        
+        .card-b .qr-zone {
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-left: 2px solid #60a5fa;
+        }
+        
+        .card-b .qr-code {
+            width: 32mm;
+            height: 32mm;
+            border-radius: 3mm;
+        }
+        
+        .card-b .qr-label {
+            font-size: 7px;
+            color: #60a5fa;
+            text-align: center;
+            margin-top: 2mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        /* VARIATION C: VERTICAL CENTER ALIGNED */
+        .card-c {
+            display: grid;
+            grid-template-columns: 48mm 1fr;
+            height: 100%;
+        }
+        
+        .card-c .text-zone {
+            padding: 7mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .card-c .logo {
+            width: 26mm;
+            height: auto;
+            margin-bottom: 3.5mm;
+        }
+        
+        .card-c .name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1.5mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-c .title {
+            font-size: 9.5px;
+            color: #6b7280;
+            margin-bottom: 3mm;
+            font-weight: 500;
+        }
+        
+        .card-c .contact {
+            font-size: 8px;
+            color: #374151;
+            line-height: 1.7;
+        }
+        
+        .card-c .company {
+            font-size: 6.5px;
+            color: #9ca3af;
+            margin-top: 2.5mm;
+        }
+        
+        .card-c .qr-zone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 6mm;
+        }
+        
+        .card-c .qr-code {
+            width: 30mm;
+            height: 30mm;
+            border: 1px solid #e5e7eb;
+            border-radius: 3mm;
+            padding: 1.5mm;
+        }
+        
+        .card-c .qr-label {
+            font-size: 7px;
+            color: #1e40af;
+            text-align: center;
+            margin-top: 2mm;
+            font-weight: 600;
+        }
+        
+        /* VARIATION D: ASYMMETRIC MODERN */
+        .card-d {
+            padding: 7mm 8mm;
+            position: relative;
+        }
+        
+        .card-d .logo {
+            width: 30mm;
+            height: auto;
+            margin-bottom: 4mm;
+        }
+        
+        .card-d .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1.5mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-d .title {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 3.5mm;
+            font-weight: 500;
+        }
+        
+        .card-d .contact {
+            font-size: 8.5px;
+            color: #374151;
+            line-height: 1.7;
+            max-width: 45mm;
+        }
+        
+        .card-d .company {
+            font-size: 7px;
+            color: #9ca3af;
+            margin-top: 3mm;
+            max-width: 45mm;
+        }
+        
+        .card-d .qr-zone {
+            position: absolute;
+            right: 7mm;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .card-d .qr-code {
+            width: 28mm;
+            height: 28mm;
+            border: 2px solid #e5e7eb;
+            border-radius: 3mm;
+            padding: 2mm;
+        }
+        
+        .card-d .qr-label {
+            font-size: 6.5px;
+            color: #60a5fa;
+            text-align: center;
+            margin-top: 1.5mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .card-d .accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 15mm;
+            height: 2px;
+            background: #60a5fa;
+        }
+        
+        .analysis {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border-left: 3px solid #10b981;
+        }
+        
+        .analysis h3 {
+            font-size: 12px;
+            color: #1e40af;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .analysis ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .analysis li {
+            font-size: 11px;
+            color: #374151;
+            margin-bottom: 5px;
+            padding-left: 12px;
+            position: relative;
+            line-height: 1.5;
+        }
+        
+        .analysis li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .recommendation {
+            margin-top: 50px;
+            padding: 30px;
+            background: #fef3c7;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .recommendation h2 {
+            font-size: 18px;
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation p {
+            font-size: 13px;
+            color: #78350f;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation strong {
+            color: #92400e;
+        }
+        
+        .rating {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .rating-alt {
+            display: inline-block;
+            background: #60a5fa;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Business Card V1 with QR Code on Front - 4 Professional Variations</h1>
+    <p class="subtitle">Single-sided design • Text left + QR right • Optimized for JB dentist recruitment</p>
+    
+    <div class="card-grid">
+        <!-- VARIATION A -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation A: Balanced Split <span class="rating">RECOMMENDED</span></div>
+            <p class="design-note">Equal weight to contact info and QR code. Clean 50/50 split with subtle QR border. Professional, balanced, easy to scan.</p>
+            
+            <div class="business-card card-a">
+                <div class="text-zone">
+                    <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                    <div class="name">GOH SEOW PING</div>
+                    <div class="title">Co-founder, CEO</div>
+                    <div class="contact">
+                        M: +65-8192 6158<br>
+                        E: contact@orachope.org<br>
+                        W: www.orachope.org
+                    </div>
+                    <div class="company">
+                        A division of CuraSphere Lab Pte Ltd<br>
+                        32 Pekin St, #05-01, Singapore 048762
+                    </div>
+                </div>
+                <div class="qr-zone">
+                    <img src="qr-code.png" alt="QR Code" class="qr-code">
+                    <div class="qr-label">Scan to Partner</div>
+                </div>
+            </div>
+            
+            <div class="analysis">
+                <h3>Why This Works</h3>
+                <ul>
+                    <li>Equal visual weight: text and QR both get 50% space</li>
+                    <li>QR border creates intentional frame, looks designed</li>
+                    <li>Vertical center alignment = professional balance</li>
+                    <li>QR size (28mm) optimal for scanning at arm's length</li>
+                    <li>Single-sided = cost-effective printing (half price vs double-sided)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- VARIATION B -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation B: Compact Text + Prominent QR <span class="rating-alt">BOLD</span></div>
+            <p class="design-note">Large QR code (32mm) on light background with blue divider. Emphasizes digital action, modern medical aesthetic.</p>
+            
+            <div class="business-card card-b">
+                <div class="text-zone">
+                    <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                    <div class="name">GOH SEOW PING</div>
+                    <div class="title">Co-founder, CEO</div>
+                    <div class="contact">
+                        M: +65-8192 6158<br>
+                        E: contact@orachope.org<br>
+                        W: www.orachope.org
+                    </div>
+                    <div class="company">
+                        CuraSphere Lab Pte Ltd<br>
+                        32 Pekin St, #05-01, SG 048762
+                    </div>
+                </div>
+                <div class="qr-zone">
+                    <img src="qr-code.png" alt="QR Code" class="qr-code">
+                    <div class="qr-label">Scan to Partner</div>
+                </div>
+            </div>
+            
+            <div class="analysis">
+                <h3>Why This Works</h3>
+                <ul>
+                    <li>Light gray background makes QR zone distinct, draws eye</li>
+                    <li>Blue divider line = Swiss medical grid aesthetic</li>
+                    <li>32mm QR = largest scannable size from 1 meter away</li>
+                    <li>Compact text keeps focus on primary action (scan)</li>
+                    <li>Modern tech-forward positioning for digital-savvy dentists</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- VARIATION C -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation C: Vertical Center Symmetry</div>
+            <p class="design-note">Both zones vertically centered for optical balance. Clean, minimal, professional medical standard.</p>
+            
+            <div class="business-card card-c">
+                <div class="text-zone">
+                    <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                    <div class="name">GOH SEOW PING</div>
+                    <div class="title">Co-founder, CEO</div>
+                    <div class="contact">
+                        M: +65-8192 6158<br>
+                        E: contact@orachope.org<br>
+                        W: www.orachope.org
+                    </div>
+                    <div class="company">
+                        CuraSphere Lab Pte Ltd<br>
+                        32 Pekin St, #05-01, Singapore 048762
+                    </div>
+                </div>
+                <div class="qr-zone">
+                    <img src="qr-code.png" alt="QR Code" class="qr-code">
+                    <div class="qr-label">Partner Signup</div>
+                </div>
+            </div>
+            
+            <div class="analysis">
+                <h3>Why This Works</h3>
+                <ul>
+                    <li>Perfect vertical centering = optical precision</li>
+                    <li>QR border subtle (1px) = minimal, not competing</li>
+                    <li>30mm QR size = optimal scanning from 50cm (meeting distance)</li>
+                    <li>Symmetrical balance = calm, trustworthy medical aesthetic</li>
+                    <li>Safe conservative choice for traditional JB dentists</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- VARIATION D -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation D: Asymmetric Editorial</div>
+            <p class="design-note">Text flows naturally top-left, QR floats center-right. Blue accent line adds modern touch. Most editorial/magazine-like.</p>
+            
+            <div class="business-card card-d">
+                <div class="accent"></div>
+                <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                <div class="name">GOH SEOW PING</div>
+                <div class="title">Co-founder, CEO</div>
+                <div class="contact">
+                    M: +65-8192 6158<br>
+                    E: contact@orachope.org<br>
+                    W: www.orachope.org
+                </div>
+                <div class="company">
+                    A division of CuraSphere Lab Pte Ltd<br>
+                    32 Pekin St, #05-01, Singapore 048762
+                </div>
+                <div class="qr-zone">
+                    <img src="qr-code.png" alt="QR Code" class="qr-code">
+                    <div class="qr-label">Scan Here</div>
+                </div>
+            </div>
+            
+            <div class="analysis">
+                <h3>Why This Works</h3>
+                <ul>
+                    <li>Asymmetry creates visual interest, memorable design</li>
+                    <li>QR vertically centered on right = easy eye landing spot</li>
+                    <li>Blue accent line top-left = modern, purposeful design element</li>
+                    <li>Natural reading flow: logo → name → contact → QR</li>
+                    <li>Editorial style = confidence, authority (CEO positioning)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="recommendation">
+        <h2>🎯 Expert Recommendation for JB Dentist Recruitment</h2>
+        
+        <p><strong>Print Variation A (Balanced Split)</strong> for your meetings next week.</p>
+        
+        <p><strong>Why Variation A wins:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li style="margin-bottom: 8px;">✅ <strong>Immediate action:</strong> QR code prominent but not overwhelming - dentist will scan it (28mm is optimal scanning size)</li>
+            <li style="margin-bottom: 8px;">✅ <strong>Professional balance:</strong> 50/50 split shows equal respect for contact info and digital partnership signup</li>
+            <li style="margin-bottom: 8px;">✅ <strong>Cost-effective:</strong> Single-sided printing = 50% cheaper than double-sided (important for 200+ card order)</li>
+            <li style="margin-bottom: 8px;">✅ <strong>Conservative-friendly:</strong> Clean, organized, not too modern (perfect for traditional JB dentists)</li>
+            <li style="margin-bottom: 8px;">✅ <strong>Clear hierarchy:</strong> Logo → Your name → Contact → QR = natural visual flow</li>
+        </ul>
+        
+        <p><strong>Meeting Strategy:</strong> Hand card → dentist sees your contact info → flips card looking for back → realizes QR is on front → scans immediately while you're talking = instant partner signup trigger.</p>
+        
+        <p><strong>Alternative:</strong> If dentist is younger/tech-savvy, use <strong>Variation B (Prominent QR)</strong> - the 32mm QR code and gray background signal "digital-first" positioning.</p>
+        
+        <p style="margin-bottom: 0;"><strong>DO NOT use Variation D</strong> for JB dentists - too editorial/Western. Save it for Singapore medical conferences or investor meetings.</p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; padding: 20px; color: #6b7280; font-size: 11px;">
+        <p><strong>Print Specifications:</strong> 90mm × 54mm standard business card size • Single-sided only • 300gsm art card • Matte finish • CMYK color mode</p>
+        <p style="margin-top: 8px;"><strong>Estimated Cost:</strong> 200 cards single-sided = SGD 30-40 (vs SGD 60-70 double-sided) • PrintCity, Eprints.sg, or WhatsApp Print • 2-3 day turnaround</p>
+    </div>
+</body>
+</html>

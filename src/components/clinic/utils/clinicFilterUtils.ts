@@ -149,7 +149,9 @@ export const getSpecialServices = (clinic: Clinic) => {
 };
 
 export const getUniqueTownships = (clinics: Clinic[]) => {
-  return [...new Set(clinics.map(clinic => clinic.township))].sort();
+  return [...new Set(clinics.map(clinic => clinic.township))]
+    .filter(township => township && township.trim() !== '') // Filter out null/undefined/empty strings
+    .sort();
 };
 
 export const getTreatmentsByCategory = (clinic: Clinic) => {

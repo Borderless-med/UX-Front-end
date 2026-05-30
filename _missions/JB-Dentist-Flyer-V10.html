@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope Partner Program - Founding Partner Offer</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #e5e7eb;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        /* DOUBLE BORDER — navy inner, sky outer */
+        .flyer {
+            width: 100%;
+            height: 100%;
+            padding: 10mm;
+            border: 3px solid #1e3a5f;
+            outline: 2px solid #93c5fd;
+            outline-offset: -7px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── HEADER ───────────────────────────────────────── */
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding-bottom: 4mm;
+            border-bottom: 1.5px solid #d1d5db;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            height: 12mm;
+            width: auto;
+            display: block;
+        }
+
+        /* CHANGE 4: tagline larger + bolder */
+        .tagline {
+            font-size: 10.5px;
+            color: #2563eb;
+            font-weight: 700;
+            margin-top: 2mm;
+            letter-spacing: 0.2px;
+        }
+
+        .header-trust {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            text-align: right;
+            padding-top: 1mm;
+        }
+
+        .header-trust .dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
+        /* ── HERO ─────────────────────────────────────────── */
+        .hero {
+            background: #eff6ff;
+            border: 1.5px solid #93c5fd;
+            border-radius: 8px;
+            padding: 5mm 8mm;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .hero-label {
+            font-size: 8.5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #b45309;
+            margin-bottom: 2.5mm;
+        }
+
+        /* CHANGE 1: new headline */
+        .hero-headline {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.15;
+            color: #1e3a5f;
+            margin-bottom: 1.5mm;
+        }
+
+        .hero-subheadline {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 3mm;
+        }
+
+        /* CHANGE 2: peer quote */
+        .hero-quote {
+            font-size: 11px;
+            color: #374151;
+            font-style: italic;
+            border-left: 3px solid #2563eb;
+            padding-left: 3mm;
+            margin-bottom: 3mm;
+            line-height: 1.4;
+        }
+
+        .hero-quote cite {
+            display: block;
+            font-size: 9.5px;
+            font-style: normal;
+            font-weight: 600;
+            color: #6b7280;
+            margin-top: 1mm;
+        }
+
+        /* CHANGE 3: bullets shortened */
+        .hero-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hero-bullets li {
+            font-size: 12px;
+            color: #374151;
+            line-height: 1.5;
+            padding-left: 4.5mm;
+            position: relative;
+        }
+
+        .hero-bullets li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        /* ── BENEFITS GRID ────────────────────────────────── */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4mm;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .benefit {
+            border: 1.5px solid #93c5fd;
+            border-radius: 8px;
+            padding: 3.5mm 4mm;
+            background: #fafcff;
+        }
+
+        .benefit-icon {
+            font-size: 15px;
+            margin-bottom: 1.5mm;
+            line-height: 1;
+        }
+
+        .benefit-title {
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 1.5mm;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #1e3a5f;
+        }
+
+        .benefit-text {
+            font-size: 10.5px;
+            line-height: 1.4;
+            color: #374151;
+        }
+
+        /* ── SUBSCRIPTION MODEL ───────────────────────────── */
+        .pricing {
+            background: #f8fafc;
+            border: 1.5px solid #1e3a5f;
+            border-radius: 8px;
+            padding: 4mm 6mm;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .pricing-headline {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 3mm;
+        }
+
+        /* CHANGE 6: Standard as full box; Pro/Elite as single slim row */
+        .tier-active {
+            border: 2px solid #1e3a5f;
+            border-radius: 6px;
+            padding: 3.5mm 5mm;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            gap: 4mm;
+            margin-bottom: 2.5mm;
+        }
+
+        .tier-active-left {
+            flex-shrink: 0;
+        }
+
+        .tier-badge {
+            font-size: 7.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            background: #1e3a5f;
+            padding: 1px 5px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 1mm;
+        }
+
+        .tier-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1e3a5f;
+        }
+
+        .tier-desc {
+            font-size: 10px;
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .tier-coming-row {
+            display: flex;
+            align-items: center;
+            gap: 3mm;
+            padding: 2mm 5mm;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .tier-coming-label {
+            font-size: 8px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .tier-coming-names {
+            font-size: 10px;
+            font-weight: 700;
+            color: #9ca3af;
+        }
+
+        .tier-coming-note {
+            font-size: 8.5px;
+            color: #9ca3af;
+            font-style: italic;
+            margin-left: auto;
+        }
+
+        .zero-commission-bar {
+            margin-top: 2.5mm;
+            font-size: 10px;
+            color: #1e3a5f;
+            font-weight: 700;
+            text-align: center;
+            padding: 2mm 0;
+            border-top: 1px solid #d1d5db;
+        }
+
+        .zero-commission-bar span {
+            color: #16a34a;
+        }
+
+        /* ── QR + CTA ─────────────────────────────────────── */
+        .qr-section {
+            display: grid;
+            grid-template-columns: 35mm 1fr;
+            gap: 6mm;
+            padding: 4mm 5.5mm;
+            background: white;
+            border: 1.5px solid #93c5fd;
+            border-radius: 8px;
+            margin-bottom: 4mm;
+            flex-shrink: 0;
+        }
+
+        .qr-code {
+            width: 35mm;
+            height: 35mm;
+            display: block;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+
+        .qr-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .qr-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 2mm;
+            color: #9ca3af;
+        }
+
+        .qr-headline {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 2mm;
+            line-height: 1.2;
+        }
+
+        .qr-url {
+            font-size: 11.5px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            color: #2563eb;
+            margin-bottom: 1.5mm;
+        }
+
+        .qr-action {
+            font-size: 10px;
+            color: #4b5563;
+            margin-bottom: 1mm;
+        }
+
+        .qr-setup {
+            font-size: 9.5px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* ── URGENCY BAR ──────────────────────────────────── */
+        .urgency {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4mm 6mm;
+            margin-bottom: 4mm;
+            background: #dbeafe;
+            border: 2px solid #1e3a5f;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .urgency-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e3a5f;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .urgency-text strong {
+            color: #b45309;
+            display: block;
+            font-size: 13px;
+            margin-bottom: 1mm;
+        }
+
+        .urgency-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #2563eb;
+            border-radius: 6px;
+            padding: 3mm 6mm;
+            margin-left: 7mm;
+            min-width: 26mm;
+            flex-shrink: 0;
+        }
+
+        .urgency-count {
+            font-size: 26px;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .urgency-count-label {
+            font-size: 8.5px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1px;
+        }
+
+        /* ── FOOTER ───────────────────────────────────────── */
+        .footer {
+            margin-top: auto;
+            padding-top: 3.5mm;
+            border-top: 1.5px solid #d1d5db;
+            flex-shrink: 0;
+        }
+
+        /* CHANGE 8: closing line above contacts */
+        .footer-closing {
+            font-size: 10px;
+            font-weight: 700;
+            color: #1e3a5f;
+            font-style: italic;
+            margin-bottom: 2mm;
+        }
+
+        .footer-bottom {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 4mm;
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 1mm;
+        }
+
+        .footer-contact-item {
+            font-size: 8.5px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .footer-whatsapp {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #16a34a;
+        }
+
+        .footer-tagline {
+            font-size: 8.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9ca3af;
+            text-align: right;
+        }
+
+        /* ── PRINT ────────────────────────────────────────── */
+        @media print {
+            body { background: white; }
+            .page { margin: 0; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="flyer">
+
+            <!-- HEADER -->
+            <div class="header">
+                <div class="header-left">
+                    <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                    <!-- CHANGE 4: larger, bolder tagline -->
+                    <div class="tagline">AI-Powered Dental Directory Connecting Singapore Patients with JB Clinics</div>
+                </div>
+                <div class="header-trust">
+                    <span class="dot"></span> Verified Professional Network
+                </div>
+            </div>
+
+            <!-- HERO -->
+            <div class="hero">
+                <div class="hero-label">Founding Partner Opportunity · April 2026</div>
+                <!-- CHANGE 1: new headline + subheadline -->
+                <div class="hero-headline">Singapore Patients Already Fill<br>30–70% of JB Dental Chairs</div>
+                <div class="hero-subheadline">Is your clinic getting its share?</div>
+                <!-- CHANGE 2: verified peer quote -->
+                <div class="hero-quote">
+                    "Six to seven out of every ten of my patients are from Singapore."
+                    <cite>— Dr Jolene Lai, Pink and White Dental, JB &nbsp;·&nbsp; Straits Times, May 2024</cite>
+                </div>
+                <!-- CHANGE 3: shortened bullets -->
+                <ul class="hero-bullets">
+                    <li>Zero commission on every booking — you keep 100%, forever.</li>
+                    <li>Patients book directly with your clinic. No middleman, no extra admin.</li>
+                </ul>
+            </div>
+
+            <!-- BENEFITS — CHANGE 5: clinic-outcome wording -->
+            <div class="benefits-grid">
+                <div class="benefit">
+                    <div class="benefit-icon">🚫</div>
+                    <div class="benefit-title">Zero Commission</div>
+                    <div class="benefit-text">Keep 100% of every appointment fee. No cuts, no referral charges, no surprises.</div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">📩</div>
+                    <div class="benefit-title">New Patients, Direct</div>
+                    <div class="benefit-text">Singapore patients contact your clinic directly. Full details, instant notifications.</div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">⭐</div>
+                    <div class="benefit-title">Top of Search Results</div>
+                    <div class="benefit-text">Be found first. Verified Partner badge. AI-matched to patients seeking your services.</div>
+                </div>
+            </div>
+
+            <!-- SUBSCRIPTION MODEL — CHANGE 6: Standard dominant, Pro/Elite single slim row -->
+            <div class="pricing">
+                <div class="pricing-headline">Transparent Subscription Model</div>
+                <div class="tier-active">
+                    <div class="tier-active-left">
+                        <div class="tier-badge">Now Launching</div>
+                        <div class="tier-name">Standard Plan</div>
+                    </div>
+                    <div class="tier-desc">Core directory listing · Direct patient bookings · Verified Partner badge · Priority search placement</div>
+                </div>
+                <div class="tier-coming-row">
+                    <div class="tier-coming-label">Coming Soon</div>
+                    <div class="tier-coming-names">Professional &nbsp;·&nbsp; Elite</div>
+                    <div class="tier-coming-note">Founding Partners receive first access when launched</div>
+                </div>
+                <div class="zero-commission-bar">
+                    <span>✔ Zero commission on all bookings</span> — applies across all tiers, always
+                </div>
+            </div>
+
+            <!-- QR CODE + CTA -->
+            <div class="qr-section">
+                <img src="qr-code.png" alt="Scan to apply at orachope.org/partner" class="qr-code">
+                <div class="qr-text">
+                    <div class="qr-label">Scan to Apply</div>
+                    <div class="qr-headline">Get Discovered by<br>Singapore Patients</div>
+                    <div class="qr-url">www.orachope.org/partner</div>
+                    <div class="qr-action">Application takes 5 minutes · Instant approval for qualified clinics</div>
+                    <div class="qr-setup">Setup is easy and takes under 30 minutes. Your team responds to patient enquiries as usual.</div>
+                </div>
+            </div>
+
+            <!-- URGENCY — CHANGE 7: condensed to one sentence -->
+            <div class="urgency">
+                <div class="urgency-text">
+                    <strong>Founding Partner Offer</strong>
+                    First 7 clinics get 6 months FREE on Standard. The 8th clinic onwards pays full monthly rate.
+                </div>
+                <div class="urgency-badge">
+                    <div class="urgency-count">7</div>
+                    <div class="urgency-count-label">Spots Left</div>
+                </div>
+            </div>
+
+            <!-- FOOTER — CHANGE 8: closing line added -->
+            <div class="footer">
+                <div class="footer-closing">Singapore patients are searching right now. Be the clinic they find.</div>
+                <div class="footer-bottom">
+                    <div class="footer-contact">
+                        <div class="footer-whatsapp">📲 WhatsApp: +65-81926158</div>
+                        <div class="footer-contact-item">Email: contact@orachope.org</div>
+                        <div class="footer-contact-item">Website: www.orachope.org</div>
+                    </div>
+                    <div class="footer-tagline">Verified Professional<br>Network</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

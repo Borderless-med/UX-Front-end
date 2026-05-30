@@ -17,19 +17,5 @@
       "source": "/:path*",
       "destination": "/index.html"
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/cron/check-expired-bookings",
-      "schedule": "*/15 * * * *"
-    },
-    {
-      "path": "/api/cron/send-urgent-nudges",
-      "schedule": "*/15 * * * *"
-    },
-    {
-      "path": "/api/cron/send-appointment-reminders",
-      "schedule": "0 * * * *"
-    }
   ]
 }

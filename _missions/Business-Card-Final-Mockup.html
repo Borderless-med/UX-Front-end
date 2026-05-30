@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Card - Final Design Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.4;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 13px;
+        }
+        
+        .card-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .business-card {
+            width: 90mm;
+            height: 54mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: 5mm 8mm 2.5mm 8mm;
+            overflow: hidden;
+        }
+        
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8mm;
+            flex: 1;
+        }
+        
+        .text-zone {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo {
+            width: 36mm;
+            height: auto;
+            margin-bottom: 4mm;
+        }
+        
+        .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .title {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 3mm;
+            font-weight: 500;
+        }
+        
+        .contact {
+            font-size: 8.5px;
+            color: #374151;
+            line-height: 1.5;
+        }
+        
+        .qr-zone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qr-code {
+            width: 18mm;
+            height: 18mm;
+        }
+        
+        .company-section {
+            margin-top: auto;
+            padding-top: 3.5mm;
+            border-top: 2px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+        
+        .company {
+            font-size: 6px;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+        
+        .specs {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border-left: 3px solid #10b981;
+        }
+        
+        .specs h3 {
+            font-size: 14px;
+            color: #1e40af;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .specs ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .specs li {
+            font-size: 12px;
+            color: #374151;
+            margin-bottom: 8px;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .specs li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .specs strong {
+            color: #1e40af;
+        }
+        
+        .print-ready {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fef3c7;
+            border-radius: 6px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .print-ready h3 {
+            font-size: 15px;
+            color: #92400e;
+            margin-bottom: 12px;
+        }
+        
+        .print-ready p {
+            font-size: 12px;
+            color: #78350f;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        
+        .print-ready strong {
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <h1>OraChope Business Card - Final Design</h1>
+    <p class="subtitle">Based on Variation D • Logo closer to top • Gray separator line • Spacious text layout • Company text FITS within card</p>
+    
+    <div class="card-container">
+        <div class="card-label">Front Side (Single-Sided Design)</div>
+        
+        <div class="business-card">
+            <div class="top-section">
+                <div class="text-zone">
+                    <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                    <div class="name">GOH SEOW PING</div>
+                    <div class="title">Co-founder, CEO</div>
+                    <div class="contact">
+                        M: +65-8192 6158<br>
+                        E: contact@orachope.org<br>
+                        W: www.orachope.org
+                    </div>
+                </div>
+                <div class="qr-zone">
+                    <img src="qr-code.png" alt="QR Code" class="qr-code">
+                </div>
+            </div>
+            <div class="company-section">
+                <div class="company">
+                    A division of CuraSphere Lab Pte Ltd (reg. pending)<br>
+                    32 Pekin St, #05-01, Singapore 048762
+                </div>
+            </div>
+        </div>
+        
+        <div class="specs">
+            <h3>Design Specifications</h3>
+            <ul>
+                <li><strong>Logo position:</strong> Closer to top edge (5mm from top), prominent placement</li>
+                <li><strong>QR code:</strong> 18mm × 18mm (20% smaller, subtle but scannable)</li>
+                <li><strong>Gray separator:</strong> 2px solid gray line (#9ca3af) - professional, subtle division</li>
+                <li><strong>Text spacing:</strong> Increased margins between all elements for breathing room</li>
+                <li><strong>Contact line height:</strong> 2.0 (was 1.7) - more spacious, easier to read</li>
+                <li><strong>Company section:</strong> 6.5px font, 1.5 line height - FITS WITHIN CARD BOUNDARY</li>
+                <li><strong>Bottom padding:</strong> 5mm (equal top/bottom) ensures company text stays inside</li>
+                <li><strong>Layout:</strong> Text left + QR right | Gray line | Company footer full width</li>
+            </ul>
+        </div>
+        
+        <div class="print-ready">
+            <h3>✅ Ready for Print Production</h3>
+            <p><strong>Card Specifications:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 12px;">
+                <li>Size: 90mm × 54mm (standard business card)</li>
+                <li>Format: Single-sided only (back blank)</li>
+                <li>Material: 300gsm art card, matte finish</li>
+                <li>Color: CMYK mode, 300 DPI resolution</li>
+            </ul>
+            
+            <p><strong>Singapore Printers (2-3 day turnaround):</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 12px;">
+                <li>PrintCity (Tanjong Pagar) - SGD 30-35 for 200 cards</li>
+                <li>Eprints.sg (Online) - SGD 28-32 for 200 cards</li>
+                <li>WhatsApp Print (Instant quote) - SGD 32-38 for 200 cards</li>
+            </ul>
+            
+            <p><strong>Meeting Strategy:</strong> Hand card → dentist sees prominent OraChope logo at top + spacious contact details + subtle QR code right → professional gray separator line creates clean structure → company details clearly visible at bottom (WITHIN CARD) → scans QR while discussing partnership → instant application submission. Clean spacing makes card easy to read at glance.</p>
+            
+            <p style="margin-bottom: 0;"><strong>Next Step:</strong> Approve this design, I'll prepare print-ready PDF with 3mm bleed and crop marks for printer submission.</p>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; padding: 20px; color: #6b7280; font-size: 11px;">
+        <p><strong>Design Improvements Summary:</strong></p>
+        <p>Logo: Top-positioned • QR: 18mm (subtle) • Gray separator: 2px solid • Text: Spacious layout (2.0 line height)</p>
+        <p style="margin-top: 8px;">Company: 6.5px font, 1.5 line height - FITS INSIDE CARD • Equal 5mm top/bottom padding • Professional clean hierarchy</p>
+    </div>
+</body>
+</html>

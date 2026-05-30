@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope Business Cards - 4 Medical Professional Variations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.4;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+        
+        .card-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+        
+        .card-wrapper {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .version-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .design-principle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        /* Standard business card: 90mm × 54mm */
+        .business-card {
+            width: 90mm;
+            height: 54mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            border: 1px solid #e5e7eb;
+        }
+        
+        /* VARIATION 1: LEFT-ALIGNED EDITORIAL */
+        .card-v1 {
+            padding: 7mm 8mm;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-v1 .logo {
+            width: 32mm;
+            height: auto;
+            margin-bottom: 6mm;
+        }
+        
+        .card-v1 .name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1.5mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-v1 .title {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 4mm;
+            font-weight: 500;
+        }
+        
+        .card-v1 .contact {
+            font-size: 9px;
+            color: #374151;
+            line-height: 1.7;
+        }
+        
+        .card-v1 .company {
+            font-size: 8px;
+            color: #9ca3af;
+            margin-top: 3mm;
+            padding-top: 2.5mm;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        /* VARIATION 2: SWISS MEDICAL GRID */
+        .card-v2 {
+            display: grid;
+            grid-template-columns: 30mm 1px 1fr;
+            height: 100%;
+        }
+        
+        .card-v2 .logo-zone {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 7mm 5mm 5mm 5mm;
+        }
+        
+        .card-v2 .logo {
+            width: 26mm;
+            height: auto;
+        }
+        
+        .card-v2 .divider {
+            background: #60a5fa;
+            width: 1px;
+        }
+        
+        .card-v2 .info-zone {
+            padding: 7mm 8mm 7mm 7mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .card-v2 .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-v2 .title {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 3.5mm;
+            font-weight: 500;
+        }
+        
+        .card-v2 .contact {
+            font-size: 8.5px;
+            color: #374151;
+            line-height: 1.8;
+        }
+        
+        .card-v2 .company {
+            font-size: 7.5px;
+            color: #9ca3af;
+            margin-top: 2.5mm;
+        }
+        
+        /* VARIATION 3: CENTERED HIERARCHY */
+        .card-v3 {
+            padding: 6mm 9mm;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .card-v3 .logo {
+            width: 28mm;
+            height: auto;
+            margin-bottom: 4mm;
+        }
+        
+        .card-v3 .tagline {
+            font-size: 8px;
+            color: #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3mm;
+            font-weight: 600;
+        }
+        
+        .card-v3 .name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-v3 .title {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 3.5mm;
+            font-weight: 500;
+        }
+        
+        .card-v3 .contact {
+            font-size: 8.5px;
+            color: #374151;
+            line-height: 1.8;
+        }
+        
+        .card-v3 .company {
+            font-size: 7.5px;
+            color: #9ca3af;
+            margin-top: auto;
+            padding-top: 3mm;
+        }
+        
+        /* VARIATION 4: ASYMMETRIC MODERN */
+        .card-v4 {
+            padding: 7mm 8mm;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .card-v4 .name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1.5mm;
+            letter-spacing: 0.3px;
+            max-width: 60mm;
+        }
+        
+        .card-v4 .title {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 4mm;
+            font-weight: 500;
+            max-width: 60mm;
+        }
+        
+        .card-v4 .contact {
+            font-size: 9px;
+            color: #374151;
+            line-height: 1.7;
+            max-width: 60mm;
+        }
+        
+        .card-v4 .company {
+            font-size: 8px;
+            color: #9ca3af;
+            margin-top: auto;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            max-width: 55mm;
+        }
+        
+        .card-v4 .logo {
+            width: 18mm;
+            height: auto;
+            position: absolute;
+            bottom: 6mm;
+            right: 7mm;
+            opacity: 1;
+        }
+        
+        .card-v4 .accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12mm;
+            height: 2px;
+            background: #60a5fa;
+        }
+        
+        .critique {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border-left: 3px solid #1e40af;
+        }
+        
+        .critique h3 {
+            font-size: 13px;
+            color: #1e40af;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .critique ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .critique li {
+            font-size: 12px;
+            color: #374151;
+            margin-bottom: 6px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .critique li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .recommendation {
+            margin-top: 60px;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .recommendation h2 {
+            font-size: 20px;
+            color: #1e40af;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .rec-item {
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+        
+        .rec-item h4 {
+            font-size: 14px;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        
+        .rec-item p {
+            font-size: 12px;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        
+        .rating {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>OraChope Business Cards - World-Class Medical Professional Designs</h1>
+    <p class="subtitle">4 Variations Based on Global Healthcare Branding Standards</p>
+    
+    <div class="card-container">
+        <!-- VARIATION 1 -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation 1: Editorial Left-Aligned <span class="rating">RECOMMENDED</span></div>
+            <p class="design-principle">Editorial style, confident left alignment. Used by Mayo Clinic, Cleveland Clinic executives. Clean hierarchy, professional breathing room.</p>
+            
+            <div class="business-card card-v1">
+                <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                <div class="name">GOH SEOW PING</div>
+                <div class="title">Co-founder, CEO</div>
+                <div class="contact">
+                    M: +65-8192 6158<br>
+                    E: contact@orachope.org<br>
+                    W: www.orachope.org
+                </div>
+                <div class="company">
+                    A division of CuraSphere Lab Pte Ltd<br>
+                    32 Pekin St, #05-01, Singapore 048762
+                </div>
+            </div>
+            
+            <div class="critique">
+                <h3>Design Rationale</h3>
+                <ul>
+                    <li>Left alignment = confidence, authority (not centered timidity)</li>
+                    <li>Logo top-left establishes visual anchor immediately</li>
+                    <li>Generous margins create luxury, medical-grade precision feel</li>
+                    <li>Clear typographic hierarchy guides eye naturally</li>
+                    <li>Company details subtle footer = not competing with identity</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- VARIATION 2 -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation 2: Swiss Medical Grid</div>
+            <p class="design-principle">Swiss design precision with medical blue accent line. Inspired by Novartis, Roche corporate identity. Structural clarity, European sophistication.</p>
+            
+            <div class="business-card card-v2">
+                <div class="logo-zone">
+                    <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                </div>
+                <div class="divider"></div>
+                <div class="info-zone">
+                    <div class="name">GOH SEOW PING</div>
+                    <div class="title">Co-founder, CEO</div>
+                    <div class="contact">
+                        M: +65-8192 6158<br>
+                        E: contact@orachope.org<br>
+                        W: www.orachope.org
+                    </div>
+                    <div class="company">
+                        CuraSphere Lab Pte Ltd<br>
+                        32 Pekin St, #05-01, SG 048762
+                    </div>
+                </div>
+            </div>
+            
+            <div class="critique">
+                <h3>Design Rationale</h3>
+                <ul>
+                    <li>Vertical blue line = PURPOSE (separates brand zone from info zone)</li>
+                    <li>Fixed logo proportions prevent imbalance of V4A layout</li>
+                    <li>Grid system ensures optical precision, medical aesthetic</li>
+                    <li>Blue accent answers "Why is there a line?" = functional divider</li>
+                    <li>Balanced 1/3-2/3 split based on golden ratio</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- VARIATION 3 -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation 3: Centered with Hierarchy</div>
+            <p class="design-principle">Centered BUT purposeful. Fixes V2's weaknesses with clear size hierarchy, tagline anchor, compressed spacing. Modern medical aesthetic.</p>
+            
+            <div class="business-card card-v3">
+                <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                <div class="tagline">AI-Powered Dental Directory</div>
+                <div class="name">GOH SEOW PING</div>
+                <div class="title">Co-founder, CEO</div>
+                <div class="contact">
+                    +65-8192 6158<br>
+                    contact@orachope.org<br>
+                    www.orachope.org
+                </div>
+                <div class="company">
+                    CuraSphere Lab Pte Ltd • 32 Pekin St, #05-01, Singapore 048762
+                </div>
+            </div>
+            
+            <div class="critique">
+                <h3>Design Rationale</h3>
+                <ul>
+                    <li>Centered = formal, traditional medical authority (think hospital cards)</li>
+                    <li>Tagline adds PURPOSE to blue line concept from V2</li>
+                    <li>Strong size contrast (16px name, 10px title, 8.5px contact) creates hierarchy</li>
+                    <li>Company footer anchors bottom = visual balance</li>
+                    <li>Symmetry works WHEN elements vary in size/weight</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- VARIATION 4 -->
+        <div class="card-wrapper">
+            <div class="version-label">Variation 4: Asymmetric Modern <span class="rating">BOLD CHOICE</span></div>
+            <p class="design-principle">Modern medical tech aesthetic. Logo bottom-right creates tension/interest. Used by digital health startups (Oscar Health, Zocdoc). Memorable, confident.</p>
+            
+            <div class="business-card card-v4">
+                <div class="accent"></div>
+                <div class="name">GOH SEOW PING</div>
+                <div class="title">Co-founder, CEO</div>
+                <div class="contact">
+                    M: +65-8192 6158<br>
+                    E: contact@orachope.org<br>
+                    W: www.orachope.org
+                </div>
+                <div class="company">
+                    CuraSphere Lab Pte Ltd<br>
+                    32 Pekin St, #05-01, Singapore 048762
+                </div>
+                <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+            </div>
+            
+            <div class="critique">
+                <h3>Design Rationale</h3>
+                <ul>
+                    <li>Logo bottom-right SOLVES V4A imbalance = counterweight to text</li>
+                    <li>Blue accent line top-left = modern, purposeful (not decorative)</li>
+                    <li>Asymmetry creates visual interest, memorable placement</li>
+                    <li>Text top-left + logo bottom-right = diagonal eye flow</li>
+                    <li>Tech-forward medical aesthetic, differentiates from traditional doctors</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="recommendation">
+        <h2>🎯 Expert Recommendation & Decision Matrix</h2>
+        
+        <div class="recommendation-grid">
+            <div class="rec-item">
+                <h4>Variation 1: Editorial Left-Aligned ⭐ BEST FOR YOUR USE CASE</h4>
+                <p><strong>For:</strong> Conservative JB dentist meetings next week. Most professional, least risky. Matches CEO authority positioning. Clean, trustworthy, no distractions.</p>
+                <p><strong>Medical precedent:</strong> Mayo Clinic, Cleveland Clinic, Singapore Medical Council executive cards.</p>
+                <p><strong>Print NOW:</strong> 200 cards for dentist recruitment.</p>
+            </div>
+            
+            <div class="rec-item">
+                <h4>Variation 2: Swiss Medical Grid - Runner-up</h4>
+                <p><strong>For:</strong> If you want European sophistication. Blue divider answers "why is there a line" critique = functional separator.</p>
+                <p><strong>Medical precedent:</strong> Swiss pharma companies (Novartis, Roche), European healthcare systems.</p>
+                <p><strong>Best for:</strong> International conferences, European dentist partners.</p>
+            </div>
+            
+            <div class="rec-item">
+                <h4>Variation 3: Centered Hierarchy - Safe Traditional</h4>
+                <p><strong>For:</strong> If you must have centered design. Fixes V2 weaknesses with hierarchy + tagline. More formal than V1.</p>
+                <p><strong>Medical precedent:</strong> Hospital administrator cards, traditional medical associations.</p>
+                <p><strong>Best for:</strong> Very conservative audiences, government health officials.</p>
+            </div>
+            
+            <div class="rec-item">
+                <h4>Variation 4: Asymmetric Modern - Innovation Signal</h4>
+                <p><strong>For:</strong> Tech-forward positioning, younger dentists, medical startups. Logo bottom-right solves V4A imbalance.</p>
+                <p><strong>Medical precedent:</strong> Digital health companies (Oscar, Zocdoc, Teladoc), medical AI startups.</p>
+                <p><strong>Best for:</strong> After you're established, second batch of cards for tech audience.</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 25px; padding: 20px; background: #fef3c7; border-radius: 6px; border-left: 4px solid #f59e0b;">
+            <h3 style="font-size: 14px; color: #92400e; margin-bottom: 10px;">⚡ ACTION ITEM FOR NEXT WEEK'S MEETINGS:</h3>
+            <p style="font-size: 13px; color: #78350f; line-height: 1.6; margin: 0;">
+                <strong>Print Variation 1 (Editorial Left-Aligned) immediately.</strong> It's the safest, most professional choice for conservative JB dentists. Left-alignment signals authority and confidence. Clean hierarchy guides their eye naturally. Generous white space = premium medical aesthetic. This design works for 90% of your audiences. You can experiment with V2 or V4 for second batch after first 10 partners secured.
+            </p>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; padding: 20px; color: #6b7280; font-size: 12px;">
+        <p><strong>Design Principles Applied:</strong> Swiss Medical Grid System • Editorial Left-Alignment Authority • Typographic Hierarchy • Golden Ratio Proportions • Medical Color Psychology (Blue Trust)</p>
+        <p style="margin-top: 10px;"><strong>Inspiration Sources:</strong> Mayo Clinic, Cleveland Clinic, Novartis, Roche, Singapore Medical Council, Oscar Health, Zocdoc, European Pharma Companies</p>
+    </div>
+</body>
+</html>

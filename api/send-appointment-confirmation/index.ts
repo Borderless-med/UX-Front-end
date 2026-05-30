@@ -115,6 +115,40 @@ export default async function handler(
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const SMTP_USER = process.env.SMTP_USER!;
     
+    // Fetch clinic contact information from database
+    let clinicEmail: string | null = null;
+    let clinicWhatsApp: string | null = null;
+    
+    try {
+      // Try JB clinics first (clinics_data)
+      const { data: jbClinic } = await supabase
+        .from('clinics_data')
+        .select('contact_email, whatsapp_number')
+        .eq('name', bookingData.clinic_location)
+        .single();
+      
+      if (jbClinic) {
+        clinicEmail = jbClinic.contact_email;
+        clinicWhatsApp = jbClinic.whatsapp_number;
+        console.log(`Found JB clinic contact: ${clinicEmail}`);
+      } else {
+        // Try SG clinics (sg_clinics)
+        const { data: sgClinic } = await supabase
+          .from('sg_clinics')
+          .select('contact_email, whatsapp_number')
+          .eq('name', bookingData.clinic_location)
+          .single();
+        
+        if (sgClinic) {
+          clinicEmail = sgClinic.contact_email;
+          clinicWhatsApp = sgClinic.whatsapp_number;
+          console.log(`Found SG clinic contact: ${clinicEmail}`);
+        }
+      }
+    } catch (err) {
+      console.log(`Could not fetch clinic contact info: ${err}`);
+    }
+    
     const bookingData: AppointmentBookingRequest = req.body;
 
     // --- All core business logic below this line is IDENTICAL to your original file ---
@@ -309,6 +343,102 @@ export default async function handler(
       console.log('Admin booking notification sent.');
     } catch (e) {
       console.error('Failed to send admin booking notification', e);
+    }
+
+    // --- Clinic notification (generic partner email for now) ---
+    // TODO: Once clinic emails are added to database, look up clinic-specific email
+    // Query: SELECT contact_email FROM clinics_data WHERE name = bookingData.clinic_location
+    const clinicEmailHtml = `
+      <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;line-height:1.5">
+        <h2 style="margin:0 0 12px;color:#1e3a8a">🎉 New Booking Request for Your Clinic</h2>
+        <p style="margin:0 0 16px;color:#334155">Booking Reference <strong>${bookingRef}</strong></p>
+        
+        <div style="background:#f0f9ff;padding:16px;border-radius:8px;margin:16px 0">
+          <h3 style="margin:0 0 12px;color:#1e40af">Patient Details</h3>
+          <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <tr><td style="padding:4px 0;font-weight:600;color:#475569">Name</td><td style="padding:4px 0">${bookingData.patient_name}</td></tr>
+            <tr><td style="padding:4px 0;font-weight:600;color:#475569">Email</td><td style="padding:4px 0">${bookingData.email}</td></tr>
+            <tr><td style="padding:4px 0;font-weight:600;color:#475569">WhatsApp</td><td style="padding:4px 0">${bookingData.whatsapp}</td></tr>
+          </table>
+        </div>
+
+        <div style="background:#fef3c7;padding:16px;border-radius:8px;margin:16px 0">
+          <h3 style="margin:0 0 12px;color:#92400e">Appointment Details</h3>
+          <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <tr><td style="padding:4px 0;font-weight:600;color:#78350f">Treatment</td><td style="padding:4px 0">${bookingData.treatment_type}</td></tr>
+            <tr><td style="padding:4px 0;font-weight:600;color:#78350f">Date</td><td style="padding:4px 0">${formattedDate}</td></tr>
+            <tr><td style="padding:4px 0;font-weight:600;color:#78350f">Time Slot</td><td style="padding:4px 0">${bookingData.time_slot}</td></tr>
+          </table>
+        </div>
+
+        <div style="background:#f0fdf4;padding:16px;border-radius:8px;margin:20px 0">
+          <h4 style="margin:0 0 8px;color:#15803d">📞 Next Steps:</h4>
+          <ol style="margin:8px 0;padding-left:20px;color:#166534">
+            <li>Contact patient within 24 hours via WhatsApp: <strong>${bookingData.whatsapp}</strong></li>
+            <li>Confirm appointment availability for ${formattedDate} at ${bookingData.time_slot}</li>
+            <li>Provide clinic directions and parking info</li>
+            <li>Confirm treatment pricing and duration</li>
+          </ol>
+        </div>
+
+        <div style="text-align:center;margin:24px 0">
+          <a href="https://wa.me/${bookingData.whatsapp.replace(/[^\d+]/g, '')}?text=Hi%20${encodeURIComponent(bookingData.patient_name)}%2C%20this%20is%20${encodeURIComponent(bookingData.clinic_location)}.%20We%20received%20your%20booking%20request%20for%20${encodeURIComponent(bookingData.treatment_type)}%20on%20${encodeURIComponent(formattedDate)}.%20" 
+             style="display:inline-block;background:#22c55e;color:#fff;text-decoration:none;padding:12px 24px;border-radius:6px;font-weight:600;font-size:14px">
+            💬 Contact Patient via WhatsApp
+          </a>
+        </div>
+
+        ${clinicWhatsApp ? `
+        <div style="background:#eff6ff;padding:12px;border-radius:6px;margin:16px 0;border-left:4px solid #3b82f6">
+          <p style="margin:0;font-size:13px;color:#1e40af">
+            <strong>Your clinic WhatsApp:</strong> ${clinicWhatsApp}<br>
+            <span style="font-size:12px;color:#64748b">This is stored in our system. Update via OraChope.org dashboard.</span>
+          </p>
+        </div>
+        ` : `
+        <div style="background:#fef3c7;padding:12px;border-radius:6px;margin:16px 0;border-left:4px solid #f59e0b">
+          <p style="margin:0;font-size:13px;color:#92400e">
+            <strong>⚠️ No WhatsApp number on file.</strong> <a href="mailto:contact@orachope.org" style="color:#92400e">Contact us</a> to add your clinic's WhatsApp for faster patient communication.
+          </p>
+        </div>
+        `}
+
+        <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">
+          This booking was made through OraChope.org dental platform.<br>
+          Questions? Contact us at <a href="mailto:contact@orachope.org">contact@orachope.org</a>
+        </p>
+      </div>`;
+    
+    try {
+      if (clinicEmail) {
+        // Send directly to clinic
+        await emailService.sendMail({
+          from: `SG-JB Dental <${SMTP_USER}>`,
+          to: clinicEmail,
+          subject: `New Patient Booking Request - ${bookingRef}`,
+          html: clinicEmailHtml,
+        });
+        console.log(`Clinic notification sent directly to: ${clinicEmail}`);
+        
+        // Also CC admin for tracking
+        await emailService.sendMail({
+          from: `SG-JB Dental <${SMTP_USER}>`,
+          to: 'contact@orachope.org',
+          subject: `[CC] Booking sent to ${bookingData.clinic_location} - ${bookingRef}`,
+          html: `<p>A booking notification was sent to <strong>${clinicEmail}</strong></p>${clinicEmailHtml}`,
+        });
+      } else {
+        // Fallback: Send to admin for manual forwarding
+        await emailService.sendMail({
+          from: `SG-JB Dental <${SMTP_USER}>`,
+          to: 'contact@orachope.org',
+          subject: `[NO CLINIC EMAIL] Booking for ${bookingData.clinic_location} - ${bookingRef}`,
+          html: `<div style="background:#fef2f2;padding:16px;margin-bottom:16px;border:2px solid #dc2626;border-radius:8px"><p style="color:#991b1b;font-weight:600;margin:0">⚠️ CLINIC EMAIL NOT IN DATABASE</p><p style="color:#991b1b;margin:8px 0 0">Please forward this booking to ${bookingData.clinic_location} manually.</p></div>${clinicEmailHtml}`,
+        });
+        console.log('Clinic email not found - sent to admin for manual forwarding');
+      }
+    } catch (e) {
+      console.error('Failed to send clinic booking notification', e);
     }
 
     res.status(200).json({ 

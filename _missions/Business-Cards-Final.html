@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraChope Business Cards - Final Designs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #1f2937;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 16px;
+        }
+        
+        .card-set {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        .set-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        
+        .set-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .card-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .card-side {
+            text-align: center;
+        }
+        
+        .card-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Standard business card: 90mm × 54mm */
+        .business-card {
+            width: 90mm;
+            height: 54mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* OPTION A: MINIMALIST BLACK PANEL (V1 style with V3 gradient) */
+        .card-a-front {
+            display: grid;
+            grid-template-columns: 35mm 55mm;
+            border: 3px solid #000;
+        }
+        
+        .card-a-front .left {
+            background: linear-gradient(135deg, #1e40af 0%, #000000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5mm;
+        }
+        
+        .card-a-front .logo-white {
+            width: 25mm;
+            height: auto;
+        }
+        
+        .card-a-front .right {
+            padding: 5mm 4mm 4mm 5mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-a-front .name {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1mm;
+            color: #1e40af;
+        }
+        
+        .card-a-front .title {
+            font-size: 9px;
+            color: #666;
+            margin-bottom: 2mm;
+            font-weight: 600;
+        }
+        
+        .card-a-front .info {
+            font-size: 7px;
+            line-height: 1.7;
+            color: #333;
+        }
+        
+        .card-a-front .company {
+            font-size: 6.5px;
+            color: #999;
+            margin-top: 2mm;
+            line-height: 1.5;
+        }
+        
+        /* OPTION B: EXECUTIVE GRADIENT FULL */
+        .card-b-front {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 6mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid #1e40af;
+        }
+        
+        .card-b-front .logo {
+            height: 9mm;
+            width: auto;
+        }
+        
+        .card-b-front .name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 1mm;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-b-front .title {
+            font-size: 9px;
+            opacity: 0.9;
+            margin-bottom: 3mm;
+            font-weight: 600;
+        }
+        
+        .card-b-front .contact {
+            font-size: 7.5px;
+            line-height: 1.9;
+            opacity: 0.95;
+        }
+        
+        .card-b-front .company {
+            font-size: 6.5px;
+            opacity: 0.85;
+            margin-top: 2mm;
+            line-height: 1.6;
+        }
+        
+        /* BACK: QR CODE */
+        .card-back {
+            background: #eff6ff;
+            border: 3px solid #60a5fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 8mm;
+        }
+        
+        .card-back .qr-code {
+            width: 32mm;
+            height: 32mm;
+            display: block;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 3mm;
+        }
+        
+        .card-back .qr-text {
+            font-size: 9px;
+            font-weight: 700;
+            color: #1e40af;
+            text-align: center;
+            margin-bottom: 1mm;
+        }
+        
+        .card-back .qr-url {
+            font-size: 7px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .recommendations {
+            background: #f9fafb;
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 4px solid #1e40af;
+        }
+        
+        .recommendations h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recommendations li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .recommendations li:last-child {
+            border-bottom: none;
+        }
+        
+        .recommendations strong {
+            color: #1e40af;
+        }
+        
+        .print-specs {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .print-specs h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .recommendations, .print-specs, h1, .subtitle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OraChope Business Cards - Final Designs</h1>
+        <p class="subtitle">Hybrid of Version 1 + 3 (Front) | Version 4B (Back)</p>
+        
+        <!-- OPTION A: MINIMALIST BLACK PANEL -->
+        <div class="card-set">
+            <div class="set-title">OPTION A: Minimalist Swiss with Gradient Panel</div>
+            <div class="set-description">
+                Combines V1 minimalist layout with V3 gradient sophistication. Black-to-blue gradient on logo panel creates depth while maintaining professional minimalism. Name in blue accent for modern touch.
+            </div>
+            <div class="card-pair">
+                <div class="card-side">
+                    <div class="card-label">Front Side</div>
+                    <div class="business-card card-a-front">
+                        <div class="left">
+                            <img src="Logo-Cropped.png" alt="OraChope" class="logo-white">
+                        </div>
+                        <div class="right">
+                            <div>
+                                <div class="name">GOH SEOW PING</div>
+                                <div class="title">Co-founder, CEO</div>
+                                <div class="info">
+                                    M: +65-8192 6158<br>
+                                    E: contact@orachope.org<br>
+                                    W: www.orachope.org
+                                </div>
+                            </div>
+                            <div class="company">
+                                A division of CuraSphere Lab Pte Ltd<br>
+                                32 Pekin St, #05-01, Singapore 048762
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-side">
+                    <div class="card-label">Back Side</div>
+                    <div class="business-card card-back">
+                        <img src="qr-code.png" alt="QR Code" class="qr-code">
+                        <div class="qr-text">Scan to Become a Partner</div>
+                        <div class="qr-url">www.orachope.org/partner</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- OPTION B: EXECUTIVE GRADIENT FULL -->
+        <div class="card-set">
+            <div class="set-title">OPTION B: Executive Bold Gradient</div>
+            <div class="set-description">
+                Full V3 executive style with blue gradient covering entire card. Maximum visual impact, white text pops against blue. Premium CEO positioning with strong brand presence. Most memorable design.
+            </div>
+            <div class="card-pair">
+                <div class="card-side">
+                    <div class="card-label">Front Side</div>
+                    <div class="business-card card-b-front">
+                        <div>
+                            <img src="Logo-Cropped.png" alt="OraChope" class="logo">
+                        </div>
+                        <div>
+                            <div class="name">GOH SEOW PING</div>
+                            <div class="title">Co-founder, CEO</div>
+                            <div class="contact">
+                                M: +65-8192 6158<br>
+                                E: contact@orachope.org<br>
+                                W: www.orachope.org
+                            </div>
+                            <div class="company">
+                                A division of CuraSphere Lab Pte Ltd<br>
+                                32 Pekin St, #05-01, Singapore 048762
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-side">
+                    <div class="card-label">Back Side</div>
+                    <div class="business-card card-back">
+                        <img src="qr-code.png" alt="QR Code" class="qr-code">
+                        <div class="qr-text">Scan to Become a Partner</div>
+                        <div class="qr-url">www.orachope.org/partner</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RECOMMENDATIONS -->
+        <div class="recommendations">
+            <h3>🎯 Design Analysis & Recommendation</h3>
+            <ul>
+                <li>
+                    <strong>Option A (Minimalist):</strong> Best for first meetings with conservative JB dentists. Black panel creates authority, blue name adds modern touch without overwhelming. Logo isolation makes it memorable. Professional but approachable.
+                </li>
+                <li>
+                    <strong>Option B (Executive):</strong> Best for CEO positioning and conference networking. Full gradient creates maximum visual impact. White text on blue = high contrast legibility. Premium feel matches "leading AI platform" narrative.
+                </li>
+                <li>
+                    <strong>Back Side (Both):</strong> QR code on light blue background ensures high scan success rate. "Scan to Become a Partner" is direct call-to-action. 32mm QR size is optimal for phone cameras at arm's length.
+                </li>
+                <li>
+                    <strong>My Recommendation:</strong> <strong>Option A for dentist meetings</strong> (professional, trustworthy). Option B for investor/media meetings (bold, visionary). Print 100 of each for different contexts.
+                </li>
+            </ul>
+        </div>
+        
+        <!-- PRINT SPECIFICATIONS -->
+        <div class="print-specs">
+            <h3>📋 Print Specifications for Singapore Printers</h3>
+            <div class="specs-grid">
+                <div>
+                    <strong>Dimensions:</strong><br>
+                    90mm × 54mm (standard business card)<br><br>
+                    
+                    <strong>Material:</strong><br>
+                    300gsm art card (premium thickness)<br><br>
+                    
+                    <strong>Finish:</strong><br>
+                    Matte (recommended for professionalism)<br><br>
+                    
+                    <strong>Printing:</strong><br>
+                    CMYK full color, double-sided<br><br>
+                </div>
+                <div>
+                    <strong>Quantity Recommendation:</strong><br>
+                    • Option A: 200 cards (dentist meetings)<br>
+                    • Option B: 100 cards (networking/investors)<br><br>
+                    
+                    <strong>Cost Estimate:</strong><br>
+                    SGD 50-70 for 300 total cards<br><br>
+                    
+                    <strong>Turnaround:</strong><br>
+                    2-3 business days<br><br>
+                    
+                    <strong>Recommended Printer:</strong><br>
+                    PrintCity, Eprints.sg, or WhatsApp Print
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
