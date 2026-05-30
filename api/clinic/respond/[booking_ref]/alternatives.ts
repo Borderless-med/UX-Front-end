@@ -6,7 +6,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { NotificationService } from '../../../services/notification-service';
+import { NotificationService } from '../../../services/notification-service.js';
 import crypto from 'crypto';
 
 // Retry logic for database updates

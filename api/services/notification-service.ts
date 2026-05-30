@@ -5,8 +5,8 @@
 // ============================================
 
 import { createClient } from '@supabase/supabase-js';
-import { emailTemplates } from '../templates/email-templates';
-import { whatsappTemplates } from '../templates/whatsapp-templates';
+import { emailTemplates } from '../templates/email-templates.js';
+import { whatsappTemplates } from '../templates/whatsapp-templates.js';
 
 // Notification types
 export type NotificationType =
