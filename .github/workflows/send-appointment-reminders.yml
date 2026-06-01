@@ -13,7 +13,7 @@ jobs:
       - name: Ping Vercel endpoint
         run: |
           response=$(curl -s -w "\n%{http_code}" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}" \
             https://orachope.org/api/cron/send-appointment-reminders)
           
           http_code=$(echo "$response" | tail -n1)

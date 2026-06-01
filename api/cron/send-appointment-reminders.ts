@@ -13,10 +13,11 @@ export default async function handler(
   res: VercelResponse
 ) {
   // Verify cron secret
-  const authHeader = req.headers.authorization;
-  const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
+  // Note: Using X-Cron-Secret instead of Authorization because Vercel strips Authorization headers
+  const cronSecret = req.headers['x-cron-secret'] || req.headers['X-Cron-Secret'];
+  const expectedSecret = process.env.CRON_SECRET;
   
-  if (authHeader !== expectedAuth) {
+  if (cronSecret !== expectedSecret) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
