@@ -42,10 +42,6 @@ export default async function handler(
           id,
           name,
           address,
-          city,
-          state,
-          postcode,
-          country,
           whatsapp_number
         )
       `)

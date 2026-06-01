@@ -35,11 +35,7 @@ export default async function handler(
         *,
         clinics_data (
           name,
-          address,
-          city,
-          state,
-          postcode,
-          country
+          address
         )
       `)
       .eq('status', 'pending')

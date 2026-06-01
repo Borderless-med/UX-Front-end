@@ -43,10 +43,6 @@ export default async function handler(
           id,
           name,
           address,
-          city,
-          state,
-          postcode,
-          country,
           contact_email,
           whatsapp_number
         )
