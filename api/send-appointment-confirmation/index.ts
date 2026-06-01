@@ -122,6 +122,7 @@ export default async function handler(
     // Fetch clinic contact information from database
     let clinicEmail: string | null = null;
     let clinicWhatsApp: string | null = null;
+    let clinicId: number | null = null;
     
     console.log(`Looking up clinic: "${bookingData.clinic_location}"`);
     
@@ -129,7 +130,7 @@ export default async function handler(
       // Try JB clinics first (clinics_data) - case-insensitive search
       const { data: jbClinics, error: jbError } = await supabase
         .from('clinics_data')
-        .select('contact_email, whatsapp_number')
+        .select('id, contact_email, whatsapp_number')
         .ilike('name', bookingData.clinic_location)
         .limit(1);  // Changed from .single() to .limit(1) to avoid error on 0 or multiple rows
       
@@ -140,15 +141,16 @@ export default async function handler(
       const jbClinic = jbClinics && jbClinics.length > 0 ? jbClinics[0] : null;
       
       if (jbClinic) {
+        clinicId = jbClinic.id;
         clinicEmail = jbClinic.contact_email;
         clinicWhatsApp = jbClinic.whatsapp_number;
-        console.log(`✅ Found JB clinic contact: ${clinicEmail}`);
+        console.log(`✅ Found JB clinic (ID: ${clinicId}): ${clinicEmail}`);
       } else {
         console.log(`No JB clinic found, trying SG clinics...`);
         // Try SG clinics (sg_clinics) - case-insensitive search
         const { data: sgClinics, error: sgError } = await supabase
           .from('sg_clinics')
-          .select('contact_email, whatsapp_number')
+          .select('id, contact_email, whatsapp_number')
           .ilike('name', bookingData.clinic_location)
           .limit(1);  // Changed from .single() to .limit(1)
         
@@ -159,9 +161,10 @@ export default async function handler(
         const sgClinic = sgClinics && sgClinics.length > 0 ? sgClinics[0] : null;
         
         if (sgClinic) {
+          clinicId = sgClinic.id;
           clinicEmail = sgClinic.contact_email;
           clinicWhatsApp = sgClinic.whatsapp_number;
-          console.log(`✅ Found SG clinic contact: ${clinicEmail}`);
+          console.log(`✅ Found SG clinic (ID: ${clinicId}): ${clinicEmail}`);
         } else {
           console.log(`❌ No clinic found in either table for: "${bookingData.clinic_location}"`);
         }
@@ -376,7 +379,7 @@ export default async function handler(
     const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
     const responseToken = crypto
       .createHmac('sha256', HMAC_SECRET)
-      .update(`${bookingRef}|${clinicEmail || bookingData.clinic_location}`)
+      .update(`${bookingRef}|${clinicId || bookingData.clinic_location}`)
       .digest('hex')
       .slice(0, 32);
 

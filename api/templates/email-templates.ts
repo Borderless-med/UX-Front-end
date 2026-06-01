@@ -107,10 +107,11 @@ const bookingAlertClinic: EmailTemplateFunction = (data) => ({
           <p style="margin: 0; color: #991b1b; font-size: 14px;">This booking will AUTO-EXPIRE at ${data.expires_at} if you do not respond.</p>
         </div>
         
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${data.confirm_url}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">✅ CONFIRM APPOINTMENT</a>
-          <a href="${data.reject_url}" style="display: inline-block; background: #dc2626; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">❌ REJECT BOOKING</a>
-          <a href="${data.alternatives_url}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">🔄 OFFER ALTERNATIVES</a>
+        <div style="margin: 30px 0;">
+          <p style="text-align: center; margin: 0 0 16px; color: #64748b; font-size: 14px; font-weight: 600;">Choose your response:</p>
+          <a href="${data.confirm_url}" style="display: block; background: #059669; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 0 0 12px; text-align: center; font-size: 15px;">✓ Confirm Appointment</a>
+          <a href="${data.alternatives_url}" style="display: block; background: #3b82f6; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 0 0 12px; text-align: center; font-size: 15px;">↻ Suggest Alternative Times</a>
+          <a href="${data.reject_url}" style="display: block; background: #6b7280; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 0; text-align: center; font-size: 15px;">✕ Decline Booking</a>
         </div>
         
         <div style="text-align: center; padding: 20px 0; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
