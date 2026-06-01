@@ -126,15 +126,17 @@ export default async function handler(
     
     try {
       // Try JB clinics first (clinics_data) - case-insensitive search
-      const { data: jbClinic, error: jbError } = await supabase
+      const { data: jbClinics, error: jbError } = await supabase
         .from('clinics_data')
         .select('contact_email, whatsapp_number')
         .ilike('name', bookingData.clinic_location)
-        .single();
+        .limit(1);  // Changed from .single() to .limit(1) to avoid error on 0 or multiple rows
       
       if (jbError) {
         console.log(`JB clinic query error: ${jbError.message}`);
       }
+      
+      const jbClinic = jbClinics && jbClinics.length > 0 ? jbClinics[0] : null;
       
       if (jbClinic) {
         clinicEmail = jbClinic.contact_email;
@@ -143,15 +145,17 @@ export default async function handler(
       } else {
         console.log(`No JB clinic found, trying SG clinics...`);
         // Try SG clinics (sg_clinics) - case-insensitive search
-        const { data: sgClinic, error: sgError } = await supabase
+        const { data: sgClinics, error: sgError } = await supabase
           .from('sg_clinics')
           .select('contact_email, whatsapp_number')
           .ilike('name', bookingData.clinic_location)
-          .single();
+          .limit(1);  // Changed from .single() to .limit(1)
         
         if (sgError) {
           console.log(`SG clinic query error: ${sgError.message}`);
         }
+        
+        const sgClinic = sgClinics && sgClinics.length > 0 ? sgClinics[0] : null;
         
         if (sgClinic) {
           clinicEmail = sgClinic.contact_email;
