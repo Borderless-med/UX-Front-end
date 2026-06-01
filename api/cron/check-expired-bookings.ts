@@ -13,14 +13,16 @@ export default async function handler(
   res: VercelResponse
 ) {
   // Verify cron secret (security)
-  const authHeader = req.headers.authorization;
+  console.log('All headers:', req.headers);
+  const authHeader = req.headers.authorization || req.headers['Authorization'];
   const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
   
   console.log('Auth check:', {
     hasAuthHeader: !!authHeader,
     hasEnvVar: !!process.env.CRON_SECRET,
     authHeaderPrefix: authHeader?.substring(0, 15),
-    expectedPrefix: expectedAuth?.substring(0, 15)
+    expectedPrefix: expectedAuth?.substring(0, 15),
+    headerKeys: Object.keys(req.headers)
   });
   
   if (authHeader !== expectedAuth) {
