@@ -115,6 +115,9 @@ export default async function handler(
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const SMTP_USER = process.env.SMTP_USER!;
     
+    // Extract booking data from request body FIRST
+    const bookingData: AppointmentBookingRequest = req.body;
+    
     // Fetch clinic contact information from database
     let clinicEmail: string | null = null;
     let clinicWhatsApp: string | null = null;
@@ -148,8 +151,6 @@ export default async function handler(
     } catch (err) {
       console.log(`Could not fetch clinic contact info: ${err}`);
     }
-    
-    const bookingData: AppointmentBookingRequest = req.body;
 
     // --- All core business logic below this line is IDENTICAL to your original file ---
     
