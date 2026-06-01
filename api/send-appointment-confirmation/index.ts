@@ -122,30 +122,43 @@ export default async function handler(
     let clinicEmail: string | null = null;
     let clinicWhatsApp: string | null = null;
     
+    console.log(`Looking up clinic: "${bookingData.clinic_location}"`);
+    
     try {
-      // Try JB clinics first (clinics_data)
-      const { data: jbClinic } = await supabase
+      // Try JB clinics first (clinics_data) - case-insensitive search
+      const { data: jbClinic, error: jbError } = await supabase
         .from('clinics_data')
         .select('contact_email, whatsapp_number')
-        .eq('name', bookingData.clinic_location)
+        .ilike('name', bookingData.clinic_location)
         .single();
+      
+      if (jbError) {
+        console.log(`JB clinic query error: ${jbError.message}`);
+      }
       
       if (jbClinic) {
         clinicEmail = jbClinic.contact_email;
         clinicWhatsApp = jbClinic.whatsapp_number;
-        console.log(`Found JB clinic contact: ${clinicEmail}`);
+        console.log(`✅ Found JB clinic contact: ${clinicEmail}`);
       } else {
-        // Try SG clinics (sg_clinics)
-        const { data: sgClinic } = await supabase
+        console.log(`No JB clinic found, trying SG clinics...`);
+        // Try SG clinics (sg_clinics) - case-insensitive search
+        const { data: sgClinic, error: sgError } = await supabase
           .from('sg_clinics')
           .select('contact_email, whatsapp_number')
-          .eq('name', bookingData.clinic_location)
+          .ilike('name', bookingData.clinic_location)
           .single();
+        
+        if (sgError) {
+          console.log(`SG clinic query error: ${sgError.message}`);
+        }
         
         if (sgClinic) {
           clinicEmail = sgClinic.contact_email;
           clinicWhatsApp = sgClinic.whatsapp_number;
-          console.log(`Found SG clinic contact: ${clinicEmail}`);
+          console.log(`✅ Found SG clinic contact: ${clinicEmail}`);
+        } else {
+          console.log(`❌ No clinic found in either table for: "${bookingData.clinic_location}"`);
         }
       }
     } catch (err) {
