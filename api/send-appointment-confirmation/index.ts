@@ -3,6 +3,7 @@
 import { createClient } from "@supabase/supabase-js";
 import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { NotificationService } from '../services/notification-service.js';
 
 // --- Email Service Class (logic is identical, just uses Node.js env vars) ---
 class OraHopeEmailService {
@@ -253,6 +254,13 @@ export default async function handler(
     
     const emailService = new OraHopeEmailService({ username: SMTP_USER });
     
+    // Initialize NotificationService for proper templated emails
+    const notificationService = new NotificationService({
+      supabaseUrl,
+      supabaseKey: supabaseServiceKey,
+      smtpUser: SMTP_USER,
+    });
+    
     // --- The main patient email template ---
     // --- Cancellation token (deterministic HMAC) ---
     const CANCEL_SECRET = process.env.CANCEL_SECRET || 'dev-cancel-secret';
@@ -363,87 +371,86 @@ export default async function handler(
       console.error('Failed to send admin booking notification', e);
     }
 
-    // --- Clinic notification (generic partner email for now) ---
-    // TODO: Once clinic emails are added to database, look up clinic-specific email
-    // Query: SELECT contact_email FROM clinics_data WHERE name = bookingData.clinic_location
-    const clinicEmailHtml = `
-      <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;line-height:1.5">
-        <h2 style="margin:0 0 12px;color:#1e3a8a">🎉 New Booking Request for Your Clinic</h2>
-        <p style="margin:0 0 16px;color:#334155">Booking Reference <strong>${bookingRef}</strong></p>
-        
-        <div style="background:#f0f9ff;padding:16px;border-radius:8px;margin:16px 0">
-          <h3 style="margin:0 0 12px;color:#1e40af">Patient Details</h3>
-          <table style="width:100%;border-collapse:collapse;font-size:14px">
-            <tr><td style="padding:4px 0;font-weight:600;color:#475569">Name</td><td style="padding:4px 0">${bookingData.patient_name}</td></tr>
-            <tr><td style="padding:4px 0;font-weight:600;color:#475569">Email</td><td style="padding:4px 0">${bookingData.email}</td></tr>
-            <tr><td style="padding:4px 0;font-weight:600;color:#475569">WhatsApp</td><td style="padding:4px 0">${bookingData.whatsapp}</td></tr>
-          </table>
-        </div>
+    // --- Clinic notification with action buttons ---
+    // Generate HMAC tokens for secure clinic response URLs
+    const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
+    const responseToken = crypto
+      .createHmac('sha256', HMAC_SECRET)
+      .update(`${bookingRef}|${clinicEmail || bookingData.clinic_location}`)
+      .digest('hex')
+      .slice(0, 32);
 
-        <div style="background:#fef3c7;padding:16px;border-radius:8px;margin:16px 0">
-          <h3 style="margin:0 0 12px;color:#92400e">Appointment Details</h3>
-          <table style="width:100%;border-collapse:collapse;font-size:14px">
-            <tr><td style="padding:4px 0;font-weight:600;color:#78350f">Treatment</td><td style="padding:4px 0">${bookingData.treatment_type}</td></tr>
-            <tr><td style="padding:4px 0;font-weight:600;color:#78350f">Date</td><td style="padding:4px 0">${formattedDate}</td></tr>
-            <tr><td style="padding:4px 0;font-weight:600;color:#78350f">Time Slot</td><td style="padding:4px 0">${bookingData.time_slot}</td></tr>
-          </table>
-        </div>
+    // Store the response token in the database for verification
+    await supabase
+      .from('appointment_bookings')
+      .update({ clinic_response_token: responseToken })
+      .eq('booking_ref', bookingRef);
 
-        <div style="background:#f0fdf4;padding:16px;border-radius:8px;margin:20px 0">
-          <h4 style="margin:0 0 8px;color:#15803d">📞 Next Steps:</h4>
-          <ol style="margin:8px 0;padding-left:20px;color:#166534">
-            <li>Contact patient within 24 hours via WhatsApp: <strong>${bookingData.whatsapp}</strong></li>
-            <li>Confirm appointment availability for ${formattedDate} at ${bookingData.time_slot}</li>
-            <li>Provide clinic directions and parking info</li>
-            <li>Confirm treatment pricing and duration</li>
-          </ol>
-        </div>
+    const baseUrl = 'https://orachope.org/api/clinic/respond';
+    const confirmUrl = `${baseUrl}/${bookingRef}/confirm?token=${responseToken}`;
+    const rejectUrl = `${baseUrl}/${bookingRef}/reject?token=${responseToken}`;
+    const alternativesUrl = `${baseUrl}/${bookingRef}/alternatives?token=${responseToken}`;
 
-        <div style="text-align:center;margin:24px 0">
-          <a href="https://wa.me/${bookingData.whatsapp.replace(/[^\d+]/g, '')}?text=Hi%20${encodeURIComponent(bookingData.patient_name)}%2C%20this%20is%20${encodeURIComponent(bookingData.clinic_location)}.%20We%20received%20your%20booking%20request%20for%20${encodeURIComponent(bookingData.treatment_type)}%20on%20${encodeURIComponent(formattedDate)}.%20" 
-             style="display:inline-block;background:#22c55e;color:#fff;text-decoration:none;padding:12px 24px;border-radius:6px;font-weight:600;font-size:14px">
-            💬 Contact Patient via WhatsApp
-          </a>
-        </div>
+    // Calculate expiry time (3 hours from now)
+    const expiresAt = new Date(Date.now() + 3 * 60 * 60 * 1000);
+    const formattedExpiryTime = expiresAt.toLocaleTimeString('en-SG', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
 
-        ${clinicWhatsApp ? `
-        <div style="background:#eff6ff;padding:12px;border-radius:6px;margin:16px 0;border-left:4px solid #3b82f6">
-          <p style="margin:0;font-size:13px;color:#1e40af">
-            <strong>Your clinic WhatsApp:</strong> ${clinicWhatsApp}<br>
-            <span style="font-size:12px;color:#64748b">This is stored in our system. Update via OraChope.org dashboard.</span>
-          </p>
-        </div>
-        ` : `
-        <div style="background:#fef3c7;padding:12px;border-radius:6px;margin:16px 0;border-left:4px solid #f59e0b">
-          <p style="margin:0;font-size:13px;color:#92400e">
-            <strong>⚠️ No WhatsApp number on file.</strong> <a href="mailto:contact@orachope.org" style="color:#92400e">Contact us</a> to add your clinic's WhatsApp for faster patient communication.
-          </p>
-        </div>
-        `}
-
-        <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">
-          This booking was made through OraChope.org dental platform.<br>
-          Questions? Contact us at <a href="mailto:contact@orachope.org">contact@orachope.org</a>
-        </p>
-      </div>`;
+    // Also update expires_at in database
+    await supabase
+      .from('appointment_bookings')
+      .update({ expires_at: expiresAt.toISOString() })
+      .eq('booking_ref', bookingRef);
     
     try {
       if (clinicEmail) {
-        // Send directly to clinic
-        await emailService.sendMail({
-          from: `SG-JB Dental <${SMTP_USER}>`,
-          to: clinicEmail,
-          subject: `New Patient Booking Request - ${bookingRef}`,
-          html: clinicEmailHtml,
-        });
-        console.log(`Clinic notification sent directly to: ${clinicEmail}`);
+        // Send via NotificationService using proper template with action buttons
+        const clinicNotificationResults = await notificationService.send(
+          'booking_alert_clinic',
+          {
+            name: bookingData.clinic_location,
+            email: clinicEmail,
+            whatsapp: clinicWhatsApp,
+          },
+          {
+            clinic_name: bookingData.clinic_location,
+            booking_ref: bookingRef,
+            patient_name: bookingData.patient_name,
+            patient_email: bookingData.email,
+            patient_whatsapp: bookingData.whatsapp,
+            treatment_type: bookingData.treatment_type,
+            formatted_date: formattedDate,
+            time_slot: bookingData.time_slot,
+            expires_at: formattedExpiryTime,
+            confirm_url: confirmUrl,
+            reject_url: rejectUrl,
+            alternatives_url: alternativesUrl,
+          },
+          ['email']
+        );
+
+        // Log notification
+        await notificationService.logNotification(
+          bookingRef,
+          'booking_alert_clinic',
+          clinicNotificationResults
+        );
+        
+        console.log(`✅ Clinic notification sent to: ${clinicEmail} (with action buttons)`);
         
         // Also CC admin for tracking
         await emailService.sendMail({
           from: `SG-JB Dental <${SMTP_USER}>`,
           to: 'contact@orachope.org',
           subject: `[CC] Booking sent to ${bookingData.clinic_location} - ${bookingRef}`,
-          html: `<p>A booking notification was sent to <strong>${clinicEmail}</strong></p>${clinicEmailHtml}`,
+          html: `<p>A booking notification with action buttons was sent to <strong>${clinicEmail}</strong></p>
+                 <p><strong>Booking Reference:</strong> ${bookingRef}<br>
+                 <strong>Patient:</strong> ${bookingData.patient_name}<br>
+                 <strong>Treatment:</strong> ${bookingData.treatment_type}<br>
+                 <strong>Date:</strong> ${formattedDate} at ${bookingData.time_slot}</p>`,
         });
       } else {
         // Fallback: Send to admin for manual forwarding
@@ -451,7 +458,12 @@ export default async function handler(
           from: `SG-JB Dental <${SMTP_USER}>`,
           to: 'contact@orachope.org',
           subject: `[NO CLINIC EMAIL] Booking for ${bookingData.clinic_location} - ${bookingRef}`,
-          html: `<div style="background:#fef2f2;padding:16px;margin-bottom:16px;border:2px solid #dc2626;border-radius:8px"><p style="color:#991b1b;font-weight:600;margin:0">⚠️ CLINIC EMAIL NOT IN DATABASE</p><p style="color:#991b1b;margin:8px 0 0">Please forward this booking to ${bookingData.clinic_location} manually.</p></div>${clinicEmailHtml}`,
+          html: `<div style="background:#fef2f2;padding:16px;margin-bottom:16px;border:2px solid #dc2626;border-radius:8px"><p style="color:#991b1b;font-weight:600;margin:0">⚠️ CLINIC EMAIL NOT IN DATABASE</p><p style="color:#991b1b;margin:8px 0 0">Please forward this booking to ${bookingData.clinic_location} manually.</p></div>
+                 <p><strong>Booking Reference:</strong> ${bookingRef}<br>
+                 <strong>Patient:</strong> ${bookingData.patient_name} (${bookingData.email})<br>
+                 <strong>WhatsApp:</strong> ${bookingData.whatsapp}<br>
+                 <strong>Treatment:</strong> ${bookingData.treatment_type}<br>
+                 <strong>Date:</strong> ${formattedDate} at ${bookingData.time_slot}</p>`,
         });
         console.log('Clinic email not found - sent to admin for manual forwarding');
       }
