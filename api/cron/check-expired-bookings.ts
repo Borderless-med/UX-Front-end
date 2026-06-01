@@ -16,6 +16,13 @@ export default async function handler(
   const authHeader = req.headers.authorization;
   const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
   
+  console.log('Auth check:', {
+    hasAuthHeader: !!authHeader,
+    hasEnvVar: !!process.env.CRON_SECRET,
+    authHeaderPrefix: authHeader?.substring(0, 15),
+    expectedPrefix: expectedAuth?.substring(0, 15)
+  });
+  
   if (authHeader !== expectedAuth) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
