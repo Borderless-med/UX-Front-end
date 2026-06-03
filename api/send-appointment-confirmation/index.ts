@@ -394,6 +394,11 @@ export default async function handler(
     const rejectUrl = `${baseUrl}/${bookingRef}/reject?token=${responseToken}`;
     const alternativesUrl = `${baseUrl}/${bookingRef}/alternatives?token=${responseToken}`;
 
+    console.log('🔗 Generated clinic response URLs:');
+    console.log('  Confirm:', confirmUrl);
+    console.log('  Reject:', rejectUrl);
+    console.log('  Alternatives:', alternativesUrl);
+
     // Calculate expiry time (3 hours from now)
     const expiresAt = new Date(Date.now() + 3 * 60 * 60 * 1000);
     const formattedExpiryTime = expiresAt.toLocaleTimeString('en-SG', {
