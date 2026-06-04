@@ -84,21 +84,10 @@ export default async function handler(
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch booking
+    // Fetch booking (removed clinics_data JOIN - not needed and causes failures)
     const { data: booking, error: fetchError } = await supabase
       .from('appointment_bookings')
-      .select(`
-        *,
-        clinics_data (
-          id,
-          name,
-          address,
-          city,
-          state,
-          postcode,
-          country
-        )
-      `)
+      .select('*')
       .eq('booking_ref', booking_ref)
       .single();
 
@@ -116,10 +105,11 @@ export default async function handler(
 
     // Verify HMAC token
     const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
-    const clinic = booking.clinics_data || {};
+    // Try to get clinic_id from booking, otherwise use clinic_location
+    const clinicIdentifier = booking.clinic_id || booking.clinic_location;
     const expectedToken = crypto
       .createHmac('sha256', HMAC_SECRET)
-      .update(`${booking_ref}|${clinic.id || booking.clinic_location}`)
+      .update(`${booking_ref}|${clinicIdentifier}`)
       .digest('hex')
       .slice(0, 32);
 
