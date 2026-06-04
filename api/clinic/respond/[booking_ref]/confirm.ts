@@ -109,7 +109,7 @@ export default async function handler(
     if (booking.clinic_id) {
       const { data: clinic } = await supabase
         .from('clinics_data')
-        .select('name, address, city, state, postcode, country')
+        .select('name, address, township')
         .eq('id', booking.clinic_id)
         .single();
       clinicDetails = clinic;
@@ -232,7 +232,7 @@ export default async function handler(
       const cancelUrl = `https://orachope.org/api/cancel-appointment?ref=${encodeURIComponent(booking_ref)}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
 
       const googleMapsUrl = clinicDetails?.address 
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicDetails.address + ', ' + clinicDetails.city)}`
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicDetails.address)}`
         : 'https://orachope.org/travel-guide';
 
       const notificationResults = await notificationService.send(
@@ -247,10 +247,10 @@ export default async function handler(
           booking_ref: booking_ref as string,
           clinic_name: clinicDetails?.name || booking.clinic_location,
           clinic_address: clinicDetails?.address || '',
-          clinic_city: clinicDetails?.city || '',
-          clinic_state: clinicDetails?.state || '',
-          clinic_postcode: clinicDetails?.postcode || '',
-          clinic_country: clinicDetails?.country || 'Malaysia',
+          clinic_city: clinicDetails?.township || 'Johor Bahru',
+          clinic_state: 'Johor',
+          clinic_postcode: '',
+          clinic_country: 'Malaysia',
           formatted_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
             weekday: 'long',
             year: 'numeric',

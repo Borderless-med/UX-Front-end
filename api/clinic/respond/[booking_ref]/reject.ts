@@ -108,7 +108,7 @@ export default async function handler(
     if (booking.clinic_id) {
       const { data: clinic } = await supabase
         .from('clinics_data')
-        .select('name, address, city, state, postcode, country')
+        .select('name, address, township')
         .eq('id', booking.clinic_id)
         .single();
       clinicDetails = clinic;

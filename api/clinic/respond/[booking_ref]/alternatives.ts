@@ -108,7 +108,7 @@ export default async function handler(
     if (booking.clinic_id) {
       const { data: clinic } = await supabase
         .from('clinics_data')
-        .select('name, address, city, state, postcode, country')
+        .select('name, address, township')
         .eq('id', booking.clinic_id)
         .single();
       clinicDetails = clinic;
@@ -478,9 +478,9 @@ export default async function handler(
             booking_ref: booking_ref as string,
             clinic_name: clinicDetails?.name || booking.clinic_location,
             clinic_address: clinicDetails?.address || '',
-            clinic_city: clinicDetails?.city || '',
-            clinic_state: clinicDetails?.state || '',
-            clinic_country: clinicDetails?.country || 'Malaysia',
+            clinic_city: clinicDetails?.township || 'Johor Bahru',
+            clinic_state: 'Johor',
+            clinic_country: 'Malaysia',
             original_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
             original_time: booking.time_slot,
             alternative_slots: alternativesText,
