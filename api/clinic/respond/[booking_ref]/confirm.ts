@@ -104,6 +104,17 @@ export default async function handler(
       `);
     }
 
+    // Fetch clinic details for patient notification (only if clinic_id exists)
+    let clinicDetails = null;
+    if (booking.clinic_id) {
+      const { data: clinic } = await supabase
+        .from('clinics_data')
+        .select('name, address, city, state, postcode, country')
+        .eq('id', booking.clinic_id)
+        .single();
+      clinicDetails = clinic;
+    }
+
     // Verify HMAC token
     const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
     // Try to get clinic_id from booking, otherwise use clinic_location
@@ -220,8 +231,8 @@ export default async function handler(
         .slice(0, 32);
       const cancelUrl = `https://orachope.org/api/cancel-appointment?ref=${encodeURIComponent(booking_ref)}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
 
-      const googleMapsUrl = clinic.address 
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.address + ', ' + clinic.city)}`
+      const googleMapsUrl = clinicDetails?.address 
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicDetails.address + ', ' + clinicDetails.city)}`
         : 'https://orachope.org/travel-guide';
 
       const notificationResults = await notificationService.send(
@@ -234,12 +245,12 @@ export default async function handler(
         {
           patient_name: booking.patient_name,
           booking_ref: booking_ref as string,
-          clinic_name: clinic.name || booking.clinic_location,
-          clinic_address: clinic.address || '',
-          clinic_city: clinic.city || '',
-          clinic_state: clinic.state || '',
-          clinic_postcode: clinic.postcode || '',
-          clinic_country: clinic.country || 'Malaysia',
+          clinic_name: clinicDetails?.name || booking.clinic_location,
+          clinic_address: clinicDetails?.address || '',
+          clinic_city: clinicDetails?.city || '',
+          clinic_state: clinicDetails?.state || '',
+          clinic_postcode: clinicDetails?.postcode || '',
+          clinic_country: clinicDetails?.country || 'Malaysia',
           formatted_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
             weekday: 'long',
             year: 'numeric',

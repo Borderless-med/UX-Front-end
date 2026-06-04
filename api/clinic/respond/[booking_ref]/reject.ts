@@ -103,6 +103,17 @@ export default async function handler(
       `);
     }
 
+    // Fetch clinic details for patient notification (only if clinic_id exists)
+    let clinicDetails = null;
+    if (booking.clinic_id) {
+      const { data: clinic } = await supabase
+        .from('clinics_data')
+        .select('name, address, city, state, postcode, country')
+        .eq('id', booking.clinic_id)
+        .single();
+      clinicDetails = clinic;
+    }
+
     // Verify HMAC token
     const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
     // Try to get clinic_id from booking, otherwise use clinic_location
@@ -348,7 +359,7 @@ export default async function handler(
               <h2 style="color: #dc2626;">Booking Request Declined</h2>
               <p>Dear ${booking.patient_name},</p>
               
-              <p>Unfortunately, <strong>${clinic.name || booking.clinic_location}</strong> is unable to accommodate your requested appointment:</p>
+              <p>Unfortunately, <strong>${clinicDetails?.name || booking.clinic_location}</strong> is unable to accommodate your requested appointment:</p>
               
               <div style="background: #f8fafc; padding: 15px; border-radius: 6px; margin: 20px 0;">
                 <strong>Reference:</strong> ${booking_ref}<br>
