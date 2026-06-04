@@ -36,15 +36,7 @@ export default async function handler(
     // Find confirmed bookings with appointments tomorrow
     const { data: upcomingBookings, error: fetchError } = await supabase
       .from('appointment_bookings')
-      .select(`
-        *,
-        clinics_data (
-          id,
-          name,
-          address,
-          whatsapp_number
-        )
-      `)
+      .select('*')
       .eq('status', 'confirmed')
       .eq('reminder_24h_sent', false)
       .gte('preferred_date', targetStart.toISOString().split('T')[0])
@@ -77,18 +69,25 @@ export default async function handler(
     // Process each booking
     for (const booking of upcomingBookings) {
       try {
-        const clinic = booking.clinics_data || {};
+        // Fetch clinic details separately (database only has: name, address, township)
+        const { data: clinic } = await supabase
+          .from('clinics_data')
+          .select('name, address, township')
+          .eq('id', booking.clinic_id)
+          .single();
+        
+        const clinicDetails = clinic || {};
         
         // Generate URLs
-        const clinicSlug = (clinic.name || booking.clinic_location)
+        const clinicSlug = (clinicDetails.name || booking.clinic_location)
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)/g, '');
         
         const clinicCardUrl = `https://orachope.org/clinic/${clinicSlug}`;
         const travelGuideUrl = 'https://orachope.org/travel-guide';
-        const googleMapsUrl = clinic.address 
-          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.address + ', ' + clinic.city)}`
+        const googleMapsUrl = clinicDetails.address 
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicDetails.address)}`
           : clinicCardUrl;
 
         // Send reminder (both WhatsApp AND Email for reliability)
@@ -102,12 +101,12 @@ export default async function handler(
           {
             patient_name: booking.patient_name,
             booking_ref: booking.booking_ref,
-            clinic_name: clinic.name || booking.clinic_location,
-            clinic_address: clinic.address || '',
-            clinic_city: clinic.city || '',
-            clinic_state: clinic.state || '',
-            clinic_postcode: clinic.postcode || '',
-            clinic_country: clinic.country || 'Malaysia',
+            clinic_name: clinicDetails.name || booking.clinic_location,
+            clinic_address: clinicDetails.address || '',
+            clinic_city: clinicDetails.township || 'Johor Bahru',
+            clinic_state: 'Johor',
+            clinic_postcode: '',
+            clinic_country: 'Malaysia',
             formatted_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
               weekday: 'long',
               year: 'numeric',
