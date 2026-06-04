@@ -84,8 +84,8 @@ export default async function handler(
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)/g, '');
         
-        const clinicCardUrl = `https://orachope.org/clinic/${clinicSlug}`;
-        const travelGuideUrl = 'https://orachope.org/travel-guide';
+        const clinicCardUrl = `https://www.orachope.org/clinic/${clinicSlug}`;
+        const travelGuideUrl = 'https://www.orachope.org/travel-guide';
         const googleMapsUrl = clinicDetails.address 
           ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicDetails.address)}`
           : clinicCardUrl;
