@@ -33,12 +33,13 @@ type DashboardSummary = {
 };
 
 type ClinicOption = {
-  id: number | null;
+  id: string;
   name: string;
 };
 
 type ClinicSummary = DashboardSummary & {
   clinicId: number | null;
+  clinicKey: string;
   clinicName: string;
   averageResponseMinutes: number | null;
 };
@@ -50,6 +51,7 @@ type PendingBooking = {
   preferredDate: string;
   timeSlot: string;
   clinicId: number | null;
+  clinicKey: string;
   clinicName: string;
   expiresAt: string | null;
   minutesRemaining: number | null;
@@ -57,6 +59,7 @@ type PendingBooking = {
 
 type RejectionReasonSummary = {
   clinicId: number | null;
+  clinicKey: string;
   clinicName: string;
   reason: string;
   count: number;
@@ -95,7 +98,6 @@ const formatMinutesRemaining = (minutesRemaining: number | null) => {
 };
 
 const ALL_CLINICS_VALUE = 'all';
-const UNASSIGNED_CLINIC_VALUE = 'unassigned';
 
 const AdminDashboard = () => {
   const { session, user, isLoading } = useAuth();
@@ -143,22 +145,21 @@ const AdminDashboard = () => {
     }
   }, [isLoading, session]);
 
-  const selectedClinicId = selectedClinic === ALL_CLINICS_VALUE
-    ? null
-    : selectedClinic === UNASSIGNED_CLINIC_VALUE
-      ? 'unassigned'
-      : Number(selectedClinic);
-  const selectedClinicSummary = selectedClinicId === null
+  const selectedClinicKey = selectedClinic === ALL_CLINICS_VALUE ? null : selectedClinic;
+  const selectedClinicSummary = selectedClinicKey === null
     ? dashboard?.summary ?? null
-    : dashboard?.clinicSummaries.find((clinic) =>
-        selectedClinicId === 'unassigned' ? clinic.clinicId === null : clinic.clinicId === selectedClinicId
-      ) ?? null;
+    : dashboard?.clinicSummaries.find((clinic) => clinic.clinicKey === selectedClinicKey) ?? null;
   const visiblePendingBookings = (dashboard?.pendingBookings ?? []).filter((booking) =>
-    selectedClinicId === null || (selectedClinicId === 'unassigned' ? booking.clinicId === null : booking.clinicId === selectedClinicId)
+    selectedClinicKey === null || booking.clinicKey === selectedClinicKey
   );
   const visibleRejectionReasons = (dashboard?.rejectionReasons ?? []).filter((reason) =>
-    selectedClinicId === null || (selectedClinicId === 'unassigned' ? reason.clinicId === null : reason.clinicId === selectedClinicId)
+    selectedClinicKey === null || reason.clinicKey === selectedClinicKey
   );
+  const averageResponseText = selectedClinicSummary && 'averageResponseMinutes' in selectedClinicSummary
+    ? (selectedClinicSummary.averageResponseMinutes === null
+        ? 'No responses yet'
+        : `${selectedClinicSummary.averageResponseMinutes} min`)
+    : 'N/A';
 
   if (isLoading || isFetching) {
     return (
@@ -258,7 +259,7 @@ const AdminDashboard = () => {
                 <SelectContent>
                   <SelectItem value={ALL_CLINICS_VALUE}>All clinics</SelectItem>
                   {dashboard.clinicOptions.map((clinic) => (
-                    <SelectItem key={clinic.id === null ? UNASSIGNED_CLINIC_VALUE : clinic.id} value={clinic.id === null ? UNASSIGNED_CLINIC_VALUE : String(clinic.id)}>
+                    <SelectItem key={clinic.id} value={clinic.id}>
                       {clinic.name}
                     </SelectItem>
                   ))}
@@ -308,7 +309,7 @@ const AdminDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-slate-600">
-              Avg response: {selectedClinicSummary.averageResponseMinutes === null ? 'No responses yet' : `${selectedClinicSummary.averageResponseMinutes} min`}
+              Avg response: {averageResponseText}
             </CardContent>
           </Card>
         </div>
@@ -415,7 +416,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 ) : (
                   dashboard.clinicSummaries.map((clinic) => (
-                    <TableRow key={clinic.clinicId === null ? 'unassigned' : clinic.clinicId}>
+                    <TableRow key={clinic.clinicKey}>
                       <TableCell className="font-medium">{clinic.clinicName}</TableCell>
                       <TableCell>{clinic.totalRequests}</TableCell>
                       <TableCell className={percentageTone(clinic.confirmedRate)}>{clinic.confirmedRate}%</TableCell>

@@ -14,6 +14,7 @@ type DashboardSummary = {
 
 type ClinicSummary = DashboardSummary & {
   clinicId: number | null;
+  clinicKey: string;
   clinicName: string;
   averageResponseMinutes: number | null;
 };
@@ -25,6 +26,7 @@ type PendingBooking = {
   preferredDate: string;
   timeSlot: string;
   clinicId: number | null;
+  clinicKey: string;
   clinicName: string;
   expiresAt: string | null;
   minutesRemaining: number | null;
@@ -32,6 +34,7 @@ type PendingBooking = {
 
 type RejectionReasonSummary = {
   clinicId: number | null;
+  clinicKey: string;
   clinicName: string;
   reason: string;
   count: number;
@@ -84,6 +87,26 @@ const computeSummary = (bookings: BookingRow[]): DashboardSummary => {
 
 const createError = (res: VercelResponse, status: number, error: string) =>
   res.status(status).json({ error });
+
+const getClinicKey = (booking: BookingRow) => {
+  if (booking.clinic_id !== null) {
+    return `id:${booking.clinic_id}`;
+  }
+
+  if (booking.clinic_location?.trim()) {
+    return `location:${booking.clinic_location.trim()}`;
+  }
+
+  return 'unassigned';
+};
+
+const getClinicName = (booking: BookingRow, clinicNameMap: Map<number, string>) => {
+  if (booking.clinic_id !== null) {
+    return clinicNameMap.get(booking.clinic_id) || booking.clinic_location || `Clinic ${booking.clinic_id}`;
+  }
+
+  return booking.clinic_location || 'Unassigned Clinic';
+};
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -173,7 +196,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const groupedByClinic = new Map<string, BookingRow[]>();
     for (const booking of bookingRows) {
-      const clinicKey = booking.clinic_id === null ? 'unassigned' : String(booking.clinic_id);
+      const clinicKey = getClinicKey(booking);
       const clinicBookings = groupedByClinic.get(clinicKey) || [];
       clinicBookings.push(booking);
       groupedByClinic.set(clinicKey, clinicBookings);
@@ -183,13 +206,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const responseMinutes = clinicBookings
         .filter((booking) => booking.clinic_responded_at)
         .map((booking) => toMinutes(booking.created_at, booking.clinic_responded_at!));
-      const clinicId = clinicKey === 'unassigned' ? null : Number(clinicKey);
-      const clinicName = clinicId === null
-        ? 'Unassigned Clinic'
-        : clinicNameMap.get(clinicId) || clinicBookings[0]?.clinic_location || `Clinic ${clinicId}`;
+      const firstBooking = clinicBookings[0];
+      const clinicId = firstBooking?.clinic_id ?? null;
+      const clinicName = firstBooking ? getClinicName(firstBooking, clinicNameMap) : 'Unassigned Clinic';
 
       return {
         clinicId,
+        clinicKey,
         clinicName,
         averageResponseMinutes: responseMinutes.length
           ? Math.round(responseMinutes.reduce((total, value) => total + value, 0) / responseMinutes.length)
@@ -201,9 +224,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const pendingBookings: PendingBooking[] = bookingRows
       .filter((booking) => booking.status === 'pending')
       .map((booking) => {
-        const clinicName = booking.clinic_id === null
-          ? booking.clinic_location || 'Unassigned Clinic'
-          : clinicNameMap.get(booking.clinic_id) || booking.clinic_location || `Clinic ${booking.clinic_id}`;
+        const clinicName = getClinicName(booking, clinicNameMap);
+        const clinicKey = getClinicKey(booking);
         const expiresAtMs = booking.expires_at ? new Date(booking.expires_at).getTime() : null;
         const minutesRemaining = expiresAtMs === null
           ? null
@@ -216,6 +238,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           preferredDate: booking.preferred_date,
           timeSlot: booking.time_slot,
           clinicId: booking.clinic_id,
+          clinicKey,
           clinicName,
           expiresAt: booking.expires_at,
           minutesRemaining,
@@ -230,10 +253,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const rejectionReasonCounts = new Map<string, RejectionReasonSummary>();
     for (const booking of bookingRows.filter((row) => row.status === 'rejected')) {
       const reason = booking.rejection_reason?.trim() || 'No reason provided';
-      const clinicName = booking.clinic_id === null
-        ? booking.clinic_location || 'Unassigned Clinic'
-        : clinicNameMap.get(booking.clinic_id) || booking.clinic_location || `Clinic ${booking.clinic_id}`;
-      const mapKey = `${booking.clinic_id ?? 'unassigned'}::${reason}`;
+      const clinicName = getClinicName(booking, clinicNameMap);
+      const clinicKey = getClinicKey(booking);
+      const mapKey = `${clinicKey}::${reason}`;
       const current = rejectionReasonCounts.get(mapKey);
 
       if (current) {
@@ -241,6 +263,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } else {
         rejectionReasonCounts.set(mapKey, {
           clinicId: booking.clinic_id,
+          clinicKey,
           clinicName,
           reason,
           count: 1,
@@ -249,7 +272,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const clinicOptions = clinicSummaries.map((clinic) => ({
-      id: clinic.clinicId,
+      id: clinic.clinicKey,
       name: clinic.clinicName,
     }));
 
