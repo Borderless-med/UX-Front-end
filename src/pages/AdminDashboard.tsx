@@ -30,6 +30,7 @@ type DashboardSummary = {
   confirmedRate: number;
   expiredRate: number;
   rejectedRate: number;
+  averageResponseMinutes: number | null;
 };
 
 type ClinicOption = {
@@ -155,11 +156,9 @@ const AdminDashboard = () => {
   const visibleRejectionReasons = (dashboard?.rejectionReasons ?? []).filter((reason) =>
     selectedClinicKey === null || reason.clinicKey === selectedClinicKey
   );
-  const averageResponseText = selectedClinicSummary && 'averageResponseMinutes' in selectedClinicSummary
-    ? (selectedClinicSummary.averageResponseMinutes === null
-        ? 'No responses yet'
-        : `${selectedClinicSummary.averageResponseMinutes} min`)
-    : 'N/A';
+  const averageResponseText = selectedClinicSummary.averageResponseMinutes === null
+    ? 'No responses yet'
+    : `${selectedClinicSummary.averageResponseMinutes} min`;
 
   if (isLoading || isFetching) {
     return (

@@ -10,6 +10,7 @@ type DashboardSummary = {
   confirmedRate: number;
   expiredRate: number;
   rejectedRate: number;
+  averageResponseMinutes: number | null;
 };
 
 type ClinicSummary = DashboardSummary & {
@@ -72,6 +73,9 @@ const computeSummary = (bookings: BookingRow[]): DashboardSummary => {
   const confirmedCount = bookings.filter((booking) => booking.status === 'confirmed').length;
   const expiredCount = bookings.filter((booking) => booking.status === 'expired').length;
   const rejectedCount = bookings.filter((booking) => booking.status === 'rejected').length;
+  const responseMinutes = bookings
+    .filter((booking) => booking.clinic_responded_at)
+    .map((booking) => toMinutes(booking.created_at, booking.clinic_responded_at!));
 
   return {
     totalRequests,
@@ -82,6 +86,9 @@ const computeSummary = (bookings: BookingRow[]): DashboardSummary => {
     confirmedRate: roundRate(confirmedCount, totalRequests),
     expiredRate: roundRate(expiredCount, totalRequests),
     rejectedRate: roundRate(rejectedCount, totalRequests),
+    averageResponseMinutes: responseMinutes.length
+      ? Math.round(responseMinutes.reduce((total, value) => total + value, 0) / responseMinutes.length)
+      : null,
   };
 };
 
@@ -203,21 +210,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const clinicSummaries: ClinicSummary[] = Array.from(groupedByClinic.entries()).map(([clinicKey, clinicBookings]) => {
-      const responseMinutes = clinicBookings
-        .filter((booking) => booking.clinic_responded_at)
-        .map((booking) => toMinutes(booking.created_at, booking.clinic_responded_at!));
       const firstBooking = clinicBookings[0];
       const clinicId = firstBooking?.clinic_id ?? null;
       const clinicName = firstBooking ? getClinicName(firstBooking, clinicNameMap) : 'Unassigned Clinic';
+      const clinicSummary = computeSummary(clinicBookings);
 
       return {
         clinicId,
         clinicKey,
         clinicName,
-        averageResponseMinutes: responseMinutes.length
-          ? Math.round(responseMinutes.reduce((total, value) => total + value, 0) / responseMinutes.length)
-          : null,
-        ...computeSummary(clinicBookings),
+        ...clinicSummary,
       };
     }).sort((left, right) => right.totalRequests - left.totalRequests);
 
