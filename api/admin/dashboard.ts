@@ -7,10 +7,14 @@ type DashboardSummary = {
   confirmedCount: number;
   expiredCount: number;
   rejectedCount: number;
+  cancelledCount: number;
+  pendingRate: number;
   confirmedRate: number;
   expiredRate: number;
   rejectedRate: number;
+  cancelledRate: number;
   averageResponseMinutes: number | null;
+  averageResponseSeconds: number | null;
 };
 
 type ClinicSummary = DashboardSummary & {
@@ -67,15 +71,22 @@ const toMinutes = (startAt: string, endAt: string) => {
   return Math.round((end - start) / 60000);
 };
 
+const toSeconds = (startAt: string, endAt: string) => {
+  const start = new Date(startAt).getTime();
+  const end = new Date(endAt).getTime();
+  return Math.round((end - start) / 1000);
+};
+
 const computeSummary = (bookings: BookingRow[]): DashboardSummary => {
   const totalRequests = bookings.length;
   const pendingCount = bookings.filter((booking) => booking.status === 'pending').length;
   const confirmedCount = bookings.filter((booking) => booking.status === 'confirmed').length;
   const expiredCount = bookings.filter((booking) => booking.status === 'expired').length;
   const rejectedCount = bookings.filter((booking) => booking.status === 'rejected').length;
-  const responseMinutes = bookings
+  const cancelledCount = bookings.filter((booking) => booking.status === 'cancelled').length;
+  const responseSeconds = bookings
     .filter((booking) => booking.clinic_responded_at)
-    .map((booking) => toMinutes(booking.created_at, booking.clinic_responded_at!));
+    .map((booking) => toSeconds(booking.created_at, booking.clinic_responded_at!));
 
   return {
     totalRequests,
@@ -83,11 +94,17 @@ const computeSummary = (bookings: BookingRow[]): DashboardSummary => {
     confirmedCount,
     expiredCount,
     rejectedCount,
+    cancelledCount,
+    pendingRate: roundRate(pendingCount, totalRequests),
     confirmedRate: roundRate(confirmedCount, totalRequests),
     expiredRate: roundRate(expiredCount, totalRequests),
     rejectedRate: roundRate(rejectedCount, totalRequests),
-    averageResponseMinutes: responseMinutes.length
-      ? Math.round(responseMinutes.reduce((total, value) => total + value, 0) / responseMinutes.length)
+    cancelledRate: roundRate(cancelledCount, totalRequests),
+    averageResponseMinutes: responseSeconds.length
+      ? Math.round((responseSeconds.reduce((total, value) => total + value, 0) / responseSeconds.length) / 60)
+      : null,
+    averageResponseSeconds: responseSeconds.length
+      ? Math.round(responseSeconds.reduce((total, value) => total + value, 0) / responseSeconds.length)
       : null,
   };
 };

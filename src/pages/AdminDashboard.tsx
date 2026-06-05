@@ -27,10 +27,14 @@ type DashboardSummary = {
   confirmedCount: number;
   expiredCount: number;
   rejectedCount: number;
+  cancelledCount: number;
+  pendingRate: number;
   confirmedRate: number;
   expiredRate: number;
   rejectedRate: number;
+  cancelledRate: number;
   averageResponseMinutes: number | null;
+  averageResponseSeconds: number | null;
 };
 
 type ClinicOption = {
@@ -86,6 +90,12 @@ const percentageTone = (rate: number, reverse = false) => {
   if (rate >= 70) return 'text-emerald-600';
   if (rate >= 45) return 'text-amber-600';
   return 'text-rose-600';
+};
+
+const neutralPercentageTone = (rate: number) => {
+  if (rate >= 30) return 'text-amber-600';
+  if (rate >= 10) return 'text-slate-700';
+  return 'text-slate-500';
 };
 
 const formatMinutesRemaining = (minutesRemaining: number | null) => {
@@ -156,9 +166,11 @@ const AdminDashboard = () => {
   const visibleRejectionReasons = (dashboard?.rejectionReasons ?? []).filter((reason) =>
     selectedClinicKey === null || reason.clinicKey === selectedClinicKey
   );
-  const averageResponseText = !selectedClinicSummary || selectedClinicSummary.averageResponseMinutes === null
+  const averageResponseText = !selectedClinicSummary || selectedClinicSummary.averageResponseSeconds === null
     ? 'No responses yet'
-    : `${selectedClinicSummary.averageResponseMinutes} min`;
+    : selectedClinicSummary.averageResponseSeconds < 60
+      ? '< 1 minute'
+      : `${Math.round(selectedClinicSummary.averageResponseSeconds / 60)} min`;
 
   if (isLoading || isFetching) {
     return (
@@ -268,14 +280,25 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
           <Card>
             <CardHeader>
               <CardDescription>Total requests</CardDescription>
               <CardTitle className="text-3xl">{selectedClinicSummary.totalRequests}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-slate-600">
-              Pending now: {selectedClinicSummary.pendingCount}
+              Status mix adds to 100%
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardDescription>Pending rate</CardDescription>
+              <CardTitle className={`text-3xl ${neutralPercentageTone(selectedClinicSummary.pendingRate)}`}>
+                {selectedClinicSummary.pendingRate}%
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-slate-600">
+              Pending bookings: {selectedClinicSummary.pendingCount}
             </CardContent>
           </Card>
           <Card>
@@ -308,10 +331,31 @@ const AdminDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-slate-600">
-              Avg response: {averageResponseText}
+              Rejected bookings: {selectedClinicSummary.rejectedCount}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardDescription>Cancelled rate</CardDescription>
+              <CardTitle className={`text-3xl ${neutralPercentageTone(selectedClinicSummary.cancelledRate)}`}>
+                {selectedClinicSummary.cancelledRate}%
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-slate-600">
+              Cancelled bookings: {selectedClinicSummary.cancelledCount}
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Average clinic response time</CardDescription>
+            <CardTitle className="text-3xl text-slate-900">{averageResponseText}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-slate-600">
+            Based on records with both booking creation and clinic response timestamps.
+          </CardContent>
+        </Card>
 
         <div className="grid gap-6 xl:grid-cols-[1.8fr_1fr]">
           <Card>
