@@ -156,7 +156,7 @@ const AdminDashboard = () => {
   const visibleRejectionReasons = (dashboard?.rejectionReasons ?? []).filter((reason) =>
     selectedClinicKey === null || reason.clinicKey === selectedClinicKey
   );
-  const averageResponseText = selectedClinicSummary.averageResponseMinutes === null
+  const averageResponseText = !selectedClinicSummary || selectedClinicSummary.averageResponseMinutes === null
     ? 'No responses yet'
     : `${selectedClinicSummary.averageResponseMinutes} min`;
 
