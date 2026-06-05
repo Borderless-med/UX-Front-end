@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 
 type AdminRouteProps = {
@@ -18,7 +19,22 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
   }
 
   if (!session) {
-    return <Navigate to="/" replace />;
+    return (
+      <div className="min-h-screen bg-slate-50 px-6 py-20">
+        <div className="mx-auto max-w-2xl">
+          <Alert>
+            <AlertTitle>Sign-in required</AlertTitle>
+            <AlertDescription>
+              This dashboard is restricted to authenticated admin accounts. Sign in first, then return to this URL.
+            </AlertDescription>
+          </Alert>
+          <div className="mt-4 flex gap-3">
+            <Button onClick={() => window.location.assign('/')}>Go to homepage</Button>
+            <Button variant="outline" onClick={() => window.location.reload()}>Refresh after sign-in</Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return <>{children}</>;
