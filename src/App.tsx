@@ -40,6 +40,8 @@ import PrototypeHub from "./pages/PrototypeHub";
 import TemplateDemo from "./pages/TemplateDemo";
 import TravelGuide from "./pages/TravelGuide";
 import AIScanPage from "./pages/AIScanPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminRoute from "@/components/admin/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +86,7 @@ const App = () => (
               <Route path="/template-demo" element={<TemplateDemo />} />
               <Route path="/find-clinics-prototype1" element={<FindClinicsPrototype1 />} />
               <Route path="/travel-guide" element={<TravelGuide />} />
+              <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
               );
