@@ -60,6 +60,8 @@ type BookingRow = {
   rejection_reason: string | null;
 };
 
+type DateRangeOption = 'all' | '7d' | '30d';
+
 const roundRate = (value: number, total: number) => {
   if (!total) return 0;
   return Math.round((value / total) * 100);
@@ -112,6 +114,25 @@ const computeSummary = (bookings: BookingRow[]): DashboardSummary => {
 const createError = (res: VercelResponse, status: number, error: string) =>
   res.status(status).json({ error });
 
+const parseDateRange = (rawRange: string | string[] | undefined): DateRangeOption => {
+  const range = Array.isArray(rawRange) ? rawRange[0] : rawRange;
+  if (range === '7d' || range === '30d') {
+    return range;
+  }
+  return 'all';
+};
+
+const getDateRangeStart = (range: DateRangeOption): Date | null => {
+  if (range === 'all') {
+    return null;
+  }
+
+  const days = range === '7d' ? 7 : 30;
+  const start = new Date();
+  start.setDate(start.getDate() - days);
+  return start;
+};
+
 const getClinicKey = (booking: BookingRow) => {
   if (booking.clinic_id !== null) {
     return `id:${booking.clinic_id}`;
@@ -147,6 +168,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const authHeader = req.headers.authorization;
   const accessToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const dateRange = parseDateRange(req.query.range);
+  const dateRangeStart = getDateRangeStart(dateRange);
 
   if (!accessToken) {
     return createError(res, 401, 'Missing bearer token');
@@ -174,7 +197,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return createError(res, 403, 'Admin access required');
     }
 
-    const { data: bookings, error: bookingsError } = await supabase
+    let bookingsQuery = supabase
       .from('appointment_bookings')
       .select([
         'booking_ref',
@@ -191,6 +214,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         'rejection_reason',
       ].join(','))
       .order('created_at', { ascending: false });
+
+    if (dateRangeStart) {
+      bookingsQuery = bookingsQuery.gte('created_at', dateRangeStart.toISOString());
+    }
+
+    const { data: bookings, error: bookingsError } = await bookingsQuery;
 
     if (bookingsError) {
       return createError(res, 500, 'Failed to load bookings');
@@ -297,6 +326,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({
       generatedAt: new Date().toISOString(),
+      dateRange,
       adminEmail: adminUser.email,
       summary,
       clinicOptions,

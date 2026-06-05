@@ -72,6 +72,7 @@ type RejectionReasonSummary = {
 
 type DashboardPayload = {
   generatedAt: string;
+  dateRange: 'all' | '7d' | '30d';
   adminEmail: string;
   summary: DashboardSummary;
   clinicOptions: ClinicOption[];
@@ -79,6 +80,8 @@ type DashboardPayload = {
   pendingBookings: PendingBooking[];
   rejectionReasons: RejectionReasonSummary[];
 };
+
+type DateRangeOption = 'all' | '7d' | '30d';
 
 const percentageTone = (rate: number, reverse = false) => {
   if (reverse) {
@@ -108,12 +111,19 @@ const formatMinutesRemaining = (minutesRemaining: number | null) => {
   return `${hours}h ${minutes}m left`;
 };
 
+const formatResponseTime = (seconds: number | null) => {
+  if (seconds === null) return 'No responses yet';
+  if (seconds < 60) return '< 1 minute';
+  return `${Math.round(seconds / 60)} min`;
+};
+
 const ALL_CLINICS_VALUE = 'all';
 
 const AdminDashboard = () => {
   const { session, user, isLoading } = useAuth();
   const [dashboard, setDashboard] = useState<DashboardPayload | null>(null);
   const [selectedClinic, setSelectedClinic] = useState<string>(ALL_CLINICS_VALUE);
+  const [dateRange, setDateRange] = useState<DateRangeOption>('all');
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<number | null>(null);
   const [isFetching, setIsFetching] = useState(false);
@@ -129,7 +139,7 @@ const AdminDashboard = () => {
       setErrorCode(null);
 
       try {
-        const response = await fetch('/api/admin/dashboard', {
+        const response = await fetch(`/api/admin/dashboard?range=${dateRange}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${session.access_token}`,
@@ -154,7 +164,7 @@ const AdminDashboard = () => {
     if (!isLoading) {
       void loadDashboard();
     }
-  }, [isLoading, session]);
+  }, [dateRange, isLoading, session]);
 
   const selectedClinicKey = selectedClinic === ALL_CLINICS_VALUE ? null : selectedClinic;
   const selectedClinicSummary = selectedClinicKey === null
@@ -166,11 +176,7 @@ const AdminDashboard = () => {
   const visibleRejectionReasons = (dashboard?.rejectionReasons ?? []).filter((reason) =>
     selectedClinicKey === null || reason.clinicKey === selectedClinicKey
   );
-  const averageResponseText = !selectedClinicSummary || selectedClinicSummary.averageResponseSeconds === null
-    ? 'No responses yet'
-    : selectedClinicSummary.averageResponseSeconds < 60
-      ? '< 1 minute'
-      : `${Math.round(selectedClinicSummary.averageResponseSeconds / 60)} min`;
+  const averageResponseText = formatResponseTime(selectedClinicSummary?.averageResponseSeconds ?? null);
 
   if (isLoading || isFetching) {
     return (
@@ -258,11 +264,26 @@ const AdminDashboard = () => {
           <CardHeader>
             <CardTitle>Clinic deep-dive</CardTitle>
             <CardDescription>
-              Switch between the overall network pulse and a single clinic to pinpoint bottlenecks.
+              Switch between date windows and clinics to pinpoint bottlenecks.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="max-w-sm">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <div className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">Date range</div>
+                  <Select value={dateRange} onValueChange={(value: DateRangeOption) => setDateRange(value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All time</SelectItem>
+                      <SelectItem value="7d">Last 7 days</SelectItem>
+                      <SelectItem value="30d">Last 30 days</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <div className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">Clinic filter</div>
               <Select value={selectedClinic} onValueChange={setSelectedClinic}>
                 <SelectTrigger>
                   <SelectValue placeholder="All clinics" />
@@ -276,6 +297,7 @@ const AdminDashboard = () => {
                   ))}
                 </SelectContent>
               </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -466,7 +488,7 @@ const AdminDashboard = () => {
                       <TableCell className={percentageTone(clinic.expiredRate, true)}>{clinic.expiredRate}%</TableCell>
                       <TableCell className={percentageTone(clinic.rejectedRate, true)}>{clinic.rejectedRate}%</TableCell>
                       <TableCell>
-                        {clinic.averageResponseMinutes === null ? 'No responses yet' : `${clinic.averageResponseMinutes} min`}
+                        {formatResponseTime(clinic.averageResponseSeconds)}
                       </TableCell>
                     </TableRow>
                   ))
