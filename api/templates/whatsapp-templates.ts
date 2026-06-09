@@ -4,7 +4,7 @@
 // Actual templates must be created and approved in Meta Business Manager
 // ============================================
 
-import { NotificationData } from '../services/notification-service';
+import { NotificationData } from '../services/notification-service.js';
 
 export interface WhatsAppTemplate {
   templateName: string;
@@ -137,4 +137,9 @@ export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
   booking_expired: bookingExpired,
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,
+  // Aliases for compatibility
+  confirmed: appointmentConfirmed,
+  clinic_booking_confirmed: bookingAlertClinic,
+  alternative_accepted: appointmentConfirmed,
+  booking_rejected: bookingExpired,
 };

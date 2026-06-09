@@ -229,10 +229,10 @@ export default async function handler(
         .update(`${booking_ref}|${booking.email}`)
         .digest('hex')
         .slice(0, 32);
-      const cancelUrl = `https://orachope.org/api/cancel-appointment?ref=${encodeURIComponent(booking_ref)}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
+      const cancelUrl = `https://orachope.org/api/cancel-appointment?ref=${encodeURIComponent(booking_ref as string)}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
 
       const googleMapsUrl = clinicDetails?.address 
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicDetails.address)}`
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicDetails.address + ', ' + (clinicDetails.township || ''))}`
         : 'https://orachope.org/travel-guide';
 
       const notificationResults = await notificationService.send(

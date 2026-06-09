@@ -16,7 +16,11 @@ export type NotificationType =
   | 'alternatives_offered'
   | 'booking_expired'
   | 'urgent_clinic_nudge'
-  | 'appointment_reminder_24h';
+  | 'appointment_reminder_24h'
+  | 'confirmed'
+  | 'clinic_booking_confirmed'
+  | 'alternative_accepted'
+  | 'booking_rejected';
 
 // Channel types
 export type NotificationChannel = 'email' | 'whatsapp';

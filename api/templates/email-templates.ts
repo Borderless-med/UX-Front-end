@@ -3,7 +3,7 @@
 // All 7 email notification templates
 // ============================================
 
-import { NotificationData } from '../services/notification-service';
+import { NotificationData } from '../services/notification-service.js';
 
 export interface EmailTemplate {
   subject: string;
@@ -403,4 +403,10 @@ export const emailTemplates: Record<string, EmailTemplateFunction> = {
   booking_expired: bookingExpired,
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,
+  // Aliases for compatibility
+  confirmed: appointmentConfirmed,
+  clinic_booking_confirmed: bookingAlertClinic,
+  alternative_accepted: appointmentConfirmed,
+  booking_rejected: bookingExpired, // Reuse expired template for rejected
 };
+

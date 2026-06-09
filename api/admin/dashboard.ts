@@ -225,7 +225,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return createError(res, 500, 'Failed to load bookings');
     }
 
-    const clinicIds = Array.from(new Set((bookings || []).map((booking) => booking.clinic_id).filter((clinicId): clinicId is number => clinicId !== null)));
+    const clinicIds = Array.from(new Set((bookings || []).map((booking: any) => booking.clinic_id).filter((clinicId: number | null): clinicId is number => clinicId !== null)));
 
     const clinicNameMap = new Map<number, string>();
 
@@ -244,7 +244,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    const bookingRows = (bookings || []) as BookingRow[];
+    const bookingRows = (bookings || []) as any[] as BookingRow[];
     const summary = computeSummary(bookingRows);
 
     const groupedByClinic = new Map<string, BookingRow[]>();

@@ -245,12 +245,7 @@ export default async function handler(
     const { create_account, ...bookingDataForDb } = bookingData;
     const { data: appointment, error: insertError } = await supabase
       .from('appointment_bookings')
-      .insert({ 
-        ...bookingDataForDb, 
-        booking_ref: bookingRef, 
-        status: 'pending',
-        clinic_id: clinicId  // Store numeric clinic ID for token validation
-      })
+      .insert({ ...bookingDataForDb, booking_ref: bookingRef, status: 'pending' })
       .select().single();
 
     if (insertError) throw new Error("Failed to save appointment booking");
@@ -388,8 +383,11 @@ export default async function handler(
       .digest('hex')
       .slice(0, 32);
 
-    // Note: clinic_response_token column doesn't exist in schema (tokens are regenerated on validation)
-    // No need to store token - HMAC validation uses booking_ref + clinic_id
+    // Store the response token in the database for verification
+    await supabase
+      .from('appointment_bookings')
+      .update({ clinic_response_token: responseToken })
+      .eq('booking_ref', bookingRef);
 
     const baseUrl = 'https://orachope.org/api/clinic/respond';
     const confirmUrl = `${baseUrl}/${bookingRef}/confirm?token=${responseToken}`;
@@ -423,7 +421,7 @@ export default async function handler(
           {
             name: bookingData.clinic_location,
             email: clinicEmail,
-            whatsapp: clinicWhatsApp,
+            whatsapp: clinicWhatsApp || undefined,
           },
           {
             clinic_name: bookingData.clinic_location,

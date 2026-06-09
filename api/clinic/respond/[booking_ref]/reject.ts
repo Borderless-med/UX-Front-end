@@ -103,7 +103,7 @@ export default async function handler(
       `);
     }
 
-    // Fetch clinic details for patient notification (only if clinic_id exists)
+    // Fetch clinic details for notifications (only if clinic_id exists)
     let clinicDetails = null;
     if (booking.clinic_id) {
       const { data: clinic } = await supabase
@@ -347,50 +347,33 @@ export default async function handler(
           smtpUser: process.env.SMTP_USER!,
         });
 
-        // Send simple rejection email (Template 4 without alternatives)
-        await notificationService.sendEmail(
+        // Use booking_expired template (suitable for rejection scenario)
+        const notificationResults = await notificationService.send(
+          'booking_rejected',
           {
             name: booking.patient_name,
             email: booking.email,
           },
-          'Booking Request Declined - OraChope',
-          `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #dc2626;">Booking Request Declined</h2>
-              <p>Dear ${booking.patient_name},</p>
-              
-              <p>Unfortunately, <strong>${clinicDetails?.name || booking.clinic_location}</strong> is unable to accommodate your requested appointment:</p>
-              
-              <div style="background: #f8fafc; padding: 15px; border-radius: 6px; margin: 20px 0;">
-                <strong>Reference:</strong> ${booking_ref}<br>
-                <strong>Treatment:</strong> ${booking.treatment_type}<br>
-                <strong>Requested Date:</strong> ${new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}<br>
-                <strong>Time:</strong> ${booking.time_slot}
-                ${reason !== 'No reason provided' ? `<br><strong>Reason:</strong> ${reason}` : ''}
-              </div>
-
-              <p><strong>What's next?</strong></p>
-              <ul>
-                <li>Browse other clinics in JB: <a href="https://orachope.org/clinics?treatment=${encodeURIComponent(booking.treatment_type)}">View Options</a></li>
-                <li>Need help? WhatsApp us: <a href="https://wa.me/6588104928">+65 8810 4928</a></li>
-              </ul>
-
-              <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
-                We're sorry this didn't work out. We'll help you find another great clinic!
-              </p>
-
-              <p style="color: #6b7280; font-size: 14px;">
-                Best regards,<br>
-                The OraChope Team
-              </p>
-            </div>
-          `
+          {
+            patient_name: booking.patient_name,
+            booking_ref: booking_ref as string,
+            clinic_name: clinicDetails?.name || booking.clinic_location,
+            clinic_address: clinicDetails?.address || '',
+            clinic_city: clinicDetails?.township || '',
+            clinic_state: 'Johor',
+            clinic_country: 'Malaysia',
+            treatment_type: booking.treatment_type,
+            formatted_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+            time_slot: booking.time_slot,
+            rejection_reason: reason,
+          },
+          ['email']
         );
 
         await notificationService.logNotification(
           booking_ref as string,
           'booking_rejected',
-          [{ channel: 'email', success: true }]
+          notificationResults
         );
 
       } catch (error) {
