@@ -68,11 +68,26 @@ const AppointmentBookingForm = () => {
   const [userCreated, setUserCreated] = useState<boolean>(false);
   const [completionPercentage, setCompletionPercentage] = useState(0);
 
-  // Time slot options
+  // Time slot options - specific hourly slots for better travel planning
   const timeSlots = [
-    { value: 'Morning', label: 'Morning (9AM - 12PM)' },
-    { value: 'Afternoon', label: 'Afternoon (1PM - 5PM)' },
-    { value: 'Evening', label: 'Evening (6PM - 9PM)' },
+    // Morning slots
+    { value: '09:00', label: '09:00 AM', period: 'Morning' },
+    { value: '10:00', label: '10:00 AM', period: 'Morning' },
+    { value: '11:00', label: '11:00 AM', period: 'Morning' },
+    
+    // Afternoon slots
+    { value: '12:00', label: '12:00 PM (Noon)', period: 'Afternoon' },
+    { value: '13:00', label: '01:00 PM', period: 'Afternoon' },
+    { value: '14:00', label: '02:00 PM', period: 'Afternoon' },
+    { value: '15:00', label: '03:00 PM', period: 'Afternoon' },
+    { value: '16:00', label: '04:00 PM', period: 'Afternoon' },
+    { value: '17:00', label: '05:00 PM', period: 'Afternoon' },
+    
+    // Evening slots
+    { value: '18:00', label: '06:00 PM', period: 'Evening' },
+    { value: '19:00', label: '07:00 PM', period: 'Evening' },
+    { value: '20:00', label: '08:00 PM', period: 'Evening' },
+    { value: '21:00', label: '09:00 PM', period: 'Evening' },
   ];
 
   // Country codes for WhatsApp
@@ -903,9 +918,33 @@ const AppointmentBookingForm = () => {
                   )}>
                     <SelectValue placeholder="Select preferred time" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {timeSlots.map((slot) => (
-                      <SelectItem key={slot.value} value={slot.value}>
+                  <SelectContent className="max-h-[300px]">
+                    {/* Morning Section */}
+                    <div className="px-2 py-1.5 text-sm font-semibold text-gray-500 bg-gray-50">
+                      🌅 Morning (9AM - 11AM)
+                    </div>
+                    {timeSlots.filter(slot => slot.period === 'Morning').map((slot) => (
+                      <SelectItem key={slot.value} value={slot.value} className="pl-6">
+                        {slot.label}
+                      </SelectItem>
+                    ))}
+                    
+                    {/* Afternoon Section */}
+                    <div className="px-2 py-1.5 text-sm font-semibold text-gray-500 bg-gray-50">
+                      ☀️ Afternoon (12PM - 5PM)
+                    </div>
+                    {timeSlots.filter(slot => slot.period === 'Afternoon').map((slot) => (
+                      <SelectItem key={slot.value} value={slot.value} className="pl-6">
+                        {slot.label}
+                      </SelectItem>
+                    ))}
+                    
+                    {/* Evening Section */}
+                    <div className="px-2 py-1.5 text-sm font-semibold text-gray-500 bg-gray-50">
+                      🌙 Evening (6PM - 9PM)
+                    </div>
+                    {timeSlots.filter(slot => slot.period === 'Evening').map((slot) => (
+                      <SelectItem key={slot.value} value={slot.value} className="pl-6">
                         {slot.label}
                       </SelectItem>
                     ))}
@@ -914,6 +953,9 @@ const AppointmentBookingForm = () => {
                 {errors.time_slot && (
                   <p className="text-sm text-red-600">{errors.time_slot}</p>
                 )}
+                <p className="text-xs text-gray-500">
+                  💡 Select a specific hourly slot to better plan your travel to JB
+                </p>
               </div>
 
               {/* Clinic Location */}
