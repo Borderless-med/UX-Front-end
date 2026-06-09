@@ -15,20 +15,24 @@ async function retryOperation<T>(
   operation: () => Promise<T>,
   maxRetries: number = 3
 ): Promise<T> {
-  let lastError: Error | null = null;
+  let lastError: any = null;  // Changed from Error to any to capture all error types
   
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await operation();
     } catch (error) {
-      console.error(`Attempt ${attempt} failed:`, error);
-      lastError = error as Error;
+      console.error(`❌ Retry attempt ${attempt}/${maxRetries} failed:`, error);
+      console.error(`Error type: ${typeof error}, constructor: ${error?.constructor?.name}`);
+      lastError = error;
       if (attempt < maxRetries) {
-        await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+        const waitTime = attempt * 1000;
+        console.log(`⏳ Waiting ${waitTime}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
       }
     }
   }
   
+  console.error(`❌ All ${maxRetries} retry attempts failed. Throwing last error.`);
   throw lastError;
 }
 
@@ -286,6 +290,20 @@ async function handleAcceptAlternative(
       has_clinic_id: !!booking.clinic_id
     });
 
+    // Prepare the admin_notes payload
+    const newAdminNotes = {
+      ...existingNotes,
+      alternative_chosen: {
+        slot_index: slotIndex,
+        date: newDate,
+        time: newTime,
+        chosen_at: new Date().toISOString(),
+      },
+    };
+    
+    const adminNotesString = JSON.stringify(newAdminNotes);
+    console.log('📋 New admin_notes:', adminNotesString);
+
     const updateResult = await retryOperation(async () => {
       const { data, error: updateError } = await supabase
         .from('appointment_bookings')
@@ -294,15 +312,7 @@ async function handleAcceptAlternative(
           time_slot: newTime,
           status: 'confirmed',
           confirmed_at: new Date().toISOString(),
-          admin_notes: JSON.stringify({
-            ...existingNotes,
-            alternative_chosen: {
-              slot_index: slotIndex,
-              date: newDate,
-              time: newTime,
-              chosen_at: new Date().toISOString(),
-            },
-          }),
+          admin_notes: adminNotesString,
           updated_at: new Date().toISOString(),
         })
         .eq('booking_ref', ref)
@@ -324,12 +334,20 @@ async function handleAcceptAlternative(
     });
   } catch (error) {
     console.error('Failed to update booking:', error);
+    console.error('Error type:', typeof error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     console.error('Booking details:', { 
       ref, 
       status: booking.status, 
       admin_notes_type: typeof booking.admin_notes,
       admin_notes_value: booking.admin_notes 
     });
+    
+    // Serialize error properly for Supabase errors (which are objects, not Error instances)
+    const errorDetails = error instanceof Error 
+      ? { message: error.message, stack: error.stack }
+      : (typeof error === 'object' && error !== null ? error : { raw: String(error) });
+    
     await sendAdminAlert(
       'Alternative Acceptance Failed',
       `Failed to confirm alternative for booking ${ref} after 3 retries`,
@@ -339,8 +357,11 @@ async function handleAcceptAlternative(
         booking_status: booking.status,
         expected_status: 'pending or alternatives_offered',
         admin_notes: booking.admin_notes,
-        error: error instanceof Error ? error.message : 'Unknown',
-        error_stack: error instanceof Error ? error.stack : undefined
+        new_date: newDate,
+        new_time: newTime,
+        error_details: errorDetails,
+        error_type: typeof error,
+        error_constructor: error?.constructor?.name
       }
     );
 
