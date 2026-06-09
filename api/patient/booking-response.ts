@@ -247,40 +247,6 @@ async function handleAcceptAlternative(
 
   console.log('📅 Chosen slot:', { slot_index: slotIndex, date: newDate, time: newTime });
 
-  // Convert specific time (e.g., "09:00") to time slot category (Morning/Afternoon/Evening)
-  // Database has CHECK constraint that only allows these categories
-  function convertTimeToSlot(time: string): string {
-    // If already a category, return as-is
-    if (['Morning', 'Afternoon', 'Evening'].includes(time)) {
-      return time;
-    }
-    
-    // Parse HH:MM format
-    const match = time.match(/^(\d{1,2}):(\d{2})/);
-    if (!match) {
-      // Fallback if format is unexpected
-      return 'Afternoon';
-    }
-    
-    const hour = parseInt(match[1], 10);
-    
-    // Morning: 6:00 - 11:59
-    if (hour >= 6 && hour < 12) {
-      return 'Morning';
-    }
-    // Afternoon: 12:00 - 17:59
-    else if (hour >= 12 && hour < 18) {
-      return 'Afternoon';
-    }
-    // Evening: 18:00 - 21:59
-    else {
-      return 'Evening';
-    }
-  }
-
-  const timeSlotCategory = convertTimeToSlot(newTime);
-  console.log('🕐 Time conversion:', { original: newTime, category: timeSlotCategory });
-
   // Fetch clinic details for notification
   let clinic = null;
   if (booking.clinic_id) {
@@ -343,9 +309,9 @@ async function handleAcceptAlternative(
         .from('appointment_bookings')
         .update({
           preferred_date: newDate,
-          time_slot: timeSlotCategory,  // Use category (Morning/Afternoon/Evening) to satisfy constraint
+          time_slot: newTime,  // Save exact time (e.g., "09:00")
           status: 'confirmed',
-          admin_notes: adminNotesString,  // Exact time preserved here
+          admin_notes: adminNotesString,
           updated_at: new Date().toISOString(),
         })
         .eq('booking_ref', ref)
