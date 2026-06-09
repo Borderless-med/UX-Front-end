@@ -221,11 +221,15 @@ async function handleAcceptAlternative(
   const newTime = chosenSlot.time;
 
   // Fetch clinic details for notification
-  const { data: clinic } = await supabase
-    .from('clinics_data')
-    .select('name, email, address, city, state, country')
-    .eq('id', booking.clinic_id)
-    .single();
+  let clinic = null;
+  if (booking.clinic_id) {
+    const { data } = await supabase
+      .from('clinics_data')
+      .select('name, email, address, city, state, country')
+      .eq('id', booking.clinic_id)
+      .maybeSingle();  // ✅ Won't throw error if not found
+    clinic = data;
+  }
 
   const clinicName = clinic?.name || booking.clinic_location;
   const clinicEmail = clinic?.email || booking.clinic_email;
