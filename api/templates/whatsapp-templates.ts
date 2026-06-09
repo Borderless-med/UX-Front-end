@@ -73,9 +73,9 @@ const alternativesOffered: WhatsAppTemplateFunction = (data) => ({
     data.original_date || '',
     data.original_time || '',
     `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state}, ${data.clinic_country}`,
-    data.alternative_slots || '',
+    data.alternative_slots_text || data.alternative_slots || '',
   ],
-  buttons: [data.confirm_url || '', data.reject_url || ''],
+  buttons: [data.reject_url || ''],
 });
 
 // Template 5: Booking Expired (Patient)

@@ -213,16 +213,15 @@ const alternativesOffered: EmailTemplateFunction = (data) => ({
           </p>
         </div>
         
-        <p style="margin: 20px 0 10px; color: #374151; font-weight: 600;">However, they've offered these alternatives:</p>
+        <p style="margin: 20px 0 10px; color: #374151; font-weight: 600;">They've offered these alternative time slots:</p>
         <div style="background: #f0fdf4; padding: 15px; border-radius: 6px; margin: 0 0 20px;">
           ${data.alternative_slots}
         </div>
         
-        <p style="margin: 20px 0; color: #6b7280;">Are you interested in these alternatives?</p>
+        <p style="margin: 20px 0; color: #6b7280; font-size: 14px;">Simply click on your preferred time slot above to confirm your appointment.</p>
         
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${data.confirm_url}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">✅ YES, PICK A SLOT</a>
-          <a href="${data.reject_url}" style="display: inline-block; background: #6b7280; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">❌ NO, FIND OTHER CLINIC</a>
+          <a href="${data.reject_url}" style="display: inline-block; background: #6b7280; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">❌ No Thanks, I'll Find Another Clinic</a>
         </div>
         
         <div style="text-align: center; padding: 20px 0; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">

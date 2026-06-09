@@ -103,12 +103,12 @@ export default async function handler(
       `);
     }
 
-    // Fetch clinic details for patient notification (only if clinic_id exists)
+    // Fetch clinic details for notifications (only if clinic_id exists)
     let clinicDetails = null;
     if (booking.clinic_id) {
       const { data: clinic } = await supabase
         .from('clinics_data')
-        .select('name, address, township')
+        .select('name, email, address, city, state, country')
         .eq('id', booking.clinic_id)
         .single();
       clinicDetails = clinic;
@@ -406,7 +406,39 @@ export default async function handler(
         `);
       }
 
-      // Format alternatives for email display
+      // Format alternatives for email display with clickable buttons
+      const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
+      const alternativesHtml = alternatives.map((slot, idx) => {
+        const dateObj = new Date(slot.date + 'T' + slot.time);
+        const formattedDate = dateObj.toLocaleDateString('en-SG', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        
+        // Generate HMAC token for this specific slot
+        const slotToken = crypto
+          .createHmac('sha256', HMAC_SECRET)
+          .update(`${booking_ref}|patient|${idx}`)
+          .digest('hex')
+          .slice(0, 32);
+        
+        const acceptUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/accept-alternative?ref=${booking_ref}&slot=${idx}&token=${slotToken}`;
+        
+        return `
+          <div style="background: #ffffff; border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; margin: 10px 0;">
+            <div style="color: #1f2937; font-weight: 600; margin-bottom: 8px;">Option ${idx + 1}</div>
+            <div style="color: #374151; font-size: 15px; margin-bottom: 12px;">
+              📅 ${formattedDate}<br>
+              🕐 ${slot.time}
+            </div>
+            <a href="${acceptUrl}" style="display: inline-block; background: #22c55e; color: white; padding: 10px 25px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">✅ Choose This Slot</a>
+          </div>
+        `;
+      }).join('');
+
+      // Plain text version for WhatsApp
       const alternativesText = alternatives.map((slot, idx) => {
         const dateObj = new Date(slot.date + 'T' + slot.time);
         return `Option ${idx + 1}: ${dateObj.toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${slot.time}`;
@@ -478,14 +510,14 @@ export default async function handler(
             booking_ref: booking_ref as string,
             clinic_name: clinicDetails?.name || booking.clinic_location,
             clinic_address: clinicDetails?.address || '',
-            clinic_city: clinicDetails?.township || 'Johor Bahru',
-            clinic_state: 'Johor',
-            clinic_country: 'Malaysia',
+            clinic_city: clinicDetails?.city || '',
+            clinic_state: clinicDetails?.state || '',
+            clinic_country: clinicDetails?.country || 'Malaysia',
             original_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
             original_time: booking.time_slot,
-            alternative_slots: alternativesText,
-            confirm_url: `https://orachope.org/booking/choose-alternative?ref=${booking_ref}`,
-            reject_url: `https://orachope.org/booking/decline-alternatives?ref=${booking_ref}`,
+            alternative_slots: alternativesHtml, // HTML buttons for email
+            alternative_slots_text: alternativesText, // Plain text for WhatsApp
+            reject_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/decline-alternatives?ref=${booking_ref}`,
           },
           ['email', 'whatsapp']
         );
