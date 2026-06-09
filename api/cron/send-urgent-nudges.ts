@@ -105,10 +105,10 @@ export default async function handler(
           .digest('hex')
           .slice(0, 32);
 
-        const baseUrl = 'https://orachope.org/clinic/respond';
-        const confirmUrl = `${baseUrl}/${booking.booking_ref}/confirm?token=${token}`;
-        const rejectUrl = `${baseUrl}/${booking.booking_ref}/reject?token=${token}`;
-        const alternativesUrl = `${baseUrl}/${booking.booking_ref}/alternatives?token=${token}`;
+        const baseUrl = 'https://orachope.org/api/clinic/respond';
+        const confirmUrl = `${baseUrl}/${booking.booking_ref}?action=confirm&token=${token}`;
+        const rejectUrl = `${baseUrl}/${booking.booking_ref}?action=reject&token=${token}`;
+        const alternativesUrl = `${baseUrl}/${booking.booking_ref}?action=alternatives&token=${token}`;
 
         // Send urgent nudge to clinic
         const notificationResults = await notificationService.send(

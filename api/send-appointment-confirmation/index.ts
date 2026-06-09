@@ -390,9 +390,9 @@ export default async function handler(
       .eq('booking_ref', bookingRef);
 
     const baseUrl = 'https://orachope.org/api/clinic/respond';
-    const confirmUrl = `${baseUrl}/${bookingRef}/confirm?token=${responseToken}`;
-    const rejectUrl = `${baseUrl}/${bookingRef}/reject?token=${responseToken}`;
-    const alternativesUrl = `${baseUrl}/${bookingRef}/alternatives?token=${responseToken}`;
+    const confirmUrl = `${baseUrl}/${bookingRef}?action=confirm&token=${responseToken}`;
+    const rejectUrl = `${baseUrl}/${bookingRef}?action=reject&token=${responseToken}`;
+    const alternativesUrl = `${baseUrl}/${bookingRef}?action=alternatives&token=${responseToken}`;
 
     console.log('🔗 Generated clinic response URLs:');
     console.log('  Confirm:', confirmUrl);
