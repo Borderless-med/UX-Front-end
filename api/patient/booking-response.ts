@@ -311,7 +311,6 @@ async function handleAcceptAlternative(
           preferred_date: newDate,
           time_slot: newTime,
           status: 'confirmed',
-          confirmed_at: new Date().toISOString(),
           admin_notes: adminNotesString,
           updated_at: new Date().toISOString(),
         })
