@@ -217,8 +217,31 @@ async function handleAcceptAlternative(
 
   // Get the chosen alternative
   const chosenSlot = alternatives[slotIndex];
+  
+  if (!chosenSlot || !chosenSlot.date || !chosenSlot.time) {
+    console.error('❌ Invalid slot data:', chosenSlot);
+    await sendAdminAlert(
+      'Invalid Alternative Slot Data',
+      `Slot ${slotIndex} has missing date/time`,
+      { booking_ref: ref, slot_index: slotIndex, slot_data: chosenSlot, all_alternatives: alternatives }
+    );
+    return res.status(500).send(`
+      <html>
+        <head><title>Invalid Slot Data</title></head>
+        <body style="font-family: Arial; padding: 40px; text-align: center;">
+          <h1 style="color: #dc2626;">⚠️ Invalid Slot Data</h1>
+          <p>The selected time slot has incomplete information.</p>
+          <p style="color: #6b7280; margin-top: 20px;">Reference: <strong>${ref}</strong></p>
+          <p style="color: #6b7280;">Contact: contact@orachope.org</p>
+        </body>
+      </html>
+    `);
+  }
+  
   const newDate = chosenSlot.date;
   const newTime = chosenSlot.time;
+
+  console.log('📅 Chosen slot:', { slot_index: slotIndex, date: newDate, time: newTime });
 
   // Fetch clinic details for notification
   let clinic = null;
@@ -234,10 +257,37 @@ async function handleAcceptAlternative(
   const clinicName = clinic?.name || booking.clinic_location;
   const clinicEmail = clinic?.email || booking.clinic_email;
 
+  // Parse existing admin_notes safely
+  let existingNotes: any = {};
+  try {
+    if (booking.admin_notes) {
+      const parsed = typeof booking.admin_notes === 'string' 
+        ? JSON.parse(booking.admin_notes) 
+        : booking.admin_notes;
+      
+      // Only spread if it's a plain object, not array or other type
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        existingNotes = parsed;
+      }
+    }
+  } catch (parseError) {
+    console.error('Failed to parse existing admin_notes, starting fresh:', parseError);
+    // Continue with empty object - better to lose old notes than crash
+  }
+
   // Update booking with retry logic
   try {
-    await retryOperation(async () => {
-      const { error: updateError } = await supabase
+    console.log('📝 Attempting to update booking:', {
+      ref,
+      current_status: booking.status,
+      new_date: newDate,
+      new_time: newTime,
+      slot_index: slotIndex,
+      has_clinic_id: !!booking.clinic_id
+    });
+
+    const updateResult = await retryOperation(async () => {
+      const { data, error: updateError } = await supabase
         .from('appointment_bookings')
         .update({
           preferred_date: newDate,
@@ -245,7 +295,7 @@ async function handleAcceptAlternative(
           status: 'confirmed',
           confirmed_at: new Date().toISOString(),
           admin_notes: JSON.stringify({
-            ...(typeof booking.admin_notes === 'string' ? JSON.parse(booking.admin_notes) : booking.admin_notes),
+            ...existingNotes,
             alternative_chosen: {
               slot_index: slotIndex,
               date: newDate,
@@ -256,16 +306,42 @@ async function handleAcceptAlternative(
           updated_at: new Date().toISOString(),
         })
         .eq('booking_ref', ref)
-        .in('status', ['pending', 'alternatives_offered']);
+        .in('status', ['pending', 'alternatives_offered'])
+        .select();
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('❌ Database update error:', updateError);
+        throw updateError;
+      }
+      
+      if (!data || data.length === 0) {
+        console.error('❌ Update matched 0 rows - booking status mismatch?');
+        throw new Error(`No rows updated. Current status: ${booking.status}, expected: pending or alternatives_offered`);
+      }
+
+      console.log('✅ Update successful, rows affected:', data.length);
+      return data;
     });
   } catch (error) {
     console.error('Failed to update booking:', error);
+    console.error('Booking details:', { 
+      ref, 
+      status: booking.status, 
+      admin_notes_type: typeof booking.admin_notes,
+      admin_notes_value: booking.admin_notes 
+    });
     await sendAdminAlert(
       'Alternative Acceptance Failed',
       `Failed to confirm alternative for booking ${ref} after 3 retries`,
-      { booking_ref: ref, slot_index: slotIndex, error: error instanceof Error ? error.message : 'Unknown' }
+      { 
+        booking_ref: ref, 
+        slot_index: slotIndex, 
+        booking_status: booking.status,
+        expected_status: 'pending or alternatives_offered',
+        admin_notes: booking.admin_notes,
+        error: error instanceof Error ? error.message : 'Unknown',
+        error_stack: error instanceof Error ? error.stack : undefined
+      }
     );
 
     return res.status(500).send(`
