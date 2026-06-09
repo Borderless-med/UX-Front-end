@@ -245,7 +245,12 @@ export default async function handler(
     const { create_account, ...bookingDataForDb } = bookingData;
     const { data: appointment, error: insertError } = await supabase
       .from('appointment_bookings')
-      .insert({ ...bookingDataForDb, booking_ref: bookingRef, status: 'pending' })
+      .insert({ 
+        ...bookingDataForDb, 
+        booking_ref: bookingRef, 
+        status: 'pending',
+        clinic_id: clinicId  // ✅ Save clinic_id for token validation
+      })
       .select().single();
 
     if (insertError) throw new Error("Failed to save appointment booking");
