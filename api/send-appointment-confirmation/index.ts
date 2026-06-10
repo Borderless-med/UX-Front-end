@@ -50,7 +50,7 @@ export default async function handler(
     
     const { data: jbClinics, error: jbError } = await supabase
       .from('clinics_data')
-      .select('id, contact_email, name, address, township, country')
+      .select('id, contact_email, name, address')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
@@ -58,7 +58,7 @@ export default async function handler(
     
     const { data: sgClinics, error: sgError } = await supabase
       .from('sg_clinics')
-      .select('id, contact_email, name, address, township, country')
+      .select('id, contact_email, name, address')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
@@ -115,10 +115,10 @@ export default async function handler(
         patient_whatsapp: bookingData.whatsapp,
         clinic_name: clinicDetails?.name || bookingData.clinic_location,
         clinic_address: clinicDetails?.address || '',
-        clinic_city: clinicDetails?.city || '',
-        clinic_state: clinicDetails?.state || '',
-        clinic_postcode: clinicDetails?.postcode || '',
-        clinic_country: clinicDetails?.country || 'Malaysia',
+        clinic_city: '',
+        clinic_state: '',
+        clinic_postcode: '',
+        clinic_country: 'Malaysia',
         treatment_type: bookingData.treatment_type,
         formatted_date: bookingData.preferred_date,
         time_slot: bookingData.time_slot
