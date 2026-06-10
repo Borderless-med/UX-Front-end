@@ -111,7 +111,6 @@ export default async function handler(
     if (clinicEmail) {
       const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
       const responseToken = crypto.createHmac('sha256', HMAC_SECRET).update(`${bookingRef}|${clinicId || bookingData.clinic_location}`).digest('hex').slice(0, 32);
-      await supabase.from('appointment_bookings').update({ clinic_response_token: responseToken }).eq('booking_ref', bookingRef);
 
       // Build clinic response URLs
       const baseUrl = 'https://orachope.org/api/clinic/respond';
