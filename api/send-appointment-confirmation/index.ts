@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { NotificationService } from '../services/notification-service.js';
+import { NotificationService } from '../../services/notification-service.js';
 
 // --- Email Service Class ---
 class OraHopeEmailService {

@@ -7,7 +7,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { NotificationService } from '../../../services/notification-service.js';
+import { NotificationService } from '../../../../services/notification-service.js';
 import crypto from 'crypto';
 
 // ============================================
@@ -77,7 +77,7 @@ async function handleConfirm(
   booking_ref: string,
   supabase: any,
   clinicDetails: any
-): Promise<void> {
+): Promise<any> {
   // Check if booking can be confirmed
   if (booking.status === 'confirmed') {
     return res.status(200).send(`
@@ -266,7 +266,7 @@ async function handleReject(
   token: string,
   supabase: any,
   clinicDetails: any
-): Promise<void> {
+): Promise<any> {
   // Check if already rejected
   if (booking.status === 'rejected') {
     return res.status(200).send(`
@@ -560,7 +560,7 @@ async function handleAlternatives(
   booking_ref: string,
   supabase: any,
   clinicDetails: any
-): Promise<void> {
+): Promise<any> {
   // Check booking status
   if (booking.status === 'confirmed') {
     return res.status(200).send(`
