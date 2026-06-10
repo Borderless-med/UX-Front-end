@@ -46,17 +46,23 @@ export default async function handler(
     let clinicDetails: any = null;
     
     // Search BOTH clinic tables (JB and SG) with safe column selection
-    const { data: jbClinics } = await supabase
+    console.log('🔍 Looking up clinic:', bookingData.clinic_location);
+    
+    const { data: jbClinics, error: jbError } = await supabase
       .from('clinics_data')
       .select('id, contact_email, name, address, township, country')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
-    const { data: sgClinics } = await supabase
+    console.log('JB clinics result:', jbClinics, 'Error:', jbError);
+    
+    const { data: sgClinics, error: sgError } = await supabase
       .from('sg_clinics')
       .select('id, contact_email, name, address, township, country')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
+    
+    console.log('SG clinics result:', sgClinics, 'Error:', sgError);
     
     // Use whichever table found a match
     const matchedClinic = jbClinics?.[0] || sgClinics?.[0];
@@ -64,6 +70,9 @@ export default async function handler(
       clinicId = matchedClinic.id;
       clinicEmail = matchedClinic.contact_email;
       clinicDetails = matchedClinic;
+      console.log('✅ Clinic found - ID:', clinicId, 'Email:', clinicEmail);
+    } else {
+      console.log('❌ NO CLINIC MATCH FOUND');
     }
 
     const { data: bookingRef } = await supabase.rpc('generate_booking_ref');
@@ -117,7 +126,10 @@ export default async function handler(
       ['email']
     );
 
+    console.log('📧 Checking clinic email:', clinicEmail ? `Found: ${clinicEmail}` : '❌ NULL - clinic email block will be skipped');
+    
     if (clinicEmail) {
+      console.log('📨 Sending clinic notification email to:', clinicEmail);
       const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
       const responseToken = crypto.createHmac('sha256', HMAC_SECRET).update(`${bookingRef}|${clinicId || bookingData.clinic_location}`).digest('hex').slice(0, 32);
 
@@ -146,6 +158,7 @@ export default async function handler(
         },
         ['email']
       );
+      console.log('✅ Clinic email sent successfully');
     }
 
     res.status(200).json({ 
