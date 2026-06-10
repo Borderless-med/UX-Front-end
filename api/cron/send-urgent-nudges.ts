@@ -37,16 +37,7 @@ export default async function handler(
     // Find bookings expiring soon (haven't been nudged yet)
     const { data: expiringBookings, error: fetchError } = await supabase
       .from('appointment_bookings')
-      .select(`
-        *,
-        clinics_data (
-          id,
-          name,
-          address,
-          contact_email,
-          whatsapp_number
-        )
-      `)
+      .select('*')
       .eq('status', 'pending')
       .gte('expires_at', windowStart.toISOString())
       .lte('expires_at', windowEnd.toISOString())
@@ -95,7 +86,49 @@ export default async function handler(
     // Process each booking
     for (const booking of bookingsToNudge) {
       try {
-        const clinic = booking.clinics_data || {};
+        // Look up clinic by name in BOTH tables (JB and SG)
+        let clinic: any = null;
+        
+        if (booking.clinic_id) {
+          // Try to get clinic by ID first
+          const { data: jbClinic } = await supabase
+            .from('clinics_data')
+            .select('id, name, address, contact_email, whatsapp_number')
+            .eq('id', booking.clinic_id)
+            .single();
+          
+          const { data: sgClinic } = await supabase
+            .from('sg_clinics')
+            .select('id, name, address, contact_email, whatsapp_number')
+            .eq('id', booking.clinic_id)
+            .single();
+          
+          clinic = jbClinic || sgClinic;
+        }
+        
+        // If no clinic_id or not found, search by name
+        if (!clinic && booking.clinic_location) {
+          const { data: jbClinics } = await supabase
+            .from('clinics_data')
+            .select('id, name, address, contact_email, whatsapp_number')
+            .ilike('name', booking.clinic_location)
+            .limit(1);
+          
+          const { data: sgClinics } = await supabase
+            .from('sg_clinics')
+            .select('id, name, address, contact_email, whatsapp_number')
+            .ilike('name', booking.clinic_location)
+            .limit(1);
+          
+          clinic = jbClinics?.[0] || sgClinics?.[0];
+        }
+        
+        if (!clinic || !clinic.contact_email) {
+          console.log(`⚠️ No clinic contact found for booking ${booking.booking_ref}, skipping`);
+          continue;
+        }
+        
+        console.log(`📧 Sending nudge to clinic: ${clinic.name} (${clinic.contact_email})`);
         
         // Generate HMAC tokens for response URLs
         const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
