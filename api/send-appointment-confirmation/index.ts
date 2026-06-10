@@ -123,9 +123,18 @@ export default async function handler(
       await notificationService.send('booking_alert_clinic', 
         { name: bookingData.clinic_location, email: clinicEmail },
         { 
-          clinic_name: bookingData.clinic_location, booking_ref: bookingRef, patient_name: bookingData.patient_name,
-          treatment_type: bookingData.treatment_type, formatted_date: bookingData.preferred_date, time_slot: bookingData.time_slot, 
-          expires_at: expiresAt.toLocaleTimeString(), confirm_url: confirmUrl, reject_url: rejectUrl, alternatives_url: alternativesUrl
+          clinic_name: bookingData.clinic_location, 
+          booking_ref: bookingRef, 
+          patient_name: bookingData.patient_name,
+          patient_whatsapp: bookingData.whatsapp,
+          patient_email: bookingData.email,
+          treatment_type: bookingData.treatment_type, 
+          formatted_date: bookingData.preferred_date, 
+          time_slot: bookingData.time_slot, 
+          expires_at: expiresAt.toLocaleTimeString(), 
+          confirm_url: confirmUrl, 
+          reject_url: rejectUrl, 
+          alternatives_url: alternativesUrl
         },
         ['email']
       );
