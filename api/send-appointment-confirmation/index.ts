@@ -45,16 +45,25 @@ export default async function handler(
     let clinicId: number | null = null;
     let clinicDetails: any = null;
     
+    // Search BOTH clinic tables (JB and SG) with safe column selection
     const { data: jbClinics } = await supabase
       .from('clinics_data')
-      .select('id, contact_email, name, address, city, state, postcode, country')
+      .select('id, contact_email, name, address, township, country')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
-    if (jbClinics?.[0]) {
-      clinicId = jbClinics[0].id;
-      clinicEmail = jbClinics[0].contact_email;
-      clinicDetails = jbClinics[0];
+    const { data: sgClinics } = await supabase
+      .from('sg_clinics')
+      .select('id, contact_email, name, address, township, country')
+      .ilike('name', bookingData.clinic_location)
+      .limit(1);
+    
+    // Use whichever table found a match
+    const matchedClinic = jbClinics?.[0] || sgClinics?.[0];
+    if (matchedClinic) {
+      clinicId = matchedClinic.id;
+      clinicEmail = matchedClinic.contact_email;
+      clinicDetails = matchedClinic;
     }
 
     const { data: bookingRef } = await supabase.rpc('generate_booking_ref');
