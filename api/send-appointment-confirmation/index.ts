@@ -3,12 +3,12 @@ import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../services/notification-service.js';
 
+// SLA Calculator: 3 Business Hours (9 AM - 5 PM, Mon-Fri SG Time)
 function calculateBusinessExpiry(startDate: Date): Date {
   const SLA_MINUTES = 180;
   const WORK_START_HOUR = 9;
   const WORK_END_HOUR = 17;
   let expiryDate = new Date(startDate);
-  // Adjust for SG Time (+8)
   let currentHourSG = expiryDate.getUTCHours() + 8;
   if (currentHourSG < WORK_START_HOUR) {
     expiryDate.setUTCHours(WORK_START_HOUR - 8, 0, 0, 0);
@@ -42,6 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+    const SMTP_USER = process.env.SMTP_USER!;
     const bookingData = req.body;
     let emailsSent = false;
 
@@ -53,14 +54,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 2. SLA & Reference
     const { data: bookingRef } = await supabase.rpc('generate_booking_ref');
     const expiresAt = calculateBusinessExpiry(new Date());
-    
-    // FORCE Singapore Timezone for display
-    const formattedExpiryTime = expiresAt.toLocaleTimeString('en-SG', { 
-      timeZone: 'Asia/Singapore', 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: true 
-    });
+    const formattedExpiryTime = expiresAt.toLocaleTimeString('en-SG', { timeZone: 'Asia/Singapore', hour: '2-digit', minute: '2-digit', hour12: true });
+    const formattedDate = new Date(bookingData.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
     // 3. Save to DB
     const { create_account, ...dbData } = bookingData;
@@ -68,22 +63,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ...dbData, booking_ref: bookingRef, status: 'pending', clinic_id: clinicId, expires_at: expiresAt.toISOString() 
     });
 
-    // 4. Send Emails
-    const notificationService = new NotificationService({
-      supabaseUrl: process.env.SUPABASE_URL!,
-      supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      smtpUser: process.env.SMTP_USER!
+    // 4. Send Emails (Using raw fetch for patient to avoid template errors)
+    const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
+
+    // --- PATIENT NOTIFICATION ---
+    const patientHtml = `<div style="font-family:Arial;padding:20px;"><h1>Booking Requested!</h1><p>Ref: ${bookingRef}</p><p>Clinic: ${bookingData.clinic_location}</p><p>Expires: ${formattedExpiryTime} (Singapore Time)</p></div>`;
+    
+    await fetch("https://api.smtp2go.com/v3/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ api_key: smtp2goApiKey, to: [bookingData.email], sender: SMTP_USER, subject: `Booking Requested - ${bookingRef}`, html_body: patientHtml }),
     });
 
-    // Patient Email
-    await notificationService.send('booking_requested_patient', 
-      { name: bookingData.patient_name, email: bookingData.email },
-      { patient_name: bookingData.patient_name, booking_ref: bookingRef, clinic_name: bookingData.clinic_location, expires_at: formattedExpiryTime },
-      ['email']
-    );
-
-    // Clinic Email (Fixing the "Undefined" bug here)
+    // --- CLINIC NOTIFICATION (Using existing valid template) ---
     if (clinicEmail) {
+      const notificationService = new NotificationService({ supabaseUrl: process.env.SUPABASE_URL!, supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY!, smtpUser: SMTP_USER });
       const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
       const token = crypto.createHmac('sha256', HMAC_SECRET).update(`${bookingRef}|${clinicId || bookingData.clinic_location}`).digest('hex').slice(0, 32);
       const baseUrl = 'https://orachope.org/api/clinic/respond';
@@ -91,14 +85,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await notificationService.send('booking_alert_clinic', 
         { name: bookingData.clinic_location, email: clinicEmail },
         { 
-          clinic_name: bookingData.clinic_location, 
-          booking_ref: bookingRef, 
-          patient_name: bookingData.patient_name,
-          patient_email: bookingData.email,       // FIXED
-          patient_whatsapp: bookingData.whatsapp, // FIXED
-          treatment_type: bookingData.treatment_type, 
-          formatted_date: bookingData.preferred_date, 
-          time_slot: bookingData.time_slot, 
+          clinic_name: bookingData.clinic_location, booking_ref: bookingRef, patient_name: bookingData.patient_name,
+          patient_email: bookingData.email, patient_whatsapp: bookingData.whatsapp,
+          treatment_type: bookingData.treatment_type, formatted_date: formattedDate, time_slot: bookingData.time_slot, 
           expires_at: formattedExpiryTime, 
           confirm_url: `${baseUrl}/${bookingRef}?action=confirm&token=${token}`,
           reject_url: `${baseUrl}/${bookingRef}?action=reject&token=${token}`,
@@ -119,7 +108,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
   } catch (error: any) {
-    console.error(error);
+    console.error("Critical error in handler:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 }
