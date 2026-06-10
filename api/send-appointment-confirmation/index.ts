@@ -3,61 +3,6 @@ import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 
-// --- Email Service Class ---
-class OraHopeEmailService {
-  private username: string;
-
-  constructor(config: { username: string }) {
-    this.username = config.username;
-  }
-
-  async sendMail(options: { from: string; to: string; subject: string; html: string }) {
-    try {
-      const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
-      const smtp2goPayload = {
-        api_key: smtp2goApiKey,
-        to: [options.to],
-        sender: this.username,
-        subject: options.subject,
-        html_body: options.html,
-      };
-      
-      if (smtp2goApiKey) {
-        const response = await fetch("https://api.smtp2go.com/v3/email/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(smtp2goPayload),
-        });
-        if (response.ok) return { success: true };
-      }
-      
-      const brevoApiKey = process.env.BREVO_API_KEY;
-      if (brevoApiKey) {
-         const brevoResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
-          method: "POST",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "api-key": brevoApiKey,
-          },
-          body: JSON.stringify({
-            sender: { email: this.username, name: "SG-JB Dental" },
-            to: [{ email: options.to }],
-            subject: options.subject,
-            htmlContent: options.html,
-          }),
-        });
-        if (brevoResponse.ok) return { success: true };
-      }
-      
-      return { success: true };
-    } catch (error) {
-      console.error("Failed to send email:", error);
-      throw error;
-    }
-  }
-}
-
 interface AppointmentBookingRequest {
   patient_name: string;
   email: string;
@@ -98,16 +43,18 @@ export default async function handler(
     
     let clinicEmail: string | null = null;
     let clinicId: number | null = null;
+    let clinicDetails: any = null;
     
     const { data: jbClinics } = await supabase
       .from('clinics_data')
-      .select('id, contact_email')
+      .select('id, contact_email, name, address, city, state, postcode, country')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
     if (jbClinics?.[0]) {
       clinicId = jbClinics[0].id;
       clinicEmail = jbClinics[0].contact_email;
+      clinicDetails = jbClinics[0];
     }
 
     const { data: bookingRef } = await supabase.rpc('generate_booking_ref');
@@ -140,14 +87,26 @@ export default async function handler(
       .update({ expires_at: expiresAt.toISOString() })
       .eq('booking_ref', bookingRef);
 
-    const emailService = new OraHopeEmailService({ username: SMTP_USER });
-    
-    await emailService.sendMail({
-      from: `SG-JB Dental <${SMTP_USER}>`,
-      to: bookingData.email,
-      subject: `Booking Request Received - ${bookingRef}`,
-      html: `<h1>Booking Requested</h1><p>Reference: ${bookingRef}</p>`
-    });
+    // Send detailed patient confirmation email using proper template
+    const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
+    await notificationService.send('booking_confirmation_patient', 
+      { name: bookingData.patient_name, email: bookingData.email },
+      { 
+        booking_ref: bookingRef,
+        patient_name: bookingData.patient_name,
+        patient_whatsapp: bookingData.whatsapp,
+        clinic_name: clinicDetails?.name || bookingData.clinic_location,
+        clinic_address: clinicDetails?.address || '',
+        clinic_city: clinicDetails?.city || '',
+        clinic_state: clinicDetails?.state || '',
+        clinic_postcode: clinicDetails?.postcode || '',
+        clinic_country: clinicDetails?.country || 'Malaysia',
+        treatment_type: bookingData.treatment_type,
+        formatted_date: bookingData.preferred_date,
+        time_slot: bookingData.time_slot
+      },
+      ['email']
+    );
 
     if (clinicEmail) {
       const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
