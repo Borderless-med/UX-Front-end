@@ -31,13 +31,7 @@ export default async function handler(
     // Find expired bookings
     const { data: expiredBookings, error: fetchError } = await supabase
       .from('appointment_bookings')
-      .select(`
-        *,
-        clinics_data (
-          name,
-          address
-        )
-      `)
+      .select('*')
       .eq('status', 'pending')
       .lt('expires_at', new Date().toISOString())
       .is('clinic_responded_at', null);
@@ -69,6 +63,50 @@ export default async function handler(
     // Process each expired booking
     for (const booking of expiredBookings) {
       try {
+        // Look up clinic by name in BOTH tables (JB and SG)
+        let clinic: any = null;
+        
+        if (booking.clinic_id) {
+          // Try to get clinic by ID first
+          const { data: jbClinic } = await supabase
+            .from('clinics_data')
+            .select('id, name, address')
+            .eq('id', booking.clinic_id)
+            .single();
+          
+          const { data: sgClinic } = await supabase
+            .from('sg_clinics')
+            .select('id, name, address')
+            .eq('id', booking.clinic_id)
+            .single();
+          
+          clinic = jbClinic || sgClinic;
+        }
+        
+        // If no clinic_id or not found, search by name
+        if (!clinic && booking.clinic_location) {
+          const { data: jbClinics } = await supabase
+            .from('clinics_data')
+            .select('id, name, address')
+            .ilike('name', booking.clinic_location)
+            .limit(1);
+          
+          const { data: sgClinics } = await supabase
+            .from('sg_clinics')
+            .select('id, name, address')
+            .ilike('name', booking.clinic_location)
+            .limit(1);
+          
+          clinic = jbClinics?.[0] || sgClinics?.[0];
+        }
+        
+        if (!clinic) {
+          console.log(`⚠️ No clinic found for booking ${booking.booking_ref}, using booking.clinic_location`);
+          clinic = { name: booking.clinic_location, address: '' };
+        }
+        
+        console.log(`⏱️ Expiring booking ${booking.booking_ref}`);
+        
         // Update status to expired
         const { error: updateError } = await supabase
           .from('appointment_bookings')
@@ -89,7 +127,6 @@ export default async function handler(
         }
 
         // Send expiry notification to patient
-        const clinic = booking.clinics_data || {};
         const notificationResults = await notificationService.send(
           'booking_expired',
           {

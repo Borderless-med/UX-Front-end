@@ -36,15 +36,7 @@ export default async function handler(
     // Find confirmed bookings with appointments tomorrow
     const { data: upcomingBookings, error: fetchError } = await supabase
       .from('appointment_bookings')
-      .select(`
-        *,
-        clinics_data (
-          id,
-          name,
-          address,
-          whatsapp_number
-        )
-      `)
+      .select('*')
       .eq('status', 'confirmed')
       .eq('reminder_24h_sent', false)
       .gte('preferred_date', targetStart.toISOString().split('T')[0])
@@ -77,7 +69,49 @@ export default async function handler(
     // Process each booking
     for (const booking of upcomingBookings) {
       try {
-        const clinic = (booking.clinics_data || {}) as any;
+        // Look up clinic by name in BOTH tables (JB and SG)
+        let clinic: any = null;
+        
+        if (booking.clinic_id) {
+          // Try to get clinic by ID first
+          const { data: jbClinic } = await supabase
+            .from('clinics_data')
+            .select('id, name, address, whatsapp_number')
+            .eq('id', booking.clinic_id)
+            .single();
+          
+          const { data: sgClinic } = await supabase
+            .from('sg_clinics')
+            .select('id, name, address, whatsapp_number')
+            .eq('id', booking.clinic_id)
+            .single();
+          
+          clinic = jbClinic || sgClinic;
+        }
+        
+        // If no clinic_id or not found, search by name
+        if (!clinic && booking.clinic_location) {
+          const { data: jbClinics } = await supabase
+            .from('clinics_data')
+            .select('id, name, address, whatsapp_number')
+            .ilike('name', booking.clinic_location)
+            .limit(1);
+          
+          const { data: sgClinics } = await supabase
+            .from('sg_clinics')
+            .select('id, name, address, whatsapp_number')
+            .ilike('name', booking.clinic_location)
+            .limit(1);
+          
+          clinic = jbClinics?.[0] || sgClinics?.[0];
+        }
+        
+        if (!clinic || !clinic.name) {
+          console.log(`⚠️ No clinic found for booking ${booking.booking_ref}, skipping`);
+          continue;
+        }
+        
+        console.log(`📧 Sending 24h reminder for booking ${booking.booking_ref} to ${booking.patient_name}`);
         
         // Generate URLs
         const clinicSlug = (clinic.name || booking.clinic_location)
