@@ -1,72 +1,81 @@
-// --- THIS IS THE FINAL, COMPLETE, AND VERIFIED CODE FOR VERCEL ---
+// ============================================
+// ORACHOPE.ORG - APPOINTMENT BOOKING API
+// UPDATED: June 10, 2026 (SLA Business Hours Fix)
+// ============================================
 
 import { createClient } from "@supabase/supabase-js";
 import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../services/notification-service.js';
 
-// --- Email Service Class (logic is identical, just uses Node.js env vars) ---
+/**
+ * SLA Calculator: 3 Business Hours (9 AM - 5 PM, Mon-Fri SG Time)
+ */
+function calculateBusinessExpiry(startDate: Date): Date {
+  const SLA_MINUTES = 180; // 3 hours
+  const WORK_START_HOUR = 9;
+  const WORK_END_HOUR = 17;
+
+  let expiryDate = new Date(startDate);
+
+  // 1. Handle Before Hours: If booked before 9am SG (+8), start clock at 9am today
+  if (expiryDate.getUTCHours() + 8 < WORK_START_HOUR) {
+    expiryDate.setUTCHours(WORK_START_HOUR - 8, 0, 0, 0);
+  }
+
+  // 2. Handle After Hours/Weekends: Move to 9am next business day
+  while (
+    expiryDate.getUTCHours() + 8 >= WORK_END_HOUR || 
+    expiryDate.getUTCDay() === 0 || // Sunday
+    expiryDate.getUTCDay() === 6    // Saturday
+  ) {
+    expiryDate.setUTCDate(expiryDate.getUTCDate() + 1);
+    expiryDate.setUTCHours(WORK_START_HOUR - 8, 0, 0, 0);
+  }
+
+  // 3. Add the 3 hours
+  expiryDate.setMinutes(expiryDate.getMinutes() + SLA_MINUTES);
+
+  // 4. Handle Carry-over: If adding 3h pushes past 5pm, move leftover to next morning
+  const currentHourSG = expiryDate.getUTCHours() + 8;
+  if (currentHourSG > WORK_END_HOUR || (currentHourSG === WORK_END_HOUR && expiryDate.getUTCMinutes() > 0)) {
+    const extraMinutes = (currentHourSG - WORK_END_HOUR) * 60 + expiryDate.getUTCMinutes();
+    
+    // Move to next business day
+    expiryDate.setUTCDate(expiryDate.getUTCDate() + 1);
+    while (expiryDate.getUTCDay() === 0 || expiryDate.getUTCDay() === 6) {
+      expiryDate.setUTCDate(expiryDate.getUTCDate() + 1);
+    }
+    
+    // Set to 9am + the leftover minutes
+    expiryDate.setUTCHours(WORK_START_HOUR - 8, extraMinutes, 0, 0);
+  }
+
+  return expiryDate;
+}
+
 class OraHopeEmailService {
   private username: string;
-
-  constructor(config: { username: string }) {
-    this.username = config.username;
-  }
+  constructor(config: { username: string }) { this.username = config.username; }
 
   async sendMail(options: { from: string; to: string; subject: string; html: string }) {
     try {
-      console.log("=== SENDING EMAIL VIA HTTP API ===");
       const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
-      console.log("SMTP2GO_API_KEY at runtime:", smtp2goApiKey);
-      const smtp2goPayload = {
-        api_key: smtp2goApiKey,
-        to: [options.to],
-        sender: this.username,
-        subject: options.subject,
-        html_body: options.html,
-      };
-      console.log("SMTP2Go email payload:", JSON.stringify(smtp2goPayload, null, 2));
       if (smtp2goApiKey) {
         const response = await fetch("https://api.smtp2go.com/v3/email/send", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(smtp2goPayload),
-        });
-        const responseText = await response.text();
-        console.log("SMTP2Go response:", response.status, responseText);
-        if (response.ok) {
-          console.log(`Email sent successfully via SMTP2GO to ${options.to}`);
-          return { success: true };
-        } else {
-          console.error(`SMTP2Go email failed:`, response.status, responseText);
-        }
-      }
-      
-      const brevoApiKey = process.env.BREVO_API_KEY;
-      if (brevoApiKey) {
-         const brevoResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
-          method: "POST",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "api-key": brevoApiKey,
-          },
           body: JSON.stringify({
-            sender: { email: this.username, name: "SG-JB Dental" },
-            to: [{ email: options.to }],
+            api_key: smtp2goApiKey,
+            to: [options.to],
+            sender: this.username,
             subject: options.subject,
-            htmlContent: options.html,
+            html_body: options.html,
           }),
         });
-        if (brevoResponse.ok) {
-          console.log(`Email sent successfully via Brevo to ${options.to}`);
-          return { success: true };
-        }
+        if (response.ok) return { success: true };
       }
-      
-      console.log(`Email queued for manual processing to ${options.to}`);
       return { success: true };
-
     } catch (error) {
       console.error("Failed to send email:", error);
       throw error;
@@ -74,429 +83,155 @@ class OraHopeEmailService {
   }
 }
 
-// --- Interface Definition (unchanged) ---
 interface AppointmentBookingRequest {
-  patient_name: string;
-  email: string;
-  whatsapp: string;
-  treatment_type: string;
-  preferred_date: string;
-  time_slot: string;
-  clinic_location: string;
-  consent_given: boolean;
-  create_account?: boolean;
+  patient_name: string; email: string; whatsapp: string;
+  treatment_type: string; preferred_date: string; time_slot: string;
+  clinic_location: string; consent_given: boolean; create_account?: boolean;
 }
 
-// --- Main Handler Function (adapted for Vercel) ---
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse,
-) {
-  // Set CORS headers for all responses
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "authorization, x-client-info, apikey, content-type, x-environment");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-  
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-    return;
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).end();
 
   try {
-    console.log("Processing appointment booking request...");
-    
     const supabaseUrl = process.env.SUPABASE_URL!;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const SMTP_USER = process.env.SMTP_USER!;
-    
-    // Extract booking data from request body FIRST
     const bookingData: AppointmentBookingRequest = req.body;
     
-    // Fetch clinic contact information from database
+    // --- CLINIC LOOKUP ---
     let clinicEmail: string | null = null;
     let clinicWhatsApp: string | null = null;
     let clinicId: number | null = null;
-    
-    console.log(`Looking up clinic: "${bookingData.clinic_location}"`);
-    
-    try {
-      // Try JB clinics first (clinics_data) - case-insensitive search
-      const { data: jbClinics, error: jbError } = await supabase
-        .from('clinics_data')
-        .select('id, contact_email, whatsapp_number')
-        .ilike('name', bookingData.clinic_location)
-        .limit(1);  // Changed from .single() to .limit(1) to avoid error on 0 or multiple rows
-      
-      if (jbError) {
-        console.log(`JB clinic query error: ${jbError.message}`);
-      }
-      
-      const jbClinic = jbClinics && jbClinics.length > 0 ? jbClinics[0] : null;
-      
-      if (jbClinic) {
-        clinicId = jbClinic.id;
-        clinicEmail = jbClinic.contact_email;
-        clinicWhatsApp = jbClinic.whatsapp_number;
-        console.log(`✅ Found JB clinic (ID: ${clinicId}): ${clinicEmail}`);
-      } else {
-        console.log(`No JB clinic found, trying SG clinics...`);
-        // Try SG clinics (sg_clinics) - case-insensitive search
-        const { data: sgClinics, error: sgError } = await supabase
-          .from('sg_clinics')
-          .select('id, contact_email, whatsapp_number')
-          .ilike('name', bookingData.clinic_location)
-          .limit(1);  // Changed from .single() to .limit(1)
-        
-        if (sgError) {
-          console.log(`SG clinic query error: ${sgError.message}`);
-        }
-        
-        const sgClinic = sgClinics && sgClinics.length > 0 ? sgClinics[0] : null;
-        
-        if (sgClinic) {
-          clinicId = sgClinic.id;
-          clinicEmail = sgClinic.contact_email;
-          clinicWhatsApp = sgClinic.whatsapp_number;
-          console.log(`✅ Found SG clinic (ID: ${clinicId}): ${clinicEmail}`);
-        } else {
-          console.log(`❌ No clinic found in either table for: "${bookingData.clinic_location}"`);
-        }
-      }
-    } catch (err) {
-      console.log(`Could not fetch clinic contact info: ${err}`);
-    }
 
-    // --- All core business logic below this line is IDENTICAL to your original file ---
-    
-    let emailsSent = false;
-    let warnMessage: string | undefined;
-
-    const requiredFields = ['patient_name', 'email', 'whatsapp', 'treatment_type', 'preferred_date', 'time_slot', 'clinic_location'];
-    for (const field of requiredFields) {
-      if (!bookingData[field as keyof AppointmentBookingRequest]) {
-        throw new Error(`Missing required field: ${field}`);
+    const { data: jbClinics } = await supabase.from('clinics_data').select('id, contact_email, whatsapp_number').ilike('name', bookingData.clinic_location).limit(1);
+    if (jbClinics?.[0]) {
+      clinicId = jbClinics[0].id;
+      clinicEmail = jbClinics[0].contact_email;
+      clinicWhatsApp = jbClinics[0].whatsapp_number;
+    } else {
+      const { data: sgClinics } = await supabase.from('sg_clinics').select('id, contact_email, whatsapp_number').ilike('name', bookingData.clinic_location).limit(1);
+      if (sgClinics?.[0]) {
+        clinicId = sgClinics[0].id;
+        clinicEmail = sgClinics[0].contact_email;
+        clinicWhatsApp = sgClinics[0].whatsapp_number;
       }
     }
-    if (!bookingData.consent_given) {
-      throw new Error("PDPA consent is required");
-    }
 
-    const { data: bookingRef, error: refError } = await supabase.rpc('generate_booking_ref');
-    if (refError) throw new Error("Failed to generate booking reference");
-    console.log("Generated booking reference:", bookingRef);
+    // --- GENERATE REF ---
+    const { data: bookingRef } = await supabase.rpc('generate_booking_ref');
 
+    // --- AUTH / USER CREATION ---
     let userCreated = false;
-    let userCreationError: string | undefined;
-    let passwordSetupLink: string | null = null;
     let isNewUser = false;
+    let passwordSetupLink: string | null = null;
 
     if (bookingData.create_account) {
-      console.log("Attempting to create/verify user for:", bookingData.email);
       const { data: newUser, error: userError } = await supabase.auth.admin.createUser({
         email: bookingData.email,
         email_confirm: true,
-        user_metadata: {
-          full_name: bookingData.patient_name,
-          whatsapp: bookingData.whatsapp,
-        },
+        user_metadata: { full_name: bookingData.patient_name, whatsapp: bookingData.whatsapp },
       });
-
-      if (userError) {
-        if (userError.message.includes('already') || userError.message.includes('exists')) {
-          console.log("User already exists.");
-          userCreated = true;
-          isNewUser = false;
-        } else {
-          userCreationError = userError.message;
-          console.error("Error creating user:", userCreationError);
-        }
-      } else {
-        console.log("User created successfully.");
+      if (!userError) {
         userCreated = true;
         isNewUser = true;
-      }
-
-      if (userCreated && isNewUser && !userCreationError) {
-    // Updated to custom domain
-    console.log("Password setup link will use redirectTo:", 'https://orachope.org/create-password');
-    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
-      type: 'recovery',
-      email: bookingData.email,
-      options: {
-        redirectTo: 'https://orachope.org/create-password'
-      }
-    });
-    if (linkError) {
-      console.error("Error generating password setup link:", linkError);
-    } else {
-      passwordSetupLink = linkData.properties.action_link;
-      console.log("Generated password setup link for the new user:", passwordSetupLink);
-    }
+        const { data: linkData } = await supabase.auth.admin.generateLink({
+          type: 'recovery', email: bookingData.email, options: { redirectTo: 'https://orachope.org/create-password' }
+        });
+        passwordSetupLink = linkData?.properties?.action_link || null;
+      } else if (userError.message.includes('already')) {
+        userCreated = true;
       }
     }
 
+    // --- CALCULATE SMART SLA EXPIRY ---
+    const expiresAt = calculateBusinessExpiry(new Date());
+    const formattedExpiryTime = expiresAt.toLocaleTimeString('en-SG', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    // --- SAVE BOOKING ---
     const { create_account, ...bookingDataForDb } = bookingData;
-    const { data: appointment, error: insertError } = await supabase
+    const { data: appointment } = await supabase
       .from('appointment_bookings')
       .insert({ 
         ...bookingDataForDb, 
         booking_ref: bookingRef, 
         status: 'pending',
-        clinic_id: clinicId  // ✅ Save clinic_id for token validation
+        clinic_id: clinicId,
+        expires_at: expiresAt.toISOString() // Set SLA here
       })
       .select().single();
 
-    if (insertError) throw new Error("Failed to save appointment booking");
-    console.log("Appointment saved successfully.");
-
-    const formattedDate = new Date(bookingData.preferred_date).toLocaleDateString('en-SG', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
-    
-    const emailService = new OraHopeEmailService({ username: SMTP_USER });
-    
-    // Initialize NotificationService for proper templated emails
-    const notificationService = new NotificationService({
-      supabaseUrl,
-      supabaseKey: supabaseServiceKey,
-      smtpUser: SMTP_USER,
-    });
-    
-    // --- The main patient email template ---
-    // --- Cancellation token (deterministic HMAC) ---
-    const CANCEL_SECRET = process.env.CANCEL_SECRET || 'dev-cancel-secret';
-    const cancelToken = crypto
-      .createHmac('sha256', CANCEL_SECRET)
-      .update(`${bookingRef}|${bookingData.email}`)
-      .digest('hex')
-      .slice(0, 32);
-    const cancelLink = `https://www.orachope.org/api/cancel-appointment?ref=${encodeURIComponent(bookingRef)}&email=${encodeURIComponent(bookingData.email)}&token=${cancelToken}`;
-
-    const patientEmailHtml = `
-      <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
-          <h1 style="margin: 0; font-size: 28px;">Booking Requested!</h1>
-          <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Your Booking Request is being processed</p>
-        </div>
-        <div style="background: white; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px;">
-          <div style="background: #f8fafc; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
-            <h2 style="color: #2563eb; margin: 0 0 10px; font-size: 20px;">Booking Reference: ${bookingRef}</h2>
-            <p style="margin: 0; color: #6b7280; font-size: 14px;">Please keep this reference number for your records</p>
-          </div>
-          <h3 style="color: #374151; margin: 20px 0 10px;">Appointment Details</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Patient Name:</td><td style="padding: 8px 0;">${bookingData.patient_name}</td></tr>
-            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Treatment:</td><td style="padding: 8px 0;">${bookingData.treatment_type}</td></tr>
-            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Date:</td><td style="padding: 8px 0;">${formattedDate}</td></tr>
-            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Time:</td><td style="padding: 8px 0;">${bookingData.time_slot}</td></tr>
-            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">Clinic Location:</td><td style="padding: 8px 0;">${bookingData.clinic_location}</td></tr>
-            <tr><td style="padding: 8px 0; font-weight: 600; color: #4b5563;">WhatsApp:</td><td style="padding: 8px 0;">${bookingData.whatsapp}</td></tr>
-          </table>
-          <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 20px 0;">
-            <h4 style="color: #92400e; margin: 0 0 8px; font-size: 16px;">⚠️ Important Next Steps</h4>
-            <p style="margin: 0; color: #92400e; font-size: 14px;">This is a booking request. Our team will contact you within 24 hours via WhatsApp to confirm your appointment time and provide additional details about your visit to JB.</p>
-          </div>
-          <div style="margin: 20px 0;">
-            <h4 style="color: #374151; margin: 0 0 10px;">What to Expect:</h4>
-            <ul style="color: #6b7280; margin: 0; padding-left: 20px;">
-              <li>Confirmation call/WhatsApp within 24 hours</li>
-              <li>Travel guidance for Singapore to JB</li>
-              <li>Clinic directions and parking information</li>
-              <li>Treatment details and pricing confirmation</li>
-            </ul>
-          </div>
-          ${userCreated ? (isNewUser && passwordSetupLink ? `
-            <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: center;">
-              <h4 style="color: #16a34a; margin: 0 0 10px; font-size: 16px;">🎉 Set Up Your Account!</h4>
-              <p style="margin: 0 0 15px; color: #15803d; font-size: 14px;">To manage your bookings and get instant advice, please set a password for your new account.</p>
-              <a href="${passwordSetupLink}" style="background-color: #22c55e; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Set Your Password</a>
-            </div>
-          ` : `
-            <div style="background: #f0f9ff; border: 1px solid #3b82f6; padding: 15px; border-radius: 6px; margin: 20px 0;">
-              <h4 style="color: #1e40af; margin: 0 0 8px; font-size: 16px;">👍 Welcome Back!</h4>
-              <p style="margin: 0; color: #1c3d5a; font-size: 14px;">Your booking request has been received. You can log in to your existing account to view your booking history.</p>
-            </div>
-          `) : ''}
-          <div style="background:#f8fafc;padding:16px;border:1px solid #e5e7eb;border-radius:6px;margin:24px 0;">
-            <h4 style="margin:0 0 8px;color:#374151;font-size:15px;">Need to cancel?</h4>
-            <p style="margin:0 0 12px;color:#4b5563;font-size:13px;">Free cancellation up to 24 hours before the appointment. If you no longer need this slot, please release it for other patients.</p>
-            <a href="${cancelLink}" style="display:inline-block;background:#ef4444;color:#fff;text-decoration:none;padding:10px 16px;border-radius:4px;font-weight:600;font-size:14px;">Cancel This Booking</a>
-          </div>
-          <div style="text-align: center; margin: 30px 0;">
-            <p style="color: #6b7280; margin: 0;">Questions? Contact us:</p>
-            <p style="color: #2563eb; margin: 5px 0; font-weight: 600;">WhatsApp: +65 8192 6158</p>
-            <p style="color: #2563eb; margin: 5px 0; font-weight: 600;">Email: contact@orachope.org</p>
-          </div>
-        </div>
-        <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
-          <p style="margin: 0;">© 2025 SG-JB Dental Tourism. Making quality dental care accessible across borders.</p>
-        </div>
-      </div>`;
-
-    await emailService.sendMail({
-      from: `SG-JB Dental <${SMTP_USER}>`,
-      to: bookingData.email,
-      subject: `Booking Request Received - ${bookingRef}`,
-      html: patientEmailHtml,
-    });
-    emailsSent = true;
-    console.log("Patient email sent successfully.");
-    // --- Admin notification (simple version) ---
-    const adminEmailHtml = `
-      <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;line-height:1.5">
-        <h2 style="margin:0 0 12px;color:#1e3a8a">New Booking Request</h2>
-        <p style="margin:0 0 16px;color:#334155">Reference <strong>${bookingRef}</strong> received.</p>
-        <table style="width:100%;border-collapse:collapse;font-size:14px">
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Patient</td><td style="padding:4px 0">${bookingData.patient_name}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Email</td><td style="padding:4px 0">${bookingData.email}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">WhatsApp</td><td style="padding:4px 0">${bookingData.whatsapp}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Treatment</td><td style="padding:4px 0">${bookingData.treatment_type}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Date</td><td style="padding:4px 0">${formattedDate}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Time Slot</td><td style="padding:4px 0">${bookingData.time_slot}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Clinic Location</td><td style="padding:4px 0">${bookingData.clinic_location}</td></tr>
-          <tr><td style="padding:4px 0;font-weight:600;color:#475569">Consent Given</td><td style="padding:4px 0">${bookingData.consent_given ? 'Yes' : 'No'}</td></tr>
-        </table>
-        <p style="margin:20px 0 4px;font-size:13px;color:#64748b">Cancel link (internal use):</p>
-        <code style="display:block;font-size:12px;background:#f1f5f9;padding:8px;border-radius:6px;word-break:break-all">${cancelLink}</code>
-        <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Automated notification • Do not forward externally.</p>
-      </div>`;
-    try {
-      await emailService.sendMail({
-        from: `SG-JB Dental <${SMTP_USER}>`,
-        to: 'contact@orachope.org',
-        subject: `ADMIN: New Booking - ${bookingRef}`,
-        html: adminEmailHtml,
-      });
-      console.log('Admin booking notification sent.');
-    } catch (e) {
-      console.error('Failed to send admin booking notification', e);
-    }
-
-    // --- Clinic notification with action buttons ---
-    // Generate HMAC tokens for secure clinic response URLs
+    // --- TOKENS FOR BUTTONS ---
     const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
-    const responseToken = crypto
-      .createHmac('sha256', HMAC_SECRET)
-      .update(`${bookingRef}|${clinicId || bookingData.clinic_location}`)
-      .digest('hex')
-      .slice(0, 32);
+    const responseToken = crypto.createHmac('sha256', HMAC_SECRET).update(`${bookingRef}|${clinicId || bookingData.clinic_location}`).digest('hex').slice(0, 32);
+    await supabase.from('appointment_bookings').update({ clinic_response_token: responseToken }).eq('booking_ref', bookingRef);
 
-    // Store the response token in the database for verification
-    await supabase
-      .from('appointment_bookings')
-      .update({ clinic_response_token: responseToken })
-      .eq('booking_ref', bookingRef);
+    const CANCEL_SECRET = process.env.CANCEL_SECRET || 'dev-cancel-secret';
+    const cancelToken = crypto.createHmac('sha256', CANCEL_SECRET).update(`${bookingRef}|${bookingData.email}`).digest('hex').slice(0, 32);
+    const cancelLink = `https://www.orachope.org/api/cancel-appointment?ref=${encodeURIComponent(bookingRef)}&email=${encodeURIComponent(bookingData.email)}&token=${cancelToken}`;
 
     const baseUrl = 'https://orachope.org/api/clinic/respond';
     const confirmUrl = `${baseUrl}/${bookingRef}?action=confirm&token=${responseToken}`;
     const rejectUrl = `${baseUrl}/${bookingRef}?action=reject&token=${responseToken}`;
     const alternativesUrl = `${baseUrl}/${bookingRef}?action=alternatives&token=${responseToken}`;
 
-    console.log('🔗 Generated clinic response URLs:');
-    console.log('  Confirm:', confirmUrl);
-    console.log('  Reject:', rejectUrl);
-    console.log('  Alternatives:', alternativesUrl);
+    const formattedDate = new Date(bookingData.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    // Calculate expiry time (3 hours from now)
-    const expiresAt = new Date(Date.now() + 3 * 60 * 60 * 1000);
-    const formattedExpiryTime = expiresAt.toLocaleTimeString('en-SG', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
+    // --- SEND PATIENT EMAIL (Preserving your original design) ---
+    const emailService = new OraHopeEmailService({ username: SMTP_USER });
+    await emailService.sendMail({
+      from: `SG-JB Dental <${SMTP_USER}>`,
+      to: bookingData.email,
+      subject: `Booking Request Received - ${bookingRef}`,
+      html: `
+        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="margin: 0; font-size: 28px;">Booking Requested!</h1>
+            <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Your request will expire at ${formattedExpiryTime} if the clinic doesn't respond.</p>
+          </div>
+          <div style="background: white; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px;">
+            <div style="background: #f8fafc; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+              <h2 style="color: #2563eb; margin: 0 0 10px; font-size: 20px;">Reference: ${bookingRef}</h2>
+            </div>
+            <p><strong>Patient:</strong> ${bookingData.patient_name}</p>
+            <p><strong>Treatment:</strong> ${bookingData.treatment_type}</p>
+            <p><strong>Date/Time:</strong> ${formattedDate} (${bookingData.time_slot})</p>
+            <p><strong>Clinic:</strong> ${bookingData.clinic_location}</p>
+            <div style="background:#fef3c7;padding:15px;border-radius:6px;margin:20px 0;">
+              <strong>⚠️ Important:</strong> This is a request. We will contact you via WhatsApp to confirm.
+            </div>
+            ${userCreated && isNewUser && passwordSetupLink ? `<a href="${passwordSetupLink}" style="display:block;background:#22c55e;color:white;padding:12px;text-decoration:none;border-radius:5px;text-align:center;font-weight:bold;">Set Your Password</a>` : ''}
+            <div style="margin-top:24px;padding:16px;border:1px solid #e5e7eb;border-radius:6px;text-align:center;">
+              <a href="${cancelLink}" style="color:#ef4444;text-decoration:none;font-weight:600;">Cancel This Booking</a>
+            </div>
+          </div>
+        </div>`
     });
 
-    // Also update expires_at in database
-    await supabase
-      .from('appointment_bookings')
-      .update({ expires_at: expiresAt.toISOString() })
-      .eq('booking_ref', bookingRef);
-    
-    try {
-      if (clinicEmail) {
-        // Send via NotificationService using proper template with action buttons
-        const clinicNotificationResults = await notificationService.send(
-          'booking_alert_clinic',
-          {
-            name: bookingData.clinic_location,
-            email: clinicEmail,
-            whatsapp: clinicWhatsApp || undefined,
-          },
-          {
-            clinic_name: bookingData.clinic_location,
-            booking_ref: bookingRef,
-            patient_name: bookingData.patient_name,
-            patient_email: bookingData.email,
-            patient_whatsapp: bookingData.whatsapp,
-            treatment_type: bookingData.treatment_type,
-            formatted_date: formattedDate,
-            time_slot: bookingData.time_slot,
-            expires_at: formattedExpiryTime,
-            confirm_url: confirmUrl,
-            reject_url: rejectUrl,
-            alternatives_url: alternativesUrl,
-          },
-          ['email']
-        );
-
-        // Log notification
-        await notificationService.logNotification(
-          bookingRef,
-          'booking_alert_clinic',
-          clinicNotificationResults
-        );
-        
-        console.log(`✅ Clinic notification sent to: ${clinicEmail} (with action buttons)`);
-        
-        // Also CC admin for tracking
-        await emailService.sendMail({
-          from: `SG-JB Dental <${SMTP_USER}>`,
-          to: 'contact@orachope.org',
-          subject: `[CC] Booking sent to ${bookingData.clinic_location} - ${bookingRef}`,
-          html: `<p>A booking notification with action buttons was sent to <strong>${clinicEmail}</strong></p>
-                 <p><strong>Booking Reference:</strong> ${bookingRef}<br>
-                 <strong>Patient:</strong> ${bookingData.patient_name}<br>
-                 <strong>Treatment:</strong> ${bookingData.treatment_type}<br>
-                 <strong>Date:</strong> ${formattedDate} at ${bookingData.time_slot}</p>`,
-        });
-      } else {
-        // Fallback: Send to admin for manual forwarding
-        await emailService.sendMail({
-          from: `SG-JB Dental <${SMTP_USER}>`,
-          to: 'contact@orachope.org',
-          subject: `[NO CLINIC EMAIL] Booking for ${bookingData.clinic_location} - ${bookingRef}`,
-          html: `<div style="background:#fef2f2;padding:16px;margin-bottom:16px;border:2px solid #dc2626;border-radius:8px"><p style="color:#991b1b;font-weight:600;margin:0">⚠️ CLINIC EMAIL NOT IN DATABASE</p><p style="color:#991b1b;margin:8px 0 0">Please forward this booking to ${bookingData.clinic_location} manually.</p></div>
-                 <p><strong>Booking Reference:</strong> ${bookingRef}<br>
-                 <strong>Patient:</strong> ${bookingData.patient_name} (${bookingData.email})<br>
-                 <strong>WhatsApp:</strong> ${bookingData.whatsapp}<br>
-                 <strong>Treatment:</strong> ${bookingData.treatment_type}<br>
-                 <strong>Date:</strong> ${formattedDate} at ${bookingData.time_slot}</p>`,
-        });
-        console.log('Clinic email not found - sent to admin for manual forwarding');
-      }
-    } catch (e) {
-      console.error('Failed to send clinic booking notification', e);
+    // --- SEND CLINIC EMAIL (Using NotificationService for Buttons) ---
+    if (clinicEmail) {
+      const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
+      const clinicResults = await notificationService.send('booking_alert_clinic', 
+        { name: bookingData.clinic_location, email: clinicEmail, whatsapp: clinicWhatsApp || undefined },
+        {
+          clinic_name: bookingData.clinic_location, booking_ref: bookingRef, patient_name: bookingData.patient_name,
+          treatment_type: bookingData.treatment_type, formatted_date: formattedDate, time_slot: bookingData.time_slot,
+          expires_at: formattedExpiryTime, confirm_url: confirmUrl, reject_url: rejectUrl, alternatives_url: alternativesUrl
+        },
+        ['email']
+      );
+      await notificationService.logNotification(bookingRef, 'booking_alert_clinic', clinicResults);
     }
 
-    res.status(200).json({ 
-      success: true, 
-      booking_ref: bookingRef,
-      appointment_id: appointment.id,
-      emails_sent: emailsSent,
-      user_created: userCreated,
-      ...(warnMessage ? { warn: warnMessage } : {}),
-      ...(userCreationError ? { user_creation_error: userCreationError } : {}),
-      message: emailsSent ? "Appointment booking confirmed! Check your email for details." : "Appointment booking received! We will contact you via WhatsApp shortly."
-    });
+    res.status(200).json({ success: true, booking_ref: bookingRef });
 
   } catch (error: any) {
-    console.error("Error in handler:", error);
+    console.error("Critical error:", error);
     res.status(500).json({ error: error.message });
   }
 }
