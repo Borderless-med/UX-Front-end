@@ -29,10 +29,10 @@ export default async function handler(
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Calculate time window: 25-35 minutes from now (targets 30 min before expiry)
+    // Calculate time window: 5-45 minutes from now (targets 30 min before expiry)
     const now = new Date();
-    const windowStart = new Date(now.getTime() + 25 * 60 * 1000); // 25 min from now
-    const windowEnd = new Date(now.getTime() + 35 * 60 * 1000);   // 35 min from now
+    const windowStart = new Date(now.getTime() + 5 * 60 * 1000); // 5 min from now
+    const windowEnd = new Date(now.getTime() + 45 * 60 * 1000);   // 45 min from now
 
     // Find bookings expiring soon (haven't been nudged yet)
     const { data: expiringBookings, error: fetchError } = await supabase
