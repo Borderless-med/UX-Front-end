@@ -154,13 +154,19 @@ export default async function handler(
       const responseToken = crypto.createHmac('sha256', HMAC_SECRET).update(`${bookingRef}|${clinicId || bookingData.clinic_location}`).digest('hex').slice(0, 32);
       await supabase.from('appointment_bookings').update({ clinic_response_token: responseToken }).eq('booking_ref', bookingRef);
 
+      // Build clinic response URLs
+      const baseUrl = 'https://orachope.org/api/clinic/respond';
+      const confirmUrl = `${baseUrl}/${bookingRef}?action=confirm&token=${responseToken}`;
+      const rejectUrl = `${baseUrl}/${bookingRef}?action=reject&token=${responseToken}`;
+      const alternativesUrl = `${baseUrl}/${bookingRef}?action=alternatives&token=${responseToken}`;
+
       const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
       await notificationService.send('booking_alert_clinic', 
         { name: bookingData.clinic_location, email: clinicEmail },
         { 
           clinic_name: bookingData.clinic_location, booking_ref: bookingRef, patient_name: bookingData.patient_name,
           treatment_type: bookingData.treatment_type, formatted_date: bookingData.preferred_date, time_slot: bookingData.time_slot, 
-          expires_at: expiresAt.toLocaleTimeString(), confirm_url: '#', reject_url: '#', alternatives_url: '#'
+          expires_at: expiresAt.toLocaleTimeString(), confirm_url: confirmUrl, reject_url: rejectUrl, alternatives_url: alternativesUrl
         },
         ['email']
       );
