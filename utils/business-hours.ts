@@ -25,7 +25,6 @@ export function calculateBusinessHoursExpiry(
 ): Date {
   const result = new Date(startTime);
   const currentHour = result.getHours();
-  const currentMinute = result.getMinutes();
 
   // If current time is outside business hours, move to next business day start
   if (currentHour < BUSINESS_START_HOUR) {
@@ -38,19 +37,31 @@ export function calculateBusinessHoursExpiry(
   }
   // else: within business hours, use current time
 
-  let hoursRemaining = businessHoursToAdd;
+  // Convert business hours to milliseconds for precise calculation
+  let millisecondsRemaining = businessHoursToAdd * 60 * 60 * 1000;
 
-  while (hoursRemaining > 0) {
-    const currentHour = result.getHours();
-    const hoursLeftToday = BUSINESS_END_HOUR - currentHour;
+  while (millisecondsRemaining > 0) {
+    // Calculate end of business day
+    const endOfDay = new Date(result);
+    endOfDay.setHours(BUSINESS_END_HOUR, 0, 0, 0);
 
-    if (hoursRemaining <= hoursLeftToday) {
-      // Can fit remaining hours today
-      result.setTime(result.getTime() + hoursRemaining * 60 * 60 * 1000);
-      hoursRemaining = 0;
+    // Time remaining until end of business day (in milliseconds)
+    const msUntilEndOfDay = endOfDay.getTime() - result.getTime();
+
+    if (msUntilEndOfDay <= 0) {
+      // Already past business hours, move to next day
+      result.setDate(result.getDate() + 1);
+      result.setHours(BUSINESS_START_HOUR, 0, 0, 0);
+      continue;
+    }
+
+    if (millisecondsRemaining <= msUntilEndOfDay) {
+      // Can fit remaining time within today's business hours
+      result.setTime(result.getTime() + millisecondsRemaining);
+      millisecondsRemaining = 0;
     } else {
-      // Need to roll over to next day
-      hoursRemaining -= hoursLeftToday;
+      // Need to roll over to next business day
+      millisecondsRemaining -= msUntilEndOfDay;
       result.setDate(result.getDate() + 1);
       result.setHours(BUSINESS_START_HOUR, 0, 0, 0);
     }
