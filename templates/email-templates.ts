@@ -394,6 +394,54 @@ const appointmentReminder24h: EmailTemplateFunction = (data) => ({
   `,
 });
 
+// Template 8: Alternative Slot Accepted (Clinic FYI)
+const alternativeSlotAcceptedClinic: EmailTemplateFunction = (data) => ({
+  subject: `✅ Patient Selected Slot - ${data.booking_ref} | ${data.clinic_name}`,
+  html: `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px;">
+        <div style="background: #22c55e; color: white; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+          <h2 style="margin: 0; font-size: 18px;">✅ PATIENT ACCEPTED YOUR ALTERNATIVE SLOT</h2>
+        </div>
+        
+        <p style="color: #374151; font-size: 16px; margin: 0 0 20px;">For: <strong>${data.clinic_name}</strong></p>
+        <p style="color: #6b7280; font-size: 14px; margin: 0 0 20px;">Reference: <strong>${data.booking_ref}</strong></p>
+        
+        <div style="background: #f0fdf4; border: 2px solid #22c55e; padding: 20px; border-radius: 6px; margin: 20px 0;">
+          <h3 style="color: #166534; margin: 0 0 15px;">Confirmed Appointment</h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Date:</td><td style="padding: 6px 0;">${data.formatted_date}</td></tr>
+            <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Time:</td><td style="padding: 6px 0;">${data.time_slot}</td></tr>
+            <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Treatment:</td><td style="padding: 6px 0;">${data.treatment_type}</td></tr>
+          </table>
+        </div>
+        
+        <h3 style="margin: 20px 0 10px; color: #374151;">Patient Details</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Name:</td><td style="padding: 6px 0;">${data.patient_name}</td></tr>
+          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">WhatsApp:</td><td style="padding: 6px 0;">${data.patient_whatsapp}</td></tr>
+          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Email:</td><td style="padding: 6px 0;">${data.patient_email}</td></tr>
+        </table>
+        
+        <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
+          <p style="margin: 0; color: #1e40af; font-size: 14px;"><strong>ℹ️ No Action Required</strong><br>This appointment is already confirmed. The patient has been notified.</p>
+        </div>
+        
+        <div style="text-align: center; padding: 20px 0; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
+          <p style="margin: 0;">OraChope.org | Partner Support: contact@orachope.org</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `,
+});
+
 // Export all templates
 export const emailTemplates: Record<string, EmailTemplateFunction> = {
   booking_confirmation_patient: bookingConfirmationPatient,
@@ -403,6 +451,7 @@ export const emailTemplates: Record<string, EmailTemplateFunction> = {
   booking_expired: bookingExpired,
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,
+  alternative_slot_accepted_clinic: alternativeSlotAcceptedClinic,
   // Aliases for compatibility
   confirmed: appointmentConfirmed,
   clinic_booking_confirmed: bookingAlertClinic,

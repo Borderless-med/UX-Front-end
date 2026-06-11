@@ -469,10 +469,10 @@ async function handleAcceptAlternative(
       ['email', 'whatsapp']
     );
 
-    // Notify clinic
+    // Notify clinic (FYI only - no action required)
     if (clinicEmail) {
       const clinicResults = await notificationService.send(
-        'clinic_booking_confirmed',
+        'alternative_slot_accepted_clinic',
         {
           name: clinic?.name || booking.clinic_location,
           email: clinicEmail,
