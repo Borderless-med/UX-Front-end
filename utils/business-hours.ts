@@ -23,6 +23,19 @@ function toSingaporeTime(date: Date): Date {
  * Get hour in Singapore timezone
  */
 function getSingaporeHour(date: Date): number {
+  const sgDate = toSingaporeTime(date);
+  return sgDate.getUTCHours();
+}
+
+/**
+ * Calculate expiry time by adding business hours to start time
+ * All calculations done in Singapore timezone (UTC+8)
+ * 
+ * @param startTime - The start time (in UTC)
+ * @param businessHoursToAdd - Number of business hours to add
+ * @returns The expiry date/time (in UTC)
+ */
+export function calculateBusinessHoursExpiry(startTime: Date, businessHoursToAdd: number): Date {
   // Work in Singapore timezone throughout calculation
   const sgStartTime = toSingaporeTime(startTime);
   const result = new Date(sgStartTime);
@@ -71,8 +84,14 @@ function getSingaporeHour(date: Date): number {
 
   // Convert back to UTC for storage
   const utcResult = new Date(result.getTime() - SG_TIMEZONE_OFFSET);
-  return utcRUntilEndOfDay <= 0) {
-      // Already past business hours, move to (in UTC)
+  return utcResult;
+}
+
+/**
+ * Format business hours expiry for email display
+ * Displays time in Singapore timezone
+ * 
+ * @param expiryDate - The expiry Date object (in UTC)
  * @returns Formatted string in Singapore timezone (e.g., "1:00 PM, Thursday 12 June")
  */
 export function formatExpiryTime(expiryDate: Date): string {
@@ -90,30 +109,7 @@ export function formatExpiryTime(expiryDate: Date): string {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    timeZone: 'UTC', // Display as-is (already shifted to SG time)te(result.getDate() + 1);
-      result.setHours(BUSINESS_START_HOUR, 0, 0, 0);
-    }
-  }
-
-  return result;
-}
-
-/**
- * Format business hours expiry for email display
- * @param expiryDate - The expiry Date object
- * @returns Formatted string (e.g., "1:00 PM, Thursday 12 June")
- */
-export function formatExpiryTime(expiryDate: Date): string {
-  const timeStr = expiryDate.toLocaleTimeString('en-SG', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-
-  const dateStr = expiryDate.toLocaleDateString('en-SG', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
+    timeZone: 'UTC', // Display as-is (already shifted to SG time)
   });
 
   return `${timeStr}, ${dateStr}`;
