@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
+import { calculateBusinessHoursExpiry, formatExpiryTime } from '../../utils/business-hours.js';
 
 interface AppointmentBookingRequest {
   patient_name: string;
@@ -99,7 +100,8 @@ export default async function handler(
       })
       .select().single();
 
-    const expiresAt = new Date(Date.now() + 3 * 60 * 60 * 1000);
+    // Calculate expiry using business hours (10 AM - 6 PM daily, including weekends)
+    const expiresAt = calculateBusinessHoursExpiry(new Date(), 3);
     await supabase
       .from('appointment_bookings')
       .update({ expires_at: expiresAt.toISOString() })
@@ -151,7 +153,7 @@ export default async function handler(
           treatment_type: bookingData.treatment_type, 
           formatted_date: bookingData.preferred_date, 
           time_slot: bookingData.time_slot, 
-          expires_at: expiresAt.toLocaleTimeString(), 
+          expires_at: formatExpiryTime(expiresAt), 
           confirm_url: confirmUrl, 
           reject_url: rejectUrl, 
           alternatives_url: alternativesUrl
