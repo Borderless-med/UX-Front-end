@@ -1061,16 +1061,49 @@ export default async function handler(
       `);
     }
 
-    // Fetch clinic details for notifications (only if clinic_id exists)
-    let clinicDetails = null;
+    // Fetch clinic details for notifications (search by ID first, then by name)
+    let clinicDetails: any = null;
+    
+    // Search by clinic_id first (if exists)
     if (booking.clinic_id) {
-      const { data: clinic } = await supabase
+      const { data: jbClinic } = await supabase
         .from('clinics_data')
-        .select('name, email, address, city, state, country, township')
+        .select('id, name, contact_email, address, township')
         .eq('id', booking.clinic_id)
         .single();
-      clinicDetails = clinic;
+      
+      const { data: sgClinic } = await supabase
+        .from('sg_clinics')
+        .select('id, name, contact_email, address, township')
+        .eq('id', booking.clinic_id)
+        .single();
+      
+      clinicDetails = jbClinic || sgClinic;
     }
+    
+    // Fallback: Search by name in BOTH tables
+    if (!clinicDetails && booking.clinic_location) {
+      const { data: jbClinics } = await supabase
+        .from('clinics_data')
+        .select('id, name, contact_email, address, township')
+        .ilike('name', booking.clinic_location)
+        .limit(1);
+      
+      const { data: sgClinics } = await supabase
+        .from('sg_clinics')
+        .select('id, name, contact_email, address, township')
+        .ilike('name', booking.clinic_location)
+        .limit(1);
+      
+      clinicDetails = jbClinics?.[0] || sgClinics?.[0];
+    }
+    
+    console.log('📍 Clinic lookup result:', { 
+      clinic_id: booking.clinic_id, 
+      clinic_location: booking.clinic_location,
+      found: !!clinicDetails,
+      clinic_name: clinicDetails?.name 
+    });
 
     // Verify HMAC token
     const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';

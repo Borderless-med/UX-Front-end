@@ -247,19 +247,52 @@ async function handleAcceptAlternative(
 
   console.log('📅 Chosen slot:', { slot_index: slotIndex, date: newDate, time: newTime });
 
-  // Fetch clinic details for notification
-  let clinic = null;
+  // Fetch clinic details for notification (search by ID first, then by name)
+  let clinic: any = null;
+  
+  // Search by clinic_id first (if exists)
   if (booking.clinic_id) {
-    const { data } = await supabase
+    const { data: jbClinic } = await supabase
       .from('clinics_data')
-      .select('name, email, address, city, state, country')
+      .select('id, name, contact_email, address, township')
       .eq('id', booking.clinic_id)
-      .maybeSingle();  // ✅ Won't throw error if not found
-    clinic = data;
+      .single();
+    
+    const { data: sgClinic } = await supabase
+      .from('sg_clinics')
+      .select('id, name, contact_email, address, township')
+      .eq('id', booking.clinic_id)
+      .single();
+    
+    clinic = jbClinic || sgClinic;
   }
+  
+  // Fallback: Search by name in BOTH tables
+  if (!clinic && booking.clinic_location) {
+    const { data: jbClinics } = await supabase
+      .from('clinics_data')
+      .select('id, name, contact_email, address, township')
+      .ilike('name', booking.clinic_location)
+      .limit(1);
+    
+    const { data: sgClinics } = await supabase
+      .from('sg_clinics')
+      .select('id, name, contact_email, address, township')
+      .ilike('name', booking.clinic_location)
+      .limit(1);
+    
+    clinic = jbClinics?.[0] || sgClinics?.[0];
+  }
+  
+  console.log('📍 Clinic lookup result:', { 
+    clinic_id: booking.clinic_id, 
+    clinic_location: booking.clinic_location,
+    found: !!clinic,
+    clinic_name: clinic?.name 
+  });
 
   const clinicName = clinic?.name || booking.clinic_location;
-  const clinicEmail = clinic?.email || booking.clinic_email;
+  const clinicEmail = clinic?.contact_email || booking.clinic_email;
 
   // Parse existing admin_notes safely
   let existingNotes: any = {};
@@ -395,9 +428,23 @@ async function handleAcceptAlternative(
       smtpUser: process.env.SMTP_USER!,
     });
 
+    // Generate cancel URL
+    const CANCEL_SECRET = process.env.CANCEL_SECRET || 'dev-cancel-secret';
+    const cancelToken = crypto
+      .createHmac('sha256', CANCEL_SECRET)
+      .update(`${ref}|${booking.email}`)
+      .digest('hex')
+      .slice(0, 32);
+    
+    const cancelUrl = `https://orachope.org/api/cancel-appointment?ref=${encodeURIComponent(ref as string)}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
+    
+    const googleMapsUrl = clinic?.address 
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.address + ', ' + (clinic.township || ''))}`
+      : 'https://orachope.org/travel-guide';
+
     // Notify patient
     const patientResults = await notificationService.send(
-      'confirmed',
+      'appointment_confirmed',
       {
         name: booking.patient_name,
         email: booking.email,
@@ -406,14 +453,18 @@ async function handleAcceptAlternative(
       {
         patient_name: booking.patient_name,
         booking_ref: ref as string,
-        clinic_name: clinicName,
+        clinic_name: clinic?.name || booking.clinic_location,
         clinic_address: clinic?.address || '',
-        clinic_city: clinic?.city || '',
-        clinic_state: clinic?.state || '',
-        clinic_country: clinic?.country || 'Malaysia',
-        appointment_date: formattedDate,
-        appointment_time: newTime,
+        clinic_city: clinic?.township || 'Johor Bahru',
+        clinic_state: 'Johor',
+        clinic_postcode: '',
+        clinic_country: 'Malaysia',
+        formatted_date: formattedDate,
+        time_slot: newTime,
         treatment_type: booking.treatment_type,
+        travel_guide_url: 'https://orachope.org/travel-guide',
+        google_maps_url: googleMapsUrl,
+        cancel_url: cancelUrl,
       },
       ['email', 'whatsapp']
     );
@@ -423,17 +474,17 @@ async function handleAcceptAlternative(
       const clinicResults = await notificationService.send(
         'clinic_booking_confirmed',
         {
-          name: clinicName,
+          name: clinic?.name || booking.clinic_location,
           email: clinicEmail,
         },
         {
-          clinic_name: clinicName,
+          clinic_name: clinic?.name || booking.clinic_location,
           patient_name: booking.patient_name,
           patient_email: booking.email,
           patient_whatsapp: booking.whatsapp,
           booking_ref: ref as string,
-          appointment_date: formattedDate,
-          appointment_time: newTime,
+          formatted_date: formattedDate,
+          time_slot: newTime,
           treatment_type: booking.treatment_type,
         },
         ['email']
