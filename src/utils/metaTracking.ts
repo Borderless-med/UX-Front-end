@@ -105,7 +105,7 @@ export function trackMetaEvent(
   }
 
   if (typeof window !== 'undefined') {
-    void fetch('/api/meta/capi', {
+    void fetch('/api/dynamic-function?route=meta-capi', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
