@@ -10,6 +10,7 @@ import ClinicCardInfo from './ClinicCardInfo';
 import ClinicCardServices from './ClinicCardServices';
 import ClinicCardActions from './ClinicCardActions';
 import PractitionerDetailsModal from './PractitionerDetailsModal';
+import { trackMetaEvent } from '@/utils/metaTracking';
 
 interface ClinicCardProps {
   clinic: Clinic;
@@ -35,6 +36,14 @@ const ClinicCard = ({ clinic, isAuthenticated, onSignInClick, onViewPractitioner
   };
 
   const handleBookNow = () => {
+    if (!clinic.isVerifiedPartner) {
+      trackMetaEvent('Contact', {
+        source_button: 'contact_orachope_primary_cta',
+        clinic_id: clinic.id,
+        clinic_name: clinic.name,
+      });
+    }
+
     // Navigate to booking page with clinic name pre-filled
     navigate(`/book-now?clinic=${encodeURIComponent(clinic.name)}`);
   };

@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { restInvokeFunction } from '@/utils/restClient';
+import { trackMetaEvent } from '@/utils/metaTracking';
 
 const WaitlistSection = () => {
   const [formData, setFormData] = useState({
@@ -103,6 +104,18 @@ const WaitlistSection = () => {
         console.error('Confirmation sending failed:', confirmationError);
         // Don't fail the whole process if confirmation sending fails
       }
+
+      trackMetaEvent(
+        'Lead',
+        {
+          source_form: 'waitlist_whatsapp_consent',
+          source_section: 'waitlist',
+        },
+        {
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.mobile.trim() || undefined,
+        },
+      );
 
       setPendingConfirmation(true);
       toast({

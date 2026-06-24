@@ -9,6 +9,7 @@ import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import { SecurityProvider } from "@/contexts/SecurityContext";
 import CookieConsentBanner from "@/components/cookies/CookieConsentBanner";
 import CookiePreferences from "@/components/cookies/CookiePreferences";
+import MetaPixelTracker from "@/components/analytics/MetaPixelTracker";
 const ChatWidget = React.lazy(() => import("@/components/ChatWidget"));
 import Index from "./pages/Index";
 import Compare from "./pages/Compare";
@@ -59,6 +60,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+            <MetaPixelTracker />
             {(() => {
               return (
             <Routes>

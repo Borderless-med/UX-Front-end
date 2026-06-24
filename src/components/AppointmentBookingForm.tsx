@@ -20,6 +20,7 @@ import { commonTownships } from '@/components/clinic/utils/clinicConstants';
 import { isDateDisabled } from '@/data/singaporeHolidays';
 import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 import { toast } from 'sonner';
+import { trackMetaEvent } from '@/utils/metaTracking';
 
 interface FormData {
   patient_name: string;
@@ -545,6 +546,20 @@ const AppointmentBookingForm = () => {
       }
 
       console.log('Appointment booked successfully:', data);
+
+      trackMetaEvent(
+        'Lead',
+        {
+          source_form: 'appointment_booking',
+          source_path: location.pathname,
+          has_preferred_clinic: Boolean(formData.preferred_clinic),
+        },
+        {
+          email: formData.email.trim(),
+          phone: `${formData.country_code}${formData.whatsapp.trim()}`,
+        },
+      );
+
       setBookingReference(data.booking_ref);
       setEmailsSent(Boolean(data.emails_sent));
       setUserCreated(Boolean(data.user_created));

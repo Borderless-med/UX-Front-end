@@ -4,6 +4,7 @@ import { MapPin, Globe, Star, MessageCircle, Shield, Timer } from 'lucide-react'
 import { Clinic } from '@/types/clinic';
 import { InquiryForm } from '@/components/clinic/InquiryForm';
 import { useState } from 'react';
+import { trackMetaEvent } from '@/utils/metaTracking';
 
 interface MinimalClinicCardProps {
   clinic: Clinic;
@@ -35,6 +36,16 @@ const MinimalClinicCard = ({ clinic, selectedTreatments = [] }: MinimalClinicCar
 
   const handleClaimRemove = () => {
     window.location.href = `/opt-out-report?clinic=${encodeURIComponent(clinic.name)}&clinicId=${clinic.id}`;
+  };
+
+  const handleContactClick = () => {
+    trackMetaEvent('Contact', {
+      source_button: 'contact_orachope_minimal_card',
+      clinic_id: clinic.id,
+      clinic_name: clinic.name,
+    });
+
+    setIsInquiryFormOpen(true);
   };
 
   return (
@@ -144,7 +155,7 @@ const MinimalClinicCard = ({ clinic, selectedTreatments = [] }: MinimalClinicCar
               </p>
             
               <button
-                onClick={() => setIsInquiryFormOpen(true)}
+                onClick={handleContactClick}
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"
               >
                 <MessageCircle className="h-4 w-4" />
