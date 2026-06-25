@@ -10,6 +10,52 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 import crypto from 'crypto';
 
+function firstQueryValue(value: unknown): string | undefined {
+  if (Array.isArray(value)) {
+    return typeof value[0] === 'string' ? value[0] : undefined;
+  }
+
+  return typeof value === 'string' ? value : undefined;
+}
+
+function parseStuffedQuery(rawToken?: string): URLSearchParams | null {
+  if (!rawToken) {
+    return null;
+  }
+
+  const candidate = rawToken.startsWith('?') ? rawToken.slice(1) : rawToken;
+  const decodedCandidate = (() => {
+    try {
+      return decodeURIComponent(candidate);
+    } catch {
+      return candidate;
+    }
+  })();
+
+  if ((!candidate.includes('=') && !candidate.includes('&')) && (!decodedCandidate.includes('=') && !decodedCandidate.includes('&'))) {
+    return null;
+  }
+
+  return new URLSearchParams(decodedCandidate);
+}
+
+function getNormalizedParams(query: VercelRequest['query']) {
+  let action = firstQueryValue(query.action);
+  let ref = firstQueryValue(query.ref);
+  let slot = firstQueryValue(query.slot);
+  let token = firstQueryValue(query.token);
+
+  const stuffed = parseStuffedQuery(token);
+  if (stuffed) {
+    action = action || stuffed.get('action') || undefined;
+    ref = ref || stuffed.get('ref') || undefined;
+    slot = slot || stuffed.get('slot') || undefined;
+    token = stuffed.get('token') || token;
+  }
+
+  return { action, ref, slot, token };
+}
+
 // Retry logic for database updates
 async function retryOperation<T>(
   operation: () => Promise<T>,
@@ -70,7 +116,7 @@ async function handleAcceptAlternative(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  const { ref, slot, token } = req.query;
+  const { ref, slot, token } = getNormalizedParams(req.query);
 
   // Validate parameters
   if (!ref || !slot || !token) {
@@ -620,7 +666,7 @@ async function handleDeclineAlternatives(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  const { ref, token } = req.query;
+  const { ref, token } = getNormalizedParams(req.query);
 
   if (!ref) {
     return res.status(400).send(`
@@ -704,7 +750,7 @@ export default async function handler(
   res: VercelResponse
 ) {
   try {
-    const { action } = req.query;
+    const { action } = getNormalizedParams(req.query);
 
     if (action === 'accept') {
       return await handleAcceptAlternative(req, res);

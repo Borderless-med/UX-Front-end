@@ -2,6 +2,35 @@ import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'crypto';
 
+function firstValue(value: unknown): string | undefined {
+  if (Array.isArray(value)) {
+    return typeof value[0] === 'string' ? value[0] : undefined;
+  }
+
+  return typeof value === 'string' ? value : undefined;
+}
+
+function parseStuffedQuery(rawToken?: string): URLSearchParams | null {
+  if (!rawToken) {
+    return null;
+  }
+
+  const candidate = rawToken.startsWith('?') ? rawToken.slice(1) : rawToken;
+  const decodedCandidate = (() => {
+    try {
+      return decodeURIComponent(candidate);
+    } catch {
+      return candidate;
+    }
+  })();
+
+  if ((!candidate.includes('=') && !candidate.includes('&')) && (!decodedCandidate.includes('=') && !decodedCandidate.includes('&'))) {
+    return null;
+  }
+
+  return new URLSearchParams(decodedCandidate);
+}
+
 async function sendAdminCancellationEmail(params: { booking: any; ref: string; email: string; reason?: string }) {
   const { booking, ref, email, reason } = params;
   const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
@@ -87,9 +116,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const ref = (req.query.ref || req.body?.ref || req.query.booking_ref || req.body?.booking_ref) as string | undefined;
-  const email = (req.query.email || req.body?.email) as string | undefined;
-  const token = (req.query.token || req.body?.token) as string | undefined;
+  let ref = firstValue(req.query.ref) || firstValue(req.body?.ref) || firstValue(req.query.booking_ref) || firstValue(req.body?.booking_ref);
+  let email = firstValue(req.query.email) || firstValue(req.body?.email);
+  let token = firstValue(req.query.token) || firstValue(req.body?.token);
+
+  const stuffed = parseStuffedQuery(token);
+  if (stuffed) {
+    ref = ref || stuffed.get('ref') || stuffed.get('booking_ref') || undefined;
+    email = email || stuffed.get('email') || undefined;
+    token = stuffed.get('token') || token;
+  }
+
   const reason = (req.query.reason || req.body?.reason || req.body?.cancellation_reason) as string | undefined;
   const accept = (req.headers?.accept || '') as string;
   const wantsHTML = accept.includes('text/html') || (method === 'GET');

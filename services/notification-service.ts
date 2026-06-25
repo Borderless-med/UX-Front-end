@@ -10,10 +10,14 @@ import { whatsappTemplates } from '../templates/whatsapp-templates.js';
 
 // Notification types
 export type NotificationType =
+  | 'booking_request_received'
   | 'booking_confirmation_patient'
   | 'booking_alert_clinic'
   | 'appointment_confirmed'
-  | 'alternatives_offered'
+  | 'alternatives_offered'  // Deprecated - use specific slot count templates
+  | 'alternatives_offered_1slot'
+  | 'alternatives_offered_2slot'
+  | 'alternatives_offered_3slot'
   | 'booking_expired'
   | 'urgent_clinic_nudge'
   | 'appointment_reminder_24h'
@@ -75,6 +79,67 @@ export class NotificationService {
   private whatsappEnabled: boolean;
   private smtpUser: string;
 
+  private getFirstButtonBaseSegment(templateName: string): string | null {
+    const urlTemplates: Record<string, string> = {
+      alternatives_offered_2slot: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
+      alternatives_offered_2slot_v2: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
+      alternatives_offered_3slot: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
+      alternatives_offered_3slot_v3: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
+      appointment_confirmed: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
+      appointment_confirmed_v9: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
+      urgent_clinic_nudge: 'https://www.orachope.org/api/clinic/respond/{{1}}',
+      urgent_clinic_nudge_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
+      booking_alert_clinic: 'https://www.orachope.org/api/clinic/respond/{{1}}',
+      booking_alert_clinic_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
+    };
+
+    const templateUrl = urlTemplates[templateName];
+    if (!templateUrl || !templateUrl.includes('{{1}}')) {
+      return null;
+    }
+
+    return templateUrl.split('{{1}}')[0];
+  }
+
+  private normalizeWhatsAppButtonValue(templateName: string, buttonValue: string): string {
+    const value = (buttonValue || '').trim();
+    if (!value) {
+      return value;
+    }
+
+    const basePrefix = this.getFirstButtonBaseSegment(templateName);
+
+    if (basePrefix?.includes('/api/clinic/respond/')) {
+      // For clinic templates we send only the suffix: BOOKING_REF?action=...&token=...
+      const marker = '/api/clinic/respond/';
+      const markerIndex = value.indexOf(marker);
+      if (markerIndex >= 0) {
+        return value.slice(markerIndex + marker.length);
+      }
+
+      if (/^[A-Z0-9-]+\?action=/.test(value)) {
+        return value;
+      }
+    }
+
+    if (basePrefix?.includes('/api/patient/booking-response?token=') || basePrefix?.includes('/api/cancel-appointment?token=')) {
+      // For patient templates we send a stuffed query string into the token variable.
+      // Example output: action=accept&ref=APT-123&slot=...&token=abc
+      if (!value.includes('://') && value.includes('=')) {
+        return value.replace(/^\?/, '');
+      }
+
+      try {
+        const parsed = new URL(value);
+        return parsed.search.replace(/^\?/, '');
+      } catch {
+        return value;
+      }
+    }
+
+    return value;
+  }
+
   constructor(config: {
     supabaseUrl: string;
     supabaseKey: string;
@@ -104,7 +169,7 @@ export class NotificationService {
           const emailResult = await this.sendEmail(type, recipient, data);
           results.push(emailResult);
         } else if (channel === 'whatsapp' && recipient.whatsapp) {
-          const whatsappResult = await this.sendWhatsApp(type, recipient, data);
+          const whatsappResult = await this.sendWhatsApp(type, recipient.whatsapp, data);
           results.push(whatsappResult);
         }
       } catch (error) {
@@ -197,7 +262,7 @@ export class NotificationService {
    */
   private async sendWhatsApp(
     type: NotificationType,
-    recipient: NotificationRecipient,
+    whatsappNumber: string,
     data: NotificationData
   ): Promise<NotificationResult> {
     if (!this.whatsappEnabled) {
@@ -226,7 +291,7 @@ export class NotificationService {
     }
 
     // Format phone number (remove non-digits except +)
-    const formattedPhone = recipient.whatsapp.replace(/[^\d+]/g, '');
+    const formattedPhone = whatsappNumber.replace(/[^\d+]/g, '');
 
     const payload: any = {
       messaging_product: 'whatsapp',
@@ -249,14 +314,18 @@ export class NotificationService {
 
     // Add buttons if present
     if (buttons && buttons.length > 0) {
-      payload.template.components.push({
-        type: 'button',
-        sub_type: 'url',
-        index: 0,
-        parameters: buttons.map((url) => ({
-          type: 'text',
-          text: url,
-        })),
+      buttons.forEach((buttonValue, index) => {
+        payload.template.components.push({
+          type: 'button',
+          sub_type: 'url',
+          index,
+          parameters: [
+            {
+              type: 'text',
+              text: this.normalizeWhatsAppButtonValue(templateName, buttonValue),
+            },
+          ],
+        });
       });
     }
 
@@ -273,7 +342,7 @@ export class NotificationService {
     );
 
     if (response.ok) {
-      console.log(`WhatsApp sent to ${recipient.whatsapp}`);
+      console.log(`WhatsApp sent to ${whatsappNumber}`);
       return {
         channel: 'whatsapp',
         success: true,

@@ -14,6 +14,21 @@ export interface WhatsAppTemplate {
 
 type WhatsAppTemplateFunction = (data: NotificationData) => WhatsAppTemplate;
 
+// Template 1: Booking Request Received (Patient)
+const bookingRequestReceived: WhatsAppTemplateFunction = (data) => ({
+  templateName: 'booking_request_received',
+  variables: [
+    data.patient_name || '',
+    data.booking_ref || '',
+    data.clinic_name || '',
+    data.clinic_address || '',
+    data.treatment_type || '',
+    data.requested_date || data.formatted_date || '',
+    data.time_slot || '',
+  ],
+  buttons: [data.travel_guide_url || 'https://orachope.org/travel-guide'],
+});
+
 // Template 1: Booking Confirmation (Patient)
 const bookingConfirmationPatient: WhatsAppTemplateFunction = (data) => ({
   templateName: 'booking_confirmation_patient',
@@ -30,7 +45,7 @@ const bookingConfirmationPatient: WhatsAppTemplateFunction = (data) => ({
 
 // Template 2: Booking Alert (Clinic)
 const bookingAlertClinic: WhatsAppTemplateFunction = (data) => ({
-  templateName: 'booking_alert_clinic',
+  templateName: 'booking_alert_clinic_v7',
   variables: [
     data.clinic_name || '',
     data.booking_ref || '',
@@ -41,16 +56,12 @@ const bookingAlertClinic: WhatsAppTemplateFunction = (data) => ({
     data.time_slot || '',
     data.expires_at || '',
   ],
-  buttons: [
-    data.confirm_url || '',
-    data.reject_url || '',
-    data.alternatives_url || '',
-  ],
+  buttons: [data.confirm_url || data.alternatives_url || data.reject_url || ''],
 });
 
 // Template 3: Appointment Confirmed (Patient)
 const appointmentConfirmed: WhatsAppTemplateFunction = (data) => ({
-  templateName: 'appointment_confirmed',
+  templateName: 'appointment_confirmation_1',
   variables: [
     data.patient_name || '',
     data.clinic_name || '',
@@ -64,18 +75,157 @@ const appointmentConfirmed: WhatsAppTemplateFunction = (data) => ({
   buttons: [data.cancel_url || ''],
 });
 
-// Template 4: Alternatives Offered (Patient)
-const alternativesOffered: WhatsAppTemplateFunction = (data) => ({
-  templateName: 'alternatives_offered',
+// Template 4A: Alternatives Offered - 1 Slot (Patient)
+// ============================================
+// META BUSINESS MANAGER TEMPLATE STRUCTURE:
+// ============================================
+// Template Name: alternatives_offered_1slot
+// Category: UTILITY
+// Language: English (en)
+// 
+// Header (TEXT): "Alternative Time Available"
+// 
+// Body:
+// Hi {{1}}, {{2}} cannot accommodate your original request:
+// 
+// {{3}} at {{4}} ❌
+// 
+// They've offered this alternative time. Tap to confirm:
+// 
+// Not interested? Visit orachope.org/clinics
+// 
+// Footer: "OraChope.org"
+// 
+// Buttons (CTA URL):
+// Button 1: Text = {{5}}, URL = {{6}}
+// 
+// Variables:
+// {{1}} = patient_name
+// {{2}} = clinic_name
+// {{3}} = original_date (e.g., "2026-06-11")
+// {{4}} = original_time (e.g., "15:00")
+// {{5}} = slot1_button_text (e.g., "📅 Fri 13 Jun, 10:00 AM")
+// {{6}} = slot1_url
+// ============================================
+const alternativesOffered1Slot: WhatsAppTemplateFunction = (data) => ({
+  templateName: 'alternatives_offered_1slot',
   variables: [
     data.patient_name || '',
     data.clinic_name || '',
     data.original_date || '',
     data.original_time || '',
-    `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state}, ${data.clinic_country}`,
-    data.alternative_slots_text || data.alternative_slots || '',
+    data.slot1_button_text || '',  // e.g., "📅 Fri 13 Jun, 10:00 AM"
   ],
-  buttons: [data.reject_url || ''],
+  buttons: [
+    data.slot1_url || '',  // Button 1: Only slot
+  ],
+});
+
+// Template 4B: Alternatives Offered - 2 Slots (Patient)
+// ============================================
+// META BUSINESS MANAGER TEMPLATE STRUCTURE:
+// ============================================
+// Template Name: alternatives_offered_2slot
+// Category: UTILITY
+// Language: English (en)
+// 
+// Header (TEXT): "Alternative Times Available"
+// 
+// Body:
+// Hi {{1}}, {{2}} cannot accommodate your original request:
+// 
+// {{3}} at {{4}} ❌
+// 
+// They've offered these 2 alternative times. Tap to confirm:
+// 
+// Not interested? Visit orachope.org/clinics
+// 
+// Footer: "OraChope.org"
+// 
+// Buttons (CTA URL):
+// Button 1: Text = {{5}}, URL = {{6}}
+// Button 2: Text = {{7}}, URL = {{8}}
+// 
+// Variables:
+// {{1}} = patient_name
+// {{2}} = clinic_name
+// {{3}} = original_date (e.g., "2026-06-11")
+// {{4}} = original_time (e.g., "15:00")
+// {{5}} = slot1_button_text (e.g., "📅 Fri 13 Jun, 10:00 AM")
+// {{6}} = slot1_url
+// {{7}} = slot2_button_text (e.g., "📅 Sat 14 Jun, 2:00 PM")
+// {{8}} = slot2_url
+// ============================================
+const alternativesOffered2Slot: WhatsAppTemplateFunction = (data) => ({
+  templateName: 'alternatives_offered_2slot_v4',
+  variables: [
+    data.patient_name || '',
+    data.clinic_name || '',
+    data.original_date || '',
+    data.original_time || '',
+    data.slot1_button_text || '',  // e.g., "📅 Fri 13 Jun, 10:00 AM"
+    data.slot2_button_text || '',  // e.g., "📅 Sat 14 Jun, 2:00 PM"
+  ],
+  buttons: [
+    data.slot1_url || '',  // Button 1: First alternative slot
+    data.slot2_url || '',  // Button 2: Second alternative slot
+  ],
+});
+
+// Template 4C: Alternatives Offered - 3 Slots (Patient)
+// ============================================
+// META BUSINESS MANAGER TEMPLATE STRUCTURE:
+// ============================================
+// Template Name: alternatives_offered_3slot
+// Category: UTILITY
+// Language: English (en)
+// 
+// Header (TEXT): "Alternative Times Available"
+// 
+// Body:
+// Hi {{1}}, {{2}} cannot accommodate your original request:
+// 
+// {{3}} at {{4}} ❌
+// 
+// They've offered these 3 alternative times. Tap to confirm:
+// 
+// Not interested? Visit orachope.org/clinics
+// 
+// Footer: "OraChope.org"
+// 
+// Buttons (CTA URL):
+// Button 1: Text = {{5}}, URL = {{6}}
+// Button 2: Text = {{7}}, URL = {{8}}
+// Button 3: Text = {{9}}, URL = {{10}}
+// 
+// Variables:
+// {{1}} = patient_name
+// {{2}} = clinic_name
+// {{3}} = original_date (e.g., "2026-06-11")
+// {{4}} = original_time (e.g., "15:00")
+// {{5}} = slot1_button_text (e.g., "📅 Fri 13 Jun, 10:00 AM")
+// {{6}} = slot1_url
+// {{7}} = slot2_button_text (e.g., "📅 Sat 14 Jun, 2:00 PM")
+// {{8}} = slot2_url
+// {{9}} = slot3_button_text (e.g., "📅 Mon 16 Jun, 9:00 AM")
+// {{10}} = slot3_url
+// ============================================
+const alternativesOffered3Slot: WhatsAppTemplateFunction = (data) => ({
+  templateName: 'alternatives_offered_3slot_v5',
+  variables: [
+    data.patient_name || '',
+    data.clinic_name || '',
+    data.original_date || '',
+    data.original_time || '',
+    data.slot1_button_text || '',  // e.g., "📅 Fri 13 Jun, 10:00 AM"
+    data.slot2_button_text || '',  // e.g., "📅 Sat 14 Jun, 2:00 PM"
+    data.slot3_button_text || '',  // e.g., "📅 Mon 16 Jun, 9:00 AM"
+  ],
+  buttons: [
+    data.slot1_url || '',  // Button 1: First alternative slot
+    data.slot2_url || '',  // Button 2: Second alternative slot
+    data.slot3_url || '',  // Button 3: Third alternative slot
+  ],
 });
 
 // Template 5: Booking Expired (Patient)
@@ -97,7 +247,7 @@ const bookingExpired: WhatsAppTemplateFunction = (data) => ({
 
 // Template 6: Urgent Clinic Nudge
 const urgentClinicNudge: WhatsAppTemplateFunction = (data) => ({
-  templateName: 'urgent_clinic_nudge',
+  templateName: 'urgent_clinic_nudge_v7',
   variables: [
     data.clinic_name || '',
     data.booking_ref || '',
@@ -107,11 +257,7 @@ const urgentClinicNudge: WhatsAppTemplateFunction = (data) => ({
     data.formatted_date || '',
     data.time_slot || '',
   ],
-  buttons: [
-    data.confirm_url || '',
-    data.reject_url || '',
-    data.alternatives_url || '',
-  ],
+  buttons: [data.confirm_url || data.alternatives_url || data.reject_url || ''],
 });
 
 // Template 7: 24-Hour Reminder (Patient)
@@ -130,10 +276,13 @@ const appointmentReminder24h: WhatsAppTemplateFunction = (data) => ({
 
 // Export all templates
 export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
+  booking_request_received: bookingRequestReceived,
   booking_confirmation_patient: bookingConfirmationPatient,
   booking_alert_clinic: bookingAlertClinic,
   appointment_confirmed: appointmentConfirmed,
-  alternatives_offered: alternativesOffered,
+  alternatives_offered_1slot: alternativesOffered1Slot,
+  alternatives_offered_2slot: alternativesOffered2Slot,
+  alternatives_offered_3slot: alternativesOffered3Slot,
   booking_expired: bookingExpired,
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,

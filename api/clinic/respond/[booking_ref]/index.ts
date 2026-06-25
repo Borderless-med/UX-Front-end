@@ -707,7 +707,7 @@ async function handleAlternatives(
         <body>
           <div class="container">
             <h1>📅 Offer Alternative Time Slots</h1>
-            <p style="color: #6b7280; margin-bottom: 20px;">The original slot isn't available? Suggest 3-5 alternative times for the patient.</p>
+            <p style="color: #6b7280; margin-bottom: 20px;">The original slot isn't available? Suggest 3 alternative times for the patient.</p>
             
             <div class="detail">
               <strong>Reference:</strong> ${booking_ref}<br>
@@ -717,13 +717,13 @@ async function handleAlternatives(
             </div>
 
             <div class="note">
-              💡 <strong>Tip:</strong> Offering alternatives extends the booking expiry by <strong>60 minutes</strong>. The patient will receive an email to choose their preferred slot.
+              💡 <strong>Tip:</strong> Offering alternatives extends the booking expiry by <strong>60 minutes</strong>. The patient will receive a WhatsApp message to choose their preferred slot.
             </div>
 
             <form method="POST" id="alternativesForm">
               <div id="slotsContainer">
                 <div class="slot-group">
-                  <h3>Alternative Slot 1</h3>
+                  <h3>Alternative Slot 1 <span style="color: #dc2626;">*Required</span></h3>
                   <div class="input-row">
                     <input type="date" name="slot_date_1" required min="${new Date().toISOString().split('T')[0]}">
                     <input type="time" name="slot_time_1" required step="900" value="09:00">
@@ -731,70 +731,46 @@ async function handleAlternatives(
                 </div>
 
                 <div class="slot-group">
-                  <h3>Alternative Slot 2</h3>
+                  <h3>Alternative Slot 2 <span style="color: #6b7280; font-style: italic;">(Optional)</span></h3>
                   <div class="input-row">
-                    <input type="date" name="slot_date_2" required min="${new Date().toISOString().split('T')[0]}">
-                    <input type="time" name="slot_time_2" required step="900" value="14:00">
+                    <input type="date" name="slot_date_2" min="${new Date().toISOString().split('T')[0]}">
+                    <input type="time" name="slot_time_2" step="900" value="14:00">
                   </div>
                 </div>
 
                 <div class="slot-group">
-                  <h3>Alternative Slot 3</h3>
+                  <h3>Alternative Slot 3 <span style="color: #6b7280; font-style: italic;">(Optional)</span></h3>
                   <div class="input-row">
-                    <input type="date" name="slot_date_3" required min="${new Date().toISOString().split('T')[0]}">
-                    <input type="time" name="slot_time_3" required step="900" value="16:00">
+                    <input type="date" name="slot_date_3" min="${new Date().toISOString().split('T')[0]}">
+                    <input type="time" name="slot_time_3" step="900" value="16:00">
                   </div>
                 </div>
               </div>
-
-              <button type="button" class="add-slot-btn" id="addSlotBtn">+ Add Another Slot (Optional)</button>
 
               <button type="submit">Send Alternatives to Patient</button>
             </form>
           </div>
 
           <script>
-            let slotCount = 3;
-            const maxSlots = 5;
-            
-            document.getElementById('addSlotBtn').addEventListener('click', function() {
-              if (slotCount >= maxSlots) {
-                alert('Maximum 5 alternative slots allowed');
-                return;
-              }
-              
-              slotCount++;
-              const container = document.getElementById('slotsContainer');
-              const slotDiv = document.createElement('div');
-              slotDiv.className = 'slot-group';
-              slotDiv.innerHTML = \`
-                <h3>Alternative Slot \${slotCount} <button type="button" class="remove-btn" onclick="this.parentElement.parentElement.remove()">Remove</button></h3>
-                <div class="input-row">
-                  <input type="date" name="slot_date_\${slotCount}" required min="${new Date().toISOString().split('T')[0]}">
-                  <input type="time" name="slot_time_\${slotCount}" required step="900" value="10:00">
-                </div>
-              \`;
-              container.appendChild(slotDiv);
-              
-              if (slotCount >= maxSlots) {
-                this.style.display = 'none';
-              }
-            });
-
             document.getElementById('alternativesForm').addEventListener('submit', function(e) {
               const formData = new FormData(this);
-              let hasAtLeastThree = false;
               let validSlots = 0;
               
-              for (let i = 1; i <= slotCount; i++) {
+              for (let i = 1; i <= 3; i++) {
                 const date = formData.get('slot_date_' + i);
                 const time = formData.get('slot_time_' + i);
                 if (date && time) validSlots++;
               }
               
-              if (validSlots < 3) {
+              if (validSlots < 1) {
                 e.preventDefault();
-                alert('Please provide at least 3 alternative time slots.');
+                alert('Please provide at least 1 alternative time slot.');
+                return false;
+              }
+              
+              if (validSlots > 3) {
+                e.preventDefault();
+                alert('You can provide maximum 3 alternative time slots.');
                 return false;
               }
             });
@@ -808,9 +784,9 @@ async function handleAlternatives(
   if (req.method === 'POST') {
     const body = req.body;
     
-    // Extract alternative slots from form data
+    // Extract alternative slots from form data (exactly 3 slots)
     const alternatives: Array<{date: string, time: string}> = [];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 3; i++) {
       const date = body[`slot_date_${i}`];
       const time = body[`slot_time_${i}`];
       if (date && time) {
@@ -818,13 +794,26 @@ async function handleAlternatives(
       }
     }
 
-    if (alternatives.length < 3) {
+    if (alternatives.length < 1) {
       return res.status(400).send(`
         <html>
           <head><title>Insufficient Alternatives</title></head>
           <body style="font-family: Arial; padding: 40px; text-align: center;">
             <h1 style="color: #dc2626;">❌ Insufficient Alternatives</h1>
-            <p>You must provide at least 3 alternative time slots.</p>
+            <p>You must provide at least 1 alternative time slot.</p>
+            <button onclick="history.back()" style="padding: 10px 20px; margin-top: 20px; cursor: pointer;">Go Back</button>
+          </body>
+        </html>
+      `);
+    }
+
+    if (alternatives.length > 3) {
+      return res.status(400).send(`
+        <html>
+          <head><title>Too Many Alternatives</title></head>
+          <body style="font-family: Arial; padding: 40px; text-align: center;">
+            <h1 style="color: #dc2626;">❌ Too Many Alternatives</h1>
+            <p>You can provide maximum 3 alternative time slots.</p>
             <button onclick="history.back()" style="padding: 10px 20px; margin-top: 20px; cursor: pointer;">Go Back</button>
           </body>
         </html>
@@ -926,33 +915,70 @@ async function handleAlternatives(
         smtpUser: process.env.SMTP_USER!,
       });
 
+      // Select correct WhatsApp template based on slot count
+      let whatsappTemplateName: 'alternatives_offered_1slot' | 'alternatives_offered_2slot' | 'alternatives_offered_3slot';
+      if (alternatives.length === 1) {
+        whatsappTemplateName = 'alternatives_offered_1slot';
+      } else if (alternatives.length === 2) {
+        whatsappTemplateName = 'alternatives_offered_2slot';
+      } else {
+        whatsappTemplateName = 'alternatives_offered_3slot';
+      }
+
+      // Prepare notification data
+      const notificationData: any = {
+        patient_name: booking.patient_name,
+        booking_ref: booking_ref as string,
+        clinic_name: clinicDetails?.name || booking.clinic_location,
+        clinic_address: clinicDetails?.address || '',
+        clinic_city: clinicDetails?.city || '',
+        clinic_state: clinicDetails?.state || '',
+        clinic_country: clinicDetails?.country || 'Malaysia',
+        original_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        original_time: booking.time_slot,
+        alternative_slots: alternativesHtml, // HTML buttons for email
+        alternative_slots_text: alternativesText, // Plain text for WhatsApp
+        reject_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/booking-response?action=decline&ref=${booking_ref}`,
+      };
+
+      // Add slot-specific button texts and URLs for WhatsApp
+      alternatives.forEach((slot, idx) => {
+        const dateObj = new Date(slot.date + 'T' + slot.time);
+        const buttonText = dateObj.toLocaleString('en-SG', {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        }).replace(',', ''); // e.g., "Fri 13 Jun 10:00 AM"
+        
+        // Generate accept URL for this slot
+        const slotData = `${slot.date}T${slot.time}`;
+        const slotToken = crypto
+          .createHmac('sha256', HMAC_SECRET)
+          .update(`${booking_ref}:${slotData}:accept`)
+          .digest('hex');
+        const acceptUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/booking-response?action=accept&ref=${booking_ref}&slot=${encodeURIComponent(slotData)}&token=${slotToken}`;
+
+        notificationData[`slot${idx + 1}_button_text`] = `📅 ${buttonText}`;
+        notificationData[`slot${idx + 1}_url`] = acceptUrl;
+      });
+
       const notificationResults = await notificationService.send(
-        'alternatives_offered',
+        whatsappTemplateName,
         {
           name: booking.patient_name,
           email: booking.email,
           whatsapp: booking.whatsapp,
         },
-        {
-          patient_name: booking.patient_name,
-          booking_ref: booking_ref as string,
-          clinic_name: clinicDetails?.name || booking.clinic_location,
-          clinic_address: clinicDetails?.address || '',
-          clinic_city: clinicDetails?.city || '',
-          clinic_state: clinicDetails?.state || '',
-          clinic_country: clinicDetails?.country || 'Malaysia',
-          original_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-          original_time: booking.time_slot,
-          alternative_slots: alternativesHtml, // HTML buttons for email
-          alternative_slots_text: alternativesText, // Plain text for WhatsApp
-          reject_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/booking-response?action=decline&ref=${booking_ref}`,
-        },
+        notificationData,
         ['email', 'whatsapp']
       );
 
       await notificationService.logNotification(
         booking_ref as string,
-        'alternatives_offered',
+        whatsappTemplateName,
         notificationResults
       );
 

@@ -107,7 +107,7 @@ export default async function handler(
       .update({ expires_at: expiresAt.toISOString() })
       .eq('booking_ref', bookingRef);
 
-    // Send detailed patient confirmation email using proper template
+    // Send patient receipt via email and WhatsApp using the approved template set.
     const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
     await notificationService.send('booking_confirmation_patient', 
       { name: bookingData.patient_name, email: bookingData.email },
@@ -126,6 +126,21 @@ export default async function handler(
         time_slot: bookingData.time_slot
       },
       ['email']
+    );
+
+    await notificationService.send('booking_request_received',
+      { name: bookingData.patient_name, whatsapp: bookingData.whatsapp },
+      {
+        booking_ref: bookingRef,
+        patient_name: bookingData.patient_name,
+        clinic_name: clinicDetails?.name || bookingData.clinic_location,
+        clinic_address: clinicDetails?.address || '',
+        treatment_type: bookingData.treatment_type,
+        requested_date: bookingData.preferred_date,
+        time_slot: bookingData.time_slot,
+        travel_guide_url: 'https://orachope.org/travel-guide',
+      },
+      ['whatsapp']
     );
 
     console.log('📧 Checking clinic email:', clinicEmail ? `Found: ${clinicEmail}` : '❌ NULL - clinic email block will be skipped');
