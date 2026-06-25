@@ -83,14 +83,19 @@ export class NotificationService {
     const urlTemplates: Record<string, string> = {
       alternatives_offered_2slot: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       alternatives_offered_2slot_v2: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
+      alternatives_offered_2slot_v4: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       alternatives_offered_3slot: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       alternatives_offered_3slot_v3: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
+      alternatives_offered_3slot_v5: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       appointment_confirmed: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
       appointment_confirmed_v9: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
+      appointment_confirmation_1: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       urgent_clinic_nudge: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       urgent_clinic_nudge_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
+      urgent_clinic_nudge_v7: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       booking_alert_clinic: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       booking_alert_clinic_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
+      booking_alert_clinic_v7: 'https://www.orachope.org/api/clinic/respond/{{1}}',
     };
 
     const templateUrl = urlTemplates[templateName];
