@@ -1029,6 +1029,134 @@ async function handleAlternatives(
 }
 
 // ============================================
+// NEUTRAL CHOICE HANDLER
+// ============================================
+
+async function handleChoice(
+  req: VercelRequest,
+  res: VercelResponse,
+  booking: any,
+  booking_ref: string,
+  token: string,
+  clinicDetails: any
+): Promise<any> {
+  if (booking.status === 'confirmed') {
+    return res.status(200).send(`
+      <html>
+        <head><title>Already Confirmed</title></head>
+        <body style="font-family: Arial; padding: 40px; text-align: center;">
+          <h1 style="color: #22c55e;">✅ Already Confirmed</h1>
+          <p>This booking was already confirmed earlier.</p>
+          <p><strong>Reference:</strong> ${booking_ref}</p>
+        </body>
+      </html>
+    `);
+  }
+
+  if (booking.status === 'expired') {
+    return res.status(410).send(`
+      <html>
+        <head><title>Booking Expired</title></head>
+        <body style="font-family: Arial; padding: 40px; text-align: center;">
+          <h1 style="color: #dc2626;">⏰ Booking Expired</h1>
+          <p>This booking expired due to no response within 3 hours.</p>
+          <p><strong>Reference:</strong> ${booking_ref}</p>
+        </body>
+      </html>
+    `);
+  }
+
+  if (booking.status !== 'pending') {
+    return res.status(400).send(`
+      <html>
+        <head><title>Booking Unavailable</title></head>
+        <body style="font-family: Arial; padding: 40px; text-align: center;">
+          <h1 style="color: #dc2626;">❌ Booking Unavailable</h1>
+          <p>This booking has status: <strong>${booking.status}</strong></p>
+        </body>
+      </html>
+    `);
+  }
+
+  const confirmUrl = `?action=confirm&token=${encodeURIComponent(token)}`;
+  const rejectUrl = `?action=reject&token=${encodeURIComponent(token)}`;
+  const alternativesUrl = `?action=alternatives&token=${encodeURIComponent(token)}`;
+
+  return res.status(200).send(`
+    <html>
+      <head>
+        <title>Clinic Response</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+            margin: 0;
+          }
+          .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 640px;
+            margin: 24px auto;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+            border: 1px solid #e2e8f0;
+          }
+          h1 { color: #0f172a; margin-bottom: 8px; }
+          .subtitle { color: #475569; margin-bottom: 20px; line-height: 1.5; }
+          .detail {
+            background: #f8fafc;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 10px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+          }
+          .detail strong { color: #334155; display: inline-block; width: 130px; }
+          .button-group { display: grid; gap: 12px; margin-top: 24px; }
+          a.button {
+            display: block;
+            padding: 14px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            text-align: center;
+          }
+          .confirm { background: #059669; color: white; }
+          .reject { background: #dc2626; color: white; }
+          .alternatives { background: #2563eb; color: white; }
+          .note { color: #64748b; font-size: 14px; margin-top: 18px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Clinic Response</h1>
+          <p class="subtitle">Choose how you want to handle this booking request. This page is the WhatsApp entry point and keeps your decision explicit.</p>
+
+          <div class="detail">
+            <strong>Reference:</strong> ${booking_ref}<br>
+            <strong>Patient:</strong> ${booking.patient_name}<br>
+            <strong>Treatment:</strong> ${booking.treatment_type}<br>
+            <strong>Date:</strong> ${new Date(booking.preferred_date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}<br>
+            <strong>Time:</strong> ${booking.time_slot}<br>
+            <strong>Clinic:</strong> ${clinicDetails?.name || booking.clinic_location}
+          </div>
+
+          <div class="button-group">
+            <a class="button confirm" href="${confirmUrl}">Confirm Appointment</a>
+            <a class="button reject" href="${rejectUrl}">Reject Booking</a>
+            <a class="button alternatives" href="${alternativesUrl}">Offer Alternatives</a>
+          </div>
+
+          <p class="note">You can use any of these actions without changing the email flow.</p>
+        </div>
+      </body>
+    </html>
+  `);
+}
+
+// ============================================
 // MAIN HANDLER - ROUTER
 // ============================================
 
@@ -1052,7 +1180,7 @@ export default async function handler(
       `);
     }
 
-    if (!action || !['confirm', 'reject', 'alternatives'].includes(action as string)) {
+    if (action && !['confirm', 'reject', 'alternatives'].includes(action as string)) {
       return res.status(400).send(`
         <html>
           <head><title>Invalid Action</title></head>
@@ -1151,6 +1279,10 @@ export default async function handler(
           </body>
         </html>
       `);
+    }
+
+    if (!action) {
+      return await handleChoice(req, res, booking, booking_ref as string, token as string, clinicDetails);
     }
 
     // Route to appropriate handler based on action

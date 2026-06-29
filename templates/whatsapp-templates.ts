@@ -74,7 +74,7 @@ const bookingAlertClinic: WhatsAppTemplateFunction = (data) => ({
     'requested_time',
     'expires_at',
   ],
-  buttons: [data.confirm_url || data.alternatives_url || data.reject_url || ''],
+  buttons: [data.clinic_response_url || data.confirm_url || data.alternatives_url || data.reject_url || ''],
   buttonHasVariable: [true],
 });
 

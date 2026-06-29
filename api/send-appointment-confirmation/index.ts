@@ -159,6 +159,7 @@ export default async function handler(
 
       // Build clinic response URLs
       const baseUrl = 'https://orachope.org/api/clinic/respond';
+      const responseUrl = `${baseUrl}/${bookingRef}?token=${responseToken}`;
       const confirmUrl = `${baseUrl}/${bookingRef}?action=confirm&token=${responseToken}`;
       const rejectUrl = `${baseUrl}/${bookingRef}?action=reject&token=${responseToken}`;
       const alternativesUrl = `${baseUrl}/${bookingRef}?action=alternatives&token=${responseToken}`;
@@ -181,6 +182,7 @@ export default async function handler(
           formatted_date: bookingData.preferred_date, 
           time_slot: bookingData.time_slot, 
           expires_at: formatExpiryTime(expiresAt), 
+          clinic_response_url: responseUrl,
           confirm_url: confirmUrl, 
           reject_url: rejectUrl, 
           alternatives_url: alternativesUrl
