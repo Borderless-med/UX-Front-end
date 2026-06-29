@@ -960,8 +960,10 @@ async function handleAlternatives(
           .update(`${booking_ref}:${slotData}:accept`)
           .digest('hex');
         const acceptUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/booking-response?action=accept&ref=${booking_ref}&slot=${encodeURIComponent(slotData)}&token=${slotToken}`;
+        const slotDetails = `${dateObj.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' })}, ${slot.time}`;
 
         notificationData[`slot${idx + 1}_button_text`] = `📅 ${buttonText}`;
+        notificationData[`slot${idx + 1}_details`] = slotDetails;
         notificationData[`slot${idx + 1}_url`] = acceptUrl;
       });
 
