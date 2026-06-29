@@ -9,7 +9,9 @@ import { NotificationData } from '../services/notification-service.js';
 export interface WhatsAppTemplate {
   templateName: string;
   variables: string[];
+  variableNames?: string[];
   buttons?: string[];
+  buttonHasVariable?: boolean[];
 }
 
 type WhatsAppTemplateFunction = (data: NotificationData) => WhatsAppTemplate;
@@ -26,7 +28,17 @@ const bookingRequestReceived: WhatsAppTemplateFunction = (data) => ({
     data.requested_date || data.formatted_date || '',
     data.time_slot || '',
   ],
+  variableNames: [
+    'patient_name',
+    'booking_ref',
+    'clinic_name',
+    'clinic_address',
+    'treatment_type',
+    'requested_date',
+    'time_slot',
+  ],
   buttons: [data.travel_guide_url || 'https://orachope.org/travel-guide'],
+  buttonHasVariable: [false],
 });
 
 // Template 1: Booking Confirmation (Patient)
@@ -54,7 +66,16 @@ const bookingAlertClinic: WhatsAppTemplateFunction = (data) => ({
     data.requested_time || `${data.formatted_date || ''}${data.time_slot ? ` ${data.time_slot}` : ''}`.trim(),
     data.expires_at || '',
   ],
+  variableNames: [
+    'clinic_name',
+    'booking_ref',
+    'patient_name',
+    'treatment_type',
+    'requested_time',
+    'expires_at',
+  ],
   buttons: [data.confirm_url || data.alternatives_url || data.reject_url || ''],
+  buttonHasVariable: [true],
 });
 
 // Template 3: Appointment Confirmed (Patient)
@@ -68,10 +89,19 @@ const appointmentConfirmed: WhatsAppTemplateFunction = (data) => ({
     data.time_slot || data.appointment_time || '',
     `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state} ${data.clinic_postcode}, ${data.clinic_country}`,
   ],
+  variableNames: [
+    'patient_name',
+    'clinic_name',
+    'booking_ref',
+    'appointment_date',
+    'appointment_time',
+    'clinic_address',
+  ],
   buttons: [
     data.google_maps_url || data.travel_guide_url || '',
     data.cancel_url || '',
   ],
+  buttonHasVariable: [true, true],
 });
 
 // Template 4A: Alternatives Offered - 1 Slot (Patient)
@@ -163,10 +193,17 @@ const alternativesOffered2Slot: WhatsAppTemplateFunction = (data) => ({
     data.slot1_details || data.original_date || '',
     data.slot2_details || data.original_time || '',
   ],
+  variableNames: [
+    'patient_name',
+    'clinic_name',
+    'slot_1_details',
+    'slot_2_details',
+  ],
   buttons: [
     data.slot1_url || '',  // Button 1: First alternative slot
     data.slot2_url || '',  // Button 2: Second alternative slot
   ],
+  buttonHasVariable: [true, true],
 });
 
 // Template 4C: Alternatives Offered - 3 Slots (Patient)
@@ -217,10 +254,19 @@ const alternativesOffered3Slot: WhatsAppTemplateFunction = (data) => ({
     data.slot3_details || '',
     data.slot3_url || '',
   ],
+  variableNames: [
+    'patient_name',
+    'clinic_name',
+    'slot_1_details',
+    'slot_2_details',
+    'slot_3_details',
+    'slot_3_url',
+  ],
   buttons: [
     data.slot1_url || '',  // Button 1: First alternative slot
     data.slot2_url || '',  // Button 2: Second alternative slot
   ],
+  buttonHasVariable: [true, true],
 });
 
 // Template 5: Booking Expired (Patient)
@@ -234,10 +280,19 @@ const bookingExpired: WhatsAppTemplateFunction = (data) => ({
     data.treatment_type || '',
     data.formatted_date || '',
   ],
+  variableNames: [
+    'patient_name',
+    'booking_ref',
+    'clinic_name',
+    'clinic_address',
+    'treatment_type',
+    'requested_date',
+  ],
   buttons: [
     `https://orachope.org/clinics?treatment=${encodeURIComponent(data.treatment_type || '')}`,
     'https://wa.me/6588104928',
   ],
+  buttonHasVariable: [true, false],
 });
 
 // Template 6: Urgent Clinic Nudge
@@ -251,7 +306,16 @@ const urgentClinicNudge: WhatsAppTemplateFunction = (data) => ({
     data.treatment_type || '',
     data.time_slot || '',
   ],
+  variableNames: [
+    'clinic_name',
+    'booking_ref',
+    'expires_at',
+    'patient_name',
+    'treatment_type',
+    'time_slot',
+  ],
   buttons: [data.confirm_url || data.alternatives_url || data.reject_url || ''],
+  buttonHasVariable: [true],
 });
 
 // Template 7: 24-Hour Reminder (Patient)
@@ -265,7 +329,16 @@ const appointmentReminder24h: WhatsAppTemplateFunction = (data) => ({
     `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state} ${data.clinic_postcode}, ${data.clinic_country}`,
     data.travel_guide_url || '',
   ],
+  variableNames: [
+    'patient_name',
+    'clinic_name',
+    'appointment_date',
+    'appointment_time',
+    'clinic_address',
+    'travel_guide_url',
+  ],
   buttons: [data.clinic_card_url || '', data.google_maps_url || ''],
+  buttonHasVariable: [false, true],
 });
 
 // Export all templates

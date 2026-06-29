@@ -286,7 +286,7 @@ export class NotificationService {
       throw new Error(`WhatsApp template not found for type: ${type}`);
     }
 
-    const { templateName, variables, buttons } = template(data);
+    const { templateName, variables, variableNames, buttons, buttonHasVariable } = template(data);
 
     // WhatsApp Business API integration
     const whatsappToken = process.env.WHATSAPP_API_TOKEN;
@@ -309,10 +309,18 @@ export class NotificationService {
         components: [
           {
             type: 'body',
-            parameters: variables.map((value) => ({
-              type: 'text',
-              text: value,
-            })),
+            parameters: variables.map((value, index) => {
+              const parameter: Record<string, string> = {
+                type: 'text',
+                text: value,
+              };
+
+              if (variableNames?.[index]) {
+                parameter.parameter_name = variableNames[index];
+              }
+
+              return parameter;
+            }),
           },
         ],
       },
@@ -321,6 +329,10 @@ export class NotificationService {
     // Add buttons if present
     if (buttons && buttons.length > 0) {
       buttons.forEach((buttonValue, index) => {
+        if (buttonHasVariable?.[index] === false) {
+          return;
+        }
+
         payload.template.components.push({
           type: 'button',
           sub_type: 'url',
