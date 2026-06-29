@@ -131,18 +131,8 @@ async function handleAcceptAlternative(
     `);
   }
 
-  const slotIndex = parseInt(slot as string);
-  if (isNaN(slotIndex) || slotIndex < 0 || slotIndex > 4) {
-    return res.status(400).send(`
-      <html>
-        <head><title>Invalid Slot</title></head>
-        <body style="font-family: Arial; padding: 40px; text-align: center;">
-          <h1 style="color: #dc2626;">❌ Invalid Slot Selection</h1>
-          <p>Slot index must be between 0 and 4.</p>
-        </body>
-      </html>
-    `);
-  }
+  const slotValue = decodeURIComponent(slot as string);
+  let slotIndex = -1;
 
   const supabaseUrl = process.env.SUPABASE_URL!;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -163,27 +153,6 @@ async function handleAcceptAlternative(
           <h1 style="color: #dc2626;">❌ Booking Not Found</h1>
           <p>Reference: ${ref}</p>
           <p style="color: #6b7280; margin-top: 20px;">This booking may have expired or been cancelled.</p>
-        </body>
-      </html>
-    `);
-  }
-
-  // Verify HMAC token
-  const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
-  const expectedToken = crypto
-    .createHmac('sha256', HMAC_SECRET)
-    .update(`${ref}|patient|${slotIndex}`)
-    .digest('hex')
-    .slice(0, 32);
-
-  if (token !== expectedToken) {
-    return res.status(403).send(`
-      <html>
-        <head><title>Invalid Token</title></head>
-        <body style="font-family: Arial; padding: 40px; text-align: center;">
-          <h1 style="color: #dc2626;">❌ Invalid Security Token</h1>
-          <p>This link may have expired or been tampered with.</p>
-          <p style="color: #6b7280; margin-top: 20px;">Please request a new booking or contact support.</p>
         </body>
       </html>
     `);
@@ -253,13 +222,53 @@ async function handleAcceptAlternative(
   }
 
   // Validate slot index
-  if (slotIndex >= alternatives.length) {
+  if (/^\d+$/.test(slotValue)) {
+    slotIndex = parseInt(slotValue, 10);
+  } else {
+    slotIndex = alternatives.findIndex((candidate) => `${candidate.date}T${candidate.time}` === slotValue);
+  }
+
+  if (slotIndex < 0 || slotIndex >= alternatives.length) {
     return res.status(400).send(`
       <html>
         <head><title>Invalid Slot</title></head>
         <body style="font-family: Arial; padding: 40px; text-align: center;">
           <h1 style="color: #dc2626;">❌ Invalid Slot Selection</h1>
           <p>The selected time slot is not available.</p>
+        </body>
+      </html>
+    `);
+  }
+
+  // Verify HMAC token (supports both legacy index-based and datetime-based links)
+  const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
+  const chosenSlotForToken = alternatives[slotIndex];
+  const chosenSlotData = `${chosenSlotForToken.date}T${chosenSlotForToken.time}`;
+
+  const expectedIndexToken = crypto
+    .createHmac('sha256', HMAC_SECRET)
+    .update(`${ref}|patient|${slotIndex}`)
+    .digest('hex')
+    .slice(0, 32);
+
+  const expectedDatetimeToken = crypto
+    .createHmac('sha256', HMAC_SECRET)
+    .update(`${ref}:${chosenSlotData}:accept`)
+    .digest('hex');
+
+  const validToken =
+    token === expectedIndexToken ||
+    token === expectedDatetimeToken ||
+    token === expectedDatetimeToken.slice(0, 32);
+
+  if (!validToken) {
+    return res.status(403).send(`
+      <html>
+        <head><title>Invalid Token</title></head>
+        <body style="font-family: Arial; padding: 40px; text-align: center;">
+          <h1 style="color: #dc2626;">❌ Invalid Security Token</h1>
+          <p>This link may have expired or been tampered with.</p>
+          <p style="color: #6b7280; margin-top: 20px;">Please request a new booking or contact support.</p>
         </body>
       </html>
     `);
@@ -750,7 +759,8 @@ export default async function handler(
   res: VercelResponse
 ) {
   try {
-    const { action } = getNormalizedParams(req.query);
+    const normalized = getNormalizedParams(req.query);
+    const action = normalized.action || ((normalized.ref && normalized.slot && normalized.token) ? 'accept' : undefined);
 
     if (action === 'accept') {
       return await handleAcceptAlternative(req, res);

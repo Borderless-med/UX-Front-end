@@ -953,13 +953,12 @@ async function handleAlternatives(
           hour12: true
         }).replace(',', ''); // e.g., "Fri 13 Jun 10:00 AM"
         
-        // Generate accept URL for this slot
-        const slotData = `${slot.date}T${slot.time}`;
+        // Generate accept URL for this slot (index-based token matches booking-response verifier)
         const slotToken = crypto
           .createHmac('sha256', HMAC_SECRET)
-          .update(`${booking_ref}:${slotData}:accept`)
+          .update(`${booking_ref}|patient|${idx}`)
           .digest('hex');
-        const acceptUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/booking-response?action=accept&ref=${booking_ref}&slot=${encodeURIComponent(slotData)}&token=${slotToken}`;
+        const acceptUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/booking-response?action=accept&ref=${booking_ref}&slot=${idx}&token=${slotToken.slice(0, 32)}`;
         const slotDetails = `${dateObj.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' })}, ${slot.time}`;
 
         notificationData[`slot${idx + 1}_button_text`] = `📅 ${buttonText}`;
