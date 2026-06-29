@@ -1,10 +1,11 @@
 # Booking System Status - June 9, 2026
 
 ## 📊 OVERALL STATUS
-**Phase 1 Automated Booking System: 85% Complete**
+**Phase 1 Automated Booking System: Operational with WhatsApp enabled**
 - Core booking flow: ✅ Working
 - Clinic response system: ✅ Working  
-- Email notifications: ✅ Working (with 1 bug)
+- Email notifications: ✅ Working
+- WhatsApp notifications: ✅ Approved and enabled
 - Admin dashboard: ✅ Working
 - Cron automation: ✅ Working
 
@@ -31,7 +32,7 @@
 - **Features:**
   - **Confirm:** One-click approval, updates status to 'confirmed', notifies patient
   - **Reject:** Shows form for rejection reason, updates status to 'rejected', notifies patient
-  - **Offer Alternatives:** Prompts clinic to select 3 alternative time slots, sends new email to patient with choices
+  - **Offer Alternatives:** Prompts clinic to select 3 alternative time slots, sends WhatsApp message to patient with 3 clickable buttons
 
 ### 3. Email Templates
 - **File:** `api/templates/email-templates.ts`
@@ -138,20 +139,20 @@
   - Change patient message to "We will confirm your appointment within 3-6 hours"
   - Or: Keep 24h promise but add "We aim to respond within a few hours"
 
-### 3. WhatsApp Notifications (Not Yet Implemented)
-- **Status:** Email-only currently
+### 3. WhatsApp Notifications
+- **Status:** ✅ Meta-approved and wired into the runtime
 - **Code Ready:** NotificationService supports WhatsApp channel
-- **Blocked By:** Meta Business API approval (submitted May 28, 2026)
-- **Next Step:** Once approved, change `['email']` to `['email', 'whatsapp']` in notification calls
+- **Current State:** WhatsApp templates and send paths are aligned with the latest approved manifest
+- **Next Step:** Run live smoke tests and monitor delivery logs
 
-### 4. Patient Alternative Acceptance Endpoint (CRITICAL - 404 Bug)
-- **Missing File:** `api/patient/accept-alternative.ts` (needs creation)
-- **Required Features:**
-  - Verify patient email/token
-  - Update booking with accepted alternative time
-  - Change status back to 'pending' for clinic final confirmation
-  - Send confirmation emails to patient + clinic
-  - Reset expires_at timer
+### 4. Patient Alternative Acceptance Endpoint
+- **Status:** Implemented via the unified patient response route
+- **Handler:** `api/patient/booking-response.ts`
+- **Features:**
+  - Verifies stuffed query parameters and HMAC tokens
+  - Updates booking with the selected alternative slot
+  - Sends patient and clinic notifications
+  - Extends expiry when alternatives are offered
 
 ---
 
@@ -244,18 +245,16 @@ cafb2e7 - Fix: Add .js extensions to ES module imports
 
 ## 🎯 IMMEDIATE PRIORITIES (For Next Chat)
 
-### Priority 1: Fix Alternative Time Slots 404 Bug (CRITICAL)
-**Goal:** Patient can accept alternative time slots offered by clinic
+### Priority 1: Live WhatsApp Smoke Test
+**Goal:** Confirm approved templates send successfully from the deployed runtime
 
 **Tasks:**
-1. Create `api/patient/accept-alternative.ts` endpoint
-2. Generate secure token for patient response (similar to clinic tokens)
-3. Update `alternativesOffered` email template with correct button URLs
-4. Test full flow: Clinic offers alternatives → Patient receives email → Patient clicks slot → Booking updated
+1. Trigger each booking workflow in production or staging
+2. Verify template delivery in WhatsApp and Vercel logs
+3. Confirm button clicks reach the expected endpoints
+4. Watch for any template-name or token-parsing mismatches
 
-**Estimated Effort:** 1-2 hours
-
-### Priority 2: After-Hours Booking Logic (BUSINESS DECISION NEEDED)
+### Priority 2: After-Hours Booking Logic (Business Decision)
 **Goal:** Prevent after-hours bookings from auto-expiring before clinic sees them
 
 **Tasks:**

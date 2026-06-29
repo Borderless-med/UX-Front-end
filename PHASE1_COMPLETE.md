@@ -21,7 +21,7 @@
 ### Clinic Response Endpoints (3 files)
 - ✅ [api/clinic/respond/[booking_ref]/confirm.ts](api/clinic/respond/[booking_ref]/confirm.ts) - One-click confirmation
 - ✅ [api/clinic/respond/[booking_ref]/reject.ts](api/clinic/respond/[booking_ref]/reject.ts) - Rejection form with reason
-- ✅ [api/clinic/respond/[booking_ref]/alternatives.ts](api/clinic/respond/[booking_ref]/alternatives.ts) - 3-5 alternative slots
+- ✅ [api/clinic/respond/[booking_ref]/alternatives.ts](api/clinic/respond/[booking_ref]/alternatives.ts) - 3 alternative slots
 
 ### Configuration (1 file)
 - ✅ [vercel.json](vercel.json) - Updated with 3 cron schedules
@@ -75,6 +75,11 @@
 - Template 7 sent via BOTH email + WhatsApp (redundancy)
 - Includes: clinic address, travel guide, clinic card, Google Maps
 - Database: `reminder_24h_sent=TRUE`
+
+**8. WhatsApp Delivery Now Approved**
+- Meta-approved WhatsApp templates are now live in the manifest
+- Runtime WhatsApp mappings are aligned to the approved Graph names
+- Patient/staff button links are parsed through the stuffed-query model where required
 
 ---
 
@@ -148,9 +153,9 @@
 ### Template 4: Alternatives Offered (Patient)
 **When:** Clinic offers alternative slots  
 **To:** Patient (email + WhatsApp)  
-**Content:** Original request, clinic address, 3-5 alternative slots list  
+**Content:** Original request, clinic address, 3 alternative slots with clickable buttons  
 **Tone:** Friendly  
-**Buttons:** Confirm | Decline All
+**Buttons:** 3 slot buttons (WhatsApp), 3 slot buttons + "Find Other Clinics" link (Email)
 
 ### Template 5: Booking Expired (Patient)
 **When:** No clinic response within 3 hours  
@@ -213,7 +218,7 @@ await notificationService.send(
 - [ ] Generate `CRON_SECRET` (32-char random string)
 - [ ] Generate `HMAC_SECRET` (32-char random string)
 - [ ] Add both to Vercel environment variables
-- [ ] Set `WHATSAPP_ENABLED=false` (enable later when Meta approves)
+- [ ] Set `WHATSAPP_ENABLED=true` (once deployment is verified)
 - [ ] Verify existing env vars present (Supabase, SMTP2GO, Brevo)
 
 **Deploy:**
@@ -251,6 +256,8 @@ await notificationService.send(
 - Patient notifications: 2-3 messages (confirmation, reminder)
 - Clinic notifications: 1-2 messages (alert, nudge)
 - **Est. Cost:** ~$0.30 per booking = $300/month for 1000 bookings
+
+**Current Note:** WhatsApp is now enabled in the approved runtime and should be validated with live smoke tests before relying on the cost model above.
 
 **Recommendations:**
 - Start with email-only (WhatsApp disabled)
