@@ -89,6 +89,7 @@ export class NotificationService {
       alternatives_offered_3slot_v5: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       appointment_confirmed: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
       appointment_confirmed_v9: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
+      appointment_confirmation_v3: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
       appointment_confirmation_1: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       urgent_clinic_nudge: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       urgent_clinic_nudge_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',

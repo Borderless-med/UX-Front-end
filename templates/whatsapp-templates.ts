@@ -50,10 +50,8 @@ const bookingAlertClinic: WhatsAppTemplateFunction = (data) => ({
     data.clinic_name || '',
     data.booking_ref || '',
     data.patient_name || '',
-    data.patient_whatsapp || '',
     data.treatment_type || '',
-    data.formatted_date || '',
-    data.time_slot || '',
+    data.requested_time || `${data.formatted_date || ''}${data.time_slot ? ` ${data.time_slot}` : ''}`.trim(),
     data.expires_at || '',
   ],
   buttons: [data.confirm_url || data.alternatives_url || data.reject_url || ''],
@@ -61,18 +59,19 @@ const bookingAlertClinic: WhatsAppTemplateFunction = (data) => ({
 
 // Template 3: Appointment Confirmed (Patient)
 const appointmentConfirmed: WhatsAppTemplateFunction = (data) => ({
-  templateName: 'appointment_confirmation_1',
+  templateName: 'appointment_confirmation_v3',
   variables: [
     data.patient_name || '',
     data.clinic_name || '',
     data.booking_ref || '',
-    data.formatted_date || '',
-    data.time_slot || '',
+    data.formatted_date || data.appointment_date || '',
+    data.time_slot || data.appointment_time || '',
     `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state} ${data.clinic_postcode}, ${data.clinic_country}`,
-    data.travel_guide_url || '',
-    data.google_maps_url || '',
   ],
-  buttons: [data.cancel_url || ''],
+  buttons: [
+    data.google_maps_url || data.travel_guide_url || '',
+    data.cancel_url || '',
+  ],
 });
 
 // Template 4A: Alternatives Offered - 1 Slot (Patient)
@@ -161,10 +160,8 @@ const alternativesOffered2Slot: WhatsAppTemplateFunction = (data) => ({
   variables: [
     data.patient_name || '',
     data.clinic_name || '',
-    data.original_date || '',
-    data.original_time || '',
-    data.slot1_button_text || '',  // e.g., "📅 Fri 13 Jun, 10:00 AM"
-    data.slot2_button_text || '',  // e.g., "📅 Sat 14 Jun, 2:00 PM"
+    data.slot1_details || data.original_date || '',
+    data.slot2_details || data.original_time || '',
   ],
   buttons: [
     data.slot1_url || '',  // Button 1: First alternative slot
@@ -215,16 +212,14 @@ const alternativesOffered3Slot: WhatsAppTemplateFunction = (data) => ({
   variables: [
     data.patient_name || '',
     data.clinic_name || '',
-    data.original_date || '',
-    data.original_time || '',
-    data.slot1_button_text || '',  // e.g., "📅 Fri 13 Jun, 10:00 AM"
-    data.slot2_button_text || '',  // e.g., "📅 Sat 14 Jun, 2:00 PM"
-    data.slot3_button_text || '',  // e.g., "📅 Mon 16 Jun, 9:00 AM"
+    data.slot1_details || data.original_date || '',
+    data.slot2_details || data.original_time || '',
+    data.slot3_details || '',
+    data.slot3_url || '',
   ],
   buttons: [
     data.slot1_url || '',  // Button 1: First alternative slot
     data.slot2_url || '',  // Button 2: Second alternative slot
-    data.slot3_url || '',  // Button 3: Third alternative slot
   ],
 });
 
@@ -254,7 +249,6 @@ const urgentClinicNudge: WhatsAppTemplateFunction = (data) => ({
     data.expires_at || '',
     data.patient_name || '',
     data.treatment_type || '',
-    data.formatted_date || '',
     data.time_slot || '',
   ],
   buttons: [data.confirm_url || data.alternatives_url || data.reject_url || ''],
