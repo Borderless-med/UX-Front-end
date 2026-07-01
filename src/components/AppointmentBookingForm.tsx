@@ -524,7 +524,7 @@ const AppointmentBookingForm = () => {
         email: formData.email.trim(),
         whatsapp: `${formData.country_code} ${formData.whatsapp.trim()}`,
         treatment_type: formData.treatment_type,
-        preferred_date: formData.preferred_date!.toISOString().split('T')[0],
+        preferred_date: format(formData.preferred_date!, 'yyyy-MM-dd'),
         time_slot: formData.time_slot,
         clinic_location: formData.preferred_clinic || formData.clinic_location,
         consent_given: formData.consent_given,
