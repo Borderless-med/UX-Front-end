@@ -7,6 +7,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
+import crypto from 'crypto';
 
 export default async function handler(
   req: VercelRequest,
@@ -38,7 +39,7 @@ export default async function handler(
       .from('appointment_bookings')
       .select('*')
       .eq('status', 'confirmed')
-      .eq('reminder_24h_sent', false)
+      .or('reminder_24h_sent.is.null,reminder_24h_sent.eq.false')
       .gte('preferred_date', targetStart.toISOString().split('T')[0])
       .lte('preferred_date', targetEnd.toISOString().split('T')[0]);
 
@@ -124,6 +125,17 @@ export default async function handler(
         const googleMapsUrl = clinic.address 
           ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.address + ', ' + clinic.city)}`
           : clinicCardUrl;
+        const googleMapsQuery = clinic.address
+          ? `${clinic.name || booking.clinic_location} ${clinic.address} ${clinic.city || ''}`.trim()
+          : `${clinic.name || booking.clinic_location} ${booking.clinic_location || ''}`.trim();
+
+        const cancelSecret = process.env.CANCEL_SECRET || 'dev-cancel-secret';
+        const cancelToken = crypto
+          .createHmac('sha256', cancelSecret)
+          .update(`${booking.booking_ref}|${booking.email}`)
+          .digest('hex')
+          .slice(0, 32);
+        const cancelRefPayload = `${booking.booking_ref}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
 
         // Send reminder (both WhatsApp AND Email for reliability)
         const notificationResults = await notificationService.send(
@@ -152,18 +164,25 @@ export default async function handler(
             travel_guide_url: travelGuideUrl,
             clinic_card_url: clinicCardUrl,
             google_maps_url: googleMapsUrl,
+            google_maps_query: googleMapsQuery,
+            cancel_ref_payload: cancelRefPayload,
           },
           ['email', 'whatsapp'] // Send BOTH for critical reminder
         );
 
-        // Update reminder flag
-        await supabase
-          .from('appointment_bookings')
-          .update({
-            reminder_24h_sent: true,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('booking_ref', booking.booking_ref);
+        const hasAnyChannelSuccess = notificationResults.some((r) => r.success);
+        if (hasAnyChannelSuccess) {
+          // Update reminder flag only if at least one channel was sent.
+          await supabase
+            .from('appointment_bookings')
+            .update({
+              reminder_24h_sent: true,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('booking_ref', booking.booking_ref);
+        } else {
+          console.warn(`⚠️ Reminder delivery failed on all channels for ${booking.booking_ref}; keeping reminder_24h_sent=false for retry`);
+        }
 
         // Log notification
         await notificationService.logNotification(

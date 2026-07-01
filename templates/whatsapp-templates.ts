@@ -326,8 +326,7 @@ const appointmentReminder24h: WhatsAppTemplateFunction = (data) => ({
     data.clinic_name || '',
     data.formatted_date || '',
     data.time_slot || '',
-    `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state} ${data.clinic_postcode}, ${data.clinic_country}`,
-    data.travel_guide_url || '',
+    `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state} ${data.clinic_postcode}, ${data.clinic_country}`.replace(/\s+,/g, ',').replace(/\s{2,}/g, ' ').trim(),
   ],
   variableNames: [
     'patient_name',
@@ -335,10 +334,9 @@ const appointmentReminder24h: WhatsAppTemplateFunction = (data) => ({
     'appointment_date',
     'appointment_time',
     'clinic_address',
-    'travel_guide_url',
   ],
-  buttons: [data.clinic_card_url || '', data.google_maps_url || ''],
-  buttonHasVariable: [false, true],
+  buttons: [data.google_maps_query || '', data.cancel_ref_payload || data.booking_ref || ''],
+  buttonHasVariable: [true, true],
 });
 
 // Export all templates
