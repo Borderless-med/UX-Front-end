@@ -125,9 +125,10 @@ export default async function handler(
         const googleMapsUrl = clinic.address 
           ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.address + ', ' + clinic.city)}`
           : clinicCardUrl;
-        const googleMapsQuery = clinic.address
+        const rawGoogleMapsQuery = clinic.address
           ? `${clinic.name || booking.clinic_location} ${clinic.address} ${clinic.city || ''}`.trim()
           : `${clinic.name || booking.clinic_location} ${booking.clinic_location || ''}`.trim();
+        const googleMapsQuery = encodeURIComponent(rawGoogleMapsQuery || 'Johor Bahru dental clinic');
 
         const cancelSecret = process.env.CANCEL_SECRET || 'dev-cancel-secret';
         const cancelToken = crypto
