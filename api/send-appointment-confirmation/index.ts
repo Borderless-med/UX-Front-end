@@ -16,6 +16,44 @@ interface AppointmentBookingRequest {
   create_account?: boolean;
 }
 
+function isValidDateOnly(dateOnly: string): boolean {
+  const match = dateOnly.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return false;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  );
+}
+
+function normalizePreferredDate(raw: unknown): { normalized?: string; error?: string } {
+  if (typeof raw !== 'string') {
+    return { error: 'preferred_date must be a string in YYYY-MM-DD format' };
+  }
+
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return { error: 'preferred_date is required' };
+  }
+
+  // Strict backend contract: date-only string to avoid timezone drift.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    return { error: `preferred_date must be date-only (YYYY-MM-DD). Received: ${trimmed}` };
+  }
+
+  if (!isValidDateOnly(trimmed)) {
+    return { error: `preferred_date is not a valid calendar date: ${trimmed}` };
+  }
+
+  return { normalized: trimmed };
+}
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse,
@@ -40,7 +78,29 @@ export default async function handler(
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const SMTP_USER = process.env.SMTP_USER!;
-    const bookingData: AppointmentBookingRequest = req.body;
+    const bookingDataRaw: AppointmentBookingRequest = req.body;
+    const normalizedDateResult = normalizePreferredDate(bookingDataRaw?.preferred_date);
+
+    console.log('📥 Booking request received:', {
+      request_id: req.headers['x-vercel-id'] || null,
+      user_agent: req.headers['user-agent'] || null,
+      preferred_date_raw: bookingDataRaw?.preferred_date,
+      preferred_date_normalized: normalizedDateResult.normalized || null,
+      preferred_date_error: normalizedDateResult.error || null,
+      time_slot: bookingDataRaw?.time_slot || null,
+      clinic_location: bookingDataRaw?.clinic_location || null,
+    });
+
+    if (normalizedDateResult.error || !normalizedDateResult.normalized) {
+      return res.status(400).json({
+        error: normalizedDateResult.error || 'Invalid preferred_date',
+      });
+    }
+
+    const bookingData: AppointmentBookingRequest = {
+      ...bookingDataRaw,
+      preferred_date: normalizedDateResult.normalized,
+    };
     
     let clinicEmail: string | null = null;
     let clinicWhatsApp: string | null = null;
