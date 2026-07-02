@@ -6,11 +6,11 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Import individual job handlers from _handlers directory
-// (underscore prefix prevents Vercel from deploying them as separate functions)
-import checkExpiredBookingsHandler from './_handlers/check-expired-bookings.js';
-import sendAppointmentRemindersHandler from './_handlers/send-appointment-reminders.js';
-import sendUrgentNudgesHandler from './_handlers/send-urgent-nudges.js';
+// Import individual job handlers from lib/cron directory
+// (lib directory is outside api/, so these won't be deployed as separate serverless functions)
+import checkExpiredBookingsHandler from '../../lib/cron/check-expired-bookings.js';
+import sendAppointmentRemindersHandler from '../../lib/cron/send-appointment-reminders.js';
+import sendUrgentNudgesHandler from '../../lib/cron/send-urgent-nudges.js';
 
 export default async function handler(
   req: VercelRequest,
