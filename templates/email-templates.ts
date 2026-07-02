@@ -268,7 +268,7 @@ const bookingExpired: EmailTemplateFunction = (data) => ({
         
         <div style="text-align: center; margin: 30px 0;">
           <a href="https://orachope.org/clinics?treatment=${encodeURIComponent(data.treatment_type || '')}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">🔍 BROWSE OTHER CLINICS</a>
-          <a href="https://wa.me/6588104928" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">💬 CONTACT SUPPORT</a>
+          <a href="https://wa.me/6581926158" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">💬 CONTACT SUPPORT</a>
         </div>
         
         <p style="text-align: center; color: #6b7280; font-size: 14px; margin: 20px 0;">We apologize for the inconvenience.</p>

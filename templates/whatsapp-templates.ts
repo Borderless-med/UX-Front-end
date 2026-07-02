@@ -274,9 +274,8 @@ const bookingExpired: WhatsAppTemplateFunction = (data) => ({
   templateName: 'booking_expired',
   variables: [
     data.patient_name || '',
-    data.clinic_name || '',
     data.booking_ref || '',
-    `${data.clinic_address}, ${data.clinic_city}, ${data.clinic_state}, ${data.clinic_country}`,
+    data.clinic_name || '',
     data.treatment_type || '',
     data.formatted_date || '',
   ],
@@ -284,13 +283,12 @@ const bookingExpired: WhatsAppTemplateFunction = (data) => ({
     'patient_name',
     'booking_ref',
     'clinic_name',
-    'clinic_address',
     'treatment_type',
     'requested_date',
   ],
   buttons: [
     `https://orachope.org/clinics?treatment=${encodeURIComponent(data.treatment_type || '')}`,
-    'https://wa.me/6588104928',
+    'https://wa.me/6581926158',
   ],
   buttonHasVariable: [true, false],
 });

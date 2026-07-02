@@ -79,6 +79,59 @@ export class NotificationService {
   private whatsappEnabled: boolean;
   private smtpUser: string;
 
+  private validateWhatsAppTemplateContract(
+    templateName: string,
+    variables: string[],
+    variableNames?: string[],
+    buttons?: string[],
+    buttonHasVariable?: boolean[]
+  ): void {
+    if (variableNames && variableNames.length !== variables.length) {
+      throw new Error(
+        `WhatsApp template contract mismatch for ${templateName}: variables (${variables.length}) != variableNames (${variableNames.length})`
+      );
+    }
+
+    if (templateName === 'booking_expired') {
+      const expectedVariableNames = [
+        'patient_name',
+        'booking_ref',
+        'clinic_name',
+        'treatment_type',
+        'requested_date',
+      ];
+
+      if (variables.length !== expectedVariableNames.length) {
+        throw new Error(
+          `WhatsApp template contract mismatch for booking_expired: expected ${expectedVariableNames.length} body parameters, got ${variables.length}`
+        );
+      }
+
+      if (!variableNames) {
+        throw new Error('WhatsApp template contract mismatch for booking_expired: variableNames are required');
+      }
+
+      const sameNames = expectedVariableNames.every((name, index) => variableNames[index] === name);
+      if (!sameNames) {
+        throw new Error(
+          `WhatsApp template contract mismatch for booking_expired: expected variableNames ${expectedVariableNames.join(', ')}, got ${variableNames.join(', ')}`
+        );
+      }
+
+      if (!buttons || buttons.length !== 2) {
+        throw new Error(
+          `WhatsApp template contract mismatch for booking_expired: expected 2 buttons, got ${buttons?.length ?? 0}`
+        );
+      }
+
+      if (!buttonHasVariable || buttonHasVariable.length < 2 || buttonHasVariable[0] !== true || buttonHasVariable[1] !== false) {
+        throw new Error(
+          'WhatsApp template contract mismatch for booking_expired: expected buttonHasVariable [true, false]'
+        );
+      }
+    }
+  }
+
   private getFirstButtonBaseSegment(templateName: string): string | null {
     const urlTemplates: Record<string, string> = {
       alternatives_offered_2slot: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
@@ -287,6 +340,7 @@ export class NotificationService {
     }
 
     const { templateName, variables, variableNames, buttons, buttonHasVariable } = template(data);
+    this.validateWhatsAppTemplateContract(templateName, variables, variableNames, buttons, buttonHasVariable);
 
     // WhatsApp Business API integration
     const whatsappToken = process.env.WHATSAPP_API_TOKEN;
