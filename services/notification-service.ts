@@ -24,6 +24,7 @@ export type NotificationType =
   | 'appointment_reminder_24h'
   | 'confirmed'
   | 'clinic_booking_confirmed'
+  | 'alternative_slot_accepted_clinic'
   | 'alternative_accepted'
   | 'booking_rejected';
 
