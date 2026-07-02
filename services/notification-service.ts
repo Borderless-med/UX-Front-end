@@ -253,22 +253,27 @@ export class NotificationService {
     }
 
     if (basePrefix?.includes('/clinics?treatment=')) {
-      // For booking_expired template, extract just the treatment value
-      // Input: https://orachope.org/clinics?treatment=root_canal
-      // Output: root_canal
+      // For booking_expired template, extract and URL-encode the treatment value
+      // Input: https://orachope.org/clinics?treatment=Wisdom%20Tooth%20Extraction
+      // Output: Wisdom%20Tooth%20Extraction (URL-encoded for Meta template substitution)
       if (!value.includes('://') && !value.includes('?')) {
-        // Already just the treatment value
-        return value;
+        // Already just the treatment value - encode it
+        return encodeURIComponent(value);
       }
 
       try {
         const parsed = new URL(value);
         const treatment = parsed.searchParams.get('treatment');
-        return treatment || value;
+        // Re-encode the extracted value for Meta template substitution
+        return treatment ? encodeURIComponent(treatment) : value;
       } catch {
         // Fallback: extract from query string
         const match = value.match(/[?&]treatment=([^&]+)/);
-        return match ? decodeURIComponent(match[1]) : value;
+        if (match) {
+          const decoded = decodeURIComponent(match[1]);
+          return encodeURIComponent(decoded);
+        }
+        return encodeURIComponent(value);
       }
     }
 
