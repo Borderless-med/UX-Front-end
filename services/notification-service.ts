@@ -186,6 +186,7 @@ export class NotificationService {
       appointment_confirmation_v3: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
       appointment_confirmation_1: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
       appointment_reschedule_1: 'https://orachope.org/api/accept?ref={{1}}',
+      booking_expired: 'https://orachope.org/clinics?treatment={{1}}',
       urgent_clinic_nudge: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       urgent_clinic_nudge_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       urgent_clinic_nudge_v7: 'https://www.orachope.org/api/clinic/respond/{{1}}',
@@ -248,6 +249,26 @@ export class NotificationService {
         return parsed.search.replace(/^\?ref=/, '');
       } catch {
         return value.replace(/^ref=/, '').replace(/^\?ref=/, '');
+      }
+    }
+
+    if (basePrefix?.includes('/clinics?treatment=')) {
+      // For booking_expired template, extract just the treatment value
+      // Input: https://orachope.org/clinics?treatment=root_canal
+      // Output: root_canal
+      if (!value.includes('://') && !value.includes('?')) {
+        // Already just the treatment value
+        return value;
+      }
+
+      try {
+        const parsed = new URL(value);
+        const treatment = parsed.searchParams.get('treatment');
+        return treatment || value;
+      } catch {
+        // Fallback: extract from query string
+        const match = value.match(/[?&]treatment=([^&]+)/);
+        return match ? decodeURIComponent(match[1]) : value;
       }
     }
 
