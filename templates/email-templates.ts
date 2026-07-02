@@ -448,6 +448,7 @@ export const emailTemplates: Record<string, EmailTemplateFunction> = {
   booking_alert_clinic: bookingAlertClinic,
   appointment_confirmed: appointmentConfirmed,
   alternatives_offered: alternativesOffered,
+  appointment_reschedule_1: alternativesOffered,
   alternatives_offered_1slot: alternativesOffered,
   alternatives_offered_2slot: alternativesOffered,
   alternatives_offered_3slot: alternativesOffered,

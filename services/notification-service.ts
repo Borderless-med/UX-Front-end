@@ -14,6 +14,7 @@ export type NotificationType =
   | 'booking_confirmation_patient'
   | 'booking_alert_clinic'
   | 'appointment_confirmed'
+  | 'appointment_reschedule_1'
   | 'alternatives_offered'  // Deprecated - use specific slot count templates
   | 'alternatives_offered_1slot'
   | 'alternatives_offered_2slot'
@@ -130,6 +131,45 @@ export class NotificationService {
         );
       }
     }
+
+    if (templateName === 'appointment_reschedule_1') {
+      const expectedVariableNames = [
+        'patient_name',
+        'clinic_name',
+        'original_date',
+        'original_time',
+        'alt_slot_details',
+      ];
+
+      if (variables.length !== expectedVariableNames.length) {
+        throw new Error(
+          `WhatsApp template contract mismatch for appointment_reschedule_1: expected ${expectedVariableNames.length} body parameters, got ${variables.length}`
+        );
+      }
+
+      if (!variableNames) {
+        throw new Error('WhatsApp template contract mismatch for appointment_reschedule_1: variableNames are required');
+      }
+
+      const sameNames = expectedVariableNames.every((name, index) => variableNames[index] === name);
+      if (!sameNames) {
+        throw new Error(
+          `WhatsApp template contract mismatch for appointment_reschedule_1: expected variableNames ${expectedVariableNames.join(', ')}, got ${variableNames.join(', ')}`
+        );
+      }
+
+      if (!buttons || buttons.length !== 1) {
+        throw new Error(
+          `WhatsApp template contract mismatch for appointment_reschedule_1: expected 1 button, got ${buttons?.length ?? 0}`
+        );
+      }
+
+      if (!buttonHasVariable || buttonHasVariable.length < 1 || buttonHasVariable[0] !== true) {
+        throw new Error(
+          'WhatsApp template contract mismatch for appointment_reschedule_1: expected buttonHasVariable [true]'
+        );
+      }
+    }
   }
 
   private getFirstButtonBaseSegment(templateName: string): string | null {
@@ -144,6 +184,7 @@ export class NotificationService {
       appointment_confirmed_v9: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
       appointment_confirmation_v3: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
       appointment_confirmation_1: 'https://www.orachope.org/api/patient/booking-response?token={{1}}',
+      appointment_reschedule_1: 'https://orachope.org/api/accept?ref={{1}}',
       urgent_clinic_nudge: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       urgent_clinic_nudge_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       urgent_clinic_nudge_v7: 'https://www.orachope.org/api/clinic/respond/{{1}}',
@@ -193,6 +234,19 @@ export class NotificationService {
         return parsed.search.replace(/^\?/, '');
       } catch {
         return value;
+      }
+    }
+
+    if (basePrefix?.includes('/api/accept?ref=')) {
+      if (!value.includes('://') && !value.startsWith('ref=')) {
+        return value;
+      }
+
+      try {
+        const parsed = new URL(value);
+        return parsed.search.replace(/^\?ref=/, '');
+      } catch {
+        return value.replace(/^ref=/, '').replace(/^\?ref=/, '');
       }
     }
 

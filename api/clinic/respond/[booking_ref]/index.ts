@@ -916,9 +916,9 @@ async function handleAlternatives(
       });
 
       // Select correct WhatsApp template based on slot count
-      let whatsappTemplateName: 'alternatives_offered_1slot' | 'alternatives_offered_2slot' | 'alternatives_offered_3slot';
+      let whatsappTemplateName: 'appointment_reschedule_1' | 'alternatives_offered_2slot' | 'alternatives_offered_3slot';
       if (alternatives.length === 1) {
-        whatsappTemplateName = 'alternatives_offered_1slot';
+        whatsappTemplateName = 'appointment_reschedule_1';
       } else if (alternatives.length === 2) {
         whatsappTemplateName = 'alternatives_offered_2slot';
       } else {
@@ -958,7 +958,10 @@ async function handleAlternatives(
           .createHmac('sha256', HMAC_SECRET)
           .update(`${booking_ref}|patient|${idx}`)
           .digest('hex');
-        const acceptUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org'}/api/patient/booking-response?action=accept&ref=${booking_ref}&slot=${idx}&token=${slotToken.slice(0, 32)}`;
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://orachope.org';
+        const acceptUrl = alternatives.length === 1
+          ? `${baseUrl}/api/accept?ref=${booking_ref}&slot=${idx}&token=${slotToken.slice(0, 32)}`
+          : `${baseUrl}/api/patient/booking-response?action=accept&ref=${booking_ref}&slot=${idx}&token=${slotToken.slice(0, 32)}`;
         const slotDetails = `${dateObj.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' })}, ${slot.time}`;
 
         notificationData[`slot${idx + 1}_button_text`] = `📅 ${buttonText}`;

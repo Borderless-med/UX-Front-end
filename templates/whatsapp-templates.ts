@@ -337,6 +337,27 @@ const appointmentReminder24h: WhatsAppTemplateFunction = (data) => ({
   buttonHasVariable: [true, true],
 });
 
+// Template 8: Appointment Reschedule - 1 alternative slot
+const appointmentReschedule1: WhatsAppTemplateFunction = (data) => ({
+  templateName: 'appointment_reschedule_1',
+  variables: [
+    data.patient_name || '',
+    data.clinic_name || '',
+    data.original_date || '',
+    data.original_time || '',
+    data.slot1_details || data.alt_slot_details || '',
+  ],
+  variableNames: [
+    'patient_name',
+    'clinic_name',
+    'original_date',
+    'original_time',
+    'alt_slot_details',
+  ],
+  buttons: [data.slot1_url || ''],
+  buttonHasVariable: [true],
+});
+
 // Export all templates
 export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
   booking_request_received: bookingRequestReceived,
@@ -349,6 +370,7 @@ export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
   booking_expired: bookingExpired,
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,
+  appointment_reschedule_1: appointmentReschedule1,
   // Aliases for compatibility
   confirmed: appointmentConfirmed,
   clinic_booking_confirmed: bookingAlertClinic,
