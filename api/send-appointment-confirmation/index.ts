@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 import { calculateBusinessHoursExpiry, formatExpiryTime } from '../../utils/business-hours.js';
+import { formatSingaporeDate } from '../../utils/sg-time.js';
 
 interface AppointmentBookingRequest {
   patient_name: string;
@@ -101,6 +102,7 @@ export default async function handler(
       ...bookingDataRaw,
       preferred_date: normalizedDateResult.normalized,
     };
+    const preferredDateDisplay = formatSingaporeDate(bookingData.preferred_date);
     
     let clinicEmail: string | null = null;
     let clinicWhatsApp: string | null = null;
@@ -189,7 +191,7 @@ export default async function handler(
         clinic_postcode: '',
         clinic_country: 'Malaysia',
         treatment_type: bookingData.treatment_type,
-        formatted_date: bookingData.preferred_date,
+        formatted_date: preferredDateDisplay,
         time_slot: bookingData.time_slot
       },
       ['email']
@@ -203,7 +205,7 @@ export default async function handler(
         clinic_name: clinicDetails?.name || bookingData.clinic_location,
         clinic_address: clinicDetails?.address || '',
         treatment_type: bookingData.treatment_type,
-        requested_date: bookingData.preferred_date,
+        requested_date: preferredDateDisplay,
         time_slot: bookingData.time_slot,
         travel_guide_url: 'https://orachope.org/travel-guide',
       },
@@ -239,7 +241,7 @@ export default async function handler(
           patient_whatsapp: bookingData.whatsapp,
           patient_email: bookingData.email,
           treatment_type: bookingData.treatment_type, 
-          formatted_date: bookingData.preferred_date, 
+          formatted_date: preferredDateDisplay, 
           time_slot: bookingData.time_slot, 
           expires_at: formatExpiryTime(expiresAt), 
           clinic_response_url: responseUrl,

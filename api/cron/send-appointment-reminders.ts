@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 import crypto from 'crypto';
+import { formatSingaporeDate } from '../../utils/sg-time.js';
 
 export default async function handler(
   req: VercelRequest,
@@ -155,12 +156,7 @@ export default async function handler(
             clinic_state: clinic.state || '',
             clinic_postcode: clinic.postcode || '',
             clinic_country: clinic.country || 'Malaysia',
-            formatted_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            }),
+            formatted_date: formatSingaporeDate(booking.preferred_date),
             time_slot: booking.time_slot,
             travel_guide_url: travelGuideUrl,
             clinic_card_url: clinicCardUrl,

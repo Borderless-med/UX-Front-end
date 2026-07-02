@@ -9,6 +9,7 @@ import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 import crypto from 'crypto';
+import { formatSingaporeDate } from '../../utils/sg-time.js';
 
 function firstQueryValue(value: unknown): string | undefined {
   if (Array.isArray(value)) {
@@ -465,14 +466,8 @@ async function handleAcceptAlternative(
     `);
   }
 
-  // Format date and time for display
-  const appointmentDate = new Date(newDate + 'T' + newTime);
-  const formattedDate = appointmentDate.toLocaleDateString('en-SG', { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
+  // Format date and time for display in Singapore timezone
+  const formattedDate = formatSingaporeDate(newDate);
 
   // Send confirmation notifications
   try {

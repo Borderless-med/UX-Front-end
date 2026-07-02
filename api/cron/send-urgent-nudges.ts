@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 import crypto from 'crypto';
+import { formatSingaporeDate, formatSingaporeTime } from '../../utils/sg-time.js';
 
 export default async function handler(
   req: VercelRequest,
@@ -29,9 +30,10 @@ export default async function handler(
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Calculate time window: 5-45 minutes from now (targets 30 min before expiry)
+    // Calculate time window: 30-45 minutes from now.
+    // This guarantees clinics have at least 30 minutes to respond.
     const now = new Date();
-    const windowStart = new Date(now.getTime() + 5 * 60 * 1000); // 5 min from now
+    const windowStart = new Date(now.getTime() + 30 * 60 * 1000); // 30 min from now
     const windowEnd = new Date(now.getTime() + 45 * 60 * 1000);   // 45 min from now
 
     // Find bookings expiring soon (haven't been nudged yet)
@@ -154,18 +156,10 @@ export default async function handler(
           {
             clinic_name: clinic.name || booking.clinic_location,
             booking_ref: booking.booking_ref,
-            expires_at: new Date(booking.expires_at).toLocaleTimeString('en-SG', {
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
+            expires_at: formatSingaporeTime(booking.expires_at),
             patient_name: booking.patient_name,
             treatment_type: booking.treatment_type,
-            formatted_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            }),
+            formatted_date: formatSingaporeDate(booking.preferred_date),
             time_slot: booking.time_slot,
             confirm_url: confirmUrl,
             reject_url: rejectUrl,
