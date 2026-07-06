@@ -74,8 +74,8 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
         clinic_id: clinic.id,
         clinic_name: clinic.name,
         user_name: formData.name,
-        user_email: formData.email || nul? `${formData.countryCode} ${formData.whatsapp}` :
-        user_whatsapp: formData.whatsapp || null,
+        user_email: formData.email || null,
+        user_whatsapp: formData.whatsapp ? `${formData.countryCode} ${formData.whatsapp}` : null,
         inquiry_message: formData.message,
         preferred_contact: formData.preferredContact,
         status: 'pending',
