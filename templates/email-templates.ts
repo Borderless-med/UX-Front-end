@@ -416,8 +416,8 @@ const alternativeSlotAcceptedClinic: EmailTemplateFunction = (data) => ({
         <div style="background: #f0fdf4; border: 2px solid #22c55e; padding: 20px; border-radius: 6px; margin: 20px 0;">
           <h3 style="color: #166534; margin: 0 0 15px;">Confirmed Appointment</h3>
           <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-            <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Date:</td><td style="padding: 6px 0;">${data.formatted_date}</td></tr>
-            <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Time:</td><td style="padding: 6px 0;">${data.time_slot}</td></tr>
+            <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Date:</td><td style="padding: 6px 0;">${data.confirmed_date || data.formatted_date}</td></tr>
+            <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Time:</td><td style="padding: 6px 0;">${data.confirmed_time || data.time_slot}</td></tr>
             <tr><td style="padding: 6px 0; font-weight: 600; color: #166534;">Treatment:</td><td style="padding: 6px 0;">${data.treatment_type}</td></tr>
           </table>
         </div>
@@ -456,6 +456,7 @@ export const emailTemplates: Record<string, EmailTemplateFunction> = {
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,
   alternative_slot_accepted_clinic: alternativeSlotAcceptedClinic,
+  alternative_accepted_clinic: alternativeSlotAcceptedClinic,  // New name for clinic notification
   // Aliases for compatibility
   confirmed: appointmentConfirmed,
   clinic_booking_confirmed: bookingAlertClinic,
