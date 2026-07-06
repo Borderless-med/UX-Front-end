@@ -4,6 +4,8 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { countryCodes } from '@/data/countryCodes';
 
 interface PartnerFormData {
   clinicSource: 'jb' | 'sg';
@@ -13,6 +15,7 @@ interface PartnerFormData {
   email: string;
   password: string;
   phone: string;
+  countryCode: string;
   address: string;
   city: string;
   mdcRegistrationNumber: string;
@@ -62,19 +65,39 @@ const PartnerFormFields = ({ form }: PartnerFormFieldsProps) => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-gray-800 font-semibold">Phone Number *</FormLabel>
-              <FormControl>
-                <Input placeholder="+60 12 345 6789" {...field} required className="text-gray-900 placeholder:text-gray-500" />
-              </FormControl>
-              <FormMessage className="text-red-600 font-medium" />
-            </FormItem>
-          )}
-        />
+        <FormItem>
+          <FormLabel className="text-gray-800 font-semibold">Phone Number *</FormLabel>
+          <div className="flex gap-2">
+            <FormField
+              control={form.control}
+              name="countryCode"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    {countryCodes.map((code) => (
+                      <SelectItem key={code.value} value={code.value}>
+                        {code.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormControl>
+                  <Input placeholder="12 345 6789" {...field} required className="flex-1 text-gray-900 placeholder:text-gray-500" />
+                </FormControl>
+              )}
+            />
+          </div>
+          <FormMessage className="text-red-600 font-medium" />
+        </FormItem>
       </div>
 
       <FormField

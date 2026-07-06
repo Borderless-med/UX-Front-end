@@ -21,6 +21,7 @@ import { isDateDisabled } from '@/data/singaporeHolidays';
 import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
 import { toast } from 'sonner';
 import { trackMetaEvent } from '@/utils/metaTracking';
+import { countryCodes } from '@/data/countryCodes';
 
 interface FormData {
   patient_name: string;
@@ -89,12 +90,6 @@ const AppointmentBookingForm = () => {
     { value: '19:00', label: '07:00 PM', period: 'Evening' },
     { value: '20:00', label: '08:00 PM', period: 'Evening' },
     { value: '21:00', label: '09:00 PM', period: 'Evening' },
-  ];
-
-  // Country codes for WhatsApp
-  const countryCodes = [
-    { value: '+65', label: '+65 (Singapore)' },
-    { value: '+60', label: '+60 (Malaysia)' },
   ];
 
   // Function to format clinic name from URL parameter

@@ -30,6 +30,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { countryCodes } from '@/data/countryCodes';
 
 const ORALLINK_URL = 'https://scan.orallink.health?ref=orachope&source=ai-scan-page';
 
@@ -64,6 +65,7 @@ export default function AIScanPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
+  const [countryCode, setCountryCode] = useState('+65');
   const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -108,6 +110,9 @@ export default function AIScanPage() {
     setIsLoading(true);
     setError('');
 
+    // Combine country code with mobile if mobile is provided
+    const fullMobile = mobile ? `${countryCode} ${mobile}` : null;
+    
     // Supabase requires email for signUp; use mobile as fallback identifier in metadata
     const signUpEmail = email || `${mobile.replace(/\D/g, '')}@mobile.orachope.org`;
 
@@ -117,7 +122,7 @@ export default function AIScanPage() {
       options: {
         data: {
           full_name: name.trim(),
-          mobile: mobile || null,
+          mobile: fullMobile,
           email_provided: !!email,
           source: 'ai-scan-page',
         },
@@ -334,13 +339,26 @@ export default function AIScanPage() {
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                       Mobile Number <span className="text-gray-400 font-normal">(optional if email provided)</span>
-                    </label>
-                    <input
-                      type="tel"
-                      value={mobile}
-                      onChange={(e) => setMobile(e.target.value)}
-                      placeholder="+65 9123 4567"
-                      className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
+                    <div className="flex gap-2">
+                      <select
+                        value={countryCode}
+                        onChange={(e) => setCountryCode(e.target.value)}
+                        className="w-[180px] px-3 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base bg-white text-gray-900"
+                      >
+                        {countryCodes.map((code) => (
+                          <option key={code.value} value={code.value}>
+                            {code.label}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="tel"
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
+                        placeholder="9123 4567"
+                        className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
+                      />
+                    </div className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
                     />
                   </div>
                 )}

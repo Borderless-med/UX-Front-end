@@ -17,6 +17,7 @@ interface PartnerFormData {
   email: string;
   password: string;
   phone: string;
+  countryCode: string;
   address: string;
   city: string;
   mdcRegistrationNumber: string;
@@ -44,6 +45,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
       email: '',
       password: '',
       phone: '',
+      countryCode: '+60',
       address: '',
       city: '',
       mdcRegistrationNumber: '',
@@ -138,6 +140,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
       }
 
       // 2. Insert partner application with clinic_name and owner_user_id
+      const fullPhone = `${data.countryCode} ${data.phone}`;
       const { error: partnerError } = await supabase
         .from('partner_applications')
         .insert([
@@ -145,7 +148,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             clinic_name: selectedClinicName,
             contact_name: data.contactName,
             email: data.email,
-            phone: data.phone,
+            phone: fullPhone,
             address: data.address,
             city: data.city,
             mdc_registration_number: data.mdcRegistrationNumber,
@@ -201,7 +204,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             body: JSON.stringify({
               clinicName: selectedClinicName,
               contactName: data.contactName,
-              email: data.email,
+              email: fullPmail,
               phone: data.phone,
               city: data.city,
               address: data.address,

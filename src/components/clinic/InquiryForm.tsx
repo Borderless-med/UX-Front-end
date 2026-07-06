@@ -5,10 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Loader2, MessageCircle, Mail } from 'lucide-react';
 import { Clinic } from '@/types/clinic';
+import { countryCodes } from '@/data/countryCodes';
 
 // Inline type definition for sg_clinic_inquiries table
 type SgClinicInquiryInsert = {
@@ -33,6 +35,7 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
     name: '',
     email: '',
     whatsapp: '',
+    countryCode: '+65',
     message: '',
     preferredContact: 'either' as 'email' | 'whatsapp' | 'either',
   });
@@ -71,7 +74,7 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
         clinic_id: clinic.id,
         clinic_name: clinic.name,
         user_name: formData.name,
-        user_email: formData.email || null,
+        user_email: formData.email || nul? `${formData.countryCode} ${formData.whatsapp}` :
         user_whatsapp: formData.whatsapp || null,
         inquiry_message: formData.message,
         preferred_contact: formData.preferredContact,
@@ -100,7 +103,7 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
             clinic_name: clinic.name,
             user_name: formData.name,
             user_email: formData.email || undefined,
-            user_whatsapp: formData.whatsapp || undefined,
+            user_whatsapp: formData.whatsapp ? `${formData.countryCode} ${formData.whatsapp}` : undefined,
             preferred_contact: formData.preferredContact,
             inquiry_message: formData.message,
             inquiry_id: inquiry?.id,
@@ -131,6 +134,7 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
         name: '',
         email: '',
         whatsapp: '',
+        countryCode: '+65',
         message: '',
         preferredContact: 'either',
       });
@@ -185,17 +189,35 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
 
           {/* WhatsApp */}
           <div>
-            <Label htmlFor="whatsapp">WhatsApp Number</Label>
-            <Input
-              id="whatsapp"
-              type="tel"
-              placeholder="+65 9123 4567"
-              value={formData.whatsapp}
-              onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-              disabled={isSubmitting}
-              className="mt-1"
-            />
+            <div className="flex gap-2 mt-1">
+              <Select 
+                value={formData.countryCode} 
+                onValueChange={(value) => setFormData({ ...formData, countryCode: value })}
+                disabled={isSubmitting}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  {countryCodes.map((code) => (
+                    <SelectItem key={code.value} value={code.value}>
+                      {code.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input
+                id="whatsapp"
+                type="tel"
+                placeholder="9123 4567"
+                value={formData.whatsapp}
+                onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                disabled={isSubmitting}
+                className="flex-1"
+              />
+            </div>
             <p className="text-xs text-gray-500 mt-1">
+              For faster communication
               For faster communication (include country code)
             </p>
           </div>

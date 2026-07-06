@@ -4,16 +4,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { restInvokeFunction } from '@/utils/restClient';
 import { trackMetaEvent } from '@/utils/metaTracking';
+import { countryCodes } from '@/data/countryCodes';
 
 const WaitlistSection = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     mobile: '',
+    countryCode: '+65',
     whatsappConsent: false,
     aiChatbotInterest: false,
     clinicAnalyticsInterest: false
@@ -244,13 +247,30 @@ const WaitlistSection = () => {
               <div>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <Input
-                    type="tel"
-                    placeholder="Enter your mobile number (optional)"
-                    value={formData.mobile}
-                    onChange={(e) => handleInputChange('mobile', e.target.value)}
-                    className="w-full text-lg p-6 pl-12 border-2 border-blue-light bg-white text-blue-dark focus:border-blue-primary"
-                  />
+                  <div className="flex gap-2">
+                    <Select 
+                      value={formData.countryCode} 
+                      onValueChange={(value) => handleInputChange('countryCode', value)}
+                    >
+                      <SelectTrigger className="w-[180px] h-12 pl-10">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px]">
+                        {countryCodes.map((code) => (
+                          <SelectItem key={code.value} value={code.value}>
+                            {code.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      type="tel"
+                      placeholder="9123 4567"
+                      value={formData.mobile}
+                      onChange={(e) => handleInputChange('mobile', e.target.value)}
+                      className="flex-1 text-lg p-6 border-2 border-blue-light bg-white text-blue-dark focus:border-blue-primary"
+                    />
+                  </div>
                 </div>
               </div>
 
