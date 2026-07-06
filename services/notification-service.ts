@@ -25,6 +25,7 @@ export type NotificationType =
   | 'confirmed'
   | 'clinic_booking_confirmed'
   | 'alternative_slot_accepted_clinic'
+  | 'alternative_accepted_clinic'  // Clinic notification when patient accepts alternative slot
   | 'alternative_accepted'
   | 'booking_rejected';
 

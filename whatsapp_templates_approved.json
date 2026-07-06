@@ -1,0 +1,832 @@
+{
+    "data": [
+    {
+      "name": "appointment_reminder_24h",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Reminder: Appointment Tomorrow"
+        },
+        {
+          "type": "BODY",
+          "text": "Hello {{patient_name}}, this is a reminder of your appointment with {{clinic_name}}.
+
+Date: {{appointment_date}}
+Time: {{appointment_time}}
+Address: {{clinic_address}}
+
+To manage or cancel this booking, please use the following link:
+https://www.orachope.org/api/cancel-appointment?ref={{booking_ref_url}}&id={{booking_id}}
+
+Please arrive at the clinic 10 minutes before your scheduled time. Bring your ID and any relevant medical documents.",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "appointment_date",
+                "example": "Friday, 13 June 2026"
+              },
+              {
+                "param_name": "appointment_time",
+                "example": "10:00 AM"
+              },
+              {
+                "param_name": "clinic_address",
+                "example": "123 Jalan Maju, Johor Bahru"
+              },
+              {
+                "param_name": "booking_ref_url",
+                "example": "APT-2026-000051"
+              },
+              {
+                "param_name": "booking_id",
+                "example": "abc123xyz"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "Orachope.org"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Get Directions",
+              "url": "https://www.google.com/maps/search/?api=1&query={{1}}",
+              "example": [
+                "https://www.google.com/maps/search/?api=1&query=AllSmiles%20Dental%20Johor%20Bahru"
+              ]
+            },
+            {
+              "type": "URL",
+              "text": "Visit website",
+              "url": "https://www.orachope.org/travel-guide"
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "815984148262711"
+    },
+    {
+      "name": "booking_expired",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Booking Expired"
+        },
+        {
+          "type": "BODY",
+          "text": "Hello {{patient_name}},
+
+Your booking request {{booking_ref}} has expired because the clinic did not respond within the 3-hour window.
+
+Clinic: {{clinic_name}}
+Treatment: {{treatment_type}}
+Requested Date: {{requested_date}}
+
+To find another dentist, use the Browse button below. To chat with our support team, click: https://wa.me/6581926158",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "booking_ref",
+                "example": "APT-2026-00005"
+              },
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "treatment_type",
+                "example": "Root Canal"
+              },
+              {
+                "param_name": "requested_date",
+                "example": "Friday, 13 June 2026"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "Orachope.org"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Browse Clinics",
+              "url": "https://orachope.org/clinics?treatment={{1}}",
+              "example": [
+                "https://orachope.org/clinics?treatment=root_canal"
+              ]
+            },
+            {
+              "type": "PHONE_NUMBER",
+              "text": "Call Support",
+              "phone_number": "+6581926158"
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "1538358611173606"
+    },
+    {
+      "name": "urgent_clinic_nudge",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "URGENT: Response Required"
+        },
+        {
+          "type": "BODY",
+          "text": "FOR: {{clinic_name}}
+
+Booking {{booking_ref}} expires in 30 minutes! ⏰
+
+Expiry Time: {{expires_at}}
+Patient: {{patient_name}}
+Treatment: {{treatment_type}}
+Requested Time: {{time_slot}}
+
+Please respond now to avoid request expiration. Offering alternative times through the link below will extend your deadline.",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "booking_ref",
+                "example": "APT-2026-000039"
+              },
+              {
+                "param_name": "expires_at",
+                "example": "1:00 PM Today"
+              },
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "treatment_type",
+                "example": "Root Canal"
+              },
+              {
+                "param_name": "time_slot",
+                "example": "Friday at 10:00 AM"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "OraChope.org"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Respond Now",
+              "url": "https://www.orachope.org/api/clinic/respond?id={{1}}",
+              "example": [
+                "https://www.orachope.org/api/clinic/respond?id=abc123xyz"
+              ]
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "954242000948342"
+    },
+    {
+      "name": "booking_alert_clinic_v1",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "New Booking Request"
+        },
+        {
+          "type": "BODY",
+          "text": "NEW BOOKING REQUEST
+Clinic: {{clinic_name}}
+Reference: {{booking_ref}}
+
+Patient Information:
+Name: {{patient_name}}
+Treatment: {{treatment_type}}
+Requested Time: {{requested_time}}
+
+ACTION REQUIRED: This request will expire at {{expires_at}}. Please review the details and respond (Confirm, Suggest Alternatives, or Decline) using the link below.",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "booking_ref",
+                "example": "APT-2026-000039"
+              },
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "treatment_type",
+                "example": "Dental Crown"
+              },
+              {
+                "param_name": "requested_time",
+                "example": "Friday, 13 June at 10:00 AM"
+              },
+              {
+                "param_name": "expires_at",
+                "example": "1:00 PM Today"
+              }
+            ]
+          }
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Respond to Booking",
+              "url": "https://www.orachope.org/api/clinic/respond?id={{1}}",
+              "example": [
+                "https://www.orachope.org/api/clinic/respond?id=abc123xyz"
+              ]
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "1060599413063697"
+    },
+    {
+      "name": "alternatives_offered_3slot",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Alternative Times Available"
+        },
+        {
+          "type": "BODY",
+          "text": "Hello {{patient_name}},
+
+{{clinic_name}} is unable to confirm your original booking. They have offered 3 alternative slots:
+
+Slot 1: {{slot_1_details}}
+Slot 2: {{slot_2_details}}
+Slot 3: {{slot_3_details}}
+
+Tap a button below to confirm your choice. This will update your booking immediately.
+
+If these slots are not suitable, you may find other clinics at:
+https://www.orachope.org/clinics",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "slot_1_details",
+                "example": "Fri 13 Jun, 10:00 AM"
+              },
+              {
+                "param_name": "slot_2_details",
+                "example": "Sat 14 Jun, 2:00 PM"
+              },
+              {
+                "param_name": "slot_3_details",
+                "example": "Mon 16 Jun, 9:00 AM"
+              }
+            ]
+          }
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "Confirm Slot 1"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "Confirm Slot 2"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "Confirm Slot 3"
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "2047357072841651"
+    },
+    {
+      "name": "alternatives_offered_2slot",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Alternative Times Available"
+        },
+        {
+          "type": "BODY",
+          "text": "Hello {{patient_name}},
+
+{{clinic_name}} is unable to confirm your original booking. They have offered these 2 alternative slots:
+
+Slot 1: {{slot_1_details}}
+Slot 2: {{slot_2_details}}
+
+Tap a button below to confirm your choice. This will update your booking immediately.
+
+If these slots are not suitable, you may find other clinics at:
+https://www.orachope.org/clinics",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "slot_1_details",
+                "example": "Fri 13 Jun, 10:00 AM"
+              },
+              {
+                "param_name": "slot_2_details",
+                "example": "Sat 14 Jun, 2:00 PM"
+              }
+            ]
+          }
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "Confirm Slot 1"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "Confirm Slot 2"
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "3415113738638961"
+    },
+    {
+      "name": "appointment_reschedule_1",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Alternative Time Available"
+        },
+        {
+          "type": "BODY",
+          "text": "Hello {{patient_name}},
+
+ {{clinic_name}} is unable to accommodate your original request for {{original_date}} at {{original_time}}.
+
+They have offered the following alternative appointment:
+📅 {{alt_slot_details}}
+
+To confirm this new time, please tap the button below. If this slot does not work for you, you may browse other clinics at: orachope.org/clinics",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "original_date",
+                "example": "2026-06-11"
+              },
+              {
+                "param_name": "original_time",
+                "example": "15:00"
+              },
+              {
+                "param_name": "alt_slot_details",
+                "example": "Friday, 13 June at 10:00 AM"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "OraChope.org"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Confirm New Time",
+              "url": "https://orachope.org/api/accept?ref={{1}}",
+              "example": [
+                "https://orachope.org/api/accept?ref=APT-051&slot=1"
+              ]
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "999919316268254"
+    },
+    {
+      "name": "appointment_confirmed_v4",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Appointment confirmed!"
+        },
+        {
+          "type": "BODY",
+          "text": "Hello {{patient_name}},
+
+Your appointment with {{clinic_name}} has been confirmed.
+
+Booking Details:
+Reference: {{booking_ref}}
+Date: {{appointment_date}}
+Time: {{appointment_time}}
+Address: {{clinic_address}}
+
+To manage or cancel your booking, please use the following link:
+https://www.orachope.org/api/cancel-appointment?ref={{booking_ref_url}}&email={{user_email}}&id={{booking_id}}
+
+Please arrive at the clinic 10 minutes before your scheduled time for registration. This is an automated notification from Orachope.",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "booking_ref",
+                "example": "APT-2026-000048"
+              },
+              {
+                "param_name": "appointment_date",
+                "example": "Friday, 13 June 2026"
+              },
+              {
+                "param_name": "appointment_time",
+                "example": "10:00 AM"
+              },
+              {
+                "param_name": "clinic_address",
+                "example": "123 Jalan Maju, Johor Bahru, 80100, Malaysia"
+              },
+              {
+                "param_name": "booking_ref_url",
+                "example": "APT-2026-000048"
+              },
+              {
+                "param_name": "user_email",
+                "example": "gohseowping@gmail.com"
+              },
+              {
+                "param_name": "booking_id",
+                "example": "abc123xyz"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "Orachope.org"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Get Directions",
+              "url": "https://www.google.com/maps/search/?api=1&query={{1}}",
+              "example": [
+                "https://www.google.com/maps/search/?api=1&query=AllSmiles%20Dental%20Johor%20Bahru"
+              ]
+            }
+          ]
+        }
+      ],
+      "language": "en_US",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "1503537784836597"
+    },
+    {
+      "name": "booking_request_received",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Booking Request Received"
+        },
+        {
+          "type": "BODY",
+          "text": "Hi {{patient_name}}, your appointment request has been received! 📋
+
+Booking Reference: {{booking_ref}}
+
+🏥 Clinic: {{clinic_name}}
+📍 Address: {{clinic_address}}
+💉 Treatment: {{treatment_type}}
+📅 Requested Date: {{requested_date}}
+🕐 Time: {{time_slot}}
+
+Your clinic will respond within 3 hours. You'll receive a WhatsApp and/or email notification once they confirm or offer alternative times.",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "booking_ref",
+                "example": "APT-000051"
+              },
+              {
+                "param_name": "clinic_name",
+                "example": "AllSmiles Dental"
+              },
+              {
+                "param_name": "clinic_address",
+                "example": "123 Jalan Maju, Johor Bahru, 80100, Malaysia"
+              },
+              {
+                "param_name": "treatment_type",
+                "example": "Root Canal"
+              },
+              {
+                "param_name": "requested_date",
+                "example": "Friday, 13 June 2026"
+              },
+              {
+                "param_name": "time_slot",
+                "example": "10:00 AM"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "orachope.org"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "View details",
+              "url": "https://orachope.org/travel-guide"
+            }
+          ]
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "1036102682220427"
+    },
+    {
+      "name": "appointment_reminder_v1",
+      "parameter_format": "POSITIONAL",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Testing of appointmnet reminder from Whatsapp"
+        },
+        {
+          "type": "BODY",
+          "text": "\"Hi {{1}}, this is a reminder from Orachope for your appointment at {{2}}. Please reply YES to confirm or call us to reschedule.\"",
+          "example": {
+            "body_text": [
+              [
+                "John",
+                "2:00 PM"
+              ]
+            ]
+          }
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "1006315715088889"
+    },
+    {
+      "name": "test_confirmation",
+      "parameter_format": "POSITIONAL",
+      "components": [
+        {
+          "type": "BODY",
+          "text": "Hello, your booking for the OraChope dental concierge service is being processed. We will send your confirmation shortly."
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "1723553145745460"
+    },
+    {
+      "name": "hello_world",
+      "parameter_format": "POSITIONAL",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Hello World"
+        },
+        {
+          "type": "BODY",
+          "text": "Welcome and congratulations!! This message demonstrates your ability to send a WhatsApp message notification from the Cloud API, hosted by Meta. Thank you for taking the time to test with us."
+        },
+        {
+          "type": "FOOTER",
+          "text": "WhatsApp Business Platform sample message"
+        }
+      ],
+      "language": "en_US",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "1525851769166278"
+    },
+    {
+      "name": "alternative_accepted_clinic_v1",
+      "parameter_format": "NAMED",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Patient Accepted Alternative Slot"
+        },
+        {
+          "type": "BODY",
+          "text": "For {{clinic_name}}\n\nGood news! {{patient_name}} has accepted your offer of alternative time slot.\n\nBooking Reference: {{booking_ref}}\n\nConfirmed Details:\n📅 {{confirmed_date}}\n🕐 {{confirmed_time}}\n💉 {{treatment_type}}\n\nPatient Contact:\n📱 {{patient_whatsapp}}\n📧 {{patient_email}}\n\nNo further action needed. The patient has been notified.",
+          "example": {
+            "body_text_named_params": [
+              {
+                "param_name": "clinic_name",
+                "example": "All Smiles Dental"
+              },
+              {
+                "param_name": "patient_name",
+                "example": "John Tan"
+              },
+              {
+                "param_name": "booking_ref",
+                "example": "APT-2026-000071"
+              },
+              {
+                "param_name": "confirmed_date",
+                "example": "3 July 2026"
+              },
+              {
+                "param_name": "confirmed_time",
+                "example": "10am"
+              },
+              {
+                "param_name": "treatment_type",
+                "example": "Root Canal"
+              },
+              {
+                "param_name": "patient_whatsapp",
+                "example": "82229202"
+              },
+              {
+                "param_name": "patient_email",
+                "example": "gohseowping@gmail.com"
+              }
+            ]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "Orachope.org"
+        }
+      ],
+      "language": "en",
+      "status": "APPROVED",
+      "category": "UTILITY",
+      "sub_category": "CUSTOM",
+      "disable_ios_autofill": false,
+      "is_primary_device_delivery_only": false,
+      "id": "TBD"
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "QVFIUzgyeGJSQWN0RFZAWV3VsWi01bllwQkZATQVNqUjBqWmNpR3VLWUxycFNmUkdpd3B3TlVPU2Nsc2tfSVZASSHpWQ25aSkNabU54bTVFeUd5V1NacFQ2dFZAR",
+      "after": "QVFIU3hfX2IwVlNfTWxpTlBVWE9LVjZAFU3d5aXdxSlZAmb255XzRhOEJGMUlfMS14WnlwaWpXS3NubXZA2OEdlRDNfRTc0dkxmOWptb2NoRFFLenNrQ3l5VEhB"
+    }
+  }
+}

@@ -358,6 +358,33 @@ const appointmentReschedule1: WhatsAppTemplateFunction = (data) => ({
   buttonHasVariable: [true],
 });
 
+// Template 9: Alternative Accepted - Clinic Notification
+const alternativeAcceptedClinic: WhatsAppTemplateFunction = (data) => ({
+  templateName: 'alternative_accepted_clinic_v1',
+  variables: [
+    data.clinic_name || '',
+    data.patient_name || '',
+    data.booking_ref || '',
+    data.confirmed_date || data.formatted_date || '',
+    data.confirmed_time || data.time_slot || '',
+    data.treatment_type || '',
+    data.patient_whatsapp || '',
+    data.patient_email || '',
+  ],
+  variableNames: [
+    'clinic_name',
+    'patient_name',
+    'booking_ref',
+    'confirmed_date',
+    'confirmed_time',
+    'treatment_type',
+    'patient_whatsapp',
+    'patient_email',
+  ],
+  buttons: [],
+  buttonHasVariable: [],
+});
+
 // Export all templates
 export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
   booking_request_received: bookingRequestReceived,
@@ -371,6 +398,7 @@ export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,
   appointment_reschedule_1: appointmentReschedule1,
+  alternative_accepted_clinic: alternativeAcceptedClinic,
   // Aliases for compatibility
   confirmed: appointmentConfirmed,
   clinic_booking_confirmed: bookingAlertClinic,

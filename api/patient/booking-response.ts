@@ -310,13 +310,13 @@ async function handleAcceptAlternative(
   if (booking.clinic_id) {
     const { data: jbClinic } = await supabase
       .from('clinics_data')
-      .select('id, name, contact_email, address, township')
+      .select('id, name, contact_email, whatsapp_number, address, township')
       .eq('id', booking.clinic_id)
       .single();
     
     const { data: sgClinic } = await supabase
       .from('sg_clinics')
-      .select('id, name, contact_email, address, township')
+      .select('id, name, contact_email, whatsapp_number, address, township')
       .eq('id', booking.clinic_id)
       .single();
     
@@ -327,13 +327,13 @@ async function handleAcceptAlternative(
   if (!clinic && booking.clinic_location) {
     const { data: jbClinics } = await supabase
       .from('clinics_data')
-      .select('id, name, contact_email, address, township')
+      .select('id, name, contact_email, whatsapp_number, address, township')
       .ilike('name', booking.clinic_location)
       .limit(1);
     
     const { data: sgClinics } = await supabase
       .from('sg_clinics')
-      .select('id, name, contact_email, address, township')
+      .select('id, name, contact_email, whatsapp_number, address, township')
       .ilike('name', booking.clinic_location)
       .limit(1);
     
@@ -522,22 +522,23 @@ async function handleAcceptAlternative(
     // Notify clinic (FYI only - no action required)
     if (clinicEmail) {
       const clinicResults = await notificationService.send(
-        'alternative_slot_accepted_clinic',
+        'alternative_accepted_clinic',
         {
           name: clinic?.name || booking.clinic_location,
           email: clinicEmail,
+          whatsapp: clinic?.whatsapp_number || undefined,
         },
         {
           clinic_name: clinic?.name || booking.clinic_location,
           patient_name: booking.patient_name,
-          patient_email: booking.email,
-          patient_whatsapp: booking.whatsapp,
           booking_ref: ref as string,
-          formatted_date: formattedDate,
-          time_slot: newTime,
+          confirmed_date: formattedDate,
+          confirmed_time: newTime,
           treatment_type: booking.treatment_type,
+          patient_whatsapp: booking.whatsapp,
+          patient_email: booking.email,
         },
-        ['email']
+        ['email', 'whatsapp']
       );
 
       await notificationService.logNotification(
