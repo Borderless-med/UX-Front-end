@@ -378,8 +378,12 @@ const appointmentReminder24h: EmailTemplateFunction = (data) => ({
           </div>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${data.clinic_card_url}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">📍 VIEW CLINIC DETAILS<br><span style="font-size: 12px; opacity: 0.9;">(Map & Directions)</span></a>
-            <a href="${data.google_maps_url}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">💬 CONTACT CLINIC</a>
+            <a href="${data.google_maps_url}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">🗺️ GET DIRECTIONS</a>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <p style="color: #6b7280; font-size: 13px; margin: 0 0 10px;">Need to cancel?</p>
+            <a href="${data.cancel_url}" style="display: inline-block; background: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: 600;">❌ Cancel This Booking</a>
           </div>
           
           <p style="text-align: center; color: #6b7280; font-size: 16px; margin: 30px 0;">See you tomorrow! Safe travels 🚗</p>

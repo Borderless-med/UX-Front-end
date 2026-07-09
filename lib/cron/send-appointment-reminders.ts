@@ -138,6 +138,7 @@ export default async function handler(
           .digest('hex')
           .slice(0, 32);
         const cancelRefPayload = `${booking.booking_ref}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
+        const cancelUrl = `https://orachope.org/api/cancel-appointment?ref=${encodeURIComponent(booking.booking_ref)}&email=${encodeURIComponent(booking.email)}&token=${cancelToken}`;
 
         // Send reminder (both WhatsApp AND Email for reliability)
         const notificationResults = await notificationService.send(
@@ -163,6 +164,7 @@ export default async function handler(
             google_maps_url: googleMapsUrl,
             google_maps_query: googleMapsQuery,
             cancel_ref_payload: cancelRefPayload,
+            cancel_url: cancelUrl,
           },
           ['email', 'whatsapp'] // Send BOTH for critical reminder
         );
