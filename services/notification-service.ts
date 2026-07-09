@@ -229,13 +229,14 @@ export class NotificationService {
     if (basePrefix?.includes('/api/patient/booking-response?token=') || basePrefix?.includes('/api/cancel-appointment?token=')) {
       // For patient templates we send a stuffed query string into the token variable.
       // Example output: action=accept&ref=APT-123&slot=...&token=abc
+      // IMPORTANT: Must URL-encode the stuffed query string for Meta WhatsApp API
       if (!value.includes('://') && value.includes('=')) {
-        return value.replace(/^\?/, '');
+        return encodeURIComponent(value.replace(/^\?/, ''));
       }
 
       try {
         const parsed = new URL(value);
-        return parsed.search.replace(/^\?/, '');
+        return encodeURIComponent(parsed.search.replace(/^\?/, ''));
       } catch {
         return value;
       }
