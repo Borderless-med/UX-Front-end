@@ -194,6 +194,7 @@ export class NotificationService {
       booking_alert_clinic: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       booking_alert_clinic_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       booking_alert_clinic_v7: 'https://www.orachope.org/api/clinic/respond/{{1}}',
+      appointment_reminder_24h: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
     };
 
     const templateUrl = urlTemplates[templateName];
