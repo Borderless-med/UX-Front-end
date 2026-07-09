@@ -81,13 +81,13 @@ async function sendClinicCancellationNotification(params: {
     if (booking.clinic_id) {
       const { data: jbClinic } = await supabase
         .from('clinics_data')
-        .select('id, name, email, whatsapp_number')
+        .select('id, name, contact_email, whatsapp_number')
         .eq('id', booking.clinic_id)
         .single();
       
       const { data: sgClinic } = await supabase
         .from('sg_clinics')
-        .select('id, name, email, whatsapp_number')
+        .select('id, name, contact_email, whatsapp_number')
         .eq('id', booking.clinic_id)
         .single();
       
@@ -98,21 +98,21 @@ async function sendClinicCancellationNotification(params: {
     if (!clinic && booking.clinic_location) {
       const { data: jbClinics } = await supabase
         .from('clinics_data')
-        .select('id, name, email, whatsapp_number')
+        .select('id, name, contact_email, whatsapp_number')
         .ilike('name', booking.clinic_location)
         .limit(1);
       
       const { data: sgClinics } = await supabase
         .from('sg_clinics')
-        .select('id, name, email, whatsapp_number')
+        .select('id, name, contact_email, whatsapp_number')
         .ilike('name', booking.clinic_location)
         .limit(1);
       
       clinic = jbClinics?.[0] || sgClinics?.[0];
     }
     
-    if (!clinic || !clinic.email) {
-      console.log('⚠️ No clinic email found for cancellation notification');
+    if (!clinic || !clinic.contact_email) {
+      console.log('⚠️ No clinic contact_email found for cancellation notification');
       return;
     }
     
@@ -146,7 +146,7 @@ async function sendClinicCancellationNotification(params: {
       'booking_cancelled_clinic',
       {
         name: clinic.name,
-        email: clinic.email,
+        email: clinic.contact_email,
       },
       {
         clinic_name: clinic.name,
