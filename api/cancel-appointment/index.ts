@@ -272,7 +272,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
       return;
     }
-    // Handle POST: cancel or add reason if already cancelled
+    // Handle POST: cancel with reason (notifications sent here)
     if (method === 'POST') {
       const now = new Date().toISOString();
       if (booking.status !== 'cancelled') {
@@ -326,42 +326,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // GET: perform one-click cancel, then render friendly page
+    // GET: Show confirmation form (don't cancel yet - wait for POST with reason)
     if (booking.status !== 'cancelled') {
-      const now = new Date().toISOString();
-      const { error: updateErr } = await supabase
-        .from('appointment_bookings')
-        .update({ status: 'cancelled', cancelled_at: now, cancellation_reason: reason || null, updated_at: now })
-        .eq('booking_ref', ref)
-        .eq('email', email);
-      if (updateErr) throw updateErr;
-      try {
-        await sendAdminCancellationEmail({ booking, ref, email, reason });
-      } catch (e) { console.error('Admin cancellation email failed', e); }
-      try {
-        await sendClinicCancellationNotification({ booking, ref, email, reason, supabase });
-      } catch (e) { console.error('Clinic cancellation notification failed', e); }
       if (wantsHTML) {
         const form = `
-          <h1>Booking cancelled</h1>
-          <div class="ok">Your booking has been cancelled successfully.</div>
+          <h1>Cancel Appointment</h1>
+          <div class="warn">You're about to cancel your booking.</div>
           <p><small>Reference: ${ref}</small></p>
           <form method="POST" class="row">
             <input type="hidden" name="ref" value="${ref}" />
             <input type="hidden" name="email" value="${email}" />
             <input type="hidden" name="token" value="${token}" />
-            <label for="reason">Tell us why (optional)</label>
+            <label for="reason">Why are you cancelling? (optional)</label>
             <textarea id="reason" name="reason" rows="3" placeholder="Changed plans, picked another date, etc."></textarea>
-            <div class="row"><button class="btn" type="submit">Submit reason</button></div>
+            <div class="row"><button class="btn" type="submit">Confirm Cancellation</button></div>
           </form>`;
-        res.status(200).send(htmlPage('Booking cancelled', form));
+        res.status(200).send(htmlPage('Cancel Appointment', form));
       } else {
-        res.status(200).json({ success: true, message: 'Booking cancelled successfully' });
+        res.status(200).json({ success: false, message: 'Please use POST to cancel', ref });
       }
       return;
     }
 
-    // Already cancelled on GET
+    // Already cancelled on GET - allow adding reason
     if (wantsHTML) {
       const form = `
         <h1>Already cancelled</h1>
@@ -371,7 +358,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           <input type="hidden" name="ref" value="${ref}" />
           <input type="hidden" name="email" value="${email}" />
           <input type="hidden" name="token" value="${token}" />
-          <label for="reason">Add a reason (optional)</label>
+          <label for="reason">Add or update cancellation reason (optional)</label>
           <textarea id="reason" name="reason" rows="3" placeholder="Changed plans, picked another date, etc."></textarea>
           <div class="row"><button class="btn" type="submit">Submit reason</button></div>
         </form>`;
