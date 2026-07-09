@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'crypto';
+import { NotificationService } from '../../services/notification-service.js';
 
 function firstValue(value: unknown): string | undefined {
   if (Array.isArray(value)) {
@@ -61,6 +62,111 @@ async function sendAdminCancellationEmail(params: { booking: any; ref: string; e
   }
   if (brevoApiKey) {
     await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'api-key': brevoApiKey }, body: JSON.stringify({ sender: { email: fromUser, name: 'SG-JB Dental' }, to: [{ email: admin }], subject, htmlContent: html }) });
+  }
+}
+
+async function sendClinicCancellationNotification(params: { 
+  booking: any; 
+  ref: string; 
+  email: string; 
+  reason?: string;
+  supabase: any;
+}) {
+  const { booking, ref, email, reason, supabase } = params;
+  
+  try {
+    // Get clinic details
+    let clinic: any = null;
+    
+    if (booking.clinic_id) {
+      const { data: jbClinic } = await supabase
+        .from('clinics_data')
+        .select('id, name, email, whatsapp_number')
+        .eq('id', booking.clinic_id)
+        .single();
+      
+      const { data: sgClinic } = await supabase
+        .from('sg_clinics')
+        .select('id, name, email, whatsapp_number')
+        .eq('id', booking.clinic_id)
+        .single();
+      
+      clinic = jbClinic || sgClinic;
+    }
+    
+    // If no clinic_id or not found, search by name
+    if (!clinic && booking.clinic_location) {
+      const { data: jbClinics } = await supabase
+        .from('clinics_data')
+        .select('id, name, email, whatsapp_number')
+        .ilike('name', booking.clinic_location)
+        .limit(1);
+      
+      const { data: sgClinics } = await supabase
+        .from('sg_clinics')
+        .select('id, name, email, whatsapp_number')
+        .ilike('name', booking.clinic_location)
+        .limit(1);
+      
+      clinic = jbClinics?.[0] || sgClinics?.[0];
+    }
+    
+    if (!clinic || !clinic.email) {
+      console.log('⚠️ No clinic email found for cancellation notification');
+      return;
+    }
+    
+    // Initialize notification service
+    const notificationService = new NotificationService({
+      supabaseUrl: process.env.SUPABASE_URL!,
+      supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      whatsappEnabled: false, // Email only for now (WhatsApp in Phase 3)
+      smtpUser: process.env.SMTP_USER!,
+    });
+    
+    // Format dates
+    const cancelledAt = new Date().toLocaleString('en-SG', { 
+      weekday: 'short', 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    const formattedDate = new Date(booking.preferred_date).toLocaleString('en-SG', { 
+      weekday: 'short', 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+    
+    // Send email notification to clinic
+    const results = await notificationService.send(
+      'booking_cancelled_clinic',
+      {
+        name: clinic.name,
+        email: clinic.email,
+      },
+      {
+        clinic_name: clinic.name,
+        patient_name: booking.patient_name,
+        patient_email: email,
+        patient_whatsapp: booking.whatsapp,
+        booking_ref: ref,
+        treatment_type: booking.treatment_type,
+        formatted_date: formattedDate,
+        time_slot: booking.time_slot,
+        cancelled_at: cancelledAt,
+        cancellation_reason: reason || 'No reason provided',
+      },
+      ['email']
+    );
+    
+    console.log('✅ Clinic cancellation notification sent:', results);
+  } catch (error) {
+    console.error('❌ Failed to send clinic cancellation notification:', error);
+    // Don't throw - cancellation should still succeed even if notification fails
   }
 }
 
@@ -182,6 +288,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         } catch (e) {
           console.error('Admin cancellation email failed', e);
         }
+        // Send clinic cancellation notification
+        try {
+          await sendClinicCancellationNotification({ booking, ref, email, reason, supabase });
+        } catch (e) {
+          console.error('Clinic cancellation notification failed', e);
+        }
         if (wantsHTML) {
           res.status(200).send(htmlPage('Booking cancelled', `
             <h1>Booking cancelled</h1>
@@ -226,6 +338,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       try {
         await sendAdminCancellationEmail({ booking, ref, email, reason });
       } catch (e) { console.error('Admin cancellation email failed', e); }
+      try {
+        await sendClinicCancellationNotification({ booking, ref, email, reason, supabase });
+      } catch (e) { console.error('Clinic cancellation notification failed', e); }
       if (wantsHTML) {
         const form = `
           <h1>Booking cancelled</h1>
