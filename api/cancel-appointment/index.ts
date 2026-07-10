@@ -317,13 +317,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (updateReasonErr) throw updateReasonErr;
       }
       if (wantsHTML) {
-        res.status(200).send(htmlPage('Already cancelled', `
-          <h1>Already cancelled</h1>
-          <div class="warn">This booking was already cancelled.</div>
+        res.status(200).send(htmlPage('Booking cancelled', `
+          <h1>Booking cancelled</h1>
+          <div class="ok">This booking has been successfully cancelled.</div>
           <p><small>Reference: ${ref}</small></p>
         `));
       } else {
-        res.status(200).json({ success: true, message: 'Already cancelled' });
+        res.status(200).json({ success: true, message: 'Booking cancelled successfully' });
       }
       return;
     }
@@ -353,8 +353,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Already cancelled on GET - allow adding reason
     if (wantsHTML) {
       const form = `
-        <h1>Already cancelled</h1>
-        <div class="warn">This booking was already cancelled.</div>
+        <h1>Booking cancelled</h1>
+        <div class="ok">This booking has been successfully cancelled.</div>
         <p><small>Reference: ${ref}</small></p>
         <form method="POST" class="row">
           <input type="hidden" name="ref" value="${ref}" />
