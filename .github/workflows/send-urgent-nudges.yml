@@ -9,22 +9,38 @@ on:
 jobs:
   send-nudges:
     runs-on: ubuntu-latest
+    timeout-minutes: 5  # Prevent hanging jobs
     steps:
-      - name: Ping Vercel endpoint
+      - name: Ping Vercel endpoint with retry
         run: |
-          response=$(curl -s -w "\n%{http_code}" \
-            -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}" \
-            https://www.orachope.org/api/cron?job=send-urgent-nudges)
+          MAX_ATTEMPTS=3
+          RETRY_WAIT=10
           
-          http_code=$(echo "$response" | tail -n1)
-          body=$(echo "$response" | sed '$d')
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            echo "Attempt $attempt of $MAX_ATTEMPTS..."
+            
+            response=$(curl -s -w "\n%{http_code}" \
+              -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}" \
+              https://www.orachope.org/api/cron?job=send-urgent-nudges)
+            
+            http_code=$(echo "$response" | tail -n1)
+            body=$(echo "$response" | sed '$d')
+            
+            echo "HTTP Status: $http_code"
+            echo "Response: $body"
+            
+            if [ "$http_code" -eq 200 ]; then
+              echo "✅ Successfully sent urgent nudges"
+              exit 0
+            fi
+            
+            echo "❌ Attempt $attempt failed with status $http_code"
+            
+            if [ $attempt -lt $MAX_ATTEMPTS ]; then
+              echo "Waiting ${RETRY_WAIT}s before retry..."
+              sleep $RETRY_WAIT
+            fi
+          done
           
-          echo "HTTP Status: $http_code"
-          echo "Response: $body"
-          
-          if [ "$http_code" -ne 200 ]; then
-            echo "❌ Failed with status $http_code"
-            exit 1
-          fi
-          
-          echo "✅ Successfully sent urgent nudges"
+          echo "❌ All $MAX_ATTEMPTS attempts failed"
+          exit 1
