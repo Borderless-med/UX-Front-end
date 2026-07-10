@@ -120,7 +120,7 @@ async function sendClinicCancellationNotification(params: {
     const notificationService = new NotificationService({
       supabaseUrl: process.env.SUPABASE_URL!,
       supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      whatsappEnabled: false, // Email only for now (WhatsApp in Phase 3)
+      whatsappEnabled: true, // Phase 3 complete - Meta approved booking_cancelled_clinic_v1
       smtpUser: process.env.SMTP_USER!,
     });
     
@@ -141,12 +141,13 @@ async function sendClinicCancellationNotification(params: {
       day: 'numeric' 
     });
     
-    // Send email notification to clinic
+    // Send email + WhatsApp notification to clinic
     const results = await notificationService.send(
       'booking_cancelled_clinic',
       {
         name: clinic.name,
         email: clinic.contact_email,
+        whatsapp: clinic.whatsapp_number, // Add WhatsApp recipient
       },
       {
         clinic_name: clinic.name,
@@ -156,11 +157,12 @@ async function sendClinicCancellationNotification(params: {
         booking_ref: ref,
         treatment_type: booking.treatment_type,
         formatted_date: formattedDate,
+        appointment_date: formattedDate, // Required for WhatsApp template
         time_slot: booking.time_slot,
         cancelled_at: cancelledAt,
         cancellation_reason: reason || 'No reason provided',
       },
-      ['email']
+      ['email', 'whatsapp'] // Enable both channels
     );
     
     console.log('✅ Clinic cancellation notification sent:', results);

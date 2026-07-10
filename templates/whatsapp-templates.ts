@@ -385,6 +385,62 @@ const alternativeAcceptedClinic: WhatsAppTemplateFunction = (data) => ({
   buttonHasVariable: [],
 });
 
+// Template 10: Booking Cancelled - Clinic Notification
+// ============================================
+// META BUSINESS MANAGER TEMPLATE STRUCTURE:
+// ============================================
+// Template Name: booking_cancelled_clinic_v1
+// Category: UTILITY
+// Language: English (en)
+// 
+// Header (TEXT): "🚫 Appointment Cancelled"
+// 
+// Body:
+// Hello {{clinic_name}},
+// 
+// A patient has cancelled their booking:
+// 
+// Reference: {{booking_ref}}
+// Patient: {{patient_name}}
+// Treatment: {{treatment_type}}
+// Date: {{appointment_date}}
+// Time: {{time_slot}}
+// 
+// Cancelled at: {{cancelled_at}}
+// Reason: {{cancellation_reason}}
+// 
+// No action required. This slot is now available for other patients.
+// 
+// Footer: "OraChope.org"
+// 
+// Buttons: None
+// ============================================
+const bookingCancelledClinic: WhatsAppTemplateFunction = (data) => ({
+  templateName: 'booking_cancelled_clinic_v1',
+  variables: [
+    data.clinic_name || '',
+    data.booking_ref || '',
+    data.patient_name || '',
+    data.treatment_type || '',
+    data.appointment_date || data.formatted_date || '',
+    data.time_slot || '',
+    data.cancelled_at || '',
+    data.cancellation_reason || 'No reason provided',
+  ],
+  variableNames: [
+    'clinic_name',
+    'booking_ref',
+    'patient_name',
+    'treatment_type',
+    'appointment_date',
+    'time_slot',
+    'cancelled_at',
+    'cancellation_reason',
+  ],
+  buttons: [],
+  buttonHasVariable: [],
+});
+
 // Export all templates
 export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
   booking_request_received: bookingRequestReceived,
@@ -399,6 +455,7 @@ export const whatsappTemplates: Record<string, WhatsAppTemplateFunction> = {
   appointment_reminder_24h: appointmentReminder24h,
   appointment_reschedule_1: appointmentReschedule1,
   alternative_accepted_clinic: alternativeAcceptedClinic,
+  booking_cancelled_clinic: bookingCancelledClinic,
   // Aliases for compatibility
   confirmed: appointmentConfirmed,
   clinic_booking_confirmed: bookingAlertClinic,
