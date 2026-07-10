@@ -1085,7 +1085,22 @@ const AppointmentBookingForm = () => {
                     onCheckedChange={(checked) => handleInputChange('create_account', checked)}
                     className="mt-1"
                   />
-                  Honeypot Field (Hidden from humans, visible to bots) */}
+                  <div className="grid gap-1.5 leading-none flex-1">
+                    <Label
+                      htmlFor="create-account"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-800"
+                    >
+                      Create Account (Recommended) 🚀
+                    </Label>
+                    <p className="text-xs text-blue-700 text-justify">
+                      <strong>Get more benefits:</strong> Access our AI chatbot for instant dental advice, easy rebooking for future treatments, 
+                      exclusive promotions, and faster checkout. We'll create a secure account using your email above.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Honeypot Field (Hidden from humans, visible to bots) */}
               <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }}>
                 <input
                   type="text"
@@ -1123,21 +1138,6 @@ const AppointmentBookingForm = () => {
                   </div>
                 ) : !turnstileToken ? (
                   'Complete Security Check Above'
-                  </div>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={isSubmitting || completionPercentage < 100}
-                className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Booking Your Appointment...</span>
-                  </div>
                 ) : (
                   'Book My Appointment'
                 )}
