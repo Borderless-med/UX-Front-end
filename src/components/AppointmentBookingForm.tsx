@@ -62,6 +62,10 @@ const AppointmentBookingForm = () => {
     create_account: true, // Pre-checked for convenience
   });
 
+  // Bot protection state
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const [honeypotValue, setHoneypotValue] = useState<string>('');
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -505,6 +509,19 @@ const AppointmentBookingForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Bot protection: Check honeypot field
+    if (honeypotValue) {
+      console.warn('Honeypot triggered - potential bot detected');
+      setIsSubmitting(false);
+      return; // Silently reject (don't show error to bot)
+    }
+
+    // Bot protection: Check Turnstile token
+    if (!turnstileToken) {
+      toast.error('Please complete the security verification');
+      return;
+    }
+    
     if (!validateForm()) {
       toast.error('Please fill in all required fields correctly');
       return;
@@ -513,7 +530,7 @@ const AppointmentBookingForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Prepare submission data
+      // Prepare submission data with bot protection tokens
       const submissionData = {
         patient_name: formData.patient_name.trim(),
         email: formData.email.trim(),
@@ -524,6 +541,8 @@ const AppointmentBookingForm = () => {
         clinic_location: formData.preferred_clinic || formData.clinic_location,
         consent_given: formData.consent_given,
         create_account: formData.create_account,
+        // Bot protection
+        turnstile_token: turnstileToken,
       };
 
       console.log('Submitting appointment booking:', submissionData);
@@ -1066,17 +1085,44 @@ const AppointmentBookingForm = () => {
                     onCheckedChange={(checked) => handleInputChange('create_account', checked)}
                     className="mt-1"
                   />
-                  <div className="grid gap-1.5 leading-none flex-1">
-                    <Label
-                      htmlFor="create-account"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-800"
-                    >
-                      Create Account (Recommended) 🚀
-                    </Label>
-                    <p className="text-xs text-blue-700 text-justify">
-                      <strong>Get more benefits:</strong> Access our AI chatbot for instant dental advice, easy rebooking for future treatments, 
-                      exclusive promotions, and faster checkout. We'll create a secure account using your email above.
-                    </p>
+                  Honeypot Field (Hidden from humans, visible to bots) */}
+              <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }}>
+                <input
+                  type="text"
+                  name="website"
+                  value={honeypotValue}
+                  onChange={(e) => setHoneypotValue(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
+              </div>
+
+              {/* Cloudflare Turnstile (Bot Protection) */}
+              <div className="flex justify-center">
+                <div
+                  className="cf-turnstile"
+                  data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+                  data-callback={(token: string) => setTurnstileToken(token)}
+                  data-expired-callback={() => setTurnstileToken('')}
+                  data-theme="light"
+                  data-size="normal"
+                ></div>
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={isSubmitting || completionPercentage < 100 || !turnstileToken}
+                className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Booking Your Appointment...</span>
+                  </div>
+                ) : !turnstileToken ? (
+                  'Complete Security Check Above'
                   </div>
                 </div>
               </div>

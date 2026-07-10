@@ -1,6 +1,72 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.52.0";
 
+// ========================================
+// BOT PROTECTION: IP Rate Limiting
+// ========================================
+const rateLimitStore = new Map<string, { count: number; firstRequest: number }>();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+const MAX_BOOKINGS_PER_IP = 2; // Max 2 bookings per IP per hour
+
+function checkRateLimit(ip: string): { allowed: boolean; message?: string } {
+  const now = Date.now();
+  const record = rateLimitStore.get(ip);
+
+  if (!record) {
+    rateLimitStore.set(ip, { count: 1, firstRequest: now });
+    return { allowed: true };
+  }
+
+  // Check if window has expired
+  if (now - record.firstRequest > RATE_LIMIT_WINDOW) {
+    rateLimitStore.set(ip, { count: 1, firstRequest: now });
+    return { allowed: true };
+  }
+
+  // Check if limit exceeded
+  if (record.count >= MAX_BOOKINGS_PER_IP) {
+    return { 
+      allowed: false, 
+      message: `Rate limit exceeded. Maximum ${MAX_BOOKINGS_PER_IP} bookings per hour allowed. Please try again later.` 
+    };
+  }
+
+  // Increment count
+  record.count++;
+  return { allowed: true };
+}
+
+// ========================================
+// BOT PROTECTION: Turnstile Verification
+// ========================================
+async function verifyTurnstileToken(token: string, ip: string): Promise<boolean> {
+  const TURNSTILE_SECRET = Deno.env.get("TURNSTILE_SECRET_KEY");
+  
+  if (!TURNSTILE_SECRET) {
+    console.warn("TURNSTILE_SECRET_KEY not configured - skipping verification");
+    return true; // Allow in dev/testing
+  }
+
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret: TURNSTILE_SECRET,
+        response: token,
+        remoteip: ip,
+      }),
+    });
+
+    const data = await response.json();
+    console.log('Turnstile verification result:', data.success);
+    return data.success === true;
+  } catch (error) {
+    console.error('Turnstile verification error:', error);
+    return false;
+  }
+}
+
 // OraChope email client using Resend API (reliable for serverless)
 class OraChopeEmailClient {
   private username: string;
@@ -22,30 +88,80 @@ class OraChopeEmailClient {
       if (!RESEND_API_KEY) {
         throw new Error("RESEND_API_KEY not configured");
       }
-      
-      console.log(`Email service: Using Resend API for reliable delivery`);
-      console.log(`Reply-To: ${this.username} (OraChope domain)`);
-      
-      const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: "SG-JB Dental <onboarding@resend.dev>", // Resend verified domain
-          to: [options.to],
-          subject: options.subject,
-          html: options.html,
-          reply_to: this.username, // Reply goes to contact@orachope.org
-          headers: {
-            'X-Original-Sender': this.username,
-            'X-OraChope-Domain': 'true'
-          }
-        })
-      });
+  turnstile_token?: string; // Bot protection token
+}
 
-      if (!response.ok) {
+const handler = async (req: Request): Promise<Response> => {
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    console.log("Processing appointment booking request");
+
+    // ========================================
+    // BOT PROTECTION: Get client IP
+    // ========================================
+    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+                     req.headers.get('x-real-ip') || 
+                     'unknown';
+    console.log('Request from IP:', clientIP);
+
+    // ========================================
+    // BOT PROTECTION: Check rate limit
+    // ========================================
+    const rateLimitCheck = checkRateLimit(clientIP);
+    if (!rateLimitCheck.allowed) {
+      console.warn(`Rate limit exceeded for IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ 
+          error: rateLimitCheck.message,
+          code: 'RATE_LIMIT_EXCEEDED'
+        }),
+        { 
+          status: 429, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Initialize OraChope Email Client
+    const ORACHOPE_EMAIL = "contact@orachope.org";
+    
+    console.log(`OraChope Email Configuration: ${ORACHOPE_EMAIL}`);
+    console.log(`Using reliable email API service for delivery`);
+
+    const bookingData: AppointmentBookingRequest = await req.json();
+    console.log("Booking data received:", { ...bookingData, email: '[REDACTED]', turnstile_token: '[REDACTED]' });
+
+    // ========================================
+    // BOT PROTECTION: Verify Turnstile token
+    // ========================================
+    if (bookingData.turnstile_token) {
+      const isValidToken = await verifyTurnstileToken(bookingData.turnstile_token, clientIP);
+      if (!isValidToken) {
+        console.warn(`Invalid Turnstile token from IP: ${clientIP}`);
+        return new Response(
+          JSON.stringify({ 
+            error: 'Security verification failed. Please refresh the page and try again.',
+            code: 'TURNSTILE_FAILED'
+          }),
+          { 
+            status: 403, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+      console.log('Turnstile verification passed');
+    } else {
+      console.warn('No Turnstile token provided - potential bot or old form version');
+    }
         const errorData = await response.text();
         console.error(`Resend API error: ${response.status} - ${errorData}`);
         throw new Error(`Email API error: ${response.status} - ${errorData}`);
