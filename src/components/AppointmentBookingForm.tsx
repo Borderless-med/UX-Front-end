@@ -65,6 +65,8 @@ const AppointmentBookingForm = () => {
   // Bot protection state
   const [turnstileToken, setTurnstileToken] = useState<string>('');
   const [honeypotValue, setHoneypotValue] = useState<string>('');
+  const turnstileContainerRef = React.useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = React.useRef<string | null>(null);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -397,6 +399,70 @@ const AppointmentBookingForm = () => {
       }, 1000);
     }
   }, [searchParams]);
+
+  // Initialize Cloudflare Turnstile widget
+  useEffect(() => {
+    // Wait for Turnstile script to load
+    const initTurnstile = () => {
+      if (typeof window !== 'undefined' && (window as any).turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
+        try {
+          console.log('Initializing Turnstile widget...');
+          const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+          
+          turnstileWidgetId.current = (window as any).turnstile.render(turnstileContainerRef.current, {
+            sitekey: siteKey,
+            callback: (token: string) => {
+              console.log('Turnstile token received');
+              setTurnstileToken(token);
+            },
+            'expired-callback': () => {
+              console.log('Turnstile token expired');
+              setTurnstileToken('');
+            },
+            'error-callback': () => {
+              console.error('Turnstile error occurred');
+              setTurnstileToken('');
+            },
+            theme: 'light',
+            size: 'normal',
+          });
+          
+          console.log('Turnstile widget initialized:', turnstileWidgetId.current);
+        } catch (error) {
+          console.error('Error initializing Turnstile:', error);
+        }
+      }
+    };
+
+    // Try to initialize immediately
+    initTurnstile();
+
+    // If Turnstile script hasn't loaded yet, wait for it
+    if (!(window as any).turnstile) {
+      const checkInterval = setInterval(() => {
+        if ((window as any).turnstile) {
+          clearInterval(checkInterval);
+          initTurnstile();
+        }
+      }, 100);
+
+      // Cleanup interval after 10 seconds
+      setTimeout(() => clearInterval(checkInterval), 10000);
+
+      return () => clearInterval(checkInterval);
+    }
+
+    // Cleanup function
+    return () => {
+      if (turnstileWidgetId.current && (window as any).turnstile) {
+        try {
+          (window as any).turnstile.remove(turnstileWidgetId.current);
+        } catch (e) {
+          console.error('Error removing Turnstile widget:', e);
+        }
+      }
+    };
+  }, []);
 
   // Calculate completion percentage
   useEffect(() => {
@@ -1114,15 +1180,13 @@ const AppointmentBookingForm = () => {
               </div>
 
               {/* Cloudflare Turnstile (Bot Protection) */}
-              <div className="flex justify-center">
-                <div
-                  className="cf-turnstile"
-                  data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
-                  data-callback={(token: string) => setTurnstileToken(token)}
-                  data-expired-callback={() => setTurnstileToken('')}
-                  data-theme="light"
-                  data-size="normal"
-                ></div>
+              <div className="flex flex-col items-center space-y-2">
+                <div ref={turnstileContainerRef} className="flex justify-center"></div>
+                {!turnstileToken && (
+                  <p className="text-xs text-gray-500 text-center">
+                    ⚡ Please complete the security check above to proceed
+                  </p>
+                )}
               </div>
 
               {/* Submit Button */}
