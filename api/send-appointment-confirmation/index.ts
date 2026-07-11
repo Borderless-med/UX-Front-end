@@ -3,7 +3,85 @@ import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 import { calculateBusinessHoursExpiry, formatExpiryTime } from '../../utils/business-hours.js';
-import { formatSingaporeDate } from '../../utils/sg-time.js';
+
+// ========================================
+// BOT PROTECTION: IP Rate Limiting
+// ========================================
+const rateLimitStore = new Map<string, { count: number; firstRequest: number }>();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const MAX_BOOKINGS_PER_IP = 2;
+
+function checkRateLimit(ip: string): { allowed: boolean; message?: string } {
+  const now = Date.now();
+  const record = rateLimitStore.get(ip);
+
+  if (!record) {
+    rateLimitStore.set(ip, { count: 1, firstRequest: now });
+    return { allowed: true };
+  }
+
+  if (now - record.firstRequest > RATE_LIMIT_WINDOW) {
+    rateLimitStore.set(ip, { count: 1, firstRequest: now });
+    return { allowed: true };
+  }
+
+  if (record.count >= MAX_BOOKINGS_PER_IP) {
+    return { 
+      allowed: false, 
+      message: `Rate limit exceeded. Maximum ${MAX_BOOKINGS_PER_IP} bookings per hour allowed.` 
+    };
+  }
+
+  record.count++;
+  return { allowed: true };
+}
+
+// ========================================
+// BOT PROTECTION: Turnstile Verification
+// ========================================
+async function verifyTurnstileToken(token: string, ip: string): Promise<boolean> {
+  const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
+  
+  console.log('🔐 Turnstile Config:', {
+    secretConfigured: !!TURNSTILE_SECRET,
+    secretLength: TURNSTILE_SECRET ? TURNSTILE_SECRET.length : 0
+  });
+  
+  if (!TURNSTILE_SECRET) {
+    console.error('❌ TURNSTILE_SECRET_KEY not configured - BLOCKING');
+    return false;
+  }
+
+  if (!token) {
+    console.warn('❌ No Turnstile token provided');
+    return false;
+  }
+
+  try {
+    console.log('🔍 Calling Cloudflare siteverify...');
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret: TURNSTILE_SECRET,
+        response: token,
+        remoteip: ip,
+      }),
+    });
+
+    const data = await response.json();
+    console.log('✅ Cloudflare Response:', {
+      success: data.success,
+      hostname: data.hostname,
+      errors: data['error-codes'] || []
+    });
+    
+    return data.success === true;
+  } catch (error) {
+    console.error('❌ Turnstile API error:', error);
+    return false;
+  }
+}
 
 interface AppointmentBookingRequest {
   patient_name: string;
@@ -15,44 +93,7 @@ interface AppointmentBookingRequest {
   clinic_location: string;
   consent_given: boolean;
   create_account?: boolean;
-}
-
-function isValidDateOnly(dateOnly: string): boolean {
-  const match = dateOnly.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return false;
-
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-
-  return (
-    parsed.getUTCFullYear() === year &&
-    parsed.getUTCMonth() === month - 1 &&
-    parsed.getUTCDate() === day
-  );
-}
-
-function normalizePreferredDate(raw: unknown): { normalized?: string; error?: string } {
-  if (typeof raw !== 'string') {
-    return { error: 'preferred_date must be a string in YYYY-MM-DD format' };
-  }
-
-  const trimmed = raw.trim();
-  if (!trimmed) {
-    return { error: 'preferred_date is required' };
-  }
-
-  // Strict backend contract: date-only string to avoid timezone drift.
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
-    return { error: `preferred_date must be date-only (YYYY-MM-DD). Received: ${trimmed}` };
-  }
-
-  if (!isValidDateOnly(trimmed)) {
-    return { error: `preferred_date is not a valid calendar date: ${trimmed}` };
-  }
-
-  return { normalized: trimmed };
+  turnstile_token?: string;
 }
 
 export default async function handler(
@@ -75,37 +116,58 @@ export default async function handler(
   }
 
   try {
+    // ========================================
+    // BOT PROTECTION: Get client IP
+    // ========================================
+    const clientIP = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 
+                     (req.headers['x-real-ip'] as string) || 
+                     req.socket.remoteAddress || 
+                     'unknown';
+    console.log('📍 Request from IP:', clientIP);
+
+    // ========================================
+    // BOT PROTECTION: Check rate limit
+    // ========================================
+    const rateLimitCheck = checkRateLimit(clientIP);
+    if (!rateLimitCheck.allowed) {
+      console.warn(`⚠️ Rate limit exceeded for IP: ${clientIP}`);
+      return res.status(429).json({ 
+        error: rateLimitCheck.message,
+        code: 'RATE_LIMIT_EXCEEDED'
+      });
+    }
+
     const supabaseUrl = process.env.SUPABASE_URL!;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const SMTP_USER = process.env.SMTP_USER!;
-    const bookingDataRaw: AppointmentBookingRequest = req.body;
-    const normalizedDateResult = normalizePreferredDate(bookingDataRaw?.preferred_date);
-
-    console.log('📥 Booking request received:', {
-      request_id: req.headers['x-vercel-id'] || null,
-      user_agent: req.headers['user-agent'] || null,
-      preferred_date_raw: bookingDataRaw?.preferred_date,
-      preferred_date_normalized: normalizedDateResult.normalized || null,
-      preferred_date_error: normalizedDateResult.error || null,
-      time_slot: bookingDataRaw?.time_slot || null,
-      clinic_location: bookingDataRaw?.clinic_location || null,
-    });
-
-    if (normalizedDateResult.error || !normalizedDateResult.normalized) {
-      return res.status(400).json({
-        error: normalizedDateResult.error || 'Invalid preferred_date',
+    const bookingData: AppointmentBookingRequest = req.body;
+    
+    // ========================================
+    // BOT PROTECTION: Verify Turnstile token
+    // ========================================
+    console.log('🛡️ Starting bot protection checks...');
+    
+    if (!bookingData.turnstile_token) {
+      console.error(`❌ BLOCKED: No Turnstile token from IP: ${clientIP}`);
+      return res.status(403).json({ 
+        error: 'Security verification required. Please refresh and try again.',
+        code: 'TURNSTILE_MISSING'
       });
     }
 
-    const bookingData: AppointmentBookingRequest = {
-      ...bookingDataRaw,
-      preferred_date: normalizedDateResult.normalized,
-    };
-    const preferredDateDisplay = formatSingaporeDate(bookingData.preferred_date);
+    const isValidToken = await verifyTurnstileToken(bookingData.turnstile_token, clientIP);
+    if (!isValidToken) {
+      console.error(`❌ BLOCKED: Invalid Turnstile token from IP: ${clientIP}`);
+      return res.status(403).json({ 
+        error: 'Security verification failed. Please refresh and try again.',
+        code: 'TURNSTILE_FAILED'
+      });
+    }
+    
+    console.log('✅ Bot protection passed - processing booking');
     
     let clinicEmail: string | null = null;
-    let clinicWhatsApp: string | null = null;
     let clinicId: number | null = null;
     let clinicDetails: any = null;
     
@@ -114,7 +176,7 @@ export default async function handler(
     
     const { data: jbClinics, error: jbError } = await supabase
       .from('clinics_data')
-      .select('id, contact_email, whatsapp_number, name, address')
+      .select('id, contact_email, name, address')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
@@ -122,7 +184,7 @@ export default async function handler(
     
     const { data: sgClinics, error: sgError } = await supabase
       .from('sg_clinics')
-      .select('id, contact_email, whatsapp_number, name, address')
+      .select('id, contact_email, name, address')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
@@ -133,9 +195,8 @@ export default async function handler(
     if (matchedClinic) {
       clinicId = matchedClinic.id;
       clinicEmail = matchedClinic.contact_email;
-      clinicWhatsApp = matchedClinic.whatsapp_number || null;
       clinicDetails = matchedClinic;
-      console.log('✅ Clinic found - ID:', clinicId, 'Email:', clinicEmail, 'WhatsApp:', clinicWhatsApp);
+      console.log('✅ Clinic found - ID:', clinicId, 'Email:', clinicEmail);
     } else {
       console.log('❌ NO CLINIC MATCH FOUND');
     }
@@ -171,13 +232,8 @@ export default async function handler(
       .update({ expires_at: expiresAt.toISOString() })
       .eq('booking_ref', bookingRef);
 
-    // Send patient receipt via email and WhatsApp using the approved template set.
-    const notificationService = new NotificationService({
-      supabaseUrl,
-      supabaseKey: supabaseServiceKey,
-      whatsappEnabled: process.env.WHATSAPP_ENABLED === 'true',
-      smtpUser: SMTP_USER,
-    });
+    // Send detailed patient confirmation email using proper template
+    const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
     await notificationService.send('booking_confirmation_patient', 
       { name: bookingData.patient_name, email: bookingData.email },
       { 
@@ -191,25 +247,10 @@ export default async function handler(
         clinic_postcode: '',
         clinic_country: 'Malaysia',
         treatment_type: bookingData.treatment_type,
-        formatted_date: preferredDateDisplay,
+        formatted_date: bookingData.preferred_date,
         time_slot: bookingData.time_slot
       },
       ['email']
-    );
-
-    await notificationService.send('booking_request_received',
-      { name: bookingData.patient_name, whatsapp: bookingData.whatsapp },
-      {
-        booking_ref: bookingRef,
-        patient_name: bookingData.patient_name,
-        clinic_name: clinicDetails?.name || bookingData.clinic_location,
-        clinic_address: clinicDetails?.address || '',
-        treatment_type: bookingData.treatment_type,
-        requested_date: preferredDateDisplay,
-        time_slot: bookingData.time_slot,
-        travel_guide_url: 'https://orachope.org/travel-guide',
-      },
-      ['whatsapp']
     );
 
     console.log('📧 Checking clinic email:', clinicEmail ? `Found: ${clinicEmail}` : '❌ NULL - clinic email block will be skipped');
@@ -221,19 +262,13 @@ export default async function handler(
 
       // Build clinic response URLs
       const baseUrl = 'https://orachope.org/api/clinic/respond';
-      const responseUrl = `${baseUrl}/${bookingRef}?token=${responseToken}`;
       const confirmUrl = `${baseUrl}/${bookingRef}?action=confirm&token=${responseToken}`;
       const rejectUrl = `${baseUrl}/${bookingRef}?action=reject&token=${responseToken}`;
       const alternativesUrl = `${baseUrl}/${bookingRef}?action=alternatives&token=${responseToken}`;
 
-      const notificationService = new NotificationService({
-        supabaseUrl,
-        supabaseKey: supabaseServiceKey,
-        whatsappEnabled: process.env.WHATSAPP_ENABLED === 'true',
-        smtpUser: SMTP_USER,
-      });
+      const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
       await notificationService.send('booking_alert_clinic', 
-        { name: bookingData.clinic_location, email: clinicEmail, whatsapp: clinicWhatsApp || undefined },
+        { name: bookingData.clinic_location, email: clinicEmail },
         { 
           clinic_name: bookingData.clinic_location, 
           booking_ref: bookingRef, 
@@ -241,17 +276,16 @@ export default async function handler(
           patient_whatsapp: bookingData.whatsapp,
           patient_email: bookingData.email,
           treatment_type: bookingData.treatment_type, 
-          formatted_date: preferredDateDisplay, 
+          formatted_date: bookingData.preferred_date, 
           time_slot: bookingData.time_slot, 
           expires_at: formatExpiryTime(expiresAt), 
-          clinic_response_url: responseUrl,
           confirm_url: confirmUrl, 
           reject_url: rejectUrl, 
           alternatives_url: alternativesUrl
         },
-        ['email', 'whatsapp']
+        ['email']
       );
-      console.log('✅ Clinic initial alert sent (email + WhatsApp if configured)');
+      console.log('✅ Clinic email sent successfully');
     }
 
     res.status(200).json({ 
