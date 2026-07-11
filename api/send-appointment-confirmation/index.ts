@@ -204,6 +204,7 @@ export default async function handler(
     }
 
     const { data: bookingRef } = await supabase.rpc('generate_booking_ref');
+    const preferredDateDisplay = formatSingaporeDate(bookingData.preferred_date);
 
     if (bookingData.create_account) {
       await supabase.auth.admin.createUser({
@@ -246,6 +247,12 @@ export default async function handler(
       { name: bookingData.patient_name, whatsapp: bookingData.whatsapp },
       {
         booking_ref: bookingRef,
+        patient_name: bookingData.patient_name,
+        clinic_name: clinicDetails?.name || bookingData.clinic_location,
+        clinic_address: clinicDetails?.address || '',
+        treatment_type: bookingData.treatment_type,
+        requested_date: preferredDateDisplay,
+        time_slot: bookingData.time_slot,
         travel_guide_url: 'https://orachope.org/travel-guide',
       },
       ['whatsapp']
@@ -266,7 +273,7 @@ export default async function handler(
         clinic_postcode: '',
         clinic_country: 'Malaysia',
         treatment_type: bookingData.treatment_type,
-        formatted_date: bookingData.preferred_date,
+        formatted_date: preferredDateDisplay,
         time_slot: bookingData.time_slot
       },
       ['email']
@@ -300,7 +307,7 @@ export default async function handler(
           patient_whatsapp: bookingData.whatsapp,
           patient_email: bookingData.email,
           treatment_type: bookingData.treatment_type, 
-          formatted_date: bookingData.preferred_date, 
+          formatted_date: preferredDateDisplay, 
           time_slot: bookingData.time_slot, 
           expires_at: formatExpiryTime(expiresAt), 
           confirm_url: confirmUrl, 
