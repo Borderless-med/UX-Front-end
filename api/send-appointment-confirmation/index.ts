@@ -168,6 +168,7 @@ export default async function handler(
     console.log('✅ Bot protection passed - processing booking');
     
     let clinicEmail: string | null = null;
+    let clinicWhatsApp: string | null = null;
     let clinicId: number | null = null;
     let clinicDetails: any = null;
     
@@ -176,7 +177,7 @@ export default async function handler(
     
     const { data: jbClinics, error: jbError } = await supabase
       .from('clinics_data')
-      .select('id, contact_email, name, address')
+      .select('id, contact_email, whatsapp_number, name, address')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
@@ -184,7 +185,7 @@ export default async function handler(
     
     const { data: sgClinics, error: sgError } = await supabase
       .from('sg_clinics')
-      .select('id, contact_email, name, address')
+      .select('id, contact_email, whatsapp_number, name, address')
       .ilike('name', bookingData.clinic_location)
       .limit(1);
     
@@ -195,8 +196,9 @@ export default async function handler(
     if (matchedClinic) {
       clinicId = matchedClinic.id;
       clinicEmail = matchedClinic.contact_email;
+      clinicWhatsApp = matchedClinic.whatsapp_number || null;
       clinicDetails = matchedClinic;
-      console.log('✅ Clinic found - ID:', clinicId, 'Email:', clinicEmail);
+      console.log('✅ Clinic found - ID:', clinicId, 'Email:', clinicEmail, 'WhatsApp:', clinicWhatsApp);
     } else {
       console.log('❌ NO CLINIC MATCH FOUND');
     }
@@ -232,9 +234,26 @@ export default async function handler(
       .update({ expires_at: expiresAt.toISOString() })
       .eq('booking_ref', bookingRef);
 
+    // Send patient receipt via WhatsApp using approved template
+    const patientNotificationService = new NotificationService({
+      supabaseUrl,
+      supabaseKey: supabaseServiceKey,
+      whatsappEnabled: process.env.WHATSAPP_ENABLED === 'true',
+      smtpUser: SMTP_USER,
+    });
+
+    await patientNotificationService.send('booking_request_received',
+      { name: bookingData.patient_name, whatsapp: bookingData.whatsapp },
+      {
+        booking_ref: bookingRef,
+        travel_guide_url: 'https://orachope.org/travel-guide',
+      },
+      ['whatsapp']
+    );
+
     // Send detailed patient confirmation email using proper template
-    const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
-    await notificationService.send('booking_confirmation_patient', 
+    const emailNotificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
+    await emailNotificationService.send('booking_confirmation_patient', 
       { name: bookingData.patient_name, email: bookingData.email },
       { 
         booking_ref: bookingRef,
@@ -266,9 +285,14 @@ export default async function handler(
       const rejectUrl = `${baseUrl}/${bookingRef}?action=reject&token=${responseToken}`;
       const alternativesUrl = `${baseUrl}/${bookingRef}?action=alternatives&token=${responseToken}`;
 
-      const notificationService = new NotificationService({ supabaseUrl, supabaseKey: supabaseServiceKey, smtpUser: SMTP_USER });
-      await notificationService.send('booking_alert_clinic', 
-        { name: bookingData.clinic_location, email: clinicEmail },
+      const clinicNotificationService = new NotificationService({
+        supabaseUrl,
+        supabaseKey: supabaseServiceKey,
+        whatsappEnabled: process.env.WHATSAPP_ENABLED === 'true',
+        smtpUser: SMTP_USER,
+      });
+      await clinicNotificationService.send('booking_alert_clinic', 
+        { name: bookingData.clinic_location, email: clinicEmail, whatsapp: clinicWhatsApp || undefined },
         { 
           clinic_name: bookingData.clinic_location, 
           booking_ref: bookingRef, 
@@ -283,9 +307,9 @@ export default async function handler(
           reject_url: rejectUrl, 
           alternatives_url: alternativesUrl
         },
-        ['email']
+        ['email', 'whatsapp']
       );
-      console.log('✅ Clinic email sent successfully');
+      console.log('✅ Clinic notification sent (email + WhatsApp if configured)');
     }
 
     res.status(200).json({ 
