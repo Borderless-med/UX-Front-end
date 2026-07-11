@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotificationService } from '../../services/notification-service.js';
 import { calculateBusinessHoursExpiry, formatExpiryTime } from '../../utils/business-hours.js';
+import { formatSingaporeDate } from '../../utils/sg-time.js';
 
 // ========================================
 // BOT PROTECTION: IP Rate Limiting
