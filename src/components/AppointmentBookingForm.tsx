@@ -68,6 +68,13 @@ const AppointmentBookingForm = () => {
   const turnstileContainerRef = React.useRef<HTMLDivElement>(null);
   const turnstileWidgetId = React.useRef<string | null>(null);
 
+  // OTP verification state
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [bookingHash, setBookingHash] = useState('');
+  const [otpExpiry, setOtpExpiry] = useState<Date | null>(null);
+  const [isRequestingOtp, setIsRequestingOtp] = useState(false);
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -571,14 +578,13 @@ const AppointmentBookingForm = () => {
     }
   };
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle form submission - Step 1: Request OTP
+  const handleRequestOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Bot protection: Check honeypot field
     if (honeypotValue) {
       console.warn('Honeypot triggered - potential bot detected');
-      setIsSubmitting(false);
       return; // Silently reject (don't show error to bot)
     }
 
@@ -593,10 +599,64 @@ const AppointmentBookingForm = () => {
       return;
     }
 
+    setIsRequestingOtp(true);
+
+    try {
+      const whatsappNumber = `${formData.country_code} ${formData.whatsapp.trim()}`;
+      
+      console.log('Requesting OTP for:', whatsappNumber);
+
+      const response = await fetch('/api/request-booking-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          whatsapp: whatsappNumber,
+          patient_name: formData.patient_name.trim(),
+          turnstile_token: turnstileToken,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to send verification code');
+      }
+
+      console.log('OTP sent successfully:', data);
+
+      setBookingHash(data.booking_hash);
+      setOtpExpiry(new Date(Date.now() + data.expires_in * 1000));
+      setShowOtpInput(true);
+      
+      toast.success(`Verification code sent to ${whatsappNumber}`);
+    } catch (error: any) {
+      console.error('OTP request error:', error);
+      toast.error(error.message || 'Failed to send verification code. Please try again.');
+    } finally {
+      setIsRequestingOtp(false);
+    }
+  };
+
+  // Handle form submission - Step 2: Verify OTP and submit booking
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!otpCode || otpCode.length !== 6) {
+      toast.error('Please enter the 6-digit verification code');
+      return;
+    }
+
+    if (otpExpiry && new Date() > otpExpiry) {
+      toast.error('Verification code expired. Please request a new one.');
+      setShowOtpInput(false);
+      setOtpCode('');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Prepare submission data with bot protection tokens
+      // Prepare submission data with bot protection tokens and OTP
       const submissionData = {
         patient_name: formData.patient_name.trim(),
         email: formData.email.trim(),
@@ -607,11 +667,13 @@ const AppointmentBookingForm = () => {
         clinic_location: formData.preferred_clinic || formData.clinic_location,
         consent_given: formData.consent_given,
         create_account: formData.create_account,
-        // Bot protection
+        // Bot protection + OTP
         turnstile_token: turnstileToken,
+        otp_code: otpCode,
+        booking_hash: bookingHash,
       };
 
-      console.log('Submitting appointment booking:', submissionData);
+      console.log('Verifying OTP and submitting booking:', submissionData);
 
       // Call the edge function using REST client
       const data = await restInvokeFunction('send-appointment-confirmation', {
@@ -1189,23 +1251,89 @@ const AppointmentBookingForm = () => {
                 )}
               </div>
 
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={isSubmitting || completionPercentage < 100 || !turnstileToken}
-                className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Booking Your Appointment...</span>
+              {/* OTP Input (Step 2 - shown after OTP is sent) */}
+              {showOtpInput && (
+                <div className="space-y-3 bg-green-50 p-4 rounded-lg border border-green-200">
+                  <div className="space-y-2">
+                    <Label htmlFor="otp" className="flex items-center space-x-2">
+                      <Phone className="w-4 h-4 text-green-700" />
+                      <span className="text-green-800 font-medium">WhatsApp Verification Code *</span>
+                    </Label>
+                    <Input
+                      id="otp"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={6}
+                      placeholder="Enter 6-digit code"
+                      value={otpCode}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                        setOtpCode(value);
+                      }}
+                      className="h-12 text-center text-2xl font-mono tracking-widest"
+                      autoComplete="one-time-code"
+                    />
+                    <p className="text-xs text-green-700">
+                      📱 Enter the 6-digit code sent to {formData.country_code} {formData.whatsapp}
+                    </p>
+                    {otpExpiry && (
+                      <p className="text-xs text-gray-600">
+                        Code expires at {otpExpiry.toLocaleTimeString()}
+                      </p>
+                    )}
                   </div>
-                ) : !turnstileToken ? (
-                  'Complete Security Check Above'
-                ) : (
-                  'Book My Appointment'
-                )}
-              </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setShowOtpInput(false);
+                      setOtpCode('');
+                      setBookingHash('');
+                    }}
+                    className="w-full text-xs"
+                  >
+                    Change Phone Number or Request New Code
+                  </Button>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              {!showOtpInput ? (
+                <Button
+                  type="button"
+                  onClick={handleRequestOTP}
+                  disabled={isRequestingOtp || completionPercentage < 100 || !turnstileToken}
+                  className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {isRequestingOtp ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Sending Verification Code...</span>
+                    </div>
+                  ) : !turnstileToken ? (
+                    'Complete Security Check Above'
+                  ) : (
+                    'Send Verification Code'
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || otpCode.length !== 6}
+                  className="w-full h-12 text-base font-semibold bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Verifying & Booking...</span>
+                    </div>
+                  ) : (
+                    'Verify & Book Appointment'
+                  )}
+                </Button>
+              )}
             </form>
           </CardContent>
         </Card>

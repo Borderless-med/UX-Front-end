@@ -84,6 +84,75 @@ async function verifyTurnstileToken(token: string, ip: string): Promise<boolean>
   }
 }
 
+// ========================================
+// OTP VERIFICATION
+// ========================================
+const MAX_OTP_ATTEMPTS = 3;
+
+async function verifyOTP(
+  supabase: any,
+  bookingHash: string,
+  otpCode: string,
+  whatsapp: string
+): Promise<{ success: boolean; message?: string }> {
+  console.log(`🔐 Verifying OTP - Hash: ${bookingHash}, WhatsApp: ${whatsapp}`);
+
+  // Fetch OTP record
+  const { data: otpRecord, error: fetchError } = await supabase
+    .from('booking_otp_verification')
+    .select('*')
+    .eq('booking_hash', bookingHash)
+    .eq('whatsapp', whatsapp)
+    .single();
+
+  if (fetchError || !otpRecord) {
+    console.error('❌ OTP record not found:', fetchError);
+    return { success: false, message: 'Invalid verification code. Please request a new one.' };
+  }
+
+  // Check if already verified
+  if (otpRecord.verified) {
+    console.log('✅ OTP already verified');
+    return { success: true };
+  }
+
+  // Check expiry
+  if (new Date(otpRecord.expires_at) < new Date()) {
+    console.warn('⏰ OTP expired');
+    return { success: false, message: 'Verification code expired. Please request a new one.' };
+  }
+
+  // Check max attempts
+  if (otpRecord.attempts >= MAX_OTP_ATTEMPTS) {
+    console.warn('⚠️ Max OTP attempts exceeded');
+    return { success: false, message: 'Maximum verification attempts exceeded. Please request a new code.' };
+  }
+
+  // Increment attempts
+  await supabase
+    .from('booking_otp_verification')
+    .update({ attempts: otpRecord.attempts + 1 })
+    .eq('booking_hash', bookingHash);
+
+  // Verify code
+  if (otpRecord.otp_code !== otpCode) {
+    console.warn('❌ Invalid OTP code');
+    return { 
+      success: false, 
+      message: `Invalid verification code. ${MAX_OTP_ATTEMPTS - otpRecord.attempts - 1} attempts remaining.` 
+    };
+  }
+
+  // Mark as verified
+  await supabase
+    .from('booking_otp_verification')
+    .update({ verified: true, verified_at: new Date().toISOString() })
+    .eq('booking_hash', bookingHash);
+
+  console.log('✅ OTP verified successfully');
+  return { success: true };
+}
+
 interface AppointmentBookingRequest {
   patient_name: string;
   email: string;
@@ -95,6 +164,8 @@ interface AppointmentBookingRequest {
   consent_given: boolean;
   create_account?: boolean;
   turnstile_token?: string;
+  otp_code?: string;
+  booking_hash?: string;
 }
 
 export default async function handler(
@@ -166,7 +237,35 @@ export default async function handler(
       });
     }
     
-    console.log('✅ Bot protection passed - processing booking');
+    console.log('✅ Turnstile verified');
+
+    // ========================================
+    // OTP VERIFICATION
+    // ========================================
+    if (!bookingData.otp_code || !bookingData.booking_hash) {
+      console.error(`❌ BLOCKED: Missing OTP or booking hash from IP: ${clientIP}`);
+      return res.status(403).json({ 
+        error: 'WhatsApp verification required. Please enter the code sent to your phone.',
+        code: 'OTP_MISSING'
+      });
+    }
+
+    const otpVerification = await verifyOTP(
+      supabase,
+      bookingData.booking_hash,
+      bookingData.otp_code,
+      bookingData.whatsapp
+    );
+
+    if (!otpVerification.success) {
+      console.error(`❌ BLOCKED: OTP verification failed from IP: ${clientIP}`);
+      return res.status(403).json({ 
+        error: otpVerification.message,
+        code: 'OTP_VERIFICATION_FAILED'
+      });
+    }
+    
+    console.log('✅ All security checks passed - processing booking');
     
     let clinicEmail: string | null = null;
     let clinicWhatsApp: string | null = null;
