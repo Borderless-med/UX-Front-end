@@ -14,6 +14,7 @@ interface PDPARegistrationFormProps {
   submitButtonText?: string;
   registrationSource?: string;
   hideLoginLink?: boolean;
+  compactLayout?: boolean;
 }
 
 const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({ 
@@ -21,7 +22,8 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
   onSwitchToLogin,
   submitButtonText = 'Create Account',
   registrationSource = 'Dental treatment and booking services',
-  hideLoginLink = false
+  hideLoginLink = false,
+  compactLayout = false
 }) => {
   const { register, isLoading } = useAuth();
   const [formData, setFormData] = useState({
@@ -111,36 +113,39 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
-          {/* Full Name */}
-          <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name *</Label>
-            <Input
-              id="fullName"
-              name="fullname-signup"
-              type="text"
-              value={formData.fullName}
-              onChange={(e) => handleInputChange('fullName', e.target.value)}
-              placeholder="Enter your full name"
-              disabled={isLoading}
-              onFocus={() => setError('')}
-              autoComplete="off"
-            />
-          </div>
+          {/* Name and Email - 2 columns on compact layout */}
+          <div className={compactLayout ? "grid md:grid-cols-2 gap-4" : "space-y-4"}>
+            {/* Full Name */}
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full Name *</Label>
+              <Input
+                id="fullName"
+                name="fullname-signup"
+                type="text"
+                value={formData.fullName}
+                onChange={(e) => handleInputChange('fullName', e.target.value)}
+                placeholder="Enter your full name"
+                disabled={isLoading}
+                onFocus={() => setError('')}
+                autoComplete="off"
+              />
+            </div>
 
-          {/* Email */}
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address *</Label>
-            <Input
-              id="email"
-              name="email-signup"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="your.email@example.com"
-              disabled={isLoading}
-              onFocus={() => setError('')}
-              autoComplete="off"
-            />
+            {/* Email */}
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address *</Label>
+              <Input
+                id="email"
+                name="email-signup"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                placeholder="your.email@example.com"
+                disabled={isLoading}
+                onFocus={() => setError('')}
+                autoComplete="off"
+              />
+            </div>
           </div>
 
           {/* Password */}
@@ -192,25 +197,24 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
           </div>
 
           {/* PDPA Consent */}
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200 space-y-3">
-            <div className="flex items-start space-x-3">
+          <div className={`bg-red-50 rounded-lg border border-red-200 ${compactLayout ? 'p-2 space-y-1' : 'p-4 space-y-3'}`}>
+            <div className="flex items-start space-x-2">
               <Checkbox
                 id="pdpaConsent"
                 checked={formData.consentGiven}
                 onCheckedChange={(checked) => handleInputChange('consentGiven', !!checked)}
                 disabled={isLoading}
-                className="mt-1"
+                className="mt-0.5"
               />
               <div>
-                <Label htmlFor="pdpaConsent" className="text-sm font-medium text-red-800">
+                <Label htmlFor="pdpaConsent" className={`font-medium text-red-800 ${compactLayout ? 'text-xs' : 'text-sm'}`}>
                   PDPA Consent Required *
                 </Label>
-                <p className="text-xs text-red-700 mt-1 text-justify">
+                <p className={`text-red-700 mt-0.5 ${compactLayout ? 'text-[10px] leading-tight' : 'text-xs'}`}>
                   I consent to the collection, use and disclosure of my personal data for account creation, 
-                  dental treatment coordination, and communication purposes. By creating an account, I agree 
-                  to receive service updates and appointment reminders.{' '}
+                  dental treatment coordination, and communication purposes.{' '}
                   <a href="/privacy-policy" target="_blank" className="text-red-600 hover:text-red-800 underline">
-                    Read our Privacy Policy
+                    Privacy Policy
                   </a>
                 </p>
               </div>
@@ -218,6 +222,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
           </div>
 
           {/* Auto-Population Notice */}
+          {!compactLayout && (
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
             <div className="flex items-start space-x-3">
               <div className="bg-blue-100 p-1 rounded-full flex-shrink-0">
@@ -232,6 +237,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
               </div>
             </div>
           </div>
+          )}
 
           {error && (
             <Alert className="border-red-200 bg-red-50">

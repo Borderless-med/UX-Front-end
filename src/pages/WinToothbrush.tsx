@@ -73,7 +73,7 @@ const WinToothbrush = () => {
               <div className="relative mb-4 flex-grow flex items-center">
                 <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl p-4 shadow-lg w-full">
                   <img
-                    src="https://i.imgur.com/8KQX9YM.jpg"
+                    src="/xiaomi-toothbrush.jpg"
                     alt="Xiaomi Mijia Sonic Electric Toothbrush"
                     className="w-full h-auto object-contain rounded-lg max-h-64"
                     onError={(e) => {
@@ -147,6 +147,7 @@ const WinToothbrush = () => {
                   submitButtonText="Enter to Win"
                   registrationSource="Giveaway registration"
                   hideLoginLink={true}
+                  compactLayout={true}
                 />
 
                 {/* Additional Info */}
