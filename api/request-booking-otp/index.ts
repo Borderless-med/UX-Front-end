@@ -46,7 +46,7 @@ function generateBookingHash(): string {
   return crypto.randomBytes(16).toString('hex');
 }
 
-async function sendWhatsAppOTP(whatsapp: string, otpCode: string): Promise<boolean> {
+async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: string = 'Patient'): Promise<boolean> {
   const WHATSAPP_ENABLED = process.env.WHATSAPP_ENABLED === 'true';
   const WHATSAPP_TOKEN = process.env.WHATSAPP_API_TOKEN;
   const WHATSAPP_PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -58,6 +58,7 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string): Promise<boole
 
   try {
     const formattedNumber = whatsapp.startsWith('+') ? whatsapp.substring(1) : whatsapp;
+    const firstName = patientName.split(' ')[0]; // Get first name only
     
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_ID}/messages`,
@@ -72,12 +73,13 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string): Promise<boole
           to: formattedNumber,
           type: 'template',
           template: {
-            name: 'otp_verification',
+            name: 'booking_otp_code',
             language: { code: 'en' },
             components: [
               {
                 type: 'body',
                 parameters: [
+                  { type: 'text', text: firstName },
                   { type: 'text', text: otpCode }
                 ]
               }
@@ -181,7 +183,7 @@ export default async function handler(
     }
 
     // Send OTP via WhatsApp
-    const otpSent = await sendWhatsAppOTP(requestData.whatsapp, otpCode);
+    const otpSent = await sendWhatsAppOTP(requestData.whatsapp, otpCode, requestData.patient_name);
     
     if (!otpSent) {
       // Clean up database entry if WhatsApp send failed

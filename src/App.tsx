@@ -43,6 +43,7 @@ import TravelGuide from "./pages/TravelGuide";
 import AIScanPage from "./pages/AIScanPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "@/components/admin/AdminRoute";
+import WinToothbrush from "./pages/WinToothbrush";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
               return (
             <Routes>
               <Route path="/" element={<HomeV3_OralLink />} />  {/* REVERT: swap HomeV3_OralLink → HomePrototype_v2 to restore original OraChope homepage */}
+              <Route path="/win" element={<WinToothbrush />} />
               <Route path="/book-now" element={<BookNow />} />
               <Route path="/compare" element={<ComparePrototype />} />
               <Route path="/clinics" element={<FindClinicsPrototype1 />} />

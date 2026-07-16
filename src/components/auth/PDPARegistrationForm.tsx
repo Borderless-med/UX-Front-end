@@ -11,11 +11,17 @@ import { Loader2, Shield, Eye, EyeOff, Info } from 'lucide-react';
 interface PDPARegistrationFormProps {
   onSuccess: () => void;
   onSwitchToLogin: () => void;
+  submitButtonText?: string;
+  registrationSource?: string;
+  hideLoginLink?: boolean;
 }
 
 const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({ 
   onSuccess, 
-  onSwitchToLogin 
+  onSwitchToLogin,
+  submitButtonText = 'Create Account',
+  registrationSource = 'Dental treatment and booking services',
+  hideLoginLink = false
 }) => {
   const { register, isLoading } = useAuth();
   const [formData, setFormData] = useState({
@@ -67,7 +73,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       fullName: formData.fullName,
       // Auto-populated values for simplified registration
       organization: '', // Empty for most users
-      purposeOfUse: 'Dental treatment and booking services',
+      purposeOfUse: registrationSource,
       userCategory: 'patient' as const,
     };
     
@@ -221,21 +227,23 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
             disabled={isLoading}
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            Create Account
+            {submitButtonText}
           </Button>
         </form>
 
         {/* Sign In Link */}
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <button
-            onClick={onSwitchToLogin}
-            className="text-blue-primary hover:text-blue-dark underline font-medium"
-            disabled={isLoading}
-          >
-            Sign in here
-          </button>
-        </div>
+        {!hideLoginLink && (
+          <div className="mt-6 text-center text-sm text-gray-600">
+            Already have an account?{' '}
+            <button
+              onClick={onSwitchToLogin}
+              className="text-blue-primary hover:text-blue-dark underline font-medium"
+              disabled={isLoading}
+            >
+              Sign in here
+            </button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
