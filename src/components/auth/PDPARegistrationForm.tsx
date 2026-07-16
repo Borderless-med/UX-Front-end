@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,6 +31,17 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
     fullName: '',
     consentGiven: false,
   });
+
+  // Prevent browser autofill
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const inputs = document.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
+      inputs.forEach(input => {
+        (input as HTMLInputElement).value = '';
+      });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -99,18 +110,20 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       </CardHeader>
       
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
           {/* Full Name */}
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name *</Label>
             <Input
               id="fullName"
+              name="fullname-signup"
               type="text"
               value={formData.fullName}
               onChange={(e) => handleInputChange('fullName', e.target.value)}
               placeholder="Enter your full name"
               disabled={isLoading}
               onFocus={() => setError('')}
+              autoComplete="off"
             />
           </div>
 
@@ -119,12 +132,14 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
             <Label htmlFor="email">Email Address *</Label>
             <Input
               id="email"
+              name="email-signup"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="your.email@example.com"
               disabled={isLoading}
               onFocus={() => setError('')}
+              autoComplete="off"
             />
           </div>
 
@@ -134,12 +149,14 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
             <div className="relative">
               <Input
                 id="password"
+                name="new-password-signup"
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
                 placeholder="Create a secure password (min. 6 characters)"
                 disabled={isLoading}
                 onFocus={() => setError('')}
+                autoComplete="new-password"
               />
               <Button
                 type="button"
@@ -163,12 +180,14 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
             <Label htmlFor="confirmPassword">Confirm Password *</Label>
             <Input
               id="confirmPassword"
+              name="confirm-password-signup"
               type="password"
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               placeholder="Confirm your password"
               disabled={isLoading}
               onFocus={() => setError('')}
+              autoComplete="new-password"
             />
           </div>
 

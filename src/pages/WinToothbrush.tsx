@@ -40,85 +40,73 @@ const WinToothbrush = () => {
       </header>
 
       {/* Main Hero Section - Side by Side Layout */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8">
+      <section className="py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Announcement Badge */}
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-100 to-yellow-100 border-2 border-amber-300 px-6 py-3 rounded-full">
-              <Gift className="h-5 w-5 text-amber-600" />
-              <span className="text-amber-900 font-bold text-sm uppercase tracking-wide">
+          <div className="text-center mb-4">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-100 to-yellow-100 border-2 border-amber-300 px-4 py-2 rounded-full">
+              <Gift className="h-4 w-4 text-amber-600" />
+              <span className="text-amber-900 font-bold text-xs uppercase tracking-wide">
                 Launch Giveaway • Free Entry
               </span>
             </div>
           </div>
 
           {/* Two Column Layout: Giveaway Left, Form Right */}
-          <div className="grid lg:grid-cols-5 gap-8 items-start">
+          <div className="grid lg:grid-cols-5 gap-6 items-stretch">
             
             {/* LEFT COLUMN: Giveaway Details (40%) */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 flex flex-col">
               {/* Main Heading */}
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
                 Sign Up & Win an
-                <span className="block mt-2 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                <span className="block mt-1 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                   AI Toothbrush!
                 </span>
               </h1>
 
-              <p className="text-lg text-gray-600 mb-6">
-                Join OraChope.org and get a chance to win a premium <strong>Xiaomi Mijia Sonic Electric Toothbrush</strong>.
+              <p className="text-base text-gray-600 mb-4">
+                Join OraChope.org and win a <strong>Xiaomi Mijia Sonic Electric Toothbrush</strong>.
               </p>
 
               {/* Product Image */}
-              <div className="relative mb-6">
-                <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl p-6 shadow-lg">
-                  {/* Inline SVG toothbrush illustration */}
-                  <svg viewBox="0 0 200 400" className="w-full h-auto max-h-80 mx-auto" xmlns="http://www.w3.org/2000/svg">
-                    {/* Toothbrush body */}
-                    <rect x="75" y="50" width="50" height="250" rx="25" fill="#ffffff" stroke="#0891b2" strokeWidth="2"/>
-                    {/* Power button */}
-                    <circle cx="100" cy="150" r="8" fill="#0891b2"/>
-                    {/* Neck */}
-                    <rect x="85" y="10" width="30" height="50" rx="15" fill="#e0f2fe" stroke="#0891b2" strokeWidth="2"/>
-                    {/* Brush head */}
-                    <ellipse cx="100" cy="10" rx="20" ry="15" fill="#ffffff" stroke="#0891b2" strokeWidth="2"/>
-                    {/* Bristles */}
-                    <line x1="85" y1="5" x2="85" y2="15" stroke="#06b6d4" strokeWidth="1.5"/>
-                    <line x1="92" y1="3" x2="92" y2="17" stroke="#06b6d4" strokeWidth="1.5"/>
-                    <line x1="100" y1="2" x2="100" y2="18" stroke="#06b6d4" strokeWidth="1.5"/>
-                    <line x1="108" y1="3" x2="108" y2="17" stroke="#06b6d4" strokeWidth="1.5"/>
-                    <line x1="115" y1="5" x2="115" y2="15" stroke="#06b6d4" strokeWidth="1.5"/>
-                    {/* Brand text */}
-                    <text x="100" y="200" textAnchor="middle" fill="#0891b2" fontSize="12" fontWeight="bold">Xiaomi</text>
-                    <text x="100" y="215" textAnchor="middle" fill="#0891b2" fontSize="10">Mijia</text>
-                  </svg>
+              <div className="relative mb-4 flex-grow flex items-center">
+                <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl p-4 shadow-lg w-full">
+                  <img
+                    src="https://i.imgur.com/8KQX9YM.jpg"
+                    alt="Xiaomi Mijia Sonic Electric Toothbrush"
+                    className="w-full h-auto object-contain rounded-lg max-h-64"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%23e0f2fe"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20" fill="%230891b2"%3EXiaomi Mijia Toothbrush%3C/text%3E%3C/svg%3E';
+                    }}
+                  />
                 </div>
                 {/* Floating Badge */}
-                <div className="absolute -top-3 -right-3 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg transform rotate-12">
-                  <span className="font-bold text-sm">FREE!</span>
+                <div className="absolute -top-2 -right-2 bg-red-500 text-white px-3 py-1 rounded-full shadow-lg transform rotate-12">
+                  <span className="font-bold text-xs">FREE!</span>
                 </div>
               </div>
 
               {/* Product Benefits - Compact */}
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                  <p className="text-sm text-gray-700"><strong>Smart Sonic Technology</strong> - 31,000 vibrations/min</p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <p className="text-xs text-gray-700"><strong>Smart Sonic</strong> - 31,000 vibrations/min</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                  <p className="text-sm text-gray-700"><strong>Long Battery Life</strong> - Up to 25 days</p>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <p className="text-xs text-gray-700"><strong>25-day Battery</strong> - Long-lasting charge</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                  <p className="text-sm text-gray-700"><strong>IPX7 Waterproof</strong> - 2-minute smart timer</p>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <p className="text-xs text-gray-700"><strong>IPX7 Waterproof</strong> - Smart timer</p>
                 </div>
               </div>
 
               {/* Trust Badge */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                <div className="flex items-center gap-3">
-                  <Shield className="h-5 w-5 text-green-600 flex-shrink-0" />
+              <div className="bg-green-50 border border-green-200 rounded-lg p-2 mt-auto">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-green-600 flex-shrink-0" />
                   <div>
                     <p className="text-xs font-semibold text-green-900">100% Free • No Purchase Required</p>
                     <p className="text-xs text-green-700">Winner contacted via email</p>
@@ -129,24 +117,24 @@ const WinToothbrush = () => {
 
             {/* RIGHT COLUMN: Registration Form (60%) */}
             <div className="lg:col-span-3">
-              <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-100 p-6 md:p-8 sticky top-4">
+              <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-100 p-4 md:p-6">
                 {/* Form Header */}
-                <div className="text-center mb-6">
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                <div className="text-center mb-4">
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                     Enter to Win Now
                   </h2>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-600 text-xs mb-3">
                     Create your free account to enter the giveaway
                   </p>
                   {/* Benefit Badges */}
                   <div className="flex flex-wrap justify-center gap-2 text-xs">
-                    <span className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full font-medium">
+                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">
                       ✓ Verified Clinics
                     </span>
-                    <span className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full font-medium">
+                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">
                       ✓ Price Comparisons
                     </span>
-                    <span className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full font-medium">
+                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">
                       ✓ AI Assistant
                     </span>
                   </div>
@@ -162,9 +150,9 @@ const WinToothbrush = () => {
                 />
 
                 {/* Additional Info */}
-                <div className="mt-6 text-center text-xs text-gray-500">
+                <div className="mt-4 text-center text-xs text-gray-500">
                   <p>By entering, you agree to our <a href="/terms-of-service" className="text-blue-600 hover:underline">Terms</a> and <a href="/privacy-policy" className="text-blue-600 hover:underline">Privacy Policy</a>.</p>
-                  <p className="mt-1">Winner will be randomly selected and notified within 7 days.</p>
+                  <p className="mt-1">Winner randomly selected within 7 days.</p>
                 </div>
               </div>
             </div>
