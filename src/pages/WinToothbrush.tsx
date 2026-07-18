@@ -152,18 +152,18 @@ const WinToothbrush = () => {
               </h1>
 
               <p className="text-base text-gray-600 mb-4">
-                Join OraChope.org and win a <strong>Xiaomi Mijia Sonic Electric Toothbrush</strong>.
+                Join OraChope.org and win a <strong>Xiaomi Mijia T200</strong>.
               </p>
 
               {/* Product Image */}
               <div className="relative mb-4 flex-grow flex items-center">
                 <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl p-4 shadow-lg w-full">
                   <img
-                    src="/xiaomi-toothbrush.jpg"
-                    alt="Xiaomi Mijia Sonic Electric Toothbrush"
+                    src="/Xiami- mijia T200 toothbrush_v2.jpg"
+                    alt="Xiaomi Mijia T200 Electric Toothbrush"
                     className="w-full h-auto object-contain rounded-lg max-h-64"
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%23e0f2fe"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20" fill="%230891b2"%3EXiaomi Mijia Toothbrush%3C/text%3E%3C/svg%3E';
+                      (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%23e0f2fe"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20" fill="%230891b2"%3EXiaomi Mijia T200%3C/text%3E%3C/svg%3E';
                     }}
                   />
                 </div>
@@ -177,15 +177,15 @@ const WinToothbrush = () => {
               <div className="space-y-2 mb-4">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                  <p className="text-xs text-gray-700"><strong>Smart Sonic</strong> - 31,000 vibrations/min</p>
+                  <p className="text-xs text-gray-700"><strong>High-Frequency Sonic Motor</strong> - 31,000 vibrations/min for deep plaque removal</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                  <p className="text-xs text-gray-700"><strong>25-day Battery</strong> - Long-lasting charge</p>
+                  <p className="text-xs text-gray-700"><strong>Dual Modes & Soft Bristles</strong> - Standard + Gentle modes with 0.15mm antibacterial bristles</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                  <p className="text-xs text-gray-700"><strong>IPX7 Waterproof</strong> - Smart timer</p>
+                  <p className="text-xs text-gray-700"><strong>Smart Timer & 25-Day Battery</strong> - USB-C rechargeable with 2-min timer</p>
                 </div>
               </div>
 
