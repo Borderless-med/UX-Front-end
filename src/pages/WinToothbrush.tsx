@@ -1,20 +1,106 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Gift, Sparkles, CheckCircle, Shield } from 'lucide-react';
-import PDPARegistrationForm from '@/components/auth/PDPARegistrationForm';
+import React, { useState, useEffect } from 'react';
+import { Gift, Sparkles, CheckCircle, Shield, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import Footer from '@/components/Footer';
+import SocialLoginButtons from '@/components/giveaway/SocialLoginButtons';
+import PDPAConsentCheckbox from '@/components/giveaway/PDPAConsentCheckbox';
+import WhatsAppCaptureForm from '@/components/giveaway/WhatsAppCaptureForm';
+import GiveawayThankYou from '@/components/giveaway/GiveawayThankYou';
+
+type GiveawayStep = 'signup' | 'whatsapp' | 'thankyou';
 
 const WinToothbrush = () => {
-  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState<GiveawayStep>('signup');
+  const [pdpaConsent, setPdpaConsent] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  // Email signup form state
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
 
-  const handleRegistrationSuccess = () => {
-    // Redirect to homepage after successful registration
-    navigate('/');
-  };
+  // Check if user is already logged in on mount
+  useEffect(() => {
+    const checkExistingUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        setUserId(user.id);
+        setUserEmail(user.email || null);
+        setUserName(user.user_metadata?.full_name || null);
+        
+        // Check if they already have WhatsApp number
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('whatsapp_number')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile?.whatsapp_number) {
+          // Already completed - show thank you
+          setCurrentStep('thankyou');
+        } else {
+          // Need to capture WhatsApp
+          setCurrentStep('whatsapp');
+        }
+      }
+    };
+    
+    checkExistingUser();
+  }, []);
 
-  const handleSwitchToLogin = () => {
-    // For giveaway page, we don't show login - just redirect to homepage
-    navigate('/');
+  // Handle email signup (passwordless)
+  const handleEmailSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!pdpaConsent) {
+      setError('Please agree to the PDPA terms to continue');
+      return;
+    }
+
+    if (!fullName.trim() || !email.trim()) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Generate secure random password (shadow account)
+      const randomPassword = crypto.randomUUID() + Math.random().toString(36).slice(2);
+
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: randomPassword,
+        options: {
+          data: {
+            full_name: fullName.trim(),
+          },
+          emailRedirectTo: `${window.location.origin}/win`,
+        },
+      });
+
+      if (signUpError) throw signUpError;
+
+      if (data.user) {
+        setUserId(data.user.id);
+        setUserEmail(data.user.email || null);
+        setUserName(fullName.trim());
+        setCurrentStep('whatsapp');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to create account');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,6 +134,9 @@ const WinToothbrush = () => {
               <Gift className="h-4 w-4 text-amber-600" />
               <span className="text-amber-900 font-bold text-xs uppercase tracking-wide">
                 Launch Giveaway • Free Entry
+              </span>
+            </div>
+          </div>
               </span>
             </div>
           </div>
@@ -115,46 +204,120 @@ const WinToothbrush = () => {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Registration Form (60%) */}
+            {/* RIGHT COLUMN: Dynamic Content Based on Step (60%) */}
             <div className="lg:col-span-3">
               <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-100 p-4 md:p-6">
-                {/* Form Header */}
-                <div className="text-center mb-4">
-                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
-                    Enter to Win Now
-                  </h2>
-                  <p className="text-gray-600 text-xs mb-3">
-                    Create your free account to enter the giveaway
-                  </p>
-                  {/* Benefit Badges */}
-                  <div className="flex flex-wrap justify-center gap-2 text-xs">
-                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">
-                      ✓ Verified Clinics
-                    </span>
-                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">
-                      ✓ Price Comparisons
-                    </span>
-                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">
-                      ✓ AI Assistant
-                    </span>
+                
+                {/* STEP 1: SIGNUP FORM */}
+                {currentStep === 'signup' && (
+                  <div className="space-y-4">
+                    <div className="text-center mb-4">
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                        Enter to Win Now
+                      </h2>
+                      <p className="text-gray-600 text-xs mb-3">
+                        Quick signup - takes less than 30 seconds
+                      </p>
+                    </div>
+
+                    {/* PDPA Consent */}
+                    <PDPAConsentCheckbox
+                      checked={pdpaConsent}
+                      onCheckedChange={setPdpaConsent}
+                      disabled={isLoading}
+                    />
+
+                    {/* Social Login Buttons */}
+                    <SocialLoginButtons
+                      onError={setError}
+                      disabled={!pdpaConsent || isLoading}
+                    />
+
+                    {/* Divider */}
+                    <div className="relative my-4">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300"></div>
+                      </div>
+                      <div className="relative flex justify-center text-xs">
+                        <span className="bg-white px-2 text-gray-500">Or enter manually</span>
+                      </div>
+                    </div>
+
+                    {/* Manual Email Signup Form */}
+                    <form onSubmit={handleEmailSignup} className="space-y-3">
+                      <div className="grid md:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <Label htmlFor="fullName" className="text-xs">Full Name *</Label>
+                          <Input
+                            id="fullName"
+                            type="text"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            placeholder="Your name"
+                            disabled={!pdpaConsent || isLoading}
+                            autoComplete="off"
+                            className="h-10"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label htmlFor="email" className="text-xs">Email *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="your@email.com"
+                            disabled={!pdpaConsent || isLoading}
+                            autoComplete="off"
+                            className="h-10"
+                          />
+                        </div>
+                      </div>
+
+                      {error && (
+                        <Alert className="border-red-200 bg-red-50">
+                          <AlertDescription className="text-red-800 text-xs">{error}</AlertDescription>
+                        </Alert>
+                      )}
+
+                      <Button
+                        type="submit"
+                        disabled={!pdpaConsent || isLoading || !fullName || !email}
+                        className="w-full bg-blue-primary hover:bg-blue-dark h-11 text-base font-semibold"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                            Creating Account...
+                          </>
+                        ) : (
+                          'Enter to Win'
+                        )}
+                      </Button>
+                    </form>
+
+                    <p className="text-[10px] text-center text-gray-500 mt-4">
+                      By signing up, you agree to our{' '}
+                      <a href="/terms-of-service" className="text-blue-600 hover:underline">Terms</a>
+                      {' '}and{' '}
+                      <a href="/privacy-policy" className="text-blue-600 hover:underline">Privacy Policy</a>
+                    </p>
                   </div>
-                </div>
+                )}
 
-                {/* Form Component */}
-                <PDPARegistrationForm
-                  onSuccess={handleRegistrationSuccess}
-                  onSwitchToLogin={handleSwitchToLogin}
-                  submitButtonText="Enter to Win"
-                  registrationSource="Giveaway registration"
-                  hideLoginLink={true}
-                  compactLayout={true}
-                />
+                {/* STEP 2: WHATSAPP CAPTURE */}
+                {currentStep === 'whatsapp' && userId && (
+                  <WhatsAppCaptureForm
+                    userId={userId}
+                    userEmail={userEmail || undefined}
+                    onSuccess={() => setCurrentStep('thankyou')}
+                  />
+                )}
 
-                {/* Additional Info */}
-                <div className="mt-4 text-center text-xs text-gray-500">
-                  <p>By entering, you agree to our <a href="/terms-of-service" className="text-blue-600 hover:underline">Terms</a> and <a href="/privacy-policy" className="text-blue-600 hover:underline">Privacy Policy</a>.</p>
-                  <p className="mt-1">Winner randomly selected within 7 days.</p>
-                </div>
+                {/* STEP 3: THANK YOU */}
+                {currentStep === 'thankyou' && (
+                  <GiveawayThankYou userName={userName || undefined} />
+                )}
               </div>
             </div>
 
