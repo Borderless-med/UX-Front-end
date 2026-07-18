@@ -45,8 +45,15 @@ const AuthCallback = () => {
             }
           }
 
-          // Redirect to home page using window.location for production
-          window.location.href = '/';
+          // Check for stored return URL (e.g., from /win giveaway)
+          const returnUrl = localStorage.getItem('oauth_return_url');
+          if (returnUrl) {
+            localStorage.removeItem('oauth_return_url');
+            window.location.href = returnUrl;
+          } else {
+            // Default: redirect to home page
+            window.location.href = '/';
+          }
         } else {
           window.location.href = '/';
         }

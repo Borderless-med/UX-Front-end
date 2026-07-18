@@ -15,10 +15,13 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onError, disabl
     setLoading(provider);
     
     try {
+      // Store current page URL for return after OAuth
+      localStorage.setItem('oauth_return_url', window.location.pathname);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/win`,
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
