@@ -137,9 +137,6 @@ const WinToothbrush = () => {
               </span>
             </div>
           </div>
-              </span>
-            </div>
-          </div>
 
           {/* Two Column Layout: Giveaway Left, Form Right */}
           <div className="grid lg:grid-cols-5 gap-6 items-stretch">
