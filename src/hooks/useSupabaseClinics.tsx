@@ -253,15 +253,18 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         // Helper to attempt a select ordered by distance, falling back to rating if needed
         const loadTable = async (table: string) => {
           // Always prefer rating sort (higher first) per business directive
+          // IMPORTANT: Explicitly include is_verified_partner in select to ensure it's fetched
+          const columns = 'id,name,address,dentist,rating,reviews,distance,sentiment,sentiment_dentist_skill,sentiment_pain_management,sentiment_cost_value,sentiment_staff_service,sentiment_ambiance_cleanliness,sentiment_convenience,mda_license,credentials,country,township,website_url,google_review_url,place_id,operating_hours,contact_email,whatsapp_number,is_verified_partner,tooth_filling,root_canal,dental_crown,dental_implant,teeth_whitening,braces,wisdom_tooth,gum_treatment,composite_veneers,porcelain_veneers,dental_bonding,inlays_onlays,enamel_shaping,gingivectomy,bone_grafting,sinus_lift,frenectomy,tmj_treatment,sleep_apnea_appliances,crown_lengthening,oral_cancer_screening,alveoplasty';
+          
           try {
             return await restSelect(table, {
-              select: '*',
+              select: columns,
               order: { column: 'rating', ascending: false }
             }, { timeout: 8000, retries: 1 });
           } catch (e: any) {
             console.warn(`[useSupabaseClinics] primary rating sort failed on ${table}; attempting distance as fallback`, e?.message);
             return await restSelect(table, {
-              select: '*',
+              select: columns,
               order: { column: 'distance', ascending: true }
             }, { timeout: 8000, retries: 1 });
           }
