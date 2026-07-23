@@ -388,8 +388,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
             operatingHours: clinic.operating_hours || '',
             contactEmail: clinic.contact_email || undefined,
             whatsappNumber: clinic.whatsapp_number || undefined,
-            // SG clinics use 'is_verified', JB clinics use 'is_verified_partner'
-            isVerifiedPartner: clinic.is_verified_partner || clinic.is_verified || false,
+            isVerifiedPartner: clinic.is_verified_partner || false,
             treatments: {
               toothFilling: clinic.tooth_filling || false,
               rootCanal: clinic.root_canal || false,
