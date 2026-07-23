@@ -3,8 +3,8 @@
 -- ============================================================================
 -- Purpose: Enable verified partner badge for a Singapore clinic
 -- 
--- This script sets is_verified = TRUE for sg_clinics table
--- (Note: sg_clinics uses 'is_verified' column, not 'is_verified_partner')
+-- This script sets is_verified_partner = TRUE for sg_clinics table
+-- (After migration, both tables now use 'is_verified_partner' consistently)
 -- ============================================================================
 
 BEGIN;
@@ -13,20 +13,20 @@ BEGIN;
 -- Replace 'CLINIC_NAME_HERE' with the actual clinic name from sg_clinics
 
 UPDATE sg_clinics
-SET is_verified = TRUE
+SET is_verified_partner = TRUE
 WHERE name = 'CLINIC_NAME_HERE'  -- ← Replace with actual clinic name
-  AND is_verified = FALSE;
+  AND is_verified_partner = FALSE;
 
 -- Verify the activation
 SELECT 
   name,
   address,
   country,
-  is_verified,
+  is_verified_partner,
   rating,
   reviews
 FROM sg_clinics
-WHERE is_verified = TRUE
+WHERE is_verified_partner = TRUE
 ORDER BY name;
 
 COMMIT;
