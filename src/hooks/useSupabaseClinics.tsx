@@ -7,15 +7,16 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export type ClinicSource = 'sg' | 'jb' | 'all';
 
+// Cache version - bump this to force fresh data fetch and invalidate all caches
+const CACHE_VERSION = 'v2_verified_partner_fix';
+
 // Simple in-memory cache (module-level) to prevent duplicate fetches across components
 interface CacheEntry { data: Clinic[]; timestamp: number }
-const CACHE_VERSION = 'v2'; // Bump to invalidate in-memory cache
 const CLINICS_CACHE: Record<string, CacheEntry> = {};
 const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes (increased from 5 minutes)
 
 // ========== MOBILE FIX: localStorage Persistence Layer ==========
 // Survives tab suspension on mobile browsers (4G/5G network switches)
-const CACHE_VERSION = 'v2_verified_partner_fix'; // Bump this to invalidate old cache
 const STORAGE_KEY_PREFIX = `orachope_clinics_${CACHE_VERSION}_`;
 const STORAGE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days max age
 
