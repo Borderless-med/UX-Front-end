@@ -301,6 +301,13 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
   console.log('Raw data from database:', data?.length || 0, 'records');
         if (data && data.length > 0) {
           console.log('Sample raw record:', data[0]);
+          console.log('is_verified_partner values in first 5 records:', 
+            data.slice(0, 5).map((c: any) => ({ 
+              name: c.name, 
+              is_verified_partner: c.is_verified_partner,
+              is_verified: c.is_verified 
+            }))
+          );
         }
 
         // Transform database data to match Clinic interface
@@ -427,7 +434,9 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
               websiteUrl: transformed.websiteUrl,
               googleReviewUrl: transformed.googleReviewUrl,
               googleReviewsHref: transformed.googleReviewsHref,
-              operatingHours: transformed.operatingHours
+              operatingHours: transformed.operatingHours,
+              isVerifiedPartner: transformed.isVerifiedPartner,
+              raw_is_verified_partner: clinic.is_verified_partner
             });
           }
           
