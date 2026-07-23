@@ -8,6 +8,7 @@ interface ClinicCardActionsProps {
     websiteUrl: string;
     phone?: string;
     isVerifiedPartner?: boolean;
+    country?: string;
   };
   isAuthenticated: boolean;
   onSignInClick: () => void;
@@ -32,6 +33,9 @@ const ClinicCardActions = ({
     }
   };
 
+  // SG Verified Partners get special 3-row layout
+  const isSGVerifiedPartner = clinic.country === 'SG' && clinic.isVerifiedPartner;
+
   return (
     <TooltipProvider>
       <div className="flex flex-col gap-3 pb-2">
@@ -54,72 +58,144 @@ const ClinicCardActions = ({
           </Button>
         )}
 
-        {/* Secondary actions row - wraps on narrow widths */}
-        <div className="flex flex-wrap gap-2 w-full">
-          {/* View Practitioner Details */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={isAuthenticated ? onViewPractitioner : onSignInClick}
-                variant="outline"
-                className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
-              >
-                <UserCheck className="h-3 w-3 mr-1" />
-                Details
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{isAuthenticated ? 'View practitioner details' : 'Sign in to view dentist names, MDA licenses, chat history, and transactions'}</p>
-            </TooltipContent>
-          </Tooltip>
+        {/* Secondary actions - SG Verified Partners get 3-row layout */}
+        {isSGVerifiedPartner ? (
+          // SG Verified Partners: Row 2 (Details + Website), Row 3 (Update)
+          <>
+            <div className="flex gap-2 w-full">
+              {/* View Practitioner Details */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={isAuthenticated ? onViewPractitioner : onSignInClick}
+                    variant="outline"
+                    className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+                  >
+                    <UserCheck className="h-3 w-3 mr-1" />
+                    Details
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{isAuthenticated ? 'View practitioner details' : 'Sign in to view dentist names, MDA licenses, chat history, and transactions'}</p>
+                </TooltipContent>
+              </Tooltip>
 
-          {/* Contact/Website Button */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={handleContactClick}
-                variant="outline"
-                className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
-                disabled={!clinic.websiteUrl || clinic.websiteUrl === 'N/A' || clinic.websiteUrl.trim() === ''}
-              >
-                {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' ? (
-                  <>
-                    <Globe className="h-3 w-3 mr-1" />
-                    Website
-                  </>
-                ) : (
-                  <>
-                    <Phone className="h-3 w-3 mr-1" />
-                    Contact
-                  </>
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== ''
-                  ? 'Visit clinic website'
-                  : 'Website not available'}
-              </p>
-            </TooltipContent>
-          </Tooltip>
+              {/* Contact/Website Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleContactClick}
+                    variant="outline"
+                    className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+                    disabled={!clinic.websiteUrl || clinic.websiteUrl === 'N/A' || clinic.websiteUrl.trim() === ''}
+                  >
+                    {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' ? (
+                      <>
+                        <Globe className="h-3 w-3 mr-1" />
+                        Website
+                      </>
+                    ) : (
+                      <>
+                        <Phone className="h-3 w-3 mr-1" />
+                        Contact
+                      </>
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== ''
+                      ? 'Visit clinic website'
+                      : 'Website not available'}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
 
-          {/* Update Button */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={onClaimClinic}
-                variant="outline"
-                className="flex-1 min-w-[5.5rem] border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
-              >
-                Update
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Update clinic information</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
+            {/* Row 3: Update Button (full width) */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={onClaimClinic}
+                  variant="outline"
+                  className="w-full border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
+                >
+                  Update
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Update clinic information</p>
+              </TooltipContent>
+            </Tooltip>
+          </>
+        ) : (
+          // JB and non-verified clinics: Original single-row layout
+          <div className="flex flex-wrap gap-2 w-full">
+            {/* View Practitioner Details */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={isAuthenticated ? onViewPractitioner : onSignInClick}
+                  variant="outline"
+                  className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+                >
+                  <UserCheck className="h-3 w-3 mr-1" />
+                  Details
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isAuthenticated ? 'View practitioner details' : 'Sign in to view dentist names, MDA licenses, chat history, and transactions'}</p>
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Contact/Website Button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleContactClick}
+                  variant="outline"
+                  className="flex-1 min-w-[5.5rem] border-blue-primary text-blue-primary hover:bg-blue-primary hover:text-white text-xs py-2"
+                  disabled={!clinic.websiteUrl || clinic.websiteUrl === 'N/A' || clinic.websiteUrl.trim() === ''}
+                >
+                  {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== '' ? (
+                    <>
+                      <Globe className="h-3 w-3 mr-1" />
+                      Website
+                    </>
+                  ) : (
+                    <>
+                      <Phone className="h-3 w-3 mr-1" />
+                      Contact
+                    </>
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {clinic.websiteUrl && clinic.websiteUrl !== 'N/A' && clinic.websiteUrl.trim() !== ''
+                    ? 'Visit clinic website'
+                    : 'Website not available'}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Update Button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={onClaimClinic}
+                  variant="outline"
+                  className="flex-1 min-w-[5.5rem] border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-xs py-2"
+                >
+                  Update
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Update clinic information</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        )}
       </div>
     </TooltipProvider>
   );

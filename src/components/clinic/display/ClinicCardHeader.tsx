@@ -9,6 +9,9 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
   const hasReviewsLink = !!clinic.hasReviewsLink && !!clinic.googleReviewsHref;
   const ratingDisplay = clinic.rating && clinic.rating > 0 ? clinic.rating.toFixed(1) : 'N/A';
   const reviewsDisplay = typeof clinic.reviews === 'number' && clinic.reviews > 0 ? `(${clinic.reviews})` : '(N/A)';
+  
+  // SG verified partners: hide rating/stars (HCSA compliance)
+  const isSGVerifiedPartner = clinic.country === 'SG' && clinic.isVerifiedPartner;
 
   return (
   <div className="flex flex-wrap items-start justify-between gap-3 mb-2 w-full">
@@ -37,24 +40,34 @@ const ClinicCardHeader = ({ clinic }: ClinicCardHeaderProps) => {
           <div className="text-[11px] font-medium leading-tight mb-1 break-words text-blue-primary">
             Google Reviews
           </div>
-          <div className="flex items-center justify-center">
-            <Star className={[
-              'mr-1',
-              'h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400'
-            ].join(' ')} />
-            <span className={[
-              'font-bold text-xs sm:text-sm',
-              'text-blue-dark'
-            ].join(' ')}>
-              {ratingDisplay}
-            </span>
-          </div>
-          <div className={[
-            'text-[11px] font-medium mt-1 leading-tight break-words text-center',
-            'text-blue-primary'
-          ].join(' ')}>
-            {reviewsDisplay}
-          </div>
+          {isSGVerifiedPartner ? (
+            // SG Verified Partners: No rating display (HCSA compliance)
+            <div className="flex items-center justify-center py-3">
+              <span className="text-xs font-medium text-blue-primary">View Reviews</span>
+            </div>
+          ) : (
+            // JB clinics and others: Show rating
+            <>
+              <div className="flex items-center justify-center">
+                <Star className={[
+                  'mr-1',
+                  'h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400'
+                ].join(' ')} />
+                <span className={[
+                  'font-bold text-xs sm:text-sm',
+                  'text-blue-dark'
+                ].join(' ')}>
+                  {ratingDisplay}
+                </span>
+              </div>
+              <div className={[
+                'text-[11px] font-medium mt-1 leading-tight break-words text-center',
+                'text-blue-primary'
+              ].join(' ')}>
+                {reviewsDisplay}
+              </div>
+            </>
+          )}
         </a>
       ) : (
         <div
