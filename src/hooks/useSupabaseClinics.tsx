@@ -9,12 +9,14 @@ export type ClinicSource = 'sg' | 'jb' | 'all';
 
 // Simple in-memory cache (module-level) to prevent duplicate fetches across components
 interface CacheEntry { data: Clinic[]; timestamp: number }
+const CACHE_VERSION = 'v2'; // Bump to invalidate in-memory cache
 const CLINICS_CACHE: Record<string, CacheEntry> = {};
 const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes (increased from 5 minutes)
 
 // ========== MOBILE FIX: localStorage Persistence Layer ==========
 // Survives tab suspension on mobile browsers (4G/5G network switches)
-const STORAGE_KEY_PREFIX = 'orachope_clinics_';
+const CACHE_VERSION = 'v2_verified_partner_fix'; // Bump this to invalidate old cache
+const STORAGE_KEY_PREFIX = `orachope_clinics_${CACHE_VERSION}_`;
 const STORAGE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days max age
 
 /**
@@ -159,7 +161,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
     }
     
     // FIX: If we already have data and cache is still valid, don't refetch unnecessarily
-    const cacheKey = source;
+    const cacheKey = `${CACHE_VERSION}_${source}`;
     const cached = CLINICS_CACHE[cacheKey];
     if (hasInitialDataRef.current && cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS && currentSourceRef.current === source) {
       console.log('[useSupabaseClinics] ⚠️ Already have valid data for this source, skipping unnecessary refetch');
@@ -177,7 +179,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
       
       try {
         // MOBILE FIX: Check cache layers (memory → localStorage → network)
-        const cacheKey = source;
+        const cacheKey = `${CACHE_VERSION}_${source}`;
         
         // Layer 1: Check in-memory cache (fastest)
         const memoryCached = CLINICS_CACHE[cacheKey];
@@ -466,7 +468,7 @@ export const useSupabaseClinics = (source: ClinicSource = 'all') => {
         }
         
         // CRITICAL FIX: Preserve existing clinics on error - never show empty state if we have data
-        const cacheKey = source;
+        const cacheKey = `${CACHE_VERSION}_${source}`;
         const staleMemoryCache = CLINICS_CACHE[cacheKey];
         const staleLocalStorageCache = loadFromLocalStorage(source);
         
