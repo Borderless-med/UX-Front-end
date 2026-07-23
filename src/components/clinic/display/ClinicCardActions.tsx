@@ -33,9 +33,6 @@ const ClinicCardActions = ({
     }
   };
 
-  // SG Verified Partners get special 3-row layout
-  const isSGVerifiedPartner = clinic.country === 'SG' && clinic.isVerifiedPartner;
-
   return (
     <TooltipProvider>
       <div className="flex flex-col gap-3 pb-2">
@@ -58,10 +55,10 @@ const ClinicCardActions = ({
           </Button>
         )}
 
-        {/* Secondary actions - SG Verified Partners get 3-row layout */}
-        {isSGVerifiedPartner ? (
-          // SG Verified Partners: Row 2 (Details + Website), Row 3 (Update)
+        {/* Secondary actions - Verified Partners get 3-row layout (Row 2: Details+Website, Row 3: Update) */}
+        {clinic.isVerifiedPartner ? (
           <>
+            {/* Row 2: Details + Website side by side */}
             <div className="flex gap-2 w-full">
               {/* View Practitioner Details */}
               <Tooltip>
@@ -129,7 +126,7 @@ const ClinicCardActions = ({
             </Tooltip>
           </>
         ) : (
-          // JB and non-verified clinics: Original single-row layout
+          // Non-verified clinics: Original single-row layout with all 3 buttons
           <div className="flex flex-wrap gap-2 w-full">
             {/* View Practitioner Details */}
             <Tooltip>
