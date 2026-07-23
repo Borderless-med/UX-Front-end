@@ -34,7 +34,7 @@ export interface Clinic {
   // Clinic contact information (for booking notifications)
   contactEmail?: string;
   whatsappNumber?: string;
-  // Verified partner status (shows "✅ Verified Partner" badge)
+  // Verified partner flag (clinics with active partner subscription)
   isVerifiedPartner?: boolean;
   treatments: {
     toothFilling: boolean;
