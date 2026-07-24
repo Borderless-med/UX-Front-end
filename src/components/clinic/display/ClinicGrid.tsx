@@ -72,8 +72,9 @@ const ClinicGrid = ({
             {verifiedPartners.map((clinic) => {
               const perClinicHideDistance = hideDistance || (selection === 'all' && clinic?.country === 'SG');
               const isSingaporeClinic = clinic?.country === 'SG';
+              const useMinimalCard = isSingaporeClinic && !clinic.isVerifiedPartner;
             
-              if (isSingaporeClinic) {
+              if (useMinimalCard) {
                 return (
                   <MinimalClinicCard 
                     key={clinic.id} 
