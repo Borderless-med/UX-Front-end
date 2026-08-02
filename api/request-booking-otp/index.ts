@@ -67,6 +67,38 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
     // Demo Mode: Use approved booking_request_received template for Meta review
     const templateName = DEMO_MODE ? 'booking_request_received' : 'booking_otp_code';
     
+    // Prepare template components based on mode
+    let templateComponents;
+    
+    if (DEMO_MODE) {
+      // For booking_request_received template - embed OTP in booking reference
+      templateComponents = [
+        {
+          type: 'body',
+          parameters: [
+            { type: 'text', text: firstName }, // {{patient_name}}
+            { type: 'text', text: `VERIFICATION CODE: ${otpCode}` }, // {{booking_ref}} - shows OTP
+            { type: 'text', text: 'Dental Clinic' }, // {{clinic_name}}
+            { type: 'text', text: 'Johor Bahru, Malaysia' }, // {{clinic_address}}
+            { type: 'text', text: 'Dental Treatment' }, // {{treatment_type}}
+            { type: 'text', text: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }, // {{requested_date}}
+            { type: 'text', text: '10:00 AM' } // {{time_slot}}
+          ]
+        }
+      ];
+    } else {
+      // For booking_otp_code template - original format
+      templateComponents = [
+        {
+          type: 'body',
+          parameters: [
+            { type: 'text', text: firstName },
+            { type: 'text', text: otpCode }
+          ]
+        }
+      ];
+    }
+    
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_ID}/messages`,
       {
@@ -82,15 +114,7 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
           template: {
             name: templateName,
             language: { code: 'en' },
-            components: [
-              {
-                type: 'body',
-                parameters: [
-                  { type: 'text', text: firstName },
-                  { type: 'text', text: otpCode }
-                ]
-              }
-            ]
+            components: templateComponents
           }
         }),
       }
