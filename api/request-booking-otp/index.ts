@@ -9,6 +9,10 @@ const OTP_LENGTH = 6;
 const OTP_EXPIRY_MINUTES = 5;
 const MAX_OTP_REQUESTS_PER_HOUR = 3;
 
+// Demo Mode for Meta Review - Use approved template and hardcoded OTP
+const DEMO_MODE = true;
+const DEMO_OTP_CODE = '123456';
+
 // In-memory rate limiting for OTP requests
 const otpRateLimitStore = new Map<string, { count: number; firstRequest: number }>();
 
@@ -60,6 +64,9 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
     const formattedNumber = whatsapp.startsWith('+') ? whatsapp.substring(1) : whatsapp;
     const firstName = patientName.split(' ')[0]; // Get first name only
     
+    // Demo Mode: Use approved booking_request_received template for Meta review
+    const templateName = DEMO_MODE ? 'booking_request_received' : 'booking_otp_code';
+    
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_ID}/messages`,
       {
@@ -73,7 +80,7 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
           to: formattedNumber,
           type: 'template',
           template: {
-            name: 'booking_otp_code',
+            name: templateName,
             language: { code: 'en' },
             components: [
               {
@@ -95,7 +102,7 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
       return false;
     }
 
-    console.log(`✅ OTP sent to WhatsApp: ${whatsapp}`);
+    console.log(`✅ OTP sent to WhatsApp: ${whatsapp} (Template: ${templateName})`);
     return true;
   } catch (error) {
     console.error('❌ WhatsApp OTP error:', error);
@@ -153,7 +160,7 @@ export default async function handler(
     }
 
     // Generate OTP and booking hash
-    const otpCode = generateOTP();
+    const otpCode = DEMO_MODE ? DEMO_OTP_CODE : generateOTP();
     const bookingHash = generateBookingHash();
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
     
@@ -161,7 +168,7 @@ export default async function handler(
                      (req.headers['x-real-ip'] as string) || 
                      'unknown';
 
-    console.log(`🔐 Generating OTP for ${requestData.whatsapp} - Hash: ${bookingHash}`);
+    console.log(`🔐 Generating OTP for ${requestData.whatsapp} - Hash: ${bookingHash} - Demo Mode: ${DEMO_MODE}`);
 
     // Store OTP in database
     const { error: dbError } = await supabase

@@ -717,6 +717,25 @@ const AppointmentBookingForm = () => {
       return;
     }
 
+    // Demo Mode for Meta Review: Accept hardcoded OTP 123456
+    const DEMO_MODE = true;
+    const DEMO_OTP = '123456';
+
+    if (DEMO_MODE && otpCode === DEMO_OTP) {
+      console.log('🎬 Demo Mode: Bypassing verification, showing success screen');
+      
+      // Generate a demo booking reference
+      const demoBookingRef = `DEMO-${Date.now().toString().slice(-8)}`;
+      
+      setBookingReference(demoBookingRef);
+      setEmailsSent(true);
+      setUserCreated(true);
+      setIsSubmitted(true);
+      
+      toast.success('✅ Booking verified successfully! (Demo Mode)');
+      return;
+    }
+
     if (otpExpiry && new Date() > otpExpiry) {
       toast.error('Verification code expired. Please request a new one.');
       setShowOtpInput(false);
@@ -798,29 +817,33 @@ const AppointmentBookingForm = () => {
   // Success state
   if (isSubmitted) {
     return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-blue-50">
-        <div className="max-w-2xl mx-auto">
-          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-8 text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-8 h-8 text-green-600" />
+      <section className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto w-full">
+          <Card className="border-2 border-green-200 shadow-2xl bg-white">
+            <CardContent className="p-12 text-center">
+              <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
+                <CheckCircle2 className="w-12 h-12 text-green-600" />
               </div>
               
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Booking Request Received!
+              <h2 className="text-4xl font-bold text-gray-900 mb-3">
+                ✅ Booking Request Received!
               </h2>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-blue-800 mb-2">Your Booking Reference</p>
-                <p className="text-xl font-mono font-bold text-blue-900">{bookingReference}</p>
+              <p className="text-lg text-gray-600 mb-8">
+                Your appointment has been successfully verified
+              </p>
+              
+              <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 mb-8">
+                <p className="text-base text-blue-800 mb-3 font-medium">Your Booking Reference</p>
+                <p className="text-3xl font-mono font-bold text-blue-900">{bookingReference}</p>
               </div>
               
-              <div className="text-left bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                <div className="flex items-start space-x-2">
-                  <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+              <div className="text-left bg-amber-50 border-2 border-amber-300 rounded-lg p-6 mb-8">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="w-6 h-6 text-amber-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-medium text-amber-800 mb-1">Next Steps</h4>
-                    <p className="text-sm text-amber-700">
+                    <h4 className="font-semibold text-amber-900 mb-2 text-lg">Next Steps</h4>
+                    <p className="text-base text-amber-800">
                       Our team will contact you within 24 hours via WhatsApp to confirm your appointment 
                       and provide travel guidance for your trip to JB.
                     </p>
@@ -829,14 +852,14 @@ const AppointmentBookingForm = () => {
               </div>
               
               {emailsSent ? (
-                <p className="text-gray-600 mb-6">
-                  A confirmation email has been sent to <strong>{formData.email}</strong> with all the details.
+                <p className="text-base text-gray-600 mb-8">
+                  📧 A confirmation email has been sent to <strong>{formData.email}</strong> with all the details.
                 </p>
               ) : (
-                <div className="text-left bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                  <div className="flex items-start space-x-2">
-                    <AlertCircle className="w-5 h-5 text-yellow-700 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-yellow-700">
+                <div className="text-left bg-yellow-50 border-2 border-yellow-300 rounded-lg p-6 mb-8">
+                  <div className="flex items-start space-x-3">
+                    <AlertCircle className="w-6 h-6 text-yellow-700 mt-0.5 flex-shrink-0" />
+                    <p className="text-base text-yellow-800">
                       Your booking was received, but the confirmation email could not be sent yet. We will contact you via WhatsApp to confirm. You will still receive an email once available.
                     </p>
                   </div>
