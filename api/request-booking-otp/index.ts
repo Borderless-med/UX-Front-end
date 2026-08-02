@@ -61,7 +61,8 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
   }
 
   try {
-    const formattedNumber = whatsapp.startsWith('+') ? whatsapp.substring(1) : whatsapp;
+    // Remove all non-digits and format for WhatsApp API (no spaces, no + prefix)
+    const formattedNumber = whatsapp.replace(/\D/g, '');
     const firstName = patientName.split(' ')[0]; // Get first name only
     
     // Demo Mode: Use approved booking_request_received template for Meta review
