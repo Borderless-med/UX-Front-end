@@ -72,19 +72,35 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
     let templateComponents;
     
     if (DEMO_MODE) {
-      // For booking_request_received template - header is static, only body has 7 variables
+      // For booking_request_received template - match production code structure
+      const variables = [
+        firstName, // patient_name
+        `VERIFICATION CODE: ${otpCode}`, // booking_ref
+        'Dental Clinic', // clinic_name
+        'Johor Bahru, Malaysia', // clinic_address
+        'Dental Treatment', // treatment_type
+        new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }), // requested_date
+        '10:00 AM' // time_slot
+      ];
+      
+      const variableNames = [
+        'patient_name',
+        'booking_ref',
+        'clinic_name',
+        'clinic_address',
+        'treatment_type',
+        'requested_date',
+        'time_slot'
+      ];
+      
       templateComponents = [
         {
           type: 'body',
-          parameters: [
-            { type: 'text', text: firstName }, // {{1}} patient_name
-            { type: 'text', text: `VERIFICATION CODE: ${otpCode}` }, // {{2}} booking_ref
-            { type: 'text', text: 'Dental Clinic' }, // {{3}} clinic_name
-            { type: 'text', text: 'Johor Bahru, Malaysia' }, // {{4}} clinic_address
-            { type: 'text', text: 'Dental Treatment' }, // {{5}} treatment_type
-            { type: 'text', text: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }, // {{6}} requested_date
-            { type: 'text', text: '10:00 AM' } // {{7}} time_slot
-          ]
+          parameters: variables.map((value, index) => ({
+            type: 'text',
+            text: value,
+            parameter_name: variableNames[index]
+          }))
         }
       ];
     } else {
