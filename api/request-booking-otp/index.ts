@@ -72,19 +72,24 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
     let templateComponents;
     
     if (DEMO_MODE) {
-      // For booking_request_received template - embed OTP in booking reference
-      // Note: Template has a static URL button (no parameters needed)
+      // For booking_request_received template with header variable
       templateComponents = [
+        {
+          type: 'header',
+          parameters: [
+            { type: 'text', text: 'Booking Request Received' }
+          ]
+        },
         {
           type: 'body',
           parameters: [
-            { type: 'text', text: firstName }, // {{patient_name}}
-            { type: 'text', text: `VERIFICATION CODE: ${otpCode}` }, // {{booking_ref}} - shows OTP
-            { type: 'text', text: 'Dental Clinic' }, // {{clinic_name}}
-            { type: 'text', text: 'Johor Bahru, Malaysia' }, // {{clinic_address}}
-            { type: 'text', text: 'Dental Treatment' }, // {{treatment_type}}
-            { type: 'text', text: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }, // {{requested_date}}
-            { type: 'text', text: '10:00 AM' } // {{time_slot}}
+            { type: 'text', text: firstName }, // {{1}} patient_name
+            { type: 'text', text: `VERIFICATION CODE: ${otpCode}` }, // {{2}} booking_ref
+            { type: 'text', text: 'Dental Clinic' }, // {{3}} clinic_name
+            { type: 'text', text: 'Johor Bahru, Malaysia' }, // {{4}} clinic_address
+            { type: 'text', text: 'Dental Treatment' }, // {{5}} treatment_type
+            { type: 'text', text: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }, // {{6}} requested_date
+            { type: 'text', text: '10:00 AM' } // {{7}} time_slot
           ]
         }
       ];
