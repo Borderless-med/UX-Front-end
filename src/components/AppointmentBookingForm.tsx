@@ -79,6 +79,7 @@ const AppointmentBookingForm = () => {
   const [bookingHash, setBookingHash] = useState('');
   const [otpExpiry, setOtpExpiry] = useState<Date | null>(null);
   const [isRequestingOtp, setIsRequestingOtp] = useState(false);
+  const [resendCountdown, setResendCountdown] = useState(0);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -554,6 +555,16 @@ const AppointmentBookingForm = () => {
     setCompletionPercentage((completedFields / fieldsToCheck.length) * 100);
   }, [formData]);
 
+  // Countdown timer for resend button
+  useEffect(() => {
+    if (resendCountdown > 0) {
+      const timer = setTimeout(() => {
+        setResendCountdown(resendCountdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCountdown]);
+
   // Validation function
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -680,6 +691,7 @@ const AppointmentBookingForm = () => {
       setBookingHash(data.booking_hash);
       setOtpExpiry(new Date(Date.now() + data.expires_in * 1000));
       setShowOtpInput(true);
+      setResendCountdown(30); // Start 30 second countdown
       
       toast.success(`Verification code sent to ${whatsappNumber}`);
     } catch (error: any) {
@@ -1287,7 +1299,7 @@ const AppointmentBookingForm = () => {
                 )}
               </div>
 
-              {/* PDPA Consent */}
+              {/* WhatsApp and PDPA Consent */}
               <div className="space-y-3 bg-red-50 p-4 rounded-lg border border-red-200">
                 <div className="flex items-start space-x-3">
                   <Checkbox
@@ -1301,11 +1313,12 @@ const AppointmentBookingForm = () => {
                       htmlFor="consent"
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-red-800"
                     >
-                      PDPA Consent Required *
+                      WhatsApp and PDPA Consent *
                     </Label>
                     <p className="text-xs text-red-700 text-justify">
                       I consent to the collection, use and disclosure of my personal data for appointment booking, 
-                      treatment coordination, and communication purposes. By providing my WhatsApp number, I agree 
+                      treatment coordination, and communication purposes. I agree to receive a 6-digit verification 
+                      code via WhatsApp to verify my booking request. By providing my WhatsApp number, I agree 
                       to receive appointment confirmations and travel guidance via WhatsApp.{' '}
                       <a href="/privacy-policy" target="_blank" className="text-red-600 hover:text-red-800 underline">
                         Read our Privacy Policy
@@ -1371,7 +1384,7 @@ const AppointmentBookingForm = () => {
                   <div className="space-y-2">
                     <Label htmlFor="otp" className="flex items-center space-x-2">
                       <Phone className="w-4 h-4 text-green-700" />
-                      <span className="text-green-800 font-medium">WhatsApp Verification Code *</span>
+                      <span className="text-green-800 font-medium">Enter Verification Code sent to WhatsApp *</span>
                     </Label>
                     <Input
                       id="otp"
@@ -1379,7 +1392,7 @@ const AppointmentBookingForm = () => {
                       inputMode="numeric"
                       pattern="[0-9]*"
                       maxLength={6}
-                      placeholder="Enter 6-digit code"
+                      placeholder="123456"
                       value={otpCode}
                       onChange={(e) => {
                         const value = e.target.value.replace(/\D/g, '').slice(0, 6);
@@ -1418,7 +1431,7 @@ const AppointmentBookingForm = () => {
                 <Button
                   type="button"
                   onClick={handleRequestOTP}
-                  disabled={isRequestingOtp || completionPercentage < 100 || !turnstileToken}
+                  disabled={isRequestingOtp || completionPercentage < 100 || !turnstileToken || resendCountdown > 0}
                   className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 disabled:opacity-50"
                 >
                   {isRequestingOtp ? (
@@ -1426,6 +1439,8 @@ const AppointmentBookingForm = () => {
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       <span>Sending Verification Code...</span>
                     </div>
+                  ) : resendCountdown > 0 ? (
+                    `Resend Code (${resendCountdown}s)`
                   ) : !turnstileToken ? (
                     'Complete Security Check Above'
                   ) : (
@@ -1441,10 +1456,10 @@ const AppointmentBookingForm = () => {
                   {isSubmitting ? (
                     <div className="flex items-center space-x-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Verifying & Booking...</span>
+                      <span>Verifying & Submitting...</span>
                     </div>
                   ) : (
-                    'Verify & Book Appointment'
+                    'Verify & Submit'
                   )}
                 </Button>
               )}
