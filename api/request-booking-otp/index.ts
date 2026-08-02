@@ -72,14 +72,8 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
     let templateComponents;
     
     if (DEMO_MODE) {
-      // For booking_request_received template with header variable
+      // For booking_request_received template - header is static, only body has 7 variables
       templateComponents = [
-        {
-          type: 'header',
-          parameters: [
-            { type: 'text', text: 'Booking Request Received' }
-          ]
-        },
         {
           type: 'body',
           parameters: [
