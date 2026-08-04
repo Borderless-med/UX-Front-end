@@ -7,7 +7,7 @@ interface MetaUserData {
   phone?: string;
 }
 
-const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID;
+const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || '2329732740851617';
 
 declare global {
   interface Window {

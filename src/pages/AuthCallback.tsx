@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { trackMetaEvent } from '@/utils/metaTracking';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -49,6 +50,24 @@ const AuthCallback = () => {
           const returnUrl = localStorage.getItem('oauth_return_url');
           if (returnUrl) {
             localStorage.removeItem('oauth_return_url');
+            
+            // Track Meta Lead event if user came from /win giveaway
+            if (returnUrl === '/win' || returnUrl.includes('/win')) {
+              trackMetaEvent(
+                'Lead',
+                {
+                  content_name: 'Xiaomi Toothbrush Giveaway',
+                  content_category: 'Giveaway',
+                  value: 1.0,
+                  currency: 'SGD',
+                },
+                {
+                  em: session.user.email || '',
+                  external_id: session.user.id,
+                }
+              );
+            }
+            
             window.location.href = returnUrl;
           } else {
             // Default: redirect to home page

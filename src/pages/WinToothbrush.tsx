@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import Footer from '@/components/Footer';
 import SocialLoginButtons from '@/components/giveaway/SocialLoginButtons';
 import PDPAConsentCheckbox from '@/components/giveaway/PDPAConsentCheckbox';
+import { trackMetaEvent } from '@/utils/metaTracking';
 import WhatsAppCaptureForm from '@/components/giveaway/WhatsAppCaptureForm';
 import GiveawayThankYou from '@/components/giveaway/GiveawayThankYou';
 
@@ -94,6 +95,22 @@ const WinToothbrush = () => {
         setUserId(data.user.id);
         setUserEmail(data.user.email || null);
         setUserName(fullName.trim());
+        
+        // Track Meta Lead event
+        trackMetaEvent(
+          'Lead',
+          {
+            content_name: 'Xiaomi Toothbrush Giveaway',
+            content_category: 'Giveaway',
+            value: 1.0,
+            currency: 'SGD',
+          },
+          {
+            em: email.trim(),
+            external_id: data.user.id,
+          }
+        );
+        
         setCurrentStep('whatsapp');
       }
     } catch (err: any) {
