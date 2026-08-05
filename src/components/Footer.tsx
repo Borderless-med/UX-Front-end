@@ -87,7 +87,7 @@ const Footer = () => {
             </div>
             
             <div className="text-sm text-gray-500 text-center mb-4">
-              © 2024 Orachope. Launching August 2025.
+              © 2026 OraChope
             </div>
             
             {/* Legal Links Section - Enhanced with Cookie Management */}

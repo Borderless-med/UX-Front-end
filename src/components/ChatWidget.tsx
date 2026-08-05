@@ -75,7 +75,7 @@ const ChatWidget = ({ onAuthClick }: ChatWidgetProps) => {
     <>
       {/* Chat Window Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:inset-auto md:bottom-20 md:left-6">
+        <div className="fixed inset-0 z-50 md:inset-auto md:bottom-20 md:right-6">
           <div className="absolute inset-0 bg-black/50 md:hidden" onClick={toggleChat} />
           
           {/* Desktop resizable chat window */}
@@ -112,7 +112,7 @@ const ChatWidget = ({ onAuthClick }: ChatWidgetProps) => {
 
       {/* Chat Toggle Button + Hint - Hidden on mobile when chat is open */}
       {!isOpen && (
-        <div className="fixed bottom-6 left-6 z-50">
+        <div className="fixed bottom-6 right-6 z-50">
           <div className="relative">
             {/* Small hint bubble above icon - hidden on desktop to avoid conflict with ChatHelperTextbox */}
             {showHint && (
