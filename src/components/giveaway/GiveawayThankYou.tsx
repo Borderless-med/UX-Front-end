@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Gift, MessageCircle, Sparkles } from 'lucide-react';
+import { Gift, MessageCircle, Sparkles, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface GiveawayThankYouProps {
@@ -37,15 +37,25 @@ const GiveawayThankYou: React.FC<GiveawayThankYouProps> = ({ userName }) => {
 
       {/* What's Next */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 space-y-3">
-        <h3 className="font-semibold text-blue-900 text-lg">While You Wait...</h3>
-        <p className="text-sm text-blue-800">
-          Explore our AI-powered dental assistant! Get instant answers to your dental questions,
-          compare clinic prices, and find the best care options in Singapore and JB.
+        <h3 className="font-semibold text-blue-900 text-lg">What's Next?</h3>
+        <p className="text-sm text-blue-800 mb-4">
+          You came here for dental savings. Let's find you the best clinic prices now!
         </p>
 
+        {/* PRIMARY ACTION: View Clinics */}
+        <Button
+          onClick={() => navigate('/clinics')}
+          className="w-full bg-blue-primary hover:bg-blue-dark h-14 text-base font-bold shadow-lg"
+        >
+          <MapPin className="h-5 w-5 mr-2" />
+          View or Book Verified Clinics
+        </Button>
+
+        {/* SECONDARY ACTION: AI Assistant */}
         <Button
           onClick={() => navigate('/')}
-          className="w-full bg-blue-primary hover:bg-blue-dark h-12 text-base font-semibold"
+          variant="outline"
+          className="w-full h-12 text-base font-semibold border-2 border-blue-300 text-blue-700 hover:bg-blue-50"
         >
           <MessageCircle className="h-5 w-5 mr-2" />
           Try Our AI Dental Assistant
