@@ -93,16 +93,16 @@ async function verifyOTP(
   supabase: any,
   bookingHash: string,
   otpCode: string,
-  whatsapp: string
+  identifier: string
 ): Promise<{ success: boolean; message?: string }> {
-  console.log(`🔐 Verifying OTP - Hash: ${bookingHash}, WhatsApp: ${whatsapp}`);
+  console.log(`🔐 Verifying OTP - Hash: ${bookingHash}, Identifier: ${identifier}`);
 
-  // Fetch OTP record
+  // Fetch OTP record from new otp_verifications table
   const { data: otpRecord, error: fetchError } = await supabase
-    .from('booking_otp_verification')
+    .from('otp_verifications')
     .select('*')
     .eq('booking_hash', bookingHash)
-    .eq('whatsapp', whatsapp)
+    .eq('identifier', identifier)
     .single();
 
   if (fetchError || !otpRecord) {
@@ -111,7 +111,7 @@ async function verifyOTP(
   }
 
   // Check if already verified
-  if (otpRecord.verified) {
+  if (otpRecord.is_verified) {
     console.log('✅ OTP already verified');
     return { success: true };
   }
@@ -130,12 +130,12 @@ async function verifyOTP(
 
   // Increment attempts
   await supabase
-    .from('booking_otp_verification')
+    .from('otp_verifications')
     .update({ attempts: otpRecord.attempts + 1 })
     .eq('booking_hash', bookingHash);
 
   // Verify code
-  if (otpRecord.otp_code !== otpCode) {
+  if (otpRecord.code !== otpCode) {
     console.warn('❌ Invalid OTP code');
     return { 
       success: false, 
@@ -145,8 +145,8 @@ async function verifyOTP(
 
   // Mark as verified
   await supabase
-    .from('booking_otp_verification')
-    .update({ verified: true, verified_at: new Date().toISOString() })
+    .from('otp_verifications')
+    .update({ is_verified: true, verified_at: new Date().toISOString() })
     .eq('booking_hash', bookingHash);
 
   console.log('✅ OTP verified successfully');
@@ -166,6 +166,9 @@ interface AppointmentBookingRequest {
   turnstile_token?: string;
   otp_code?: string;
   booking_hash?: string;
+  communication_preference?: 'both' | 'email_only';
+  consent_pdpa?: boolean;
+  consent_whatsapp?: boolean;
 }
 
 export default async function handler(
@@ -245,16 +248,23 @@ export default async function handler(
     if (!bookingData.otp_code || !bookingData.booking_hash) {
       console.error(`❌ BLOCKED: Missing OTP or booking hash from IP: ${clientIP}`);
       return res.status(403).json({ 
-        error: 'WhatsApp verification required. Please enter the code sent to your phone.',
+        error: 'Verification required. Please enter the code sent to your phone or email.',
         code: 'OTP_MISSING'
       });
     }
+
+    // Determine identifier based on communication preference
+    const identifier = bookingData.communication_preference === 'both' 
+      ? bookingData.whatsapp  // Use WhatsApp for 'both'
+      : bookingData.email;     // Use Email for 'email_only'
+    
+    console.log(`🔍 OTP Verification - Preference: ${bookingData.communication_preference}, Identifier: ${identifier}`);
 
     const otpVerification = await verifyOTP(
       supabase,
       bookingData.booking_hash,
       bookingData.otp_code,
-      bookingData.whatsapp
+      identifier
     );
 
     if (!otpVerification.success) {
