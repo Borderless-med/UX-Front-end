@@ -703,7 +703,19 @@ const AppointmentBookingForm = () => {
         }),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error('Non-JSON response received:', text);
+        throw new Error('Server returned an invalid response. Please try again.');
+      }
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (!response.ok || !data.success) {
         throw new Error(data.error || 'Failed to send verification code');
