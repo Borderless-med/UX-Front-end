@@ -299,6 +299,7 @@ export default async function handler(
     console.log(`🔐 Generating OTP for ${identifier} - Preference: ${requestData.communication_preference} - Hash: ${bookingHash}`);
 
     // Store OTP in new otp_verifications table
+    console.log('📝 Attempting to insert OTP into database...');
     const { error: dbError } = await supabase
       .from('otp_verifications')
       .insert({
@@ -309,12 +310,25 @@ export default async function handler(
       });
 
     if (dbError) {
-      console.error('❌ Failed to store OTP:', dbError);
+      console.error('❌ Failed to store OTP - Database error:', JSON.stringify(dbError, null, 2));
+      
+      // Check if it's a table-not-found error
+      if (dbError.message?.includes('relation') || dbError.message?.includes('does not exist')) {
+        return res.status(500).json({ 
+          error: 'Database not configured. Please run migration: supabase/migrations/20260810_create_dual_otp_system.sql',
+          code: 'TABLE_NOT_FOUND',
+          details: dbError.message
+        });
+      }
+      
       return res.status(500).json({ 
         error: 'Failed to generate verification code. Please try again.',
-        code: 'OTP_STORAGE_FAILED'
+        code: 'OTP_STORAGE_FAILED',
+        details: dbError.message
       });
     }
+    
+    console.log('✅ OTP stored in database successfully');
 
     // Send OTP based on preference
     let otpSent = false;
