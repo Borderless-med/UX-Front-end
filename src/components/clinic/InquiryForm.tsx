@@ -94,12 +94,13 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
 
       // Send email notifications via Vercel API
       try {
-        const emailResponse = await fetch('/api/send-inquiry-notification', {
+        const emailResponse = await fetch('/api/notifications', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            type: 'inquiry',
             clinic_name: clinic.name,
             user_name: formData.name,
             user_email: formData.email || undefined,

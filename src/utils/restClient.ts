@@ -229,9 +229,11 @@ class RestClient {
     clientOptions: RestClientOptions = {}
   ): Promise<any> {
     let url: string;
+    let payload = options.body;
     if (functionName === 'send-appointment-confirmation') {
-      url = '/api/send-appointment-confirmation';
-      console.log('⚡ Using Vercel API endpoint for booking function.');
+      url = '/api/notifications';
+      payload = { type: 'appointment', ...payload };
+      console.log('⚡ Using unified notifications endpoint for appointment.');
     } else {
       url = `${SUPABASE_URL}/functions/v1/${functionName}`;
     }
@@ -242,7 +244,7 @@ class RestClient {
         url,
         {
           method: 'POST',
-          body: options.body ? JSON.stringify(options.body) : undefined,
+          body: payload ? JSON.stringify(payload) : undefined,
           headers: options.headers,
         },
         clientOptions

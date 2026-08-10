@@ -198,10 +198,11 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
 
         // Send confirmation and admin notification emails
         try {
-          await fetch('/api/send-partner-confirmation', {
+          await fetch('/api/notifications', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              type: 'partner',
               clinicName: selectedClinicName,
               contactName: data.contactName,
               email: fullPmail,
