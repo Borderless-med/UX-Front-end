@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 // Import handlers from lib/ (NOT serverless functions, just modules)
-import appointmentHandler from '../../lib/notifications/appointment-handler';
-import inquiryHandler from '../../lib/notifications/inquiry-handler';
-import partnerHandler from '../../lib/notifications/partner-handler';
+import appointmentHandler from '../../lib/notifications/appointment-handler.js';
+import inquiryHandler from '../../lib/notifications/inquiry-handler.js';
+import partnerHandler from '../../lib/notifications/partner-handler.js';
 
 /**
  * UNIFIED NOTIFICATIONS ENDPOINT

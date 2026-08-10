@@ -5,7 +5,7 @@ import {
   ACTIVE_OTP_TEMPLATE, 
   buildWhatsAppTemplateRequest,
   formatWhatsAppNumber 
-} from '../../lib/whatsapp-templates.config';
+} from '../../lib/whatsapp-templates.config.js';
 
 // ========================================
 // OTP Configuration
