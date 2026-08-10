@@ -59,10 +59,16 @@ function generateBookingHash(): string {
 // Email OTP Delivery
 // ========================================
 async function sendEmailOTP(email: string, otpCode: string, patientName: string): Promise<boolean> {
+  console.log(`📧 === sendEmailOTP called ===`);
+  console.log(`   Email: ${email}`);
+  console.log(`   OTP Code: ${otpCode}`);
+  console.log(`   Patient: ${patientName}`);
+  
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  console.log(`   RESEND_API_KEY configured: ${!!RESEND_API_KEY}`);
   
   if (!RESEND_API_KEY) {
-    console.log('📧 Email service disabled - OTP would be:', otpCode);
+    console.log('⚠️ Email service disabled (no API key) - OTP would be:', otpCode);
     return true; // For development
   }
 
@@ -141,12 +147,21 @@ async function sendEmailOTP(email: string, otpCode: string, patientName: string)
 // WhatsApp OTP Delivery (Piggyback Method)
 // ========================================
 async function sendWhatsAppOTP(whatsapp: string, patientName: string): Promise<boolean> {
+  console.log(`📱 === sendWhatsAppOTP called ===`);
+  console.log(`   WhatsApp: ${whatsapp}`);
+  console.log(`   Patient: ${patientName}`);
+  console.log(`   OTP Code (hardcoded): ${WHATSAPP_OTP_CODE}`);
+  
   const WHATSAPP_ENABLED = process.env.WHATSAPP_ENABLED === 'true';
   const WHATSAPP_TOKEN = process.env.WHATSAPP_API_TOKEN;
   const WHATSAPP_PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  
+  console.log(`   WHATSAPP_ENABLED: ${WHATSAPP_ENABLED}`);
+  console.log(`   WHATSAPP_TOKEN configured: ${!!WHATSAPP_TOKEN}`);
+  console.log(`   WHATSAPP_PHONE_ID configured: ${!!WHATSAPP_PHONE_ID}`);
 
   if (!WHATSAPP_ENABLED || !WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) {
-    console.log('📱 WhatsApp disabled - OTP would be: 123456');
+    console.log('⚠️ WhatsApp disabled (missing config) - OTP would be: 123456');
     return true; // For development
   }
 
@@ -198,11 +213,17 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse,
 ) {
+  console.log('🚀 === OTP Request Received ===');
+  console.log('Method:', req.method);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+  
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "authorization, x-client-info, apikey, content-type");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
 
   if (req.method === "OPTIONS") {
+    console.log('✅ OPTIONS request - returning 200');
     res.status(200).end();
     return;
   }
@@ -214,14 +235,23 @@ export default async function handler(
   }
 
   try {
+    console.log('📝 Processing POST request...');
     const supabaseUrl = process.env.SUPABASE_URL!;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     const requestData: OTPRequest = req.body;
+    console.log('📦 Request data:', {
+      email: requestData.email,
+      patient_name: requestData.patient_name,
+      communication_preference: requestData.communication_preference,
+      has_whatsapp: !!requestData.whatsapp,
+      has_turnstile: !!requestData.turnstile_token
+    });
     
     // Validate required fields
     if (!requestData.email || !requestData.patient_name || !requestData.communication_preference) {
+      console.log('❌ Validation failed - missing required fields');
       return res.status(400).json({ 
         error: 'Missing required fields: email, patient_name, communication_preference',
         code: 'INVALID_REQUEST'
@@ -230,11 +260,14 @@ export default async function handler(
 
     // Validate WhatsApp if user chose 'both'
     if (requestData.communication_preference === 'both' && !requestData.whatsapp) {
+      console.log('❌ Validation failed - missing WhatsApp for "both" preference');
       return res.status(400).json({ 
         error: 'WhatsApp number required when communication_preference is "both"',
         code: 'INVALID_REQUEST'
       });
     }
+
+    console.log('✅ Validation passed');
 
     // Determine identifier for rate limiting (use email for email_only, whatsapp for both)
     const identifier = requestData.communication_preference === 'both' 
@@ -289,10 +322,13 @@ export default async function handler(
 
     if (requestData.communication_preference === 'both') {
       // Send via WhatsApp
+      console.log(`📱 Attempting to send WhatsApp OTP to: ${requestData.whatsapp}`);
       otpSent = await sendWhatsAppOTP(requestData.whatsapp!, requestData.patient_name);
       deliveryMethod = 'WhatsApp';
+      console.log(`📱 WhatsApp send result: ${otpSent ? 'SUCCESS' : 'FAILED'}`);
       
       if (!otpSent) {
+        console.log('🧹 Cleaning up failed OTP record...');
         // Clean up database if send failed
         await supabase
           .from('otp_verifications')
@@ -307,10 +343,13 @@ export default async function handler(
       }
     } else {
       // Send via Email
+      console.log(`📧 Attempting to send Email OTP to: ${requestData.email}`);
       otpSent = await sendEmailOTP(requestData.email, otpCode, requestData.patient_name);
       deliveryMethod = 'Email';
+      console.log(`📧 Email send result: ${otpSent ? 'SUCCESS' : 'FAILED'}`);
       
       if (!otpSent) {
+        console.log('🧹 Cleaning up failed OTP record...');
         // Clean up database if send failed
         await supabase
           .from('otp_verifications')
