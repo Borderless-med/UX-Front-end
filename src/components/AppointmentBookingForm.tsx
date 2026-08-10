@@ -35,6 +35,7 @@ interface FormData {
   time_slot: string;
   clinic_location: string;
   consent_pdpa: boolean;
+  consent_whatsapp: boolean; // Required by Meta for WhatsApp OTP
   communication_preference: 'both' | 'email_only';
   create_account: boolean;
 }
@@ -65,6 +66,7 @@ const AppointmentBookingForm = () => {
     time_slot: '',
     clinic_location: '',
     consent_pdpa: false,
+    consent_whatsapp: false, // Required by Meta for WhatsApp OTP
     communication_preference: 'both', // Default to WhatsApp + Email
     create_account: true, // Pre-checked for convenience
   });
@@ -529,19 +531,26 @@ const AppointmentBookingForm = () => {
 
   // Calculate completion percentage
   useEffect(() => {
-    const requiredFields = [
-      'patient_name', 'email', 'whatsapp', 'treatment_type',
-      'preferred_date', 'time_slot', 'consent_pdpa', 'consent_whatsapp'
+    // Base required fields (always needed)
+    const baseRequiredFields = [
+      'patient_name', 'email', 'treatment_type',
+      'preferred_date', 'time_slot', 'consent_pdpa', 'communication_preference'
     ];
     
-    // Add either preferred_clinic OR clinic_location (mutually exclusive)
-    const fieldsToCheck = [...requiredFields];
-    if (formData.preferred_clinic || formData.clinic_location) {
-      fieldsToCheck.push(formData.preferred_clinic ? 'preferred_clinic' : 'clinic_location');
-    } else {
-      // Neither is filled, so count clinic_location as the field to be completed
-      fieldsToCheck.push('clinic_location');
+    // Conditional fields based on communication preference
+    const conditionalFields = [];
+    if (formData.communication_preference === 'both') {
+      conditionalFields.push('whatsapp', 'consent_whatsapp'); // WhatsApp consent required by Meta
     }
+    
+    // Add either preferred_clinic OR clinic_location (mutually exclusive)
+    if (formData.preferred_clinic || formData.clinic_location) {
+      conditionalFields.push(formData.preferred_clinic ? 'preferred_clinic' : 'clinic_location');
+    } else {
+      conditionalFields.push('clinic_location');
+    }
+    
+    const fieldsToCheck = [...baseRequiredFields, ...conditionalFields];
     
     let completedFields = 0;
     fieldsToCheck.forEach(field => {
@@ -581,12 +590,6 @@ const AppointmentBookingForm = () => {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    if (!formData.whatsapp.trim()) {
-      newErrors.whatsapp = 'WhatsApp number is required';
-    } else if (!/^\d{8,12}$/.test(formData.whatsapp.replace(/\s/g, ''))) {
-      newErrors.whatsapp = 'Please enter a valid phone number';
-    }
-
     if (!formData.treatment_type) {
       newErrors.treatment_type = 'Please select a treatment type';
     }
@@ -608,9 +611,16 @@ const AppointmentBookingForm = () => {
       newErrors.consent_pdpa = 'PDPA consent is required to proceed';
     }
 
-    // Validate WhatsApp number if user chose 'both'
-    if (formData.communication_preference === 'both' && !formData.whatsapp.trim()) {
-      newErrors.whatsapp = 'WhatsApp number is required for WhatsApp + Email verification';
+    // Validate WhatsApp fields if user chose 'both'
+    if (formData.communication_preference === 'both') {
+      if (!formData.whatsapp.trim()) {
+        newErrors.whatsapp = 'WhatsApp number is required for WhatsApp + Email verification';
+      } else if (!/^\d{8,12}$/.test(formData.whatsapp.replace(/\s/g, ''))) {
+        newErrors.whatsapp = 'Please enter a valid phone number';
+      }
+      if (!formData.consent_whatsapp) {
+        newErrors.consent_whatsapp = 'WhatsApp consent is required by Meta for OTP verification';
+      }
     }
 
     setErrors(newErrors);
@@ -1445,6 +1455,37 @@ const AppointmentBookingForm = () => {
                   <p className="text-sm text-red-600">{errors.consent_pdpa}</p>
                 )}
               </div>
+
+              {/* WhatsApp Consent Checkbox - REQUIRED BY META (Only for WhatsApp verification) */}
+              {formData.communication_preference === 'both' && (
+                <div className="space-y-2">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="consent-whatsapp"
+                      checked={formData.consent_whatsapp}
+                      onCheckedChange={(checked) => handleInputChange('consent_whatsapp', checked)}
+                      className="mt-1"
+                    />
+                    <div className="grid gap-1.5 leading-none flex-1">
+                      <Label
+                        htmlFor="consent-whatsapp"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#25D366">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        </svg>
+                        WhatsApp Verification Consent *
+                      </Label>
+                      <p className="text-xs text-gray-700 font-semibold">
+                        I agree to receive a 6-digit verification code and appointment updates via WhatsApp at the number provided above. Required by Meta.
+                      </p>
+                    </div>
+                  </div>
+                  {errors.consent_whatsapp && (
+                    <p className="text-sm text-red-600">{errors.consent_whatsapp}</p>
+                  )}
+                </div>
+              )}
 
               {/* Account Creation */}
               <div className="space-y-3 bg-blue-50 p-4 rounded-lg border border-blue-200">
