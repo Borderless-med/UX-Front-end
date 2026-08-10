@@ -1,6 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { 
+  ACTIVE_OTP_TEMPLATE, 
+  buildWhatsAppTemplateRequest,
+  formatWhatsAppNumber 
+} from '../whatsapp-templates.config';
 
 // ========================================
 // OTP Configuration
@@ -9,32 +14,32 @@ const OTP_LENGTH = 6;
 const OTP_EXPIRY_MINUTES = 5;
 const MAX_OTP_REQUESTS_PER_HOUR = 3;
 
-// Demo Mode for Meta Review - Use approved template and hardcoded OTP
-const DEMO_MODE = true;
-const DEMO_OTP_CODE = '123456';
+// WhatsApp OTP Configuration
+// Uses hardcoded "123456" until Meta approves Authentication Template
+const WHATSAPP_OTP_CODE = '123456';
 
-// In-memory rate limiting for OTP requests
+// In-memory rate limiting for OTP requests (applies to both email and phone)
 const otpRateLimitStore = new Map<string, { count: number; firstRequest: number }>();
 
-function checkOTPRateLimit(whatsapp: string): { allowed: boolean; message?: string } {
+function checkOTPRateLimit(identifier: string): { allowed: boolean; message?: string } {
   const now = Date.now();
-  const record = otpRateLimitStore.get(whatsapp);
+  const record = otpRateLimitStore.get(identifier);
 
   if (!record) {
-    otpRateLimitStore.set(whatsapp, { count: 1, firstRequest: now });
+    otpRateLimitStore.set(identifier, { count: 1, firstRequest: now });
     return { allowed: true };
   }
 
   const HOUR_MS = 60 * 60 * 1000;
   if (now - record.firstRequest > HOUR_MS) {
-    otpRateLimitStore.set(whatsapp, { count: 1, firstRequest: now });
+    otpRateLimitStore.set(identifier, { count: 1, firstRequest: now });
     return { allowed: true };
   }
 
   if (record.count >= MAX_OTP_REQUESTS_PER_HOUR) {
     return { 
       allowed: false, 
-      message: `Too many OTP requests. Maximum ${MAX_OTP_REQUESTS_PER_HOUR} requests per hour allowed.` 
+      message: `Too many verification requests. Maximum ${MAX_OTP_REQUESTS_PER_HOUR} requests per hour allowed.` 
     };
   }
 
@@ -50,84 +55,109 @@ function generateBookingHash(): string {
   return crypto.randomBytes(16).toString('hex');
 }
 
-async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: string = 'Patient'): Promise<boolean> {
+// ========================================
+// Email OTP Delivery
+// ========================================
+async function sendEmailOTP(email: string, otpCode: string, patientName: string): Promise<boolean> {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  
+  if (!RESEND_API_KEY) {
+    console.log('📧 Email service disabled - OTP would be:', otpCode);
+    return true; // For development
+  }
+
+  try {
+    const firstName = patientName.split(' ')[0];
+    
+    const emailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+    <h1 style="color: white; margin: 0; font-size: 24px;">OraChope.org</h1>
+    <p style="color: white; margin: 10px 0 0 0; font-size: 14px;">Your Dental Care Partner</p>
+  </div>
+  
+  <div style="background: white; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+    <h2 style="color: #1f2937; margin-top: 0;">Hi ${firstName},</h2>
+    
+    <p style="font-size: 16px; color: #4b5563;">Your verification code for OraChope.org is:</p>
+    
+    <div style="background: #f3f4f6; border: 2px dashed #3B82F6; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+      <p style="font-size: 32px; font-weight: bold; color: #3B82F6; letter-spacing: 8px; margin: 0;">${otpCode}</p>
+    </div>
+    
+    <p style="font-size: 14px; color: #6b7280; margin-top: 20px;">
+      ⏱️ This code expires in <strong>5 minutes</strong>
+    </p>
+    
+    <p style="font-size: 14px; color: #6b7280;">
+      If you didn't request this code, please ignore this email.
+    </p>
+    
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+      <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">
+        © 2026 OraChope | Making dental care accessible across borders
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'OraChope <noreply@orachope.org>',
+        to: [email],
+        subject: 'Your OraChope Verification Code',
+        html: emailHTML,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('❌ Email API Error:', errorData);
+      return false;
+    }
+
+    console.log(`✅ Email OTP sent to: ${email}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Email OTP error:', error);
+    return false;
+  }
+}
+
+// ========================================
+// WhatsApp OTP Delivery (Piggyback Method)
+// ========================================
+async function sendWhatsAppOTP(whatsapp: string, patientName: string): Promise<boolean> {
   const WHATSAPP_ENABLED = process.env.WHATSAPP_ENABLED === 'true';
   const WHATSAPP_TOKEN = process.env.WHATSAPP_API_TOKEN;
   const WHATSAPP_PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
   if (!WHATSAPP_ENABLED || !WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) {
-    console.log('📱 WhatsApp disabled - OTP would be:', otpCode);
-    return true; // For development/testing
+    console.log('📱 WhatsApp disabled - OTP would be: 123456');
+    return true; // For development
   }
 
   try {
-    // Remove all non-digits and format for WhatsApp API (no spaces, no + prefix)
-    const formattedNumber = whatsapp.replace(/\D/g, '');
-    const firstName = patientName.split(' ')[0]; // Get first name only
+    const formattedNumber = formatWhatsAppNumber(whatsapp);
     
-    // Demo Mode: Use approved booking_request_received template for Meta review
-    const templateName = DEMO_MODE ? 'booking_request_received' : 'booking_otp_code';
+    // Build request using template config (piggyback method)
+    const variables = ACTIVE_OTP_TEMPLATE.mapToVariables(WHATSAPP_OTP_CODE, patientName);
+    const requestBody = buildWhatsAppTemplateRequest(whatsapp, ACTIVE_OTP_TEMPLATE, variables);
     
-    // Prepare template components based on mode
-    let templateComponents;
-    
-    if (DEMO_MODE) {
-      // For booking_request_received template - match production code structure
-      const variables = [
-        firstName, // patient_name
-        `VERIFICATION CODE: ${otpCode}`, // booking_ref
-        'Dental Clinic', // clinic_name
-        'Johor Bahru, Malaysia', // clinic_address
-        'Dental Treatment', // treatment_type
-        new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }), // requested_date
-        '10:00 AM' // time_slot
-      ];
-      
-      const variableNames = [
-        'patient_name',
-        'booking_ref',
-        'clinic_name',
-        'clinic_address',
-        'treatment_type',
-        'requested_date',
-        'time_slot'
-      ];
-      
-      templateComponents = [
-        {
-          type: 'body',
-          parameters: variables.map((value, index) => ({
-            type: 'text',
-            text: value,
-            parameter_name: variableNames[index]
-          }))
-        }
-      ];
-    } else {
-      // For booking_otp_code template - original format
-      templateComponents = [
-        {
-          type: 'body',
-          parameters: [
-            { type: 'text', text: firstName },
-            { type: 'text', text: otpCode }
-          ]
-        }
-      ];
-    }
-    
-    const requestBody = {
-      messaging_product: 'whatsapp',
-      to: formattedNumber,
-      type: 'template',
-      template: {
-        name: templateName,
-        language: { code: 'en' },
-        components: templateComponents
-      }
-    };
-    
-    console.log('📤 Sending WhatsApp request:', JSON.stringify(requestBody, null, 2));
+    console.log('📤 Sending WhatsApp OTP (Piggyback):', JSON.stringify(requestBody, null, 2));
     
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_ID}/messages`,
@@ -143,21 +173,12 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('❌ WhatsApp API Error Response:', JSON.stringify(errorData, null, 2));
-      console.error('❌ Status:', response.status, response.statusText);
-      
-      // In demo mode, allow the flow to continue even if WhatsApp fails
-      // This ensures Meta review demo can proceed
-      if (DEMO_MODE) {
-        console.warn('⚠️ Demo Mode: WhatsApp send failed but continuing anyway for demo purposes');
-        return true; // Pretend success for demo
-      }
-      
+      console.error('❌ WhatsApp API Error:', JSON.stringify(errorData, null, 2));
       return false;
     }
 
     const responseData = await response.json();
-    console.log(`✅ OTP sent to WhatsApp: ${whatsapp} (Template: ${templateName})`, JSON.stringify(responseData, null, 2));
+    console.log(`✅ WhatsApp OTP sent to: ${whatsapp}`, JSON.stringify(responseData, null, 2));
     return true;
   } catch (error) {
     console.error('❌ WhatsApp OTP error:', error);
@@ -166,7 +187,9 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
 }
 
 interface OTPRequest {
-  whatsapp: string;
+  communication_preference: 'both' | 'email_only';
+  whatsapp?: string;
+  email: string;
   patient_name: string;
   turnstile_token?: string;
 }
@@ -197,25 +220,42 @@ export default async function handler(
     
     const requestData: OTPRequest = req.body;
     
-    if (!requestData.whatsapp || !requestData.patient_name) {
+    // Validate required fields
+    if (!requestData.email || !requestData.patient_name || !requestData.communication_preference) {
       return res.status(400).json({ 
-        error: 'Missing required fields: whatsapp and patient_name',
+        error: 'Missing required fields: email, patient_name, communication_preference',
         code: 'INVALID_REQUEST'
       });
     }
 
-    // Rate limiting per WhatsApp number
-    const rateLimitCheck = checkOTPRateLimit(requestData.whatsapp);
+    // Validate WhatsApp if user chose 'both'
+    if (requestData.communication_preference === 'both' && !requestData.whatsapp) {
+      return res.status(400).json({ 
+        error: 'WhatsApp number required when communication_preference is "both"',
+        code: 'INVALID_REQUEST'
+      });
+    }
+
+    // Determine identifier for rate limiting (use email for email_only, whatsapp for both)
+    const identifier = requestData.communication_preference === 'both' 
+      ? requestData.whatsapp! 
+      : requestData.email;
+
+    // Rate limiting check
+    const rateLimitCheck = checkOTPRateLimit(identifier);
     if (!rateLimitCheck.allowed) {
-      console.warn(`⚠️ OTP rate limit exceeded for: ${requestData.whatsapp}`);
+      console.warn(`⚠️ OTP rate limit exceeded for: ${identifier}`);
       return res.status(429).json({ 
         error: rateLimitCheck.message,
         code: 'OTP_RATE_LIMIT_EXCEEDED'
       });
     }
 
-    // Generate OTP and booking hash
-    const otpCode = DEMO_MODE ? DEMO_OTP_CODE : generateOTP();
+    // Generate OTP based on communication preference
+    const otpCode = requestData.communication_preference === 'both' 
+      ? WHATSAPP_OTP_CODE  // Use hardcoded "123456" for WhatsApp
+      : generateOTP();      // Use random code for email
+    
     const bookingHash = generateBookingHash();
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
     
@@ -223,17 +263,16 @@ export default async function handler(
                      (req.headers['x-real-ip'] as string) || 
                      'unknown';
 
-    console.log(`🔐 Generating OTP for ${requestData.whatsapp} - Hash: ${bookingHash} - Demo Mode: ${DEMO_MODE}`);
+    console.log(`🔐 Generating OTP for ${identifier} - Preference: ${requestData.communication_preference} - Hash: ${bookingHash}`);
 
-    // Store OTP in database
+    // Store OTP in new otp_verifications table
     const { error: dbError } = await supabase
-      .from('booking_otp_verification')
+      .from('otp_verifications')
       .insert({
-        whatsapp: requestData.whatsapp,
-        otp_code: otpCode,
+        identifier: identifier,
+        code: otpCode,
         booking_hash: bookingHash,
         expires_at: expiresAt.toISOString(),
-        ip_address: clientIP,
       });
 
     if (dbError) {
@@ -244,29 +283,55 @@ export default async function handler(
       });
     }
 
-    // Send OTP via WhatsApp
-    const otpSent = await sendWhatsAppOTP(requestData.whatsapp, otpCode, requestData.patient_name);
-    
-    if (!otpSent) {
-      // Clean up database entry if WhatsApp send failed
-      await supabase
-        .from('booking_otp_verification')
-        .delete()
-        .eq('booking_hash', bookingHash);
+    // Send OTP based on preference
+    let otpSent = false;
+    let deliveryMethod = '';
+
+    if (requestData.communication_preference === 'both') {
+      // Send via WhatsApp
+      otpSent = await sendWhatsAppOTP(requestData.whatsapp!, requestData.patient_name);
+      deliveryMethod = 'WhatsApp';
       
-      return res.status(500).json({ 
-        error: 'Failed to send verification code. Please check your WhatsApp number.',
-        code: 'OTP_SEND_FAILED'
-      });
+      if (!otpSent) {
+        // Clean up database if send failed
+        await supabase
+          .from('otp_verifications')
+          .delete()
+          .eq('booking_hash', bookingHash);
+        
+        return res.status(500).json({ 
+          error: 'We had trouble reaching your WhatsApp. Try Email?',
+          code: 'WHATSAPP_SEND_FAILED',
+          suggestion: 'Switch to Email verification'
+        });
+      }
+    } else {
+      // Send via Email
+      otpSent = await sendEmailOTP(requestData.email, otpCode, requestData.patient_name);
+      deliveryMethod = 'Email';
+      
+      if (!otpSent) {
+        // Clean up database if send failed
+        await supabase
+          .from('otp_verifications')
+          .delete()
+          .eq('booking_hash', bookingHash);
+        
+        return res.status(500).json({ 
+          error: 'Failed to send verification code. Please try again.',
+          code: 'EMAIL_SEND_FAILED'
+        });
+      }
     }
 
-    console.log(`✅ OTP sent successfully - expires in ${OTP_EXPIRY_MINUTES} minutes`);
+    console.log(`✅ OTP sent successfully via ${deliveryMethod} - expires in ${OTP_EXPIRY_MINUTES} minutes`);
 
     return res.status(200).json({
       success: true,
       booking_hash: bookingHash,
+      communication_preference: requestData.communication_preference,
       expires_in: OTP_EXPIRY_MINUTES * 60, // seconds
-      message: `Verification code sent to ${requestData.whatsapp}`
+      message: `Verification code sent via ${deliveryMethod}`
     });
 
   } catch (error) {

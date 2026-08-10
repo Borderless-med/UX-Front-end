@@ -35,7 +35,7 @@ interface FormData {
   time_slot: string;
   clinic_location: string;
   consent_pdpa: boolean;
-  consent_whatsapp: boolean;
+  communication_preference: 'both' | 'email_only';
   create_account: boolean;
 }
 
@@ -65,7 +65,7 @@ const AppointmentBookingForm = () => {
     time_slot: '',
     clinic_location: '',
     consent_pdpa: false,
-    consent_whatsapp: false,
+    communication_preference: 'both', // Default to WhatsApp + Email
     create_account: true, // Pre-checked for convenience
   });
 
@@ -608,8 +608,9 @@ const AppointmentBookingForm = () => {
       newErrors.consent_pdpa = 'PDPA consent is required to proceed';
     }
 
-    if (!formData.consent_whatsapp) {
-      newErrors.consent_whatsapp = 'WhatsApp consent is required to proceed';
+    // Validate WhatsApp number if user chose 'both'
+    if (formData.communication_preference === 'both' && !formData.whatsapp.trim()) {
+      newErrors.whatsapp = 'WhatsApp number is required for WhatsApp + Email verification';
     }
 
     setErrors(newErrors);
@@ -672,15 +673,21 @@ const AppointmentBookingForm = () => {
     setIsRequestingOtp(true);
 
     try {
-      const whatsappNumber = `${formData.country_code} ${formData.whatsapp.trim()}`;
+      const whatsappNumber = formData.communication_preference === 'both' 
+        ? `${formData.country_code} ${formData.whatsapp.trim()}`
+        : undefined;
       
-      console.log('Requesting OTP for:', whatsappNumber);
+      const identifier = formData.communication_preference === 'both' ? whatsappNumber : formData.email;
+      
+      console.log('Requesting OTP - Preference:', formData.communication_preference, 'Identifier:', identifier);
 
       const response = await fetch('/api/request-booking-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          communication_preference: formData.communication_preference,
           whatsapp: whatsappNumber,
+          email: formData.email.trim(),
           patient_name: formData.patient_name.trim(),
           turnstile_token: turnstileToken,
         }),
@@ -699,10 +706,24 @@ const AppointmentBookingForm = () => {
       setShowOtpInput(true);
       setResendCountdown(30); // Start 30 second countdown
       
-      toast.success(`Verification code sent to ${whatsappNumber}`);
+      const deliveryMethod = formData.communication_preference === 'both' ? 'WhatsApp' : 'Email';
+      toast.success(`Verification code sent via ${deliveryMethod}`);
     } catch (error: any) {
       console.error('OTP request error:', error);
-      toast.error(error.message || 'Failed to send verification code. Please try again.');
+      
+      // Show helpful error with suggestion if WhatsApp failed
+      if (error.message?.includes('WhatsApp')) {
+        toast.error(error.message, {
+          action: {
+            label: 'Try Email',
+            onClick: () => {
+              setFormData(prev => ({ ...prev, communication_preference: 'email_only' }));
+            }
+          }
+        });
+      } else {
+        toast.error(error.message || 'Failed to send verification code. Please try again.');
+      }
     } finally {
       setIsRequestingOtp(false);
     }
@@ -717,27 +738,8 @@ const AppointmentBookingForm = () => {
       return;
     }
 
-    // Demo Mode for Meta Review: Accept hardcoded OTP 123456
-    const DEMO_MODE = true;
-    const DEMO_OTP = '123456';
-
-    if (DEMO_MODE && otpCode === DEMO_OTP) {
-      console.log('🎬 Demo Mode: Bypassing verification, showing success screen');
-      
-      // Generate a demo booking reference
-      const demoBookingRef = `DEMO-${Date.now().toString().slice(-8)}`;
-      
-      setBookingReference(demoBookingRef);
-      setEmailsSent(true);
-      setUserCreated(true);
-      setIsSubmitted(true);
-      
-      toast.success('✅ Booking verified successfully! (Demo Mode)');
-      return;
-    }
-
     if (otpExpiry && new Date() > otpExpiry) {
-      toast.error('Verification code expired. Please request a new one.');
+      toast.error('Code expired. Please request a new one.');
       setShowOtpInput(false);
       setOtpCode('');
       return;
@@ -750,13 +752,16 @@ const AppointmentBookingForm = () => {
       const submissionData = {
         patient_name: formData.patient_name.trim(),
         email: formData.email.trim(),
-        whatsapp: `${formData.country_code} ${formData.whatsapp.trim()}`,
+        whatsapp: formData.communication_preference === 'both' 
+          ? `${formData.country_code} ${formData.whatsapp.trim()}`
+          : '',
         treatment_type: formData.treatment_type,
         preferred_date: format(formData.preferred_date!, 'yyyy-MM-dd'),
         time_slot: formData.time_slot,
         clinic_location: formData.preferred_clinic || formData.clinic_location,
         consent_pdpa: formData.consent_pdpa,
-        consent_whatsapp: formData.consent_whatsapp,
+        communication_preference: formData.communication_preference,
+        consent_whatsapp: formData.communication_preference === 'both', // For backward compatibility
         create_account: formData.create_account,
         // Bot protection + OTP
         turnstile_token: turnstileToken,
@@ -988,6 +993,84 @@ const AppointmentBookingForm = () => {
                 )}
               </div>
 
+              {/* Communication Preference - NEW */}
+              <div className="space-y-3 bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border-2 border-blue-200">
+                <Label className="text-base font-semibold text-gray-900">
+                  How would you like to receive your verification code? *
+                </Label>
+                <div className="space-y-3">
+                  {/* Option A: WhatsApp + Email */}
+                  <div 
+                    onClick={() => handleInputChange('communication_preference', 'both')}
+                    className={cn(
+                      "flex items-start space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all",
+                      formData.communication_preference === 'both' 
+                        ? "border-blue-500 bg-blue-50" 
+                        : "border-gray-200 bg-white hover:border-blue-300"
+                    )}
+                  >
+                    <div className="flex items-center h-5">
+                      <div className={cn(
+                        "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                        formData.communication_preference === 'both'
+                          ? "border-blue-500 bg-blue-500"
+                          : "border-gray-300"
+                      )}>
+                        {formData.communication_preference === 'both' && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-white" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <Label className="text-sm font-semibold cursor-pointer">
+                          Verify via WhatsApp
+                        </Label>
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#25D366">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        </svg>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Receive updates via WhatsApp & Email
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Option B: Email Only */}
+                  <div 
+                    onClick={() => handleInputChange('communication_preference', 'email_only')}
+                    className={cn(
+                      "flex items-start space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all",
+                      formData.communication_preference === 'email_only' 
+                        ? "border-blue-500 bg-blue-50" 
+                        : "border-gray-200 bg-white hover:border-blue-300"
+                    )}
+                  >
+                    <div className="flex items-center h-5">
+                      <div className={cn(
+                        "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                        formData.communication_preference === 'email_only'
+                          ? "border-blue-500 bg-blue-500"
+                          : "border-gray-300"
+                      )}>
+                        {formData.communication_preference === 'email_only' && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-white" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <Label className="text-sm font-semibold cursor-pointer flex items-center gap-2">
+                        Verify via Email
+                        <Mail className="w-4 h-4 text-gray-600" />
+                      </Label>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Receive updates via Email only
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Email Address */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center space-x-2">
@@ -1010,40 +1093,45 @@ const AppointmentBookingForm = () => {
                 )}
               </div>
 
-              {/* WhatsApp Number */}
-              <div className="space-y-2">
-                <Label htmlFor="whatsapp" className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4" />
-                  <span>WhatsApp Number *</span>
-                </Label>
-                <div className="flex space-x-2">
-                  <Select value={formData.country_code} onValueChange={(value) => handleInputChange('country_code', value)}>
-                    <SelectTrigger className="w-36 h-12">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countryCodes.map((code) => (
-                        <SelectItem key={code.value} value={code.value}>
-                          {code.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    id="whatsapp"
-                    placeholder="12345678"
-                    value={formData.whatsapp}
-                    onChange={(e) => handleInputChange('whatsapp', e.target.value)}
-                    className={cn(
-                      "flex-1 h-12 text-base",
-                      errors.whatsapp && "border-red-500"
-                    )}
-                  />
+              {/* WhatsApp Number - Only show if user selected 'both' */}
+              {formData.communication_preference === 'both' && (
+                <div className="space-y-2">
+                  <Label htmlFor="whatsapp" className="flex items-center space-x-2">
+                    <Phone className="w-4 h-4" />
+                    <span>WhatsApp Number *</span>
+                  </Label>
+                  <div className="flex space-x-2">
+                    <Select value={formData.country_code} onValueChange={(value) => handleInputChange('country_code', value)}>
+                      <SelectTrigger className="w-36 h-12">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countryCodes.map((code) => (
+                          <SelectItem key={code.value} value={code.value}>
+                            {code.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="whatsapp"
+                      placeholder="12345678"
+                      value={formData.whatsapp}
+                      onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                      className={cn(
+                        "flex-1 h-12 text-base",
+                        errors.whatsapp && "border-red-500"
+                      )}
+                    />
+                  </div>
+                  {errors.whatsapp && (
+                    <p className="text-sm text-red-600">{errors.whatsapp}</p>
+                  )}
+                  <p className="text-xs text-gray-500">
+                    Required for WhatsApp verification and appointment updates
+                  </p>
                 </div>
-                {errors.whatsapp && (
-                  <p className="text-sm text-red-600">{errors.whatsapp}</p>
-                )}
-              </div>
+              )}
 
                {/* Treatment Type */}
                <div className="space-y-2">
@@ -1355,35 +1443,6 @@ const AppointmentBookingForm = () => {
                 </div>
                 {errors.consent_pdpa && (
                   <p className="text-sm text-red-600">{errors.consent_pdpa}</p>
-                )}
-              </div>
-
-              {/* WhatsApp Consent Checkbox - CRITICAL FOR META */}
-              <div className="space-y-2">
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="consent-whatsapp"
-                    checked={formData.consent_whatsapp}
-                    onCheckedChange={(checked) => handleInputChange('consent_whatsapp', checked)}
-                    className="mt-1"
-                  />
-                  <div className="grid gap-1.5 leading-none flex-1">
-                    <Label
-                      htmlFor="consent-whatsapp"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
-                    >
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#25D366">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                      </svg>
-                      WhatsApp Verification & Communication *
-                    </Label>
-                    <p className="text-xs text-gray-700 font-semibold">
-                      I agree to receive a 6-digit verification code and appointment updates via WhatsApp at the number provided.
-                    </p>
-                  </div>
-                </div>
-                {errors.consent_whatsapp && (
-                  <p className="text-sm text-red-600">{errors.consent_whatsapp}</p>
                 )}
               </div>
 
