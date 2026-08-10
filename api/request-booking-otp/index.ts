@@ -64,12 +64,12 @@ async function sendEmailOTP(email: string, otpCode: string, patientName: string)
   console.log(`   OTP Code: ${otpCode}`);
   console.log(`   Patient: ${patientName}`);
   
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  console.log(`   RESEND_API_KEY configured: ${!!RESEND_API_KEY}`);
+  const SMTP2GO_API_KEY = process.env.SMTP2GO_API_KEY;
+  console.log(`   SMTP2GO_API_KEY configured: ${!!SMTP2GO_API_KEY}`);
   
-  if (!RESEND_API_KEY) {
-    console.log('⚠️ Email service disabled (no API key) - OTP would be:', otpCode);
-    return true; // For development
+  if (!SMTP2GO_API_KEY) {
+    console.log('⚠️ Email service disabled (no SMTP2GO_API_KEY) - OTP would be:', otpCode);
+    return false; // Return false so user knows email wasn't sent
   }
 
   try {
@@ -115,30 +115,37 @@ async function sendEmailOTP(email: string, otpCode: string, patientName: string)
 </html>
     `;
 
-    const response = await fetch('https://api.resend.com/emails', {
+    const smtp2goPayload = {
+      api_key: SMTP2GO_API_KEY,
+      to: [email],
+      sender: 'noreply@orachope.org',
+      subject: 'Your OraChope Verification Code',
+      html_body: emailHTML,
+    };
+
+    console.log('📤 Sending email via SMTP2GO to:', email);
+
+    const response = await fetch('https://api.smtp2go.com/v3/email/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: 'OraChope <noreply@orachope.org>',
-        to: [email],
-        subject: 'Your OraChope Verification Code',
-        html: emailHTML,
-      }),
+      body: JSON.stringify(smtp2goPayload),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('❌ Email API Error:', errorData);
+    const responseData = await response.json();
+    console.log('📧 SMTP2GO Response:', JSON.stringify(responseData, null, 2));
+
+    if (response.ok && responseData.data?.succeeded === 1) {
+      console.log('✅ Email OTP sent successfully via SMTP2GO');
+      return true;
+    } else {
+      console.error('❌ SMTP2GO failed:', responseData);
       return false;
     }
 
-    console.log(`✅ Email OTP sent to: ${email}`);
-    return true;
   } catch (error) {
-    console.error('❌ Email OTP error:', error);
+    console.error('❌ Email send error:', error);
     return false;
   }
 }
@@ -331,40 +338,50 @@ export default async function handler(
     console.log('✅ OTP stored in database successfully');
 
     // Send OTP based on preference
-    let otpSent = false;
-    let deliveryMethod = '';
+    let whatsappSent = false;
+    let emailSent = false;
+    const deliveryMethods: string[] = [];
 
     if (requestData.communication_preference === 'both') {
-      // Send via WhatsApp
+      // Send via BOTH WhatsApp AND Email
       console.log(`📱 Attempting to send WhatsApp OTP to: ${requestData.whatsapp}`);
-      otpSent = await sendWhatsAppOTP(requestData.whatsapp!, requestData.patient_name);
-      deliveryMethod = 'WhatsApp';
-      console.log(`📱 WhatsApp send result: ${otpSent ? 'SUCCESS' : 'FAILED'}`);
+      whatsappSent = await sendWhatsAppOTP(requestData.whatsapp!, requestData.patient_name);
+      console.log(`📱 WhatsApp send result: ${whatsappSent ? 'SUCCESS' : 'FAILED'}`);
       
-      if (!otpSent) {
+      console.log(`📧 Attempting to send Email OTP to: ${requestData.email}`);
+      emailSent = await sendEmailOTP(requestData.email, otpCode, requestData.patient_name);
+      console.log(`📧 Email send result: ${emailSent ? 'SUCCESS' : 'FAILED'}`);
+      
+      // Build delivery methods list
+      if (whatsappSent) deliveryMethods.push('WhatsApp');
+      if (emailSent) deliveryMethods.push('Email');
+      
+      // If neither succeeded, clean up and fail
+      if (!whatsappSent && !emailSent) {
+        console.log('❌ Both WhatsApp and Email delivery failed');
         console.log('🧹 Cleaning up failed OTP record...');
-        // Clean up database if send failed
         await supabase
           .from('otp_verifications')
           .delete()
           .eq('booking_hash', bookingHash);
         
         return res.status(500).json({ 
-          error: 'We had trouble reaching your WhatsApp. Try Email?',
-          code: 'WHATSAPP_SEND_FAILED',
-          suggestion: 'Switch to Email verification'
+          error: 'Failed to send verification code via WhatsApp and Email. Please try again.',
+          code: 'DELIVERY_FAILED'
         });
       }
-    } else {
-      // Send via Email
-      console.log(`📧 Attempting to send Email OTP to: ${requestData.email}`);
-      otpSent = await sendEmailOTP(requestData.email, otpCode, requestData.patient_name);
-      deliveryMethod = 'Email';
-      console.log(`📧 Email send result: ${otpSent ? 'SUCCESS' : 'FAILED'}`);
       
-      if (!otpSent) {
+      // At least one succeeded - that's enough
+      console.log(`✅ OTP sent via: ${deliveryMethods.join(' and ')}`);
+      
+    } else {
+      // Send via Email only
+      console.log(`📧 Attempting to send Email OTP to: ${requestData.email}`);
+      emailSent = await sendEmailOTP(requestData.email, otpCode, requestData.patient_name);
+      console.log(`📧 Email send result: ${emailSent ? 'SUCCESS' : 'FAILED'}`);
+      
+      if (!emailSent) {
         console.log('🧹 Cleaning up failed OTP record...');
-        // Clean up database if send failed
         await supabase
           .from('otp_verifications')
           .delete()
@@ -375,16 +392,20 @@ export default async function handler(
           code: 'EMAIL_SEND_FAILED'
         });
       }
+      
+      deliveryMethods.push('Email');
     }
 
-    console.log(`✅ OTP sent successfully via ${deliveryMethod} - expires in ${OTP_EXPIRY_MINUTES} minutes`);
+    const deliveryMethodText = deliveryMethods.join(' and ');
+    console.log(`✅ OTP sent successfully via ${deliveryMethodText} - expires in ${OTP_EXPIRY_MINUTES} minutes`);
 
     return res.status(200).json({
       success: true,
       booking_hash: bookingHash,
       communication_preference: requestData.communication_preference,
       expires_in: OTP_EXPIRY_MINUTES * 60, // seconds
-      message: `Verification code sent via ${deliveryMethod}`
+      message: `Verification code sent via ${deliveryMethodText}`,
+      delivery_methods: deliveryMethods
     });
 
   } catch (error) {
