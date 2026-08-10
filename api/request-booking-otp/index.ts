@@ -291,10 +291,13 @@ export default async function handler(
       });
     }
 
-    // Generate OTP based on communication preference
+    // PHASE 1 (Awaiting Meta Approval):
+    // - "both": Use hardcoded "123456" for BOTH WhatsApp and Email (same code on both channels!)
+    // - "email_only": Use random OTP
+    // PHASE 2 (After Meta Approval): Both will use random codes
     const otpCode = requestData.communication_preference === 'both' 
-      ? WHATSAPP_OTP_CODE  // Use hardcoded "123456" for WhatsApp
-      : generateOTP();      // Use random code for email
+      ? WHATSAPP_OTP_CODE  // "123456" - hardcoded until Meta approves
+      : generateOTP();      // Random 6-digit for email-only
     
     const bookingHash = generateBookingHash();
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
@@ -303,7 +306,7 @@ export default async function handler(
                      (req.headers['x-real-ip'] as string) || 
                      'unknown';
 
-    console.log(`🔐 Generating OTP for ${identifier} - Preference: ${requestData.communication_preference} - Hash: ${bookingHash}`);
+    console.log(`🔐 Generating OTP for ${identifier} - Preference: ${requestData.communication_preference} - Code: ${otpCode} - Hash: ${bookingHash}`);
 
     // Store OTP in new otp_verifications table
     console.log('📝 Attempting to insert OTP into database...');
@@ -343,7 +346,7 @@ export default async function handler(
     const deliveryMethods: string[] = [];
 
     if (requestData.communication_preference === 'both') {
-      // Send via BOTH WhatsApp AND Email
+      // PHASE 1: Send "123456" to BOTH WhatsApp AND Email (same code on both channels)
       console.log(`📱 Attempting to send WhatsApp OTP to: ${requestData.whatsapp}`);
       whatsappSent = await sendWhatsAppOTP(requestData.whatsapp!, requestData.patient_name);
       console.log(`📱 WhatsApp send result: ${whatsappSent ? 'SUCCESS' : 'FAILED'}`);
@@ -372,10 +375,10 @@ export default async function handler(
       }
       
       // At least one succeeded - that's enough
-      console.log(`✅ OTP sent via: ${deliveryMethods.join(' and ')}`);
+      console.log(`✅ OTP "${otpCode}" sent via: ${deliveryMethods.join(' and ')}`);
       
     } else {
-      // Send via Email only
+      // Email only - send random OTP
       console.log(`📧 Attempting to send Email OTP to: ${requestData.email}`);
       emailSent = await sendEmailOTP(requestData.email, otpCode, requestData.patient_name);
       console.log(`📧 Email send result: ${emailSent ? 'SUCCESS' : 'FAILED'}`);
