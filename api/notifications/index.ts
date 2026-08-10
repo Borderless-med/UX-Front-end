@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Import handlers (these are NOT separate serverless functions, just modules)
-const appointmentHandler = require('./appointment-handler.ts').default;
-const inquiryHandler = require('./inquiry-handler.ts').default;
-const partnerHandler = require('./partner-handler.ts').default;
+// Import handlers from lib/ (NOT serverless functions, just modules)
+import appointmentHandler from '../../lib/notifications/appointment-handler';
+import inquiryHandler from '../../lib/notifications/inquiry-handler';
+import partnerHandler from '../../lib/notifications/partner-handler';
 
 /**
  * UNIFIED NOTIFICATIONS ENDPOINT
