@@ -327,7 +327,16 @@ export default async function handler(
       });
     }
 
-    const { create_account, turnstile_token, otp_code, booking_hash, ...bookingDataForDb } = bookingData;
+    // Exclude form-only fields: OTP fields, consent checkboxes (validation only, not stored)
+    const { 
+      create_account, 
+      turnstile_token, 
+      otp_code, 
+      booking_hash, 
+      consent_pdpa, 
+      consent_whatsapp,
+      ...bookingDataForDb 
+    } = bookingData;
     
     console.log('📝 Inserting booking into database:', {
       booking_ref: bookingRef,
