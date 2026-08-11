@@ -327,14 +327,15 @@ export default async function handler(
       });
     }
 
-    // Exclude form-only fields: OTP fields, consent checkboxes (validation only, not stored)
+    // Exclude non-database fields: OTP fields, consent checkboxes, routing type
     const { 
-      create_account, 
-      turnstile_token, 
-      otp_code, 
-      booking_hash, 
-      consent_pdpa, 
-      consent_whatsapp,
+      create_account,      // Form only: whether to create user account
+      turnstile_token,     // Bot protection: not stored
+      otp_code,            // OTP verification: not stored
+      booking_hash,        // OTP verification: not stored
+      consent_pdpa,        // Form validation: not stored
+      consent_whatsapp,    // Form validation: not stored
+      type,                // API routing: identifies notification type (appointment/inquiry/partner)
       ...bookingDataForDb 
     } = bookingData;
     
