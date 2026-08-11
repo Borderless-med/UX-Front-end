@@ -10,24 +10,79 @@ class OraChopeEmailService {
   }
   async sendMail(options: { from: string; to: string; subject: string; html: string }) {
     try {
+      console.log("=== SENDING PARTNER EMAIL VIA HTTP API ===");
       const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
-      const smtp2goPayload = {
-        api_key: smtp2goApiKey,
-        to: [options.to],
-        sender: this.username,
-        subject: options.subject,
-        html_body: options.html,
-      };
+      const brevoApiKey = process.env.BREVO_API_KEY;
+      console.log("SMTP2GO_API_KEY at runtime:", smtp2goApiKey ? "present" : "missing");
+      console.log("BREVO_API_KEY at runtime:", brevoApiKey ? "present" : "missing");
+      
+      // Try SMTP2GO first
       if (smtp2goApiKey) {
-        const response = await fetch("https://api.smtp2go.com/v3/email/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(smtp2goPayload),
-        });
-        if (response.ok) return { success: true };
+        try {
+          const smtp2goPayload = {
+            api_key: smtp2goApiKey,
+            to: [options.to],
+            sender: this.username,
+            subject: options.subject,
+            html_body: options.html,
+          };
+          
+          const response = await fetch("https://api.smtp2go.com/v3/email/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(smtp2goPayload),
+          });
+          
+          if (response.ok) {
+            console.log(`✅ Email sent successfully via SMTP2GO to ${options.to}`);
+            return { success: true };
+          } else {
+            console.log(`⚠️ SMTP2GO failed, trying Brevo fallback...`);
+          }
+        } catch (smtp2goError) {
+          console.log(`⚠️ SMTP2GO error: ${smtp2goError}, trying Brevo fallback...`);
+        }
       }
+      
+      // Fallback to Brevo
+      if (brevoApiKey) {
+        try {
+          const brevoPayload = {
+            sender: { email: this.username, name: "OraChope.org" },
+            to: [{ email: options.to }],
+            subject: options.subject,
+            htmlContent: options.html,
+          };
+          
+          const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "api-key": brevoApiKey,
+            },
+            body: JSON.stringify(brevoPayload),
+          });
+          
+          if (response.ok) {
+            console.log(`✅ Email sent successfully via Brevo to ${options.to}`);
+            return { success: true };
+          } else {
+            console.error(`Brevo email failed:`, response.status);
+            return { success: false };
+          }
+        } catch (brevoError) {
+          console.error("Brevo error:", brevoError);
+          return { success: false };
+        }
+      }
+      
+      // Both providers failed or not configured
+      console.error("❌ No valid email provider configured");
       return { success: false };
+      
     } catch (error) {
+      console.error("❌ Failed to send email:", error);
       throw error;
     }
   }
