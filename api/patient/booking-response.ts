@@ -560,29 +560,87 @@ async function handleAcceptAlternative(
 
   // Send admin notification
   try {
-    await sendAdminAlert(
-      'Patient Accepted Alternative Slot',
-      `Patient ${booking.patient_name} accepted alternative slot for booking ${ref}`,
-      {
-        booking_ref: ref,
-        patient_name: booking.patient_name,
-        patient_email: booking.email,
-        patient_whatsapp: booking.whatsapp,
-        clinic_name: clinic?.name || booking.clinic_location,
-        treatment: booking.treatment_type,
-        original_date: new Date(originalRequest.date).toLocaleDateString('en-SG', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
-        original_time: originalRequest.time,
-        confirmed_date: formattedDate,
-        confirmed_time: newTime,
-        accepted_at: new Date().toISOString(),
+    const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
+    const brevoApiKey = process.env.BREVO_API_KEY;
+    const adminEmail = 'contact@orachope.org';
+    const fromUser = process.env.SMTP_USER || 'noreply@orachope.org';
+
+    const adminHtml = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.5;color:#333">
+        <h2 style="color:#16a34a;margin:0 0 20px">Patient Accepted Alternative Slot</h2>
+        <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:16px;margin:16px 0">
+          <p style="margin:0 0 8px;font-size:18px;font-weight:600">Reference: ${ref}</p>
+        </div>
+        <h3 style="color:#374151;margin:20px 0 10px;font-size:16px">Booking Details</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Patient:</td><td style="padding:8px 0">${booking.patient_name}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Email:</td><td style="padding:8px 0">${booking.email}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">WhatsApp:</td><td style="padding:8px 0">${booking.whatsapp}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Clinic:</td><td style="padding:8px 0">${clinic?.name || booking.clinic_location}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Treatment:</td><td style="padding:8px 0">${booking.treatment_type}</td></tr>
+        </table>
+        <h3 style="color:#374151;margin:20px 0 10px;font-size:16px">Original Request</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Date:</td><td style="padding:8px 0">${new Date(originalRequest.date).toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Time:</td><td style="padding:8px 0">${originalRequest.time}</td></tr>
+        </table>
+        <h3 style="color:#374151;margin:20px 0 10px;font-size:16px">Confirmed Slot</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Date:</td><td style="padding:8px 0">${formattedDate}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Time:</td><td style="padding:8px 0">${newTime}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Accepted At:</td><td style="padding:8px 0">${new Date().toLocaleString('en-SG')}</td></tr>
+        </table>
+        <div style="background:#f0fdf4;border:1px solid #16a34a;padding:12px;margin:16px 0;border-radius:6px">
+          <p style="margin:0;font-size:13px;color:#15803d">✅ <strong>Status:</strong> Patient chose alternative slot - booking confirmed</p>
+        </div>
+        <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Automated notification from OraChope booking system</p>
+      </div>
+    `;
+
+    // Try SMTP2GO first
+    if (smtp2goApiKey) {
+      try {
+        const smtp2goResponse = await fetch('https://api.smtp2go.com/v3/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            api_key: smtp2goApiKey,
+            to: [adminEmail],
+            sender: fromUser,
+            subject: `🚨 ADMIN: Patient Accepted Alternative - ${ref}`,
+            html_body: adminHtml,
+          }),
+        });
+
+        const smtp2goData = await smtp2goResponse.json();
+        if (smtp2goResponse.ok && smtp2goData.data?.succeeded === 1) {
+          console.log('✅ Admin notification sent via SMTP2GO for alternative acceptance');
+        } else {
+          throw new Error('SMTP2GO failed');
+        }
+      } catch (smtp2goError) {
+        // Fallback to Brevo
+        if (brevoApiKey && brevoApiKey !== 'your-brevo-api-key') {
+          const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'api-key': brevoApiKey,
+            },
+            body: JSON.stringify({
+              sender: { email: fromUser },
+              to: [{ email: adminEmail }],
+              subject: `🚨 ADMIN: Patient Accepted Alternative - ${ref}`,
+              htmlContent: adminHtml,
+            }),
+          });
+
+          if (brevoResponse.ok) {
+            console.log('✅ Admin notification sent via Brevo (fallback) for alternative acceptance');
+          }
+        }
       }
-    );
-    console.log('✅ Admin notification sent for alternative acceptance');
+    }
   } catch (error) {
     console.error('Failed to send admin notification:', error);
   }
