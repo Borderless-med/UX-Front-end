@@ -728,8 +728,10 @@ const AppointmentBookingForm = () => {
       setShowOtpInput(true);
       setResendCountdown(30); // Start 30 second countdown
       
-      const deliveryMethod = formData.communication_preference === 'both' ? 'WhatsApp' : 'Email';
-      toast.success(`Verification code sent via ${deliveryMethod}`);
+      // Show delivery methods from API response
+      const deliveryMethods = data.delivery_methods?.join(' and ') || 
+        (formData.communication_preference === 'both' ? 'WhatsApp and Email' : 'Email');
+      toast.success(`Verification code sent via ${deliveryMethods}`);
     } catch (error: any) {
       console.error('OTP request error:', error);
       
@@ -1552,7 +1554,9 @@ const AppointmentBookingForm = () => {
                   <div className="space-y-2">
                     <Label htmlFor="otp" className="flex items-center space-x-2">
                       <Phone className="w-4 h-4 text-green-700" />
-                      <span className="text-green-800 font-medium">Enter Verification Code sent to WhatsApp *</span>
+                      <span className="text-green-800 font-medium">
+                        Enter Verification Code {formData.communication_preference === 'both' ? '(WhatsApp or Email)' : '(Email)'} *
+                      </span>
                     </Label>
                     <Input
                       id="otp"
@@ -1570,7 +1574,10 @@ const AppointmentBookingForm = () => {
                       autoComplete="one-time-code"
                     />
                     <p className="text-xs text-green-700">
-                      📱 Enter the 6-digit code sent to {formData.country_code} {formData.whatsapp}
+                      {formData.communication_preference === 'both' 
+                        ? `📱 Check your WhatsApp (${formData.country_code} ${formData.whatsapp}) and Email (${formData.email})`
+                        : `📧 Check your Email (${formData.email})`
+                      }
                     </p>
                     {otpExpiry && (
                       <p className="text-xs text-gray-600">
