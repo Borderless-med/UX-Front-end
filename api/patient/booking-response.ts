@@ -558,6 +558,35 @@ async function handleAcceptAlternative(
     // Continue anyway - booking is confirmed in database
   }
 
+  // Send admin notification
+  try {
+    await sendAdminAlert(
+      'Patient Accepted Alternative Slot',
+      `Patient ${booking.patient_name} accepted alternative slot for booking ${ref}`,
+      {
+        booking_ref: ref,
+        patient_name: booking.patient_name,
+        patient_email: booking.email,
+        patient_whatsapp: booking.whatsapp,
+        clinic_name: clinic?.name || booking.clinic_location,
+        treatment: booking.treatment_type,
+        original_date: new Date(originalRequest.date).toLocaleDateString('en-SG', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        original_time: originalRequest.time,
+        confirmed_date: formattedDate,
+        confirmed_time: newTime,
+        accepted_at: new Date().toISOString(),
+      }
+    );
+    console.log('✅ Admin notification sent for alternative acceptance');
+  } catch (error) {
+    console.error('Failed to send admin notification:', error);
+  }
+
   // Success page
   return res.status(200).send(`
     <html>

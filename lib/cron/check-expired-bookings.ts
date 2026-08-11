@@ -159,6 +159,85 @@ export default async function handler(
 
         console.log(`Expired booking ${booking.booking_ref} and notified patient`);
         
+        // Send admin notification about expired booking
+        try {
+          const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
+          const brevoApiKey = process.env.BREVO_API_KEY;
+          const adminEmail = 'contact@orachope.org';
+          const fromUser = process.env.SMTP_USER || 'noreply@orachope.org';
+
+          const adminHtml = `
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.5;color:#333">
+              <h2 style="color:#dc2626;margin:0 0 20px">Booking Expired (No Clinic Response)</h2>
+              <div style="background:#fef2f2;border-left:4px solid #dc2626;padding:16px;margin:16px 0">
+                <p style="margin:0 0 8px;font-size:18px;font-weight:600">Reference: ${booking.booking_ref}</p>
+              </div>
+              <table style="width:100%;border-collapse:collapse;font-size:14px">
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Patient:</td><td style="padding:8px 0">${booking.patient_name}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Email:</td><td style="padding:8px 0">${booking.email}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">WhatsApp:</td><td style="padding:8px 0">${booking.whatsapp}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Clinic:</td><td style="padding:8px 0">${clinic.name || booking.clinic_location}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Treatment:</td><td style="padding:8px 0">${booking.treatment_type}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Requested Date:</td><td style="padding:8px 0">${formatSingaporeDate(booking.preferred_date)}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Requested Time:</td><td style="padding:8px 0">${booking.time_slot}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Created At:</td><td style="padding:8px 0">${new Date(booking.created_at).toLocaleString('en-SG')}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Expired At:</td><td style="padding:8px 0">${new Date(booking.expires_at).toLocaleString('en-SG')}</td></tr>
+              </table>
+              <div style="background:#fef9e7;border:1px solid #fbbf24;padding:12px;margin:16px 0;border-radius:6px">
+                <p style="margin:0;font-size:13px;color:#78350f">⚠️ <strong>Action:</strong> Consider following up with clinic about response time</p>
+              </div>
+              <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Automated notification from OraChope cron job</p>
+            </div>
+          `;
+
+          // Try SMTP2GO first
+          if (smtp2goApiKey) {
+            try {
+              const smtp2goResponse = await fetch('https://api.smtp2go.com/v3/email/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  api_key: smtp2goApiKey,
+                  to: [adminEmail],
+                  sender: fromUser,
+                  subject: `🚨 ADMIN: Booking Expired - ${booking.booking_ref}`,
+                  html_body: adminHtml,
+                }),
+              });
+
+              const smtp2goData = await smtp2goResponse.json();
+              if (smtp2goResponse.ok && smtp2goData.data?.succeeded === 1) {
+                console.log('✅ Admin notification sent via SMTP2GO for expired booking');
+              } else {
+                throw new Error('SMTP2GO failed');
+              }
+            } catch (smtp2goError) {
+              // Fallback to Brevo
+              if (brevoApiKey && brevoApiKey !== 'your-brevo-api-key') {
+                const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': brevoApiKey,
+                  },
+                  body: JSON.stringify({
+                    sender: { email: fromUser },
+                    to: [{ email: adminEmail }],
+                    subject: `🚨 ADMIN: Booking Expired - ${booking.booking_ref}`,
+                    htmlContent: adminHtml,
+                  }),
+                });
+
+                if (brevoResponse.ok) {
+                  console.log('✅ Admin notification sent via Brevo (fallback) for expired booking');
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('❌ Failed to send admin notification for expired booking:', error);
+        }
+        
         results.push({
           booking_ref: booking.booking_ref,
           success: true,

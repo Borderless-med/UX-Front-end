@@ -220,6 +220,33 @@ async function handleConfirm(
     // Continue anyway - booking is confirmed in database
   }
 
+  // Send admin notification
+  try {
+    await sendAdminAlert(
+      'Clinic Confirmed Booking',
+      `Clinic ${clinicDetails?.name || booking.clinic_location} confirmed booking ${booking_ref}`,
+      {
+        booking_ref: booking_ref,
+        patient_name: booking.patient_name,
+        patient_email: booking.email,
+        patient_whatsapp: booking.whatsapp,
+        clinic_name: clinicDetails?.name || booking.clinic_location,
+        treatment: booking.treatment_type,
+        date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        time: booking.time_slot,
+        confirmed_at: new Date().toISOString(),
+      }
+    );
+    console.log('✅ Admin notification sent for clinic confirmation');
+  } catch (error) {
+    console.error('Failed to send admin notification:', error);
+  }
+
   // Success page
   return res.status(200).send(`
     <html>
@@ -513,6 +540,34 @@ async function handleReject(
     } catch (error) {
       console.error('Failed to send rejection notification:', error);
       // Continue anyway - booking is rejected in database
+    }
+
+    // Send admin notification
+    try {
+      await sendAdminAlert(
+        'Clinic Rejected Booking',
+        `Clinic ${clinicDetails?.name || booking.clinic_location} rejected booking ${booking_ref}`,
+        {
+          booking_ref: booking_ref,
+          patient_name: booking.patient_name,
+          patient_email: booking.email,
+          patient_whatsapp: booking.whatsapp,
+          clinic_name: clinicDetails?.name || booking.clinic_location,
+          treatment: booking.treatment_type,
+          requested_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
+          requested_time: booking.time_slot,
+          rejection_reason: reason,
+          rejected_at: new Date().toISOString(),
+        }
+      );
+      console.log('✅ Admin notification sent for clinic rejection');
+    } catch (error) {
+      console.error('Failed to send admin notification:', error);
     }
 
     // Success page
@@ -989,6 +1044,40 @@ async function handleAlternatives(
     } catch (error) {
       console.error('Failed to send alternatives notification:', error);
       // Continue anyway - alternatives are saved in database
+    }
+
+    // Send admin notification
+    try {
+      const alternativesText = alternatives.map((slot, idx) => {
+        const dateObj = new Date(slot.date + 'T' + slot.time);
+        return `Option ${idx + 1}: ${dateObj.toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${slot.time}`;
+      }).join(', ');
+
+      await sendAdminAlert(
+        'Clinic Offered Alternative Slots',
+        `Clinic ${clinicDetails?.name || booking.clinic_location} offered ${alternatives.length} alternative slot(s) for booking ${booking_ref}`,
+        {
+          booking_ref: booking_ref,
+          patient_name: booking.patient_name,
+          patient_email: booking.email,
+          patient_whatsapp: booking.whatsapp,
+          clinic_name: clinicDetails?.name || booking.clinic_location,
+          treatment: booking.treatment_type,
+          original_date: new Date(booking.preferred_date).toLocaleDateString('en-SG', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
+          original_time: booking.time_slot,
+          alternatives_offered: alternativesText,
+          new_expiry: newExpiry.toISOString(),
+          offered_at: new Date().toISOString(),
+        }
+      );
+      console.log('✅ Admin notification sent for alternative slots');
+    } catch (error) {
+      console.error('Failed to send admin notification:', error);
     }
 
     // Success page

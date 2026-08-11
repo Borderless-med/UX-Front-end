@@ -450,6 +450,82 @@ export default async function handler(
       console.log('✅ Clinic notification sent (email + WhatsApp if configured)');
     }
 
+    // Send admin notification for new booking
+    try {
+      const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
+      const brevoApiKey = process.env.BREVO_API_KEY;
+      const adminEmail = 'contact@orachope.org';
+      const fromUser = process.env.SMTP_USER || 'noreply@orachope.org';
+
+      const adminHtml = `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.5;color:#333">
+          <h2 style="color:#2563eb;margin:0 0 20px">New Booking Request</h2>
+          <div style="background:#f0f9ff;border-left:4px solid #2563eb;padding:16px;margin:16px 0">
+            <p style="margin:0 0 8px;font-size:18px;font-weight:600">Reference: ${bookingRef}</p>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Patient:</td><td style="padding:8px 0">${bookingData.patient_name}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Email:</td><td style="padding:8px 0">${bookingData.email}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">WhatsApp:</td><td style="padding:8px 0">${bookingData.whatsapp}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Clinic:</td><td style="padding:8px 0">${clinicDetails?.name || bookingData.clinic_location}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Treatment:</td><td style="padding:8px 0">${bookingData.treatment_type}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Date:</td><td style="padding:8px 0">${preferredDateDisplay}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Time:</td><td style="padding:8px 0">${bookingData.time_slot}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Expires At:</td><td style="padding:8px 0">${formatExpiryTime(expiresAt)}</td></tr>
+          </table>
+          <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Automated notification from OraChope booking system</p>
+        </div>
+      `;
+
+      // Try SMTP2GO first
+      if (smtp2goApiKey) {
+        try {
+          const smtp2goResponse = await fetch('https://api.smtp2go.com/v3/email/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              api_key: smtp2goApiKey,
+              to: [adminEmail],
+              sender: fromUser,
+              subject: `🚨 ADMIN: New Booking - ${bookingRef}`,
+              html_body: adminHtml,
+            }),
+          });
+
+          const smtp2goData = await smtp2goResponse.json();
+          if (smtp2goResponse.ok && smtp2goData.data?.succeeded === 1) {
+            console.log('✅ Admin notification sent via SMTP2GO');
+          } else {
+            throw new Error('SMTP2GO failed');
+          }
+        } catch (smtp2goError) {
+          // Fallback to Brevo
+          if (brevoApiKey && brevoApiKey !== 'your-brevo-api-key') {
+            const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'api-key': brevoApiKey,
+              },
+              body: JSON.stringify({
+                sender: { email: fromUser },
+                to: [{ email: adminEmail }],
+                subject: `🚨 ADMIN: New Booking - ${bookingRef}`,
+                htmlContent: adminHtml,
+              }),
+            });
+
+            if (brevoResponse.ok) {
+              console.log('✅ Admin notification sent via Brevo (fallback)');
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('❌ Failed to send admin notification:', error);
+      // Don't fail the booking if admin notification fails
+    }
+
     res.status(200).json({ 
       success: true, 
       booking_ref: bookingRef,
