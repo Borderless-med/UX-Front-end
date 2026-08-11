@@ -25,7 +25,7 @@ const bookingConfirmationPatient: EmailTemplateFunction = (data) => ({
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; text-align: center;">
+        <div style="background-color: #2563eb; color: #ffffff; padding: 30px; text-align: center;">
           <h1 style="margin: 0; font-size: 28px;">Booking Request Received!</h1>
           <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Your booking request is being processed</p>
         </div>
@@ -109,7 +109,7 @@ const bookingAlertClinic: EmailTemplateFunction = (data) => ({
         
         <div style="margin: 30px 0; text-align: center;">
           <p style="margin: 0 0 16px; color: #1e3a8a; font-size: 16px; font-weight: 600;">Click below to respond to this booking:</p>
-          <a href="${data.response_url}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);">📋 Respond to Booking</a>
+          <a href="${data.response_url}" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);">📋 Respond to Booking</a>
           <p style="margin: 16px 0 0; color: #64748b; font-size: 13px;">You'll see 3 options: Confirm, Suggest Alternatives, or Decline</p>
         </div>
         
@@ -134,7 +134,7 @@ const appointmentConfirmed: EmailTemplateFunction = (data) => ({
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-        <div style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 30px; text-align: center;">
+        <div style="background-color: #22c55e; color: #ffffff; padding: 30px; text-align: center;">
           <h1 style="margin: 0; font-size: 28px;">🎉 Appointment Confirmed!</h1>
           <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Great news ${data.patient_name}!</p>
         </div>
@@ -320,7 +320,7 @@ const urgentClinicNudge: EmailTemplateFunction = (data) => ({
         <h3 style="color: #dc2626; margin: 20px 0 10px; text-align: center;">PLEASE RESPOND IMMEDIATELY:</h3>
         
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${data.response_url}" style="display: inline-block; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);">⚠️ RESPOND NOW</a>
+          <a href="${data.response_url}" style="display: inline-block; background-color: #dc2626; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);">⚠️ RESPOND NOW</a>
           <p style="margin: 16px 0 0; color: #64748b; font-size: 13px;">You'll see 3 options: Confirm, Suggest Alternatives, or Decline</p>
         </div>
         
@@ -345,7 +345,7 @@ const appointmentReminder24h: EmailTemplateFunction = (data) => ({
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-        <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 30px; text-align: center;">
+        <div style="background-color: #f59e0b; color: #ffffff; padding: 30px; text-align: center;">
           <h1 style="margin: 0; font-size: 28px;">⏰ Appointment Reminder</h1>
           <p style="margin: 10px 0 0; font-size: 18px; font-weight: 600;">Your appointment is TOMORROW!</p>
         </div>
