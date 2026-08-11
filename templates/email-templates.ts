@@ -107,11 +107,10 @@ const bookingAlertClinic: EmailTemplateFunction = (data) => ({
           <p style="margin: 0; color: #991b1b; font-size: 14px;">This booking will AUTO-EXPIRE at ${data.expires_at} if you do not respond.</p>
         </div>
         
-        <div style="margin: 30px 0;">
-          <p style="text-align: center; margin: 0 0 16px; color: #64748b; font-size: 14px; font-weight: 600;">Choose your response:</p>
-          <a href="${data.confirm_url}" style="display: block; background: #059669; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 0 0 12px; text-align: center; font-size: 15px;">✓ Confirm Appointment</a>
-          <a href="${data.alternatives_url}" style="display: block; background: #3b82f6; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 0 0 12px; text-align: center; font-size: 15px;">↻ Suggest Alternative Times</a>
-          <a href="${data.reject_url}" style="display: block; background: #6b7280; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 0; text-align: center; font-size: 15px;">✕ Decline Booking</a>
+        <div style="margin: 30px 0; text-align: center;">
+          <p style="margin: 0 0 16px; color: #1e3a8a; font-size: 16px; font-weight: 600;">Click below to respond to this booking:</p>
+          <a href="${data.response_url}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);">📋 Respond to Booking</a>
+          <p style="margin: 16px 0 0; color: #64748b; font-size: 13px;">You'll see 3 options: Confirm, Suggest Alternatives, or Decline</p>
         </div>
         
         <div style="text-align: center; padding: 20px 0; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
@@ -318,12 +317,11 @@ const urgentClinicNudge: EmailTemplateFunction = (data) => ({
           <p style="margin: 0; color: #92400e; font-size: 13px;"><strong>Note:</strong> If you offer alternatives, expiry will extend by 60 minutes.</p>
         </div>
         
-        <h3 style="color: #dc2626; margin: 20px 0 10px;">PLEASE RESPOND IMMEDIATELY:</h3>
+        <h3 style="color: #dc2626; margin: 20px 0 10px; text-align: center;">PLEASE RESPOND IMMEDIATELY:</h3>
         
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${data.confirm_url}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">✅ CONFIRM NOW</a>
-          <a href="${data.reject_url}" style="display: inline-block; background: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">❌ REJECT NOW</a>
-          <a href="${data.alternatives_url}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">🔄 OFFER ALTERNATIVES</a>
+          <a href="${data.response_url}" style="display: inline-block; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);">⚠️ RESPOND NOW</a>
+          <p style="margin: 16px 0 0; color: #64748b; font-size: 13px;">You'll see 3 options: Confirm, Suggest Alternatives, or Decline</p>
         </div>
         
         <div style="text-align: center; padding: 20px 0; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
@@ -378,12 +376,8 @@ const appointmentReminder24h: EmailTemplateFunction = (data) => ({
           </div>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${data.google_maps_url}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">🗺️ GET DIRECTIONS</a>
-          </div>
-          
-          <div style="text-align: center; margin: 30px 0;">
-            <p style="color: #6b7280; font-size: 13px; margin: 0 0 10px;">Need to cancel?</p>
-            <a href="${data.cancel_url}" style="display: inline-block; background: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: 600;">❌ Cancel This Booking</a>
+            <a href="${data.clinic_card_url}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">📍 VIEW CLINIC DETAILS<br><span style="font-size: 12px; opacity: 0.9;">(Map & Directions)</span></a>
+            <a href="${data.google_maps_url}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">💬 CONTACT CLINIC</a>
           </div>
           
           <p style="text-align: center; color: #6b7280; font-size: 16px; margin: 30px 0;">See you tomorrow! Safe travels 🚗</p>
@@ -398,62 +392,7 @@ const appointmentReminder24h: EmailTemplateFunction = (data) => ({
   `,
 });
 
-// Template 8: Booking Cancelled - Clinic Notification
-const bookingCancelledClinic: EmailTemplateFunction = (data) => ({
-  subject: `🚫 Appointment Cancelled - ${data.booking_ref} | ${data.clinic_name}`,
-  html: `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
-      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px;">
-        <div style="background: #dc2626; color: white; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-          <h2 style="margin: 0; font-size: 18px;">🚫 PATIENT CANCELLED APPOINTMENT</h2>
-        </div>
-        
-        <p style="color: #374151; font-size: 16px; margin: 0 0 20px;">For: <strong>${data.clinic_name}</strong></p>
-        <p style="color: #6b7280; font-size: 14px; margin: 0 0 20px;">Reference: <strong>${data.booking_ref}</strong></p>
-        
-        <div style="background: #fef2f2; border: 2px solid #dc2626; padding: 20px; border-radius: 6px; margin: 20px 0;">
-          <h3 style="color: #991b1b; margin: 0 0 15px;">Cancelled Appointment</h3>
-          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-            <tr><td style="padding: 6px 0; font-weight: 600; color: #991b1b;">Date:</td><td style="padding: 6px 0;">${data.formatted_date}</td></tr>
-            <tr><td style="padding: 6px 0; font-weight: 600; color: #991b1b;">Time:</td><td style="padding: 6px 0;">${data.time_slot}</td></tr>
-            <tr><td style="padding: 6px 0; font-weight: 600; color: #991b1b;">Treatment:</td><td style="padding: 6px 0;">${data.treatment_type}</td></tr>
-            <tr><td style="padding: 6px 0; font-weight: 600; color: #991b1b;">Cancelled At:</td><td style="padding: 6px 0;">${data.cancelled_at}</td></tr>
-          </table>
-        </div>
-        
-        ${data.cancellation_reason ? `
-        <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
-          <p style="margin: 0; color: #92400e; font-size: 14px;"><strong>📝 Cancellation Reason:</strong><br>${data.cancellation_reason}</p>
-        </div>
-        ` : ''}
-        
-        <h3 style="margin: 20px 0 10px; color: #374151;">Patient Details</h3>
-        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Name:</td><td style="padding: 6px 0;">${data.patient_name}</td></tr>
-          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">WhatsApp:</td><td style="padding: 6px 0;">${data.patient_whatsapp}</td></tr>
-          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Email:</td><td style="padding: 6px 0;">${data.patient_email}</td></tr>
-        </table>
-        
-        <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
-          <p style="margin: 0; color: #1e40af; font-size: 14px;"><strong>ℹ️ No Action Required</strong><br>This is an FYI notification. The slot is now available for other patients.</p>
-        </div>
-        
-        <div style="text-align: center; padding: 20px 0; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
-          <p style="margin: 0;">OraChope.org | Partner Support: contact@orachope.org</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `,
-});
-
-// Template 9: Alternative Slot Accepted (Clinic FYI)
+// Template 8: Alternative Slot Accepted (Clinic FYI)
 const alternativeSlotAcceptedClinic: EmailTemplateFunction = (data) => ({
   subject: `✅ Patient Selected Slot - ${data.booking_ref} | ${data.clinic_name}`,
   html: `
@@ -514,7 +453,6 @@ export const emailTemplates: Record<string, EmailTemplateFunction> = {
   booking_expired: bookingExpired,
   urgent_clinic_nudge: urgentClinicNudge,
   appointment_reminder_24h: appointmentReminder24h,
-  booking_cancelled_clinic: bookingCancelledClinic,
   alternative_slot_accepted_clinic: alternativeSlotAcceptedClinic,
   alternative_accepted_clinic: alternativeSlotAcceptedClinic,  // New name for clinic notification
   // Aliases for compatibility

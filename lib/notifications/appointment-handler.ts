@@ -421,11 +421,9 @@ export default async function handler(
       const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
       const responseToken = crypto.createHmac('sha256', HMAC_SECRET).update(`${bookingRef}|${clinicId || bookingData.clinic_location}`).digest('hex').slice(0, 32);
 
-      // Build clinic response URLs
+      // Build clinic response URL - NO action parameter = shows choice page with 3 options
       const baseUrl = 'https://orachope.org/api/clinic/respond';
-      const confirmUrl = `${baseUrl}/${bookingRef}?action=confirm&token=${responseToken}`;
-      const rejectUrl = `${baseUrl}/${bookingRef}?action=reject&token=${responseToken}`;
-      const alternativesUrl = `${baseUrl}/${bookingRef}?action=alternatives&token=${responseToken}`;
+      const responseUrl = `${baseUrl}/${bookingRef}?token=${responseToken}`;
 
       const clinicNotificationService = new NotificationService({
         supabaseUrl,
@@ -445,9 +443,7 @@ export default async function handler(
           formatted_date: preferredDateDisplay, 
           time_slot: bookingData.time_slot, 
           expires_at: formatExpiryTime(expiresAt), 
-          confirm_url: confirmUrl, 
-          reject_url: rejectUrl, 
-          alternatives_url: alternativesUrl
+          response_url: responseUrl
         },
         ['email', 'whatsapp']
       );

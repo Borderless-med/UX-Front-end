@@ -132,7 +132,7 @@ export default async function handler(
         
         console.log(`📧 Sending nudge to clinic: ${clinic.name} (${clinic.contact_email})`);
         
-        // Generate HMAC tokens for response URLs
+        // Generate HMAC token for response URL
         const HMAC_SECRET = process.env.HMAC_SECRET || 'dev-secret';
         const token = crypto
           .createHmac('sha256', HMAC_SECRET)
@@ -141,9 +141,7 @@ export default async function handler(
           .slice(0, 32);
 
         const baseUrl = 'https://orachope.org/api/clinic/respond';
-        const confirmUrl = `${baseUrl}/${booking.booking_ref}?action=confirm&token=${token}`;
-        const rejectUrl = `${baseUrl}/${booking.booking_ref}?action=reject&token=${token}`;
-        const alternativesUrl = `${baseUrl}/${booking.booking_ref}?action=alternatives&token=${token}`;
+        const responseUrl = `${baseUrl}/${booking.booking_ref}?token=${token}`;
 
         // Send urgent nudge to clinic
         const notificationResults = await notificationService.send(
@@ -161,9 +159,7 @@ export default async function handler(
             treatment_type: booking.treatment_type,
             formatted_date: formatSingaporeDate(booking.preferred_date),
             time_slot: booking.time_slot,
-            confirm_url: confirmUrl,
-            reject_url: rejectUrl,
-            alternatives_url: alternativesUrl,
+            response_url: responseUrl,
           },
           ['email', 'whatsapp']
         );

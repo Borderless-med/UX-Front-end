@@ -62,9 +62,7 @@ export interface NotificationData {
   google_maps_url?: string;
   clinic_card_url?: string;
   cancel_url?: string;
-  confirm_url?: string;
-  reject_url?: string;
-  alternatives_url?: string;
+  response_url?: string; // Unified URL - shows choice page with 3 options
   [key: string]: any;
 }
 
@@ -194,7 +192,6 @@ export class NotificationService {
       booking_alert_clinic: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       booking_alert_clinic_v5: 'https://www.orachope.org/api/clinic/respond/{{1}}',
       booking_alert_clinic_v7: 'https://www.orachope.org/api/clinic/respond/{{1}}',
-      appointment_reminder_24h: 'https://www.orachope.org/api/cancel-appointment?token={{1}}',
     };
 
     const templateUrl = urlTemplates[templateName];
@@ -229,14 +226,13 @@ export class NotificationService {
     if (basePrefix?.includes('/api/patient/booking-response?token=') || basePrefix?.includes('/api/cancel-appointment?token=')) {
       // For patient templates we send a stuffed query string into the token variable.
       // Example output: action=accept&ref=APT-123&slot=...&token=abc
-      // IMPORTANT: Must URL-encode the stuffed query string for Meta WhatsApp API
       if (!value.includes('://') && value.includes('=')) {
-        return encodeURIComponent(value.replace(/^\?/, ''));
+        return value.replace(/^\?/, '');
       }
 
       try {
         const parsed = new URL(value);
-        return encodeURIComponent(parsed.search.replace(/^\?/, ''));
+        return parsed.search.replace(/^\?/, '');
       } catch {
         return value;
       }
