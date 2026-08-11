@@ -292,42 +292,52 @@ const urgentClinicNudge: EmailTemplateFunction = (data) => ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
-      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px;">
-        <div style="background-color: #dc2626; color: #ffffff; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+      <table role="presentation" style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <td align="center" style="padding: 0;">
+            <table role="presentation" style="width: 600px; max-width: 600px; background-color: #ffffff; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 30px;">
+        <div style="background-color: #dc2626; color: #ffffff; padding-top: 15px; padding-bottom: 15px; padding-left: 15px; padding-right: 15px; border-radius: 6px; margin-top: 0; margin-bottom: 20px; margin-left: 0; margin-right: 0;">
           <h2 style="margin: 0; font-size: 18px;">FOR: ${data.clinic_name}</h2>
         </div>
         
-        <h1 style="margin: 0 0 10px; color: #dc2626; font-size: 24px;">🚨 URGENT: BOOKING EXPIRING</h1>
-        <p style="margin: 0 0 20px; color: #334155; font-size: 14px;">Reference: <strong>${data.booking_ref}</strong></p>
+        <h1 style="margin-top: 0; margin-bottom: 10px; margin-left: 0; margin-right: 0; color: #dc2626; font-size: 24px;">🚨 URGENT: BOOKING EXPIRING</h1>
+        <p style="margin-top: 0; margin-bottom: 20px; margin-left: 0; margin-right: 0; color: #334155; font-size: 14px;">Reference: <strong>${data.booking_ref}</strong></p>
         
-        <div style="background-color: #fef2f2; border: 3px solid #dc2626; padding: 20px; border-radius: 6px; margin: 20px 0; text-align: center;">
-          <h3 style="color: #991b1b; margin: 0 0 10px; font-size: 20px;">⏰ AUTO-EXPIRES IN 30 MINUTES</h3>
+        <div style="background-color: #fef2f2; border-width: 3px; border-style: solid; border-color: #dc2626; padding-top: 20px; padding-bottom: 20px; padding-left: 20px; padding-right: 20px; border-radius: 6px; margin-top: 20px; margin-bottom: 20px; margin-left: 0; margin-right: 0; text-align: center;">
+          <h3 style="color: #991b1b; margin-top: 0; margin-bottom: 10px; margin-left: 0; margin-right: 0; font-size: 20px;">⏰ AUTO-EXPIRES IN 30 MINUTES</h3>
           <p style="color: #991b1b; margin: 0; font-size: 16px; font-weight: 600;">Expiry time: ${data.expires_at}</p>
         </div>
         
-        <h3 style="margin: 20px 0 10px; color: #374151;">Patient Details</h3>
+        <h3 style="margin-top: 20px; margin-bottom: 10px; margin-left: 0; margin-right: 0; color: #374151;">Patient Details</h3>
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Name:</td><td style="padding: 6px 0;">${data.patient_name}</td></tr>
-          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Treatment:</td><td style="padding: 6px 0;">${data.treatment_type}</td></tr>
-          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Date:</td><td style="padding: 6px 0;">${data.formatted_date}</td></tr>
-          <tr><td style="padding: 6px 0; font-weight: 600; color: #475569;">Time:</td><td style="padding: 6px 0;">${data.time_slot}</td></tr>
+          <tr><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0; font-weight: 600; color: #475569;">Name:</td><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0;">${data.patient_name}</td></tr>
+          <tr><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0; font-weight: 600; color: #475569;">Treatment:</td><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0;">${data.treatment_type}</td></tr>
+          <tr><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0; font-weight: 600; color: #475569;">Date:</td><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0;">${data.formatted_date}</td></tr>
+          <tr><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0; font-weight: 600; color: #475569;">Time:</td><td style="padding-top: 6px; padding-bottom: 6px; padding-left: 0; padding-right: 0;">${data.time_slot}</td></tr>
         </table>
         
-        <div style="background-color: #fffbeb; padding: 15px; border-radius: 6px; margin: 20px 0;">
+        <div style="background-color: #fffbeb; padding-top: 15px; padding-bottom: 15px; padding-left: 15px; padding-right: 15px; border-radius: 6px; margin-top: 20px; margin-bottom: 20px; margin-left: 0; margin-right: 0;">
           <p style="margin: 0; color: #92400e; font-size: 13px;"><strong>Note:</strong> If you offer alternatives, expiry will extend by 60 minutes.</p>
         </div>
         
-        <h3 style="color: #dc2626; margin: 20px 0 10px; text-align: center;">PLEASE RESPOND IMMEDIATELY:</h3>
+        <h3 style="color: #dc2626; margin-top: 20px; margin-bottom: 10px; margin-left: 0; margin-right: 0; text-align: center;">PLEASE RESPOND IMMEDIATELY:</h3>
         
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${data.response_url}" style="display: inline-block; background-color: #dc2626; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);">⚠️ RESPOND NOW</a>
-          <p style="margin: 16px 0 0; color: #64748b; font-size: 13px;">You'll see 3 options: Confirm, Suggest Alternatives, or Decline</p>
+        <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+          <a href="${data.response_url}" style="display: inline-block; background-color: #dc2626; color: #ffffff; padding-top: 16px; padding-bottom: 16px; padding-left: 32px; padding-right: 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px;">⚠️ RESPOND NOW</a>
+          <p style="margin-top: 16px; margin-bottom: 0; margin-left: 0; margin-right: 0; color: #64748b; font-size: 13px;">You'll see 3 options: Confirm, Suggest Alternatives, or Decline</p>
         </div>
         
-        <div style="text-align: center; padding: 20px 0; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
+        <div style="text-align: center; padding-top: 20px; padding-bottom: 20px; padding-left: 0; padding-right: 0; color: #9ca3af; font-size: 12px; border-top-width: 1px; border-top-style: solid; border-top-color: #e5e7eb;">
           <p style="margin: 0;">OraChope.org | Partner Support: contact@orachope.org</p>
         </div>
-      </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
     </body>
     </html>
   `,
