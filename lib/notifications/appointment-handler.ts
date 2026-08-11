@@ -327,8 +327,16 @@ export default async function handler(
       });
     }
 
-    const { create_account, ...bookingDataForDb } = bookingData;
-    const { data: appointment } = await supabase
+    const { create_account, turnstile_token, otp_code, booking_hash, ...bookingDataForDb } = bookingData;
+    
+    console.log('📝 Inserting booking into database:', {
+      booking_ref: bookingRef,
+      patient: bookingData.patient_name,
+      clinic_id: clinicId,
+      communication_preference: bookingData.communication_preference
+    });
+    
+    const { data: appointment, error: insertError } = await supabase
       .from('appointment_bookings')
       .insert({ 
         ...bookingDataForDb, 
@@ -337,6 +345,13 @@ export default async function handler(
         clinic_id: clinicId
       })
       .select().single();
+
+    if (insertError) {
+      console.error('❌ CRITICAL: Failed to insert booking into database:', insertError);
+      throw new Error(`Failed to save booking: ${insertError.message}`);
+    }
+    
+    console.log('✅ Booking saved to database successfully:', bookingRef);
 
     // Calculate expiry using business hours (10 AM - 6 PM daily, including weekends)
     const expiresAt = calculateBusinessHoursExpiry(new Date(), 3);
