@@ -565,6 +565,12 @@ async function handleAcceptAlternative(
     const adminEmail = 'contact@orachope.org';
     const fromUser = process.env.SMTP_USER || 'noreply@orachope.org';
 
+    // Extract original request from admin_notes (saved when clinic offered alternatives)
+    const originalRequest = existingNotes?.original_request || {
+      date: booking.preferred_date,
+      time: booking.time_slot
+    };
+
     const adminHtml = `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.5;color:#333">
         <h2 style="color:#16a34a;margin:0 0 20px">Patient Accepted Alternative Slot</h2>
