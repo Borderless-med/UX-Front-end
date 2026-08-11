@@ -173,6 +173,88 @@ export default async function handler(
 
         console.log(`Sent urgent nudge for booking ${booking.booking_ref}`);
         
+        // Send admin notification
+        try {
+          const smtp2goApiKey = process.env.SMTP2GO_API_KEY;
+          const brevoApiKey = process.env.BREVO_API_KEY;
+          const adminEmail = 'contact@orachope.org';
+          const fromUser = process.env.SMTP_USER || 'noreply@orachope.org';
+
+          const expiryTime = new Date(booking.expires_at);
+          const minutesRemaining = Math.round((expiryTime.getTime() - Date.now()) / (1000 * 60));
+
+          const adminHtml = `
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.5;color:#333">
+              <h2 style="color:#ea580c;margin:0 0 20px">⚠️ Urgent: Booking Expiring Soon</h2>
+              <div style="background:#fff7ed;border-left:4px solid #ea580c;padding:16px;margin:16px 0">
+                <p style="margin:0 0 8px;font-size:18px;font-weight:600">Reference: ${booking.booking_ref}</p>
+                <p style="margin:0;font-size:14px;color:#9a3412">Expires in ~${minutesRemaining} minutes</p>
+              </div>
+              <h3 style="color:#374151;margin:20px 0 10px;font-size:16px">Booking Details</h3>
+              <table style="width:100%;border-collapse:collapse;font-size:14px">
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Patient:</td><td style="padding:8px 0">${booking.patient_name}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Email:</td><td style="padding:8px 0">${booking.email}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">WhatsApp:</td><td style="padding:8px 0">${booking.whatsapp}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Clinic:</td><td style="padding:8px 0">${clinic.name || booking.clinic_location}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Treatment:</td><td style="padding:8px 0">${booking.treatment_type}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Date:</td><td style="padding:8px 0">${formatSingaporeDate(booking.preferred_date)}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Time:</td><td style="padding:8px 0">${booking.time_slot}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Created:</td><td style="padding:8px 0">${new Date(booking.created_at).toLocaleString('en-SG')}</td></tr>
+                <tr><td style="padding:8px 0;font-weight:600;color:#4b5563">Expires:</td><td style="padding:8px 0">${formatSingaporeTime(booking.expires_at)}</td></tr>
+              </table>
+              <div style="background:#fff7ed;border:1px solid #ea580c;padding:12px;margin:16px 0;border-radius:6px">
+                <p style="margin:0;font-size:13px;color:#9a3412">⚠️ <strong>Action:</strong> Urgent nudge sent to clinic</p>
+              </div>
+              <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Automated notification from OraChope booking system</p>
+            </div>
+          `;
+
+          if (smtp2goApiKey) {
+            try {
+              const smtp2goResponse = await fetch('https://api.smtp2go.com/v3/email/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  api_key: smtp2goApiKey,
+                  to: [adminEmail],
+                  sender: fromUser,
+                  subject: `⚠️ ADMIN: Booking Expiring Soon - ${booking.booking_ref}`,
+                  html_body: adminHtml,
+                }),
+              });
+
+              const smtp2goData = await smtp2goResponse.json();
+              if (smtp2goResponse.ok && smtp2goData.data?.succeeded === 1) {
+                console.log('✅ Admin notification sent via SMTP2GO for urgent nudge');
+              } else {
+                throw new Error('SMTP2GO failed');
+              }
+            } catch (smtp2goError) {
+              if (brevoApiKey && brevoApiKey !== 'your-brevo-api-key') {
+                const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': brevoApiKey,
+                  },
+                  body: JSON.stringify({
+                    sender: { email: fromUser },
+                    to: [{ email: adminEmail }],
+                    subject: `⚠️ ADMIN: Booking Expiring Soon - ${booking.booking_ref}`,
+                    htmlContent: adminHtml,
+                  }),
+                });
+
+                if (brevoResponse.ok) {
+                  console.log('✅ Admin notification sent via Brevo (fallback) for urgent nudge');
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Failed to send admin notification for urgent nudge:', error);
+        }
+        
         results.push({
           booking_ref: booking.booking_ref,
           success: true,
