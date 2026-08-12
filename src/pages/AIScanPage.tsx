@@ -77,7 +77,7 @@ export default function AIScanPage() {
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const turnstileWidgetId = useRef<string | null>(null);
 
-  // Initialize Cloudflare Turnstile widget (Invisible mode for AI Scan page)
+  // Initialize Cloudflare Turnstile widget (Compact visible mode)
   useEffect(() => {
     const initTurnstile = () => {
       if (typeof window !== 'undefined' && (window as any).turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
@@ -86,8 +86,6 @@ export default function AIScanPage() {
           
           turnstileWidgetId.current = (window as any).turnstile.render(turnstileContainerRef.current, {
             sitekey: siteKey,
-            appearance: 'interaction-only', // INVISIBLE mode - only shows if suspicious
-            execution: 'execute', // Auto-execute on page load
             callback: (token: string) => {
               console.log('Turnstile token received (AI scan)');
               setTurnstileToken(token);
@@ -100,9 +98,11 @@ export default function AIScanPage() {
               console.error('Turnstile error occurred');
               setTurnstileToken('');
             },
+            theme: 'light',
+            size: 'compact',
           });
           
-          console.log('Turnstile widget initialized (invisible):', turnstileWidgetId.current);
+          console.log('Turnstile widget initialized:', turnstileWidgetId.current);
         } catch (error) {
           console.error('Error initializing Turnstile:', error);
         }
@@ -396,7 +396,7 @@ export default function AIScanPage() {
                   />
                 </div>
 
-                {/* Cloudflare Turnstile (Invisible Bot Protection) */}
+                {/* Cloudflare Turnstile (Bot Protection) */}
                 <div ref={turnstileContainerRef} className="flex justify-center"></div>
 
                 {/* Name (signup only) */}

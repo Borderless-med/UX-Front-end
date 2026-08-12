@@ -51,7 +51,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  // Initialize Cloudflare Turnstile widget (Invisible mode for better UX)
+  // Initialize Cloudflare Turnstile widget (Compact visible mode)
   useEffect(() => {
     const initTurnstile = () => {
       if (typeof window !== 'undefined' && (window as any).turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
@@ -60,8 +60,6 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
           
           turnstileWidgetId.current = (window as any).turnstile.render(turnstileContainerRef.current, {
             sitekey: siteKey,
-            appearance: 'interaction-only', // INVISIBLE mode - only shows if suspicious
-            execution: 'execute', // Auto-execute on page load
             callback: (token: string) => {
               console.log('Turnstile token received (signup)');
               setTurnstileToken(token);
@@ -74,9 +72,11 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
               console.error('Turnstile error occurred');
               setTurnstileToken('');
             },
+            theme: 'light',
+            size: 'compact',
           });
           
-          console.log('Turnstile widget initialized (invisible):', turnstileWidgetId.current);
+          console.log('Turnstile widget initialized:', turnstileWidgetId.current);
         } catch (error) {
           console.error('Error initializing Turnstile:', error);
         }
@@ -385,7 +385,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
             />
           </div>
 
-          {/* Cloudflare Turnstile (Invisible Bot Protection) */}
+          {/* Cloudflare Turnstile (Bot Protection) */}
           <div ref={turnstileContainerRef} className="flex justify-center"></div>
 
           {/* Auto-Population Notice */}
