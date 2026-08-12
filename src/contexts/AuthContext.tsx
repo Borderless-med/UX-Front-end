@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
 // --- CHANGE 1: Import the API client and the environment helper ---
 import { restInvokeFunction } from '@/utils/restClient';
+import { verifyTurnstileToken, checkHoneypot } from '@/utils/turnstileVerification';
 
 const getEnvironment = () => {
   const hostname = window.location.hostname;
@@ -22,6 +23,9 @@ interface RegistrationData {
   organization: string;
   purposeOfUse: string;
   userCategory: string;
+  // Bot protection fields (optional for backwards compatibility)
+  turnstileToken?: string;
+  honeypotValue?: string;
 }
 
 interface AuthContextType {
@@ -45,7 +49,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     console.log("--- TRACER BULLET: REGISTER ATTEMPT START ---");
     try {
-      const { email, password, fullName, organization, purposeOfUse, userCategory } = registrationData;
+      const { email, password, fullName, organization, purposeOfUse, userCategory, turnstileToken, honeypotValue } = registrationData;
+
+      // Bot protection: Verify honeypot (if provided)
+      if (honeypotValue !== undefined) {
+        if (!checkHoneypot(honeypotValue)) {
+          console.warn('🚫 Honeypot triggered - potential bot detected');
+          // Silent rejection - don't give bot feedback
+          return { success: false, error: 'Registration failed. Please try again.' };
+        }
+      }
+
+      // Bot protection: Verify Turnstile token (if provided)
+      if (turnstileToken !== undefined) {
+        if (!turnstileToken) {
+          console.warn('🚫 No Turnstile token provided');
+          return { success: false, error: 'Security verification required. Please refresh the page and try again.' };
+        }
+
+        console.log('🔐 Verifying Turnstile token...');
+        const isValidToken = await verifyTurnstileToken(turnstileToken);
+        
+        if (!isValidToken) {
+          console.warn('🚫 Turnstile verification failed');
+          return { success: false, error: 'Security verification failed. Please try again.' };
+        }
+        console.log('✅ Turnstile verification passed');
+      }
 
       const { data, error } = await supabase.auth.signUp({
         email,

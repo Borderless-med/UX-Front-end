@@ -34,6 +34,12 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
     consentGiven: false,
   });
 
+  // Bot protection state
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const [honeypotValue, setHoneypotValue] = useState<string>('');
+  const turnstileContainerRef = React.useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = React.useRef<string | null>(null);
+
   // Prevent browser autofill
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,6 +50,67 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
     }, 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // Initialize Cloudflare Turnstile widget (Invisible mode for better UX)
+  useEffect(() => {
+    const initTurnstile = () => {
+      if (typeof window !== 'undefined' && (window as any).turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
+        try {
+          const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+          
+          turnstileWidgetId.current = (window as any).turnstile.render(turnstileContainerRef.current, {
+            sitekey: siteKey,
+            appearance: 'interaction-only', // INVISIBLE mode - only shows if suspicious
+            execution: 'execute', // Auto-execute on page load
+            callback: (token: string) => {
+              console.log('Turnstile token received (signup)');
+              setTurnstileToken(token);
+            },
+            'expired-callback': () => {
+              console.log('Turnstile token expired');
+              setTurnstileToken('');
+            },
+            'error-callback': () => {
+              console.error('Turnstile error occurred');
+              setTurnstileToken('');
+            },
+          });
+          
+          console.log('Turnstile widget initialized (invisible):', turnstileWidgetId.current);
+        } catch (error) {
+          console.error('Error initializing Turnstile:', error);
+        }
+      }
+    };
+
+    // Try to initialize immediately
+    initTurnstile();
+
+    // If Turnstile script hasn't loaded yet, wait for it
+    if (!(window as any).turnstile) {
+      const checkInterval = setInterval(() => {
+        if ((window as any).turnstile) {
+          clearInterval(checkInterval);
+          initTurnstile();
+        }
+      }, 100);
+
+      setTimeout(() => clearInterval(checkInterval), 10000);
+      return () => clearInterval(checkInterval);
+    }
+
+    // Cleanup function
+    return () => {
+      if (turnstileWidgetId.current && (window as any).turnstile) {
+        try {
+          (window as any).turnstile.remove(turnstileWidgetId.current);
+        } catch (e) {
+          console.error('Error removing Turnstile widget:', e);
+        }
+      }
+    };
+  }, []);
+
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -53,6 +120,19 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
   };
 
   const validateForm = () => {
+    // Bot protection: Check honeypot field
+    if (honeypotValue) {
+      console.warn('Honeypot triggered - potential bot detected');
+      // Silent rejection - don't show error to bot
+      return false;
+    }
+
+    // Bot protection: Check Turnstile token
+    if (!turnstileToken) {
+      setError('Please wait for security verification to complete');
+      return false;
+    }
+
     if (!formData.email || !formData.password || !formData.fullName) {
       setError('Please fill in all required fields');
       return false;
@@ -79,7 +159,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       return;
     }
 
-    // Prepare registration data with auto-populated values
+    // Prepare registration data with auto-populated values + bot protection
     const registrationData = {
       email: formData.email,
       password: formData.password,
@@ -88,6 +168,9 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       organization: '', // Empty for most users
       purposeOfUse: registrationSource,
       userCategory: 'patient' as const,
+      // Bot protection
+      turnstileToken: turnstileToken,
+      honeypotValue: honeypotValue,
     };
     
     const result = await register(registrationData);
@@ -288,6 +371,22 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Honeypot Field (Hidden from humans, visible to bots) */}
+          <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }}>
+            <input
+              type="text"
+              name="website"
+              value={honeypotValue}
+              onChange={(e) => setHoneypotValue(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+          </div>
+
+          {/* Cloudflare Turnstile (Invisible Bot Protection) */}
+          <div ref={turnstileContainerRef} style={{ position: 'absolute', left: '-9999px' }}></div>
 
           {/* Auto-Population Notice */}
           {!compactLayout && (
