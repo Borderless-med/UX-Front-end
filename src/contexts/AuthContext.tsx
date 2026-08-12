@@ -47,54 +47,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (registrationData: RegistrationData) => {
     setIsLoading(true);
-    console.log("--- TRACER BULLET: REGISTER ATTEMPT START ---");
-    console.log("Registration data:", { 
-      email: registrationData.email, 
-      hasPassword: !!registrationData.password,
-      fullName: registrationData.fullName,
-      hasTurnstileToken: !!registrationData.turnstileToken,
-      honeypotValue: registrationData.honeypotValue 
-    });
     
     try {
       const { email, password, fullName, organization, purposeOfUse, userCategory, turnstileToken, honeypotValue } = registrationData;
 
-      // Bot protection: Verify honeypot (if provided)
+      // Bot protection: Verify honeypot
       if (honeypotValue !== undefined) {
-        console.log('🔍 Checking honeypot... value:', honeypotValue);
         if (!checkHoneypot(honeypotValue)) {
-          console.warn('🚫 Honeypot triggered - potential bot detected');
           // Silent rejection - don't give bot feedback
           return { success: false, error: 'Registration failed. Please try again.' };
         }
-        console.log('✅ Honeypot check passed');
       }
 
-      // Bot protection: Verify Turnstile token (if provided)
-      // TEMPORARILY NON-BLOCKING FOR TESTING
-      if (turnstileToken !== undefined && turnstileToken) {
-        console.log('🔐 Verifying Turnstile token... (non-blocking mode for testing)');
-        console.log('Token preview:', turnstileToken.substring(0, 20) + '...');
+      // Bot protection: Verify Turnstile token (STRICT MODE - BLOCKING)
+      if (turnstileToken) {
+        const isValidToken = await verifyTurnstileToken(turnstileToken);
         
-        try {
-          const isValidToken = await verifyTurnstileToken(turnstileToken);
-          
-          if (!isValidToken) {
-            console.warn('⚠️ Turnstile verification failed - BUT ALLOWING SIGNUP FOR TESTING');
-            // TEMPORARILY ALLOW signup even if verification fails
-            // return { success: false, error: 'Security verification failed. Please try again.' };
-          } else {
-            console.log('✅ Turnstile verification passed');
-          }
-        } catch (verifyError) {
-          console.error('❌ Turnstile verification error:', verifyError);
-          console.warn('⚠️ Allowing signup despite verification error (testing mode)');
+        if (!isValidToken) {
+          return { success: false, error: 'Security verification failed. Please try again.' };
         }
       } else {
-        console.warn('⚠️ No Turnstile token provided - skipping verification (testing mode)');
+        // No token provided - reject signup
+        return { success: false, error: 'Security verification required. Please refresh and try again.' };
       }
 
-      console.log('🚀 Calling Supabase signUp...');
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -112,20 +88,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error) {
-        console.error("--- TRACER BULLET: REGISTER FAILED ---", error);
-        console.error("Error details:", { message: error.message, status: error.status, code: error.code });
         throw error;
       }
-      console.log("--- TRACER BULLET: REGISTER SUCCEEDED ---", data);
-      console.log("User created:", data.user?.id, "Email:", data.user?.email);
+      
       return { success: true };
 
     } catch (error: any) {
-      console.error("--- REGISTER EXCEPTION ---", error);
       return { success: false, error: error.message || 'An unknown error occurred' };
     } finally {
       setIsLoading(false);
-      console.log("--- TRACER BULLET: REGISTER ATTEMPT END ---");
     }
   };
   const [user, setUser] = useState<User | null>(null);
