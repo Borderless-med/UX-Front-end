@@ -386,7 +386,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
           </div>
 
           {/* Cloudflare Turnstile (Invisible Bot Protection) */}
-          <div ref={turnstileContainerRef} style={{ position: 'absolute', left: '-9999px' }}></div>
+          <div ref={turnstileContainerRef} className="flex justify-center"></div>
 
           {/* Auto-Population Notice */}
           {!compactLayout && (

@@ -397,7 +397,7 @@ export default function AIScanPage() {
                 </div>
 
                 {/* Cloudflare Turnstile (Invisible Bot Protection) */}
-                <div ref={turnstileContainerRef} style={{ position: 'absolute', left: '-9999px' }}></div>
+                <div ref={turnstileContainerRef} className="flex justify-center"></div>
 
                 {/* Name (signup only) */}
                 {mode === 'signup' && (
