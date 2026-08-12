@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,8 +47,87 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
     blockDurationMs: 900000 // 15 minutes
   });
 
+  // Bot protection state
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const [honeypotValue, setHoneypotValue] = useState<string>('');
+  const turnstileContainerRef = React.useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = React.useRef<string | null>(null);
+
+  // Initialize Cloudflare Turnstile widget (Compact visible mode)
+  React.useEffect(() => {
+    if (!isOpen) return; // Only initialize when dialog is open
+
+    const initTurnstile = () => {
+      if (typeof window !== 'undefined' && (window as any).turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
+        try {
+          const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+          
+          turnstileWidgetId.current = (window as any).turnstile.render(turnstileContainerRef.current, {
+            sitekey: siteKey,
+            callback: (token: string) => {
+              console.log('Turnstile token received (inquiry form)');
+              setTurnstileToken(token);
+            },
+            'expired-callback': () => {
+              console.log('Turnstile token expired');
+              setTurnstileToken('');
+            },
+            'error-callback': () => {
+              console.error('Turnstile error occurred');
+              setTurnstileToken('');
+            },
+            theme: 'light',
+            size: 'compact',
+          });
+          
+          console.log('Turnstile widget initialized:', turnstileWidgetId.current);
+        } catch (error) {
+          console.error('Error initializing Turnstile:', error);
+        }
+      }
+    };
+
+    initTurnstile();
+
+    if (!(window as any).turnstile) {
+      const checkInterval = setInterval(() => {
+        if ((window as any).turnstile) {
+          clearInterval(checkInterval);
+          initTurnstile();
+        }
+      }, 100);
+
+      setTimeout(() => clearInterval(checkInterval), 10000);
+      return () => clearInterval(checkInterval);
+    }
+
+    return () => {
+      if (turnstileWidgetId.current && (window as any).turnstile) {
+        try {
+          (window as any).turnstile.remove(turnstileWidgetId.current);
+          turnstileWidgetId.current = null;
+        } catch (e) {
+          console.error('Error removing Turnstile widget:', e);
+        }
+      }
+    };
+  }, [isOpen]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Bot protection: Check honeypot field
+    if (honeypotValue) {
+      console.warn('Honeypot triggered - potential bot detected');
+      // Silent rejection - don't give bot feedback
+      return;
+    }
+
+    // Bot protection: Check Turnstile token
+    if (!turnstileToken) {
+      toast.error('Please wait for security verification to complete');
+      return;
+    }
 
     // Check rate limiting
     if (!rateLimit.checkRateLimit()) {
@@ -284,6 +363,22 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
             />
           </div>
 
+          {/* Honeypot Field (Hidden from humans, visible to bots) */}
+          <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }}>
+            <input
+              type="text"
+              name="website"
+              value={honeypotValue}
+              onChange={(e) => setHoneypotValue(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+          </div>
+
+          {/* Cloudflare Turnstile (Bot Protection) */}
+          <div ref={turnstileContainerRef} className="flex justify-center"></div>
+
           {/* Submit Buttons */}
           <div className="flex gap-3 pt-4">
             <Button
@@ -297,7 +392,7 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting || rateLimit.isBlocked}
+              disabled={isSubmitting || rateLimit.isBlocked || !turnstileToken}
               className="flex-1 bg-blue-600 hover:bg-blue-700"
             >
               {isSubmitting ? (

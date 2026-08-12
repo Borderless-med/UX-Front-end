@@ -41,6 +41,12 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
     windowMs: 300000,      // 5 minutes
     blockDurationMs: 900000 // 15 minutes
   });
+
+  // Bot protection state
+  const [turnstileToken, setTurnstileToken] = React.useState<string>('');
+  const [honeypotValue, setHoneypotValue] = React.useState<string>('');
+  const turnstileContainerRef = React.useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = React.useRef<string | null>(null);
   
   const form = useForm<PartnerFormData>({
     defaultValues: {
@@ -72,6 +78,63 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   const sortedJbClinics = [...jbClinics].sort((a, b) => a.name.localeCompare(b.name));
   const sortedSgClinics = [...sgClinics].sort((a, b) => a.name.localeCompare(b.name));
 
+  // Initialize Cloudflare Turnstile widget (Compact visible mode)
+  React.useEffect(() => {
+    const initTurnstile = () => {
+      if (typeof window !== 'undefined' && (window as any).turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
+        try {
+          const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+          
+          turnstileWidgetId.current = (window as any).turnstile.render(turnstileContainerRef.current, {
+            sitekey: siteKey,
+            callback: (token: string) => {
+              console.log('Turnstile token received (partner form)');
+              setTurnstileToken(token);
+            },
+            'expired-callback': () => {
+              console.log('Turnstile token expired');
+              setTurnstileToken('');
+            },
+            'error-callback': () => {
+              console.error('Turnstile error occurred');
+              setTurnstileToken('');
+            },
+            theme: 'light',
+            size: 'compact',
+          });
+          
+          console.log('Turnstile widget initialized:', turnstileWidgetId.current);
+        } catch (error) {
+          console.error('Error initializing Turnstile:', error);
+        }
+      }
+    };
+
+    initTurnstile();
+
+    if (!(window as any).turnstile) {
+      const checkInterval = setInterval(() => {
+        if ((window as any).turnstile) {
+          clearInterval(checkInterval);
+          initTurnstile();
+        }
+      }, 100);
+
+      setTimeout(() => clearInterval(checkInterval), 10000);
+      return () => clearInterval(checkInterval);
+    }
+
+    return () => {
+      if (turnstileWidgetId.current && (window as any).turnstile) {
+        try {
+          (window as any).turnstile.remove(turnstileWidgetId.current);
+        } catch (e) {
+          console.error('Error removing Turnstile widget:', e);
+        }
+      }
+    };
+  }, []);
+
   // Auto-fill address when clinic is selected
   const watchedClinicId = form.watch('clinicId');
   const watchedClinicSource = form.watch('clinicSource');
@@ -88,6 +151,23 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   }, [watchedClinicId, watchedClinicSource, jbClinics, sgClinics, form]);
 
   const onSubmit = async (data: PartnerFormData) => {
+    // Bot protection: Check honeypot field
+    if (honeypotValue) {
+      console.warn('Honeypot triggered - potential bot detected');
+      // Silent rejection - don't give bot feedback
+      return;
+    }
+
+    // Bot protection: Check Turnstile token
+    if (!turnstileToken) {
+      toast({
+        title: 'Security Verification Required',
+        description: 'Please wait for security verification to complete',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     // Check rate limiting
     if (!rateLimit.checkRateLimit()) {
       const remainingTime = Math.ceil(rateLimit.getRemainingTime() / 1000);
@@ -315,10 +395,26 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
             )}
           </button>
         </div>
+
+        {/* Honeypot Field (Hidden from humans, visible to bots) */}
+        <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }}>
+          <input
+            type="text"
+            name="website"
+            value={honeypotValue}
+            onChange={(e) => setHoneypotValue(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+        </div>
+
+        {/* Cloudflare Turnstile (Bot Protection) */}
+        <div ref={turnstileContainerRef} className="flex justify-center"></div>
         
         <Button 
           type="submit" 
-          disabled={isLoading || rateLimit.isBlocked}
+          disabled={isLoading || rateLimit.isBlocked || !turnstileToken}
           className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-semibold py-6 text-lg rounded-lg shadow-[0_8px_20px_rgba(59,130,246,0.4)] hover:shadow-[0_10px_25px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           {isLoading ? (
