@@ -113,6 +113,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
 
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -176,7 +177,9 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
     const result = await register(registrationData);
     
     if (result.success) {
-      onSuccess();
+      // Show success message (user needs to confirm email)
+      setIsSuccess(true);
+      setError('');
     } else {
       setError(result.error || 'Registration failed');
     }
@@ -211,8 +214,41 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
       </CardHeader>
       
       <CardContent>
-        {/* OAuth Login Buttons */}
-        <div className="space-y-3 mb-6">
+        {/* Success Message - Email Confirmation Required */}
+        {isSuccess && (
+          <Alert className="border-green-500 bg-green-50">
+            <div className="flex items-start gap-3">
+              <Info className="h-5 w-5 text-green-700 mt-0.5" />
+              <div className="flex-1">
+                <div className="font-semibold text-green-900 mb-2 text-lg">Account Created Successfully! 🎉</div>
+                <AlertDescription className="text-green-800 space-y-2">
+                  <p>
+                    We've sent a confirmation email to <strong>{formData.email}</strong>.
+                  </p>
+                  <p>
+                    Please check your inbox and click the confirmation link to activate your account.
+                  </p>
+                  <p className="text-sm text-green-700">
+                    <strong>Can't find the email?</strong> Check your spam/junk folder.
+                  </p>
+                </AlertDescription>
+                <Button 
+                  onClick={onSwitchToLogin}
+                  variant="outline"
+                  className="mt-4 border-green-600 text-green-700 hover:bg-green-100"
+                >
+                  Back to Sign In
+                </Button>
+              </div>
+            </div>
+          </Alert>
+        )}
+
+        {/* Show form only if not successful */}
+        {!isSuccess && (
+          <>
+            {/* OAuth Login Buttons */}
+            <div className="space-y-3 mb-6">
           <Button
             type="button"
             onClick={() => handleOAuthLogin('google')}
@@ -435,6 +471,8 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
               Sign in here
             </button>
           </div>
+        )}
+        </>
         )}
       </CardContent>
     </Card>
