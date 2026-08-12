@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { Loader2, MessageCircle, Mail } from 'lucide-react';
 import { Clinic } from '@/types/clinic';
 import { countryCodes } from '@/data/countryCodes';
+import { useRateLimit } from '@/hooks/useRateLimit';
 
 // Inline type definition for sg_clinic_inquiries table
 type SgClinicInquiryInsert = {
@@ -40,9 +41,21 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
     preferredContact: 'either' as 'email' | 'whatsapp' | 'either',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const rateLimit = useRateLimit({ 
+    maxAttempts: 3, 
+    windowMs: 300000,      // 5 minutes
+    blockDurationMs: 900000 // 15 minutes
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check rate limiting
+    if (!rateLimit.checkRateLimit()) {
+      const remainingTime = Math.ceil(rateLimit.getRemainingTime() / 1000);
+      toast.error(`Too many attempts. Please wait ${remainingTime} seconds before trying again.`);
+      return;
+    }
 
     // Validation
     if (!formData.name.trim()) {
@@ -284,7 +297,7 @@ export const InquiryForm = ({ clinic, isOpen, onClose }: InquiryFormProps) => {
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || rateLimit.isBlocked}
               className="flex-1 bg-blue-600 hover:bg-blue-700"
             >
               {isSubmitting ? (

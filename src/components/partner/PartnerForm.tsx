@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import PartnerFormFields from './PartnerFormFields';
 import { useSupabaseClinics } from '@/hooks/useSupabaseClinics';
+import { useRateLimit } from '@/hooks/useRateLimit';
 
 interface PartnerFormData {
   clinicSource: 'jb' | 'sg';
@@ -35,6 +36,11 @@ interface PartnerFormProps {
 
 const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   const { toast } = useToast();
+  const rateLimit = useRateLimit({ 
+    maxAttempts: 3, 
+    windowMs: 300000,      // 5 minutes
+    blockDurationMs: 900000 // 15 minutes
+  });
   
   const form = useForm<PartnerFormData>({
     defaultValues: {
@@ -82,6 +88,17 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
   }, [watchedClinicId, watchedClinicSource, jbClinics, sgClinics, form]);
 
   const onSubmit = async (data: PartnerFormData) => {
+    // Check rate limiting
+    if (!rateLimit.checkRateLimit()) {
+      const remainingTime = Math.ceil(rateLimit.getRemainingTime() / 1000);
+      toast({
+        title: 'Too Many Attempts',
+        description: `Please wait ${remainingTime} seconds before submitting again.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
       console.log('Submitting partner application:', data);
 
@@ -301,7 +318,7 @@ const PartnerForm = ({ onSubmissionSuccess }: PartnerFormProps) => {
         
         <Button 
           type="submit" 
-          disabled={isLoading}
+          disabled={isLoading || rateLimit.isBlocked}
           className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-semibold py-6 text-lg rounded-lg shadow-[0_8px_20px_rgba(59,130,246,0.4)] hover:shadow-[0_10px_25px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           {isLoading ? (
