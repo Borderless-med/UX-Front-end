@@ -92,7 +92,11 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
             components: [
               {
                 type: 'body',
-                parameters: templateVariables.map(v => ({ type: 'text', text: v.text }))
+                parameters: templateVariables.map(v => ({ 
+                  type: 'text', 
+                  text: v.text,
+                  parameter_name: v.parameter_name 
+                }))
               }
             ]
           }
