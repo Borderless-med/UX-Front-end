@@ -60,6 +60,20 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
     const formattedNumber = whatsapp.startsWith('+') ? whatsapp.substring(1) : whatsapp;
     const firstName = patientName.split(' ')[0]; // Get first name only
     
+    // Use approved booking_request_received template to deliver OTP
+    // Inject OTP into booking_ref field as "VERIFICATION CODE: {otpCode}"
+    const templateVariables = [
+      { parameter_name: 'patient_name', text: firstName },
+      { parameter_name: 'booking_ref', text: `VERIFICATION CODE: ${otpCode}` },
+      { parameter_name: 'clinic_name', text: 'OraChope Verification' },
+      { parameter_name: 'clinic_address', text: 'Singapore & Johor Bahru' },
+      { parameter_name: 'treatment_type', text: 'Account Verification' },
+      { parameter_name: 'requested_date', text: new Date().toLocaleDateString('en-SG', { 
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+      })},
+      { parameter_name: 'time_slot', text: 'Within 5 minutes' }
+    ];
+    
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_ID}/messages`,
       {
@@ -73,15 +87,12 @@ async function sendWhatsAppOTP(whatsapp: string, otpCode: string, patientName: s
           to: formattedNumber,
           type: 'template',
           template: {
-            name: 'booking_otp_code',
+            name: 'booking_request_received',
             language: { code: 'en' },
             components: [
               {
                 type: 'body',
-                parameters: [
-                  { type: 'text', text: firstName },
-                  { type: 'text', text: otpCode }
-                ]
+                parameters: templateVariables.map(v => ({ type: 'text', text: v.text }))
               }
             ]
           }

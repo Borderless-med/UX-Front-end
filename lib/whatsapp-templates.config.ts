@@ -26,26 +26,39 @@ export interface WhatsAppTemplateConfig {
 // ============================================
 
 /**
- * CURRENT: Dynamic OTP delivery using approved template
- * Uses: booking_otp_code (Meta Approved ✅)
- * Method: Sends dynamically generated 6-digit OTP code
- * Storage: Stored in otp_verifications table with 5-minute expiry
+ * CURRENT: Dynamic OTP delivery using approved booking template
+ * Uses: booking_request_received (Meta Approved ✅)
+ * Method: Injects "VERIFICATION CODE: {dynamic_otp}" into booking_ref variable
+ * Storage: OTP stored in otp_verifications table with 5-minute expiry
  * 
- * Note: The actual implementation is in api/request-booking-otp/index.ts
- * This uses the 'booking_otp_code' template with dynamic OTP generation
+ * Note: This is a "piggyback" approach using the booking confirmation template
+ * to deliver OTP codes. When Meta approves a dedicated authentication template,
+ * migrate to OTP_DELIVERY_TEMPLATE_WHATSAPP_PRODUCTION below.
  */
 export const OTP_DELIVERY_TEMPLATE_WHATSAPP: WhatsAppTemplateConfig = {
-  name: 'booking_otp_code', // Current approved template
+  name: 'booking_request_received', // Approved template
   language: 'en',
   variables: [
     'patient_name',     // First name of patient
-    'otp_code',         // Dynamic 6-digit OTP code
+    'booking_ref',      // Contains "VERIFICATION CODE: {dynamic_otp}"
+    'clinic_name',      // "OraChope Verification"
+    'clinic_address',   // "Singapore & Johor Bahru"
+    'treatment_type',   // "Account Verification"
+    'requested_date',   // Current date
+    'time_slot'         // "Within 5 minutes"
   ],
   mapToVariables: (otpCode: string, patientName: string) => {
     const firstName = patientName.split(' ')[0];
     return [
       { type: 'text', text: firstName },
-      { type: 'text', text: otpCode }
+      { type: 'text', text: `VERIFICATION CODE: ${otpCode}` },
+      { type: 'text', text: 'OraChope Verification' },
+      { type: 'text', text: 'Singapore & Johor Bahru' },
+      { type: 'text', text: 'Account Verification' },
+      { type: 'text', text: new Date().toLocaleDateString('en-SG', { 
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+      })},
+      { type: 'text', text: 'Within 5 minutes' }
     ];
   }
 };
