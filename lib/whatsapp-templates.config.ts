@@ -26,39 +26,26 @@ export interface WhatsAppTemplateConfig {
 // ============================================
 
 /**
- * TEMPORARY: "Piggyback" OTP delivery using approved booking template
- * Uses: booking_request_received (Meta Approved ✅)
- * Method: Injects "VERIFICATION CODE: 123456" into booking_ref variable
+ * CURRENT: Dynamic OTP delivery using approved template
+ * Uses: booking_otp_code (Meta Approved ✅)
+ * Method: Sends dynamically generated 6-digit OTP code
+ * Storage: Stored in otp_verifications table with 5-minute expiry
  * 
- * TO MIGRATE: When Meta approves Authentication Template:
- * 1. Change name to 'authentication_otp' or your approved template name
- * 2. Update variables array to match new template structure
- * 3. Update mapToVariables to match new parameter order
+ * Note: The actual implementation is in api/request-booking-otp/index.ts
+ * This uses the 'booking_otp_code' template with dynamic OTP generation
  */
 export const OTP_DELIVERY_TEMPLATE_WHATSAPP: WhatsAppTemplateConfig = {
-  name: 'booking_request_received', // CHANGE THIS when Meta approves
+  name: 'booking_otp_code', // Current approved template
   language: 'en',
   variables: [
-    'patient_name',     // Will contain first name
-    'booking_ref',      // Will contain "VERIFICATION CODE: 123456"
-    'clinic_name',      // Placeholder: "OraChope Verification"
-    'clinic_address',   // Placeholder: "Singapore & Johor Bahru"
-    'treatment_type',   // Placeholder: "Account Verification"
-    'requested_date',   // Current date
-    'time_slot'         // Placeholder: "Within 5 minutes"
+    'patient_name',     // First name of patient
+    'otp_code',         // Dynamic 6-digit OTP code
   ],
   mapToVariables: (otpCode: string, patientName: string) => {
     const firstName = patientName.split(' ')[0];
     return [
       { type: 'text', text: firstName },
-      { type: 'text', text: `VERIFICATION CODE: ${otpCode}` }, // The "piggyback"
-      { type: 'text', text: 'OraChope Verification' },
-      { type: 'text', text: 'Singapore & Johor Bahru' },
-      { type: 'text', text: 'Account Verification' },
-      { type: 'text', text: new Date().toLocaleDateString('en-US', { 
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-      })},
-      { type: 'text', text: 'Within 5 minutes' }
+      { type: 'text', text: otpCode }
     ];
   }
 };
