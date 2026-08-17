@@ -30,6 +30,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRateLimit } from '@/hooks/useRateLimit';
 import { countryCodes } from '@/data/countryCodes';
 
 const ORALLINK_URL = 'https://scan.orallink.health?ref=orachope&source=ai-scan-page';
@@ -60,6 +61,13 @@ async function recordScanInitiation(userId: string): Promise<string> {
 export default function AIScanPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Rate limiting: 5 signup attempts per hour, block for 1 hour
+  const rateLimit = useRateLimit({ 
+    maxAttempts: 5, 
+    windowMs: 60 * 60 * 1000, // 1 hour
+    blockDurationMs: 60 * 60 * 1000 // Block for 1 hour
+  });
 
   const [mode, setMode] = useState<'signup' | 'login'>('signup');
   const [name, setName] = useState('');
@@ -185,6 +193,13 @@ export default function AIScanPage() {
 
   // ── Handle Sign Up ──────────────────────────────────────────────────────────
   const handleSignUp = async () => {
+    // Check rate limiting first
+    if (!rateLimit.checkRateLimit()) {
+      const remainingTime = Math.ceil(rateLimit.getRemainingTime() / 1000 / 60);
+      setError(`Too many signup attempts. Please try again in ${remainingTime} minutes.`);
+      return;
+    }
+    
     if (!validate()) return;
     setIsLoading(true);
     setError('');
@@ -225,10 +240,12 @@ export default function AIScanPage() {
 
     const userId = data.user?.id;
     if (userId) {
+      rateLimit.reset(); // Reset rate limit on successful signup
       await recordScanInitiation(userId);
       window.location.href = ORALLINK_URL;
     } else {
       // Email confirmation required — inform user
+      rateLimit.reset(); // Reset rate limit on successful signup
       setError('');
       setIsLoading(false);
       alert('Check your email to confirm your account, then return here to start your scan.');

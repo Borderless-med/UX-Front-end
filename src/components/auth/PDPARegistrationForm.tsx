@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRateLimit } from '@/hooks/useRateLimit';
 import { Loader2, Shield, Eye, EyeOff, Info } from 'lucide-react';
 
 interface PDPARegistrationFormProps {
@@ -26,6 +27,14 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
   compactLayout = false
 }) => {
   const { register, loginWithGoogle, loginWithFacebook, isLoading } = useAuth();
+  
+  // Rate limiting: 5 signup attempts per hour, block for 1 hour
+  const rateLimit = useRateLimit({ 
+    maxAttempts: 5, 
+    windowMs: 60 * 60 * 1000, // 1 hour
+    blockDurationMs: 60 * 60 * 1000 // Block for 1 hour
+  });
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -156,6 +165,13 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Check rate limiting
+    if (!rateLimit.checkRateLimit()) {
+      const remainingTime = Math.ceil(rateLimit.getRemainingTime() / 1000 / 60);
+      setError(`Too many signup attempts. Please try again in ${remainingTime} minutes.`);
+      return;
+    }
+    
     if (!validateForm()) {
       return;
     }
@@ -178,6 +194,7 @@ const PDPARegistrationForm: React.FC<PDPARegistrationFormProps> = ({
     
     if (result.success) {
       // Show success message (user needs to confirm email)
+      rateLimit.reset(); // Reset rate limit on successful signup
       setIsSuccess(true);
       setError('');
     } else {
