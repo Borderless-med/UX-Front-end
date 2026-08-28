@@ -303,6 +303,8 @@ export default function AIScanPage() {
                 src="/orachope.png"
                 alt="OraChope"
                 className="h-10"
+                width="192"
+                height="112"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = 'none';
                 }}

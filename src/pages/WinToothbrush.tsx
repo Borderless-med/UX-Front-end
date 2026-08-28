@@ -130,6 +130,8 @@ const WinToothbrush = () => {
               src="/orachope.png"
               alt="OraChope.org"
               className="h-12 md:h-16 object-contain"
+              width="192"
+              height="112"
               onError={(e) => { 
                 (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; 
               }}
