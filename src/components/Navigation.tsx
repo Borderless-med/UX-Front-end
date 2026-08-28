@@ -41,6 +41,8 @@ const Navigation = () => {
                   src="/orachope.png"
                   alt="OraChope.org"
                   className="h-24 md:h-28 w-full object-contain object-left drop-shadow-sm"
+                  fetchPriority="high"
+                  loading="eager"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; }}
                 />
               </div>

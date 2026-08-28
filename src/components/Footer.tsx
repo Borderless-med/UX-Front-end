@@ -44,6 +44,7 @@ const Footer = () => {
                   src="/orachope.png"
                   alt="OraChope.org"
                   className="h-10 sm:h-12 w-auto"
+                  loading="lazy"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; }}
                 />
               </div>
