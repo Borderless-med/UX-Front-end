@@ -470,8 +470,7 @@ export default function AIScanPage() {
                         placeholder="9123 4567"
                         className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
                       />
-                    </div className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-teal-400 focus:outline-none text-base transition-colors bg-white text-gray-900 placeholder-gray-400"
-                    />
+                    </div>
                   </div>
                 )}
 
