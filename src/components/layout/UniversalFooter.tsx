@@ -8,13 +8,13 @@ const UniversalFooter: React.FC = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <img 
-              src="/orachope.png" 
+              src="/orachope.webp" 
               alt="OraChope.org" 
               className="h-10 sm:h-12 w-auto"
               width="192"
               height="112"
               loading="lazy"
-              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; }}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope.png'; }}
             />
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-slate-700 text-sm">

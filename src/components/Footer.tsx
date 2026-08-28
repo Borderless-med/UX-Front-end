@@ -41,11 +41,11 @@ const Footer = () => {
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="mb-4">
                 <img
-                  src="/orachope.png"
+                  src="/orachope.webp"
                   alt="OraChope.org"
                   className="h-10 sm:h-12 w-auto"
                   loading="lazy"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; }}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope.png'; }}
                 />
               </div>
               <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">

@@ -38,14 +38,14 @@ const Navigation = () => {
               {/* OraChope box width retained; ensure left alignment */}
               <div className="w-44 md:w-52 mb-0.5 self-start">
                 <img
-                  src="/orachope.png"
+                  src="/orachope.webp"
                   alt="OraChope.org"
                   className="h-24 md:h-28 w-full object-contain object-left drop-shadow-sm"
                   width="192"
                   height="112"
                   fetchPriority="high"
                   loading="eager"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; }}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/orachope.png'; }}
                 />
               </div>
             </Link>
