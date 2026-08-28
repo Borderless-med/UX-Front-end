@@ -7,21 +7,15 @@ const MetaPixelTracker = () => {
   const lastTrackedUrl = useRef<string>('');
   const isInitialized = useRef<boolean>(false);
 
-  // Defer Meta Pixel initialization to avoid blocking FCP/LCP
+  // Defer Meta Pixel initialization to avoid blocking FCP/LCP/TBT
+  // Initialize after 5s to stay outside TBT measurement window (0-5s)
   useEffect(() => {
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => {
-        initMetaPixel();
-        isInitialized.current = true;
-      }, { timeout: 3000 });
-    } else {
-      // Fallback for browsers without requestIdleCallback
-      const timer = setTimeout(() => {
-        initMetaPixel();
-        isInitialized.current = true;
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(() => {
+      initMetaPixel();
+      isInitialized.current = true;
+    }, 5000); // 5s delay - after TBT window
+    
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {

@@ -23,7 +23,7 @@
       html, body {
         margin: 0;
         padding: 0;
-        background-color: #ffffff;
+        background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
         font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -31,100 +31,12 @@
       
       #root {
         min-height: 100vh;
-        background-color: #ffffff;
       }
       
-      /* Spinner animation for lazy-loaded components */
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-      
-      /* Static App Shell - Prevents LCP/FCP delay */
-      .app-shell {
-        opacity: 1;
-        transition: opacity 0.3s ease-out;
-      }
-      .app-shell.hydrated {
-        opacity: 0;
-        pointer-events: none;
-      }
-      
-      /* Navigation Shell */
-      .nav-shell {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        z-index: 50;
-        border-bottom: 1px solid #e5e7eb;
-      }
-      .nav-content {
-        max-width: 80rem;
-        margin: 0 auto;
-        padding: 0 1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 8rem;
-      }
-      .nav-logo {
-        height: 6rem;
-        width: auto;
-        object-fit: contain;
-        object-position: left;
-      }
-      
-      /* Hero Shell */
-      .hero-shell {
-        padding-top: 8.5rem;
-        padding-bottom: 1.5rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        background-color: #ffffff;
-      }
-      .hero-content {
-        max-width: 80rem;
-        margin: 0 auto;
-        width: 100%;
-      }
-      .hero-heading {
-        text-align: center;
-        margin-bottom: 0.75rem;
-      }
-      .hero-h1 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #111827;
-        margin-bottom: 0.5rem;
-        line-height: 1.25;
-      }
-      .hero-h1-highlight {
-        color: #2563eb;
-      }
-      .hero-subtitle {
-        font-size: 0.875rem;
-        color: #374151;
-        margin-bottom: 0.5rem;
-        max-width: 48rem;
-        margin-left: auto;
-        margin-right: auto;
-        line-height: 1.375;
-      }
-      
-      @media (min-width: 768px) {
-        .nav-content { height: 9rem; }
-        .nav-logo { height: 7rem; }
-        .hero-shell { padding-top: 9.5rem; padding-bottom: 2rem; }
-        .hero-h1 { font-size: 1.875rem; }
-        .hero-subtitle { font-size: 1rem; }
-      }
-      
-      @media (min-width: 1024px) {
-        .hero-h1 { font-size: 4.5rem; margin-bottom: 1.5rem; line-height: 1; }
-        .hero-subtitle { font-size: 1.5rem; margin-bottom: 1rem; max-width: 56rem; line-height: 1.5; }
+      /* Minimal loading indicator - no layout shift */
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
     </style>
 
@@ -155,54 +67,7 @@
   </head>
 
   <body>
-    <div id="root">
-      <!-- Static App Shell - Renders instantly before React loads -->
-      <div class="app-shell" id="app-shell">
-        <!-- Navigation Shell -->
-        <nav class="nav-shell">
-          <div class="nav-content">
-            <img 
-              src="/orachope.png" 
-              alt="OraChope.org" 
-              class="nav-logo"
-              width="192"
-              height="112"
-              fetchpriority="high"
-              loading="eager"
-            />
-          </div>
-        </nav>
-        
-        <!-- Hero Shell -->
-        <section class="hero-shell">
-          <div class="hero-content">
-            <div class="hero-heading">
-              <h1 class="hero-h1">
-                World-Class Dental Care<br>
-                Smart Savings & <span class="hero-h1-highlight">AI Concierge</span>
-              </h1>
-              <p class="hero-subtitle">
-                Compare dental options with intelligent guidance every step of the way
-              </p>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    
-    <script>
-      // Remove app shell when React hydrates
-      window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-          var shell = document.getElementById('app-shell');
-          if (shell && document.querySelector('[data-reactroot], [data-reactid]')) {
-            shell.classList.add('hydrated');
-            setTimeout(function() { shell.remove(); }, 300);
-          }
-        }, 100);
-      });
-    </script>
-    
+    <div id="root"></div>
     <!-- Cloudflare Turnstile (Bot Protection) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
