@@ -451,6 +451,7 @@ export default function AIScanPage() {
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                       Mobile Number <span className="text-gray-400 font-normal">(optional if email provided)</span>
+                    </label>
                     <div className="flex gap-2">
                       <select
                         value={countryCode}
