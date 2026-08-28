@@ -14,6 +14,38 @@
     <!-- Preload critical logo for LCP optimization -->
     <link rel="preload" href="/orachope.png" as="image" fetchpriority="high">
 
+    <!-- Critical CSS: Inline styles for instant FCP -->
+    <style>
+      /* Prevent blank white screen during JS load */
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      #root {
+        min-height: 100vh;
+        background-color: #ffffff;
+      }
+      
+      /* Loading skeleton to prevent layout shift */
+      #root:empty::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(to bottom, #f9fafb 0%, #ffffff 100%);
+      }
+      
+      /* Spinner animation for lazy-loaded components */
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+
     <meta property="og:title" content="World-Class Dental Care | Smart Savings | AI Concierge" />
     <meta property="og:description" content="World-class dental care with smart savings and AI concierge guidance. Experience premium dental treatments across Singapore & Malaysia with intelligent assistance." />
     <meta property="og:type" content="website" />

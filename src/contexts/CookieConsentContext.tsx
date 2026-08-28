@@ -18,13 +18,13 @@ export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({
     updateStoredConsent,
   } = useCookieStorage();
 
-  // Load saved consent on mount
+  // Load saved consent on mount AND when delay completes
   useEffect(() => {
     const savedConsent = loadSavedConsent();
     if (savedConsent) {
       setConsent(savedConsent);
     }
-  }, []);
+  }, [showBanner]); // Re-run when showBanner changes (after delay)
 
   // Apply consent changes to tracking scripts
   useEffect(() => {

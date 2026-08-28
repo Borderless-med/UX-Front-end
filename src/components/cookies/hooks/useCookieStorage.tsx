@@ -6,6 +6,36 @@ import { getSavedConsent, parseSavedConsent, saveConsent, removeSavedConsent } f
 export const useCookieStorage = () => {
   const [hasConsented, setHasConsented] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
+  const [delayComplete, setDelayComplete] = useState(false);
+
+  // Delay banner to prevent LCP interference
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    let scrollTriggered = false;
+
+    const handleScroll = () => {
+      if (!scrollTriggered) {
+        scrollTriggered = true;
+        setDelayComplete(true);
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('touchstart', handleScroll);
+      }
+    };
+
+    // Show banner after 3 seconds OR on first scroll/touch
+    timeoutId = setTimeout(() => {
+      setDelayComplete(true);
+    }, 3000);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('touchstart', handleScroll, { passive: true });
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchstart', handleScroll);
+    };
+  }, []);
 
   const loadSavedConsent = (): CookieConsent | null => {
     const savedConsent = getSavedConsent();
@@ -16,14 +46,18 @@ export const useCookieStorage = () => {
         setShowBanner(false);
         return parsed;
       } else {
-        // Consent expired
+        // Consent expired - only show if delay is complete
         removeSavedConsent();
-        setShowBanner(true);
+        if (delayComplete) {
+          setShowBanner(true);
+        }
         return null;
       }
     } else {
-      // No saved consent
-      setShowBanner(true);
+      // No saved consent - only show if delay is complete
+      if (delayComplete) {
+        setShowBanner(true);
+      }
       return null;
     }
   };
