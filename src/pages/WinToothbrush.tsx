@@ -125,7 +125,7 @@ const WinToothbrush = () => {
       {/* Header Section */}
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center">
             <img
               src="/orachope.png"
               alt="OraChope.org"
@@ -136,10 +136,6 @@ const WinToothbrush = () => {
                 (e.currentTarget as HTMLImageElement).src = '/orachope-logo.svg'; 
               }}
             />
-            <div className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-              <Sparkles className="h-4 w-4" />
-              Limited Offer
-            </div>
           </div>
         </div>
       </header>
@@ -205,6 +201,25 @@ const WinToothbrush = () => {
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                   <p className="text-xs text-gray-700"><strong>Smart Timer & 25-Day Battery</strong> - USB-C rechargeable with 2-min timer</p>
+                </div>
+              </div>
+
+              {/* Price Preview Section */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                <h4 className="text-xs font-semibold text-blue-900 mb-2">💰 Typical Savings with OraChope</h4>
+                <div className="text-xs text-blue-800 space-y-1">
+                  <div className="flex justify-between">
+                    <span>Scaling & Polishing (SG):</span>
+                    <span className="font-semibold">$110</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Scaling & Polishing (JB):</span>
+                    <span className="font-semibold text-green-700">$45</span>
+                  </div>
+                  <div className="border-t border-blue-300 pt-1 mt-1 flex justify-between">
+                    <span className="font-bold">You Save:</span>
+                    <span className="font-bold text-green-700">$65 (59%)</span>
+                  </div>
                 </div>
               </div>
 
@@ -275,17 +290,10 @@ const WinToothbrush = () => {
                       </p>
                     </div>
 
-                    {/* PDPA Consent */}
-                    <PDPAConsentCheckbox
-                      checked={pdpaConsent}
-                      onCheckedChange={setPdpaConsent}
-                      disabled={isLoading}
-                    />
-
                     {/* Social Login Buttons */}
                     <SocialLoginButtons
                       onError={setError}
-                      disabled={!pdpaConsent || isLoading}
+                      disabled={isLoading}
                     />
 
                     {/* Divider */}
@@ -334,6 +342,13 @@ const WinToothbrush = () => {
                           <AlertDescription className="text-red-800 text-xs">{error}</AlertDescription>
                         </Alert>
                       )}
+
+                      {/* PDPA Consent - Moved to bottom */}
+                      <PDPAConsentCheckbox
+                        checked={pdpaConsent}
+                        onCheckedChange={setPdpaConsent}
+                        disabled={isLoading}
+                      />
 
                       <Button
                         type="submit"
@@ -390,6 +405,25 @@ const WinToothbrush = () => {
                   </div>
                   <div className="absolute -top-2 -right-2 bg-red-500 text-white px-3 py-1 rounded-full shadow-lg transform rotate-12">
                     <span className="font-bold text-xs">FREE!</span>
+                  </div>
+                </div>
+
+                {/* Price Preview Section - Mobile */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+                  <h4 className="text-xs font-semibold text-blue-900 mb-2">💰 Typical Savings with OraChope</h4>
+                  <div className="text-xs text-blue-800 space-y-1">
+                    <div className="flex justify-between">
+                      <span>Scaling & Polishing (SG):</span>
+                      <span className="font-semibold">$110</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Scaling & Polishing (JB):</span>
+                      <span className="font-semibold text-green-700">$45</span>
+                    </div>
+                    <div className="border-t border-blue-300 pt-1 mt-1 flex justify-between">
+                      <span className="font-bold">You Save:</span>
+                      <span className="font-bold text-green-700">$65 (59%)</span>
+                    </div>
                   </div>
                 </div>
                 

@@ -14,7 +14,7 @@ const PDPAConsentCheckbox: React.FC<PDPAConsentCheckboxProps> = ({
   disabled,
 }) => {
   return (
-    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+    <div className="bg-gray-50 border border-gray-300 rounded-lg p-3">
       <div className="flex items-start space-x-2">
         <Checkbox
           id="giveaway-pdpa"
@@ -26,17 +26,17 @@ const PDPAConsentCheckbox: React.FC<PDPAConsentCheckboxProps> = ({
         <div>
           <Label
             htmlFor="giveaway-pdpa"
-            className="text-xs font-medium text-red-800 cursor-pointer"
+            className="text-xs font-medium text-gray-800 cursor-pointer"
           >
             I agree to the PDPA terms *
           </Label>
-          <p className="text-[10px] text-red-700 mt-1 leading-tight">
+          <p className="text-[10px] text-gray-700 mt-1 leading-tight">
             I consent to the collection, use and disclosure of my personal data for giveaway entry,
             dental service recommendations, and communications.{' '}
             <a
               href="/privacy-policy"
               target="_blank"
-              className="text-red-600 hover:text-red-800 underline"
+              className="text-blue-600 hover:text-blue-800 underline"
             >
               Privacy Policy
             </a>
