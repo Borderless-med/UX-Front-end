@@ -105,11 +105,15 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
   const eventId = typeof req.body?.event_id === 'string' ? req.body.event_id : undefined;
   const eventSourceUrl = typeof req.body?.event_source_url === 'string' ? req.body.event_source_url : undefined;
 
-  // test_event_code: prefer request body, fall back to env var (set in Vercel during testing)
+  // test_event_code: request body → META_TEST_EVENT_CODE env var → META_TEST_CODE env var
   const testEventCode =
     (typeof req.body?.test_event_code === 'string' ? req.body.test_event_code : undefined) ??
-    (process.env.META_TEST_EVENT_CODE || undefined);
-  console.log('[CAPI] test_event_code:', testEventCode ?? '(none)');
+    process.env.META_TEST_EVENT_CODE ??
+    process.env.META_TEST_CODE ??
+    undefined;
+  console.log('[CAPI] test_event_code resolved:', testEventCode ?? '(none)',
+    '| META_TEST_EVENT_CODE present:', !!process.env.META_TEST_EVENT_CODE,
+    '| META_TEST_CODE present:', !!process.env.META_TEST_CODE);
 
   // event_time: always server-generated — never trust the client
   const eventTime = Math.floor(Date.now() / 1000);
