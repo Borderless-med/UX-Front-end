@@ -111,15 +111,9 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
     (process.env.META_TEST_EVENT_CODE || undefined);
   console.log('[CAPI] test_event_code:', testEventCode ?? '(none)');
 
-  // event_time: always generate server-side; reject any client value older than 5 minutes
-  const FIVE_MINUTES_S = 5 * 60;
-  const nowS = Math.floor(Date.now() / 1000);
-  const clientEventTime = typeof req.body?.event_time === 'number' ? req.body.event_time : undefined;
-  const eventTime =
-    clientEventTime && clientEventTime > nowS - FIVE_MINUTES_S && clientEventTime <= nowS
-      ? clientEventTime
-      : nowS;
-  console.log('[CAPI] event_time:', eventTime, '(source:', clientEventTime ? 'client (validated)' : 'server Date.now()', ')');
+  // event_time: always server-generated — never trust the client
+  const eventTime = Math.floor(Date.now() / 1000);
+  console.log('[CAPI] event_time:', eventTime);
 
   const eventData = sanitizeEventData(req.body?.event_data ?? {});
 
@@ -156,6 +150,7 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
     userData.client_user_agent = userAgent;
   }
 
+  // test_event_code at root level per Meta CAPI spec — always included when env var is set
   const payload: Record<string, unknown> = {
     data: [
       {
@@ -168,14 +163,10 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
         custom_data: eventData,
       },
     ],
+    test_event_code: testEventCode,
   };
 
-  // test_event_code must be at the root of the payload, not inside data[]
-  if (testEventCode) {
-    payload.test_event_code = testEventCode;
-  }
-
-  console.log('[CAPI] Payload:', JSON.stringify(payload, null, 2));
+  console.log('[CAPI] Final Payload:', JSON.stringify(payload, null, 2));
 
   try {
     const metaResponse = await fetch(
