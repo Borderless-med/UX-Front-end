@@ -104,7 +104,23 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
   const eventName = typeof req.body?.event_name === 'string' ? req.body.event_name : undefined;
   const eventId = typeof req.body?.event_id === 'string' ? req.body.event_id : undefined;
   const eventSourceUrl = typeof req.body?.event_source_url === 'string' ? req.body.event_source_url : undefined;
-  const testEventCode = typeof req.body?.test_event_code === 'string' ? req.body.test_event_code : undefined;
+
+  // test_event_code: prefer request body, fall back to env var (set in Vercel during testing)
+  const testEventCode =
+    (typeof req.body?.test_event_code === 'string' ? req.body.test_event_code : undefined) ??
+    (process.env.META_TEST_EVENT_CODE || undefined);
+  console.log('[CAPI] test_event_code:', testEventCode ?? '(none)');
+
+  // event_time: always generate server-side; reject any client value older than 5 minutes
+  const FIVE_MINUTES_S = 5 * 60;
+  const nowS = Math.floor(Date.now() / 1000);
+  const clientEventTime = typeof req.body?.event_time === 'number' ? req.body.event_time : undefined;
+  const eventTime =
+    clientEventTime && clientEventTime > nowS - FIVE_MINUTES_S && clientEventTime <= nowS
+      ? clientEventTime
+      : nowS;
+  console.log('[CAPI] event_time:', eventTime, '(source:', clientEventTime ? 'client (validated)' : 'server Date.now()', ')');
+
   const eventData = sanitizeEventData(req.body?.event_data ?? {});
 
   const rawEmail = normalizeEmail(req.body?.user_data?.email);
@@ -144,7 +160,7 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
     data: [
       {
         event_name: eventName,
-        event_time: Math.floor(Date.now() / 1000),
+        event_time: eventTime,
         event_id: eventId,
         action_source: 'website',
         event_source_url: eventSourceUrl,
