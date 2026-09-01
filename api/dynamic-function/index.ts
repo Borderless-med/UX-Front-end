@@ -93,7 +93,10 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
   const accessToken = process.env.META_ACCESS_TOKEN;
   const pixelId = process.env.META_PIXEL_ID;
 
+  console.log('[CAPI] Handler entered. pixelId present:', !!pixelId, '| accessToken present:', !!accessToken);
+
   if (!accessToken || !pixelId) {
+    console.error('[CAPI] Aborting: missing META_ACCESS_TOKEN or META_PIXEL_ID env vars');
     res.status(500).json({ error: 'Missing Meta configuration' });
     return;
   }
@@ -101,12 +104,14 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
   const eventName = typeof req.body?.event_name === 'string' ? req.body.event_name : undefined;
   const eventId = typeof req.body?.event_id === 'string' ? req.body.event_id : undefined;
   const eventSourceUrl = typeof req.body?.event_source_url === 'string' ? req.body.event_source_url : undefined;
+  const testEventCode = typeof req.body?.test_event_code === 'string' ? req.body.test_event_code : undefined;
   const eventData = sanitizeEventData(req.body?.event_data ?? {});
 
   const rawEmail = normalizeEmail(req.body?.user_data?.email);
   const rawPhone = normalizePhone(req.body?.user_data?.phone);
 
   if (!eventName || !eventId) {
+    console.error('[CAPI] Aborting: missing event_name or event_id in request body');
     res.status(400).json({ error: 'event_name and event_id are required' });
     return;
   }
@@ -135,7 +140,7 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
     userData.client_user_agent = userAgent;
   }
 
-  const payload = {
+  const payload: Record<string, unknown> = {
     data: [
       {
         event_name: eventName,
@@ -149,8 +154,15 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
     ],
   };
 
+  // test_event_code must be at the root of the payload, not inside data[]
+  if (testEventCode) {
+    payload.test_event_code = testEventCode;
+  }
+
+  console.log('[CAPI] Payload:', JSON.stringify(payload, null, 2));
+
   try {
-    const response = await fetch(
+    const metaResponse = await fetch(
       `https://graph.facebook.com/v20.0/${pixelId}/events?access_token=${encodeURIComponent(accessToken)}`,
       {
         method: 'POST',
@@ -161,17 +173,18 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
       },
     );
 
-    const data = await response.json();
+    const metaData = await metaResponse.json();
+    console.log('[CAPI] Meta API Response:', JSON.stringify(metaData, null, 2));
 
-    if (!response.ok) {
-      console.error('Meta CAPI error:', data);
-      res.status(502).json({ error: 'Meta CAPI request failed', details: data });
+    if (!metaResponse.ok) {
+      console.error('[CAPI] Meta returned non-2xx status:', metaResponse.status);
+      res.status(502).json({ error: 'Meta CAPI request failed', details: metaData });
       return;
     }
 
-    res.status(200).json({ ok: true, meta: data });
+    res.status(200).json({ ok: true, meta: metaData });
   } catch (error) {
-    console.error('Meta CAPI handler error:', error);
+    console.error('[CAPI] Fetch to Meta failed with exception:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
