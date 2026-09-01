@@ -106,7 +106,7 @@ const WinToothbrush = () => {
             currency: 'SGD',
           },
           {
-            em: email.trim(),
+            email: email.trim(),
             external_id: data.user.id,
           }
         );

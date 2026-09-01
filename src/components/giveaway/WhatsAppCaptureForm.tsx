@@ -83,8 +83,8 @@ const WhatsAppCaptureForm: React.FC<WhatsAppCaptureFormProps> = ({
         },
         userEmail
           ? {
-              em: userEmail,
-              ph: fullWhatsApp.replace(/\s/g, ''),
+              email: userEmail,
+              phone: fullWhatsApp.replace(/\s/g, ''),
               external_id: userId,
             }
           : undefined

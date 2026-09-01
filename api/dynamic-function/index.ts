@@ -91,7 +91,7 @@ async function handleChatProxy(req: VercelRequest, res: VercelResponse): Promise
 
 async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<void> {
   const accessToken = process.env.META_ACCESS_TOKEN;
-  const pixelId = process.env.VITE_META_PIXEL_ID || process.env.META_PIXEL_ID;
+  const pixelId = process.env.META_PIXEL_ID;
 
   if (!accessToken || !pixelId) {
     res.status(500).json({ error: 'Missing Meta configuration' });
