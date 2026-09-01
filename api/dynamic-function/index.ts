@@ -94,6 +94,9 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
   const pixelId = process.env.META_PIXEL_ID;
 
   console.log('[CAPI] Handler entered. pixelId present:', !!pixelId, '| accessToken present:', !!accessToken);
+  if (pixelId) {
+    console.log('[CAPI] Pixel ID (first 6 / last 4):', pixelId.slice(0, 6) + '...' + pixelId.slice(-4));
+  }
 
   if (!accessToken || !pixelId) {
     console.error('[CAPI] Aborting: missing META_ACCESS_TOKEN or META_PIXEL_ID env vars');
