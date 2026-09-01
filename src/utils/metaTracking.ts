@@ -98,10 +98,13 @@ export function trackMetaEvent(
   const eventId = providedEventId || generateEventId();
   const safeEventData = sanitizePayload(eventData);
 
-  initMetaPixel();
-
-  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-    window.fbq('track', eventName, safeEventData, { eventID: eventId });
+  try {
+    initMetaPixel();
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', eventName, safeEventData, { eventID: eventId });
+    }
+  } catch {
+    // Browser pixel blocked or failed — CAPI below is unaffected
   }
 
   if (typeof window !== 'undefined') {
