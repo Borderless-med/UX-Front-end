@@ -10,6 +10,7 @@ import { trackMetaEvent } from '@/utils/metaTracking';
 interface WhatsAppCaptureFormProps {
   userId: string;
   userEmail?: string;
+  userFullName?: string;
   onSuccess: () => void;
 }
 
@@ -22,9 +23,27 @@ const COUNTRY_CODES = [
   { code: '+86', country: 'China', flag: '🇨🇳' },
 ];
 
+function splitFullName(fullName?: string): { firstName?: string; lastName?: string } {
+  if (!fullName) {
+    return {};
+  }
+
+  const normalized = fullName.trim();
+  if (!normalized) {
+    return {};
+  }
+
+  const [firstName, ...rest] = normalized.split(/\s+/);
+  return {
+    firstName: firstName || undefined,
+    lastName: rest.length ? rest.join(' ') : undefined,
+  };
+}
+
 const WhatsAppCaptureForm: React.FC<WhatsAppCaptureFormProps> = ({
   userId,
   userEmail,
+  userFullName,
   onSuccess,
 }) => {
   const [countryCode, setCountryCode] = useState('+65');
@@ -72,6 +91,9 @@ const WhatsAppCaptureForm: React.FC<WhatsAppCaptureFormProps> = ({
 
       if (updateError) throw updateError;
 
+      const { firstName, lastName } = splitFullName(userFullName);
+      const normalizedPhone = fullWhatsApp.replace(/\s/g, '');
+
       // Track Meta CompleteRegistration event
       trackMetaEvent(
         'CompleteRegistration',
@@ -81,13 +103,13 @@ const WhatsAppCaptureForm: React.FC<WhatsAppCaptureFormProps> = ({
           value: 1.0,
           currency: 'SGD',
         },
-        userEmail
-          ? {
-              email: userEmail,
-              phone: fullWhatsApp.replace(/\s/g, ''),
-              external_id: userId,
-            }
-          : undefined
+        {
+          em: userEmail?.trim().toLowerCase(),
+          ph: normalizedPhone,
+          fn: firstName,
+          ln: lastName,
+          external_id: userId,
+        }
       );
 
       onSuccess();

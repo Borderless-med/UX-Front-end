@@ -3,8 +3,19 @@ type Primitive = string | number | boolean;
 type EventPayload = Record<string, Primitive | null | undefined>;
 
 interface MetaUserData {
+  em?: string;
+  ph?: string;
+  fn?: string;
+  ln?: string;
+  fbp?: string;
+  fbc?: string;
+  external_id?: string;
+
+  // Backward-compatible aliases. These are normalized into em/ph/fn/ln.
   email?: string;
   phone?: string;
+  first_name?: string;
+  last_name?: string;
 }
 
 const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || '2329732740851617';
@@ -53,6 +64,75 @@ function sanitizePayload(payload: EventPayload): Record<string, Primitive> {
   return cleaned;
 }
 
+function normalizeValue(value?: string): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const normalized = value.trim();
+  return normalized || undefined;
+}
+
+function normalizeEmail(value?: string): string | undefined {
+  const normalized = normalizeValue(value);
+  return normalized?.toLowerCase();
+}
+
+function normalizePhone(value?: string): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const normalized = value.replace(/\D/g, '');
+  return normalized || undefined;
+}
+
+function getCookieValue(name: string): string | undefined {
+  if (typeof document === 'undefined') {
+    return undefined;
+  }
+
+  const prefix = `${name}=`;
+  const match = document.cookie
+    .split(';')
+    .map((item) => item.trim())
+    .find((item) => item.startsWith(prefix));
+
+  if (!match) {
+    return undefined;
+  }
+
+  const value = match.slice(prefix.length);
+
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function buildMetaUserData(userData?: MetaUserData): MetaUserData | undefined {
+  const em = normalizeEmail(userData?.em ?? userData?.email);
+  const ph = normalizePhone(userData?.ph ?? userData?.phone);
+  const fn = normalizeValue(userData?.fn ?? userData?.first_name);
+  const ln = normalizeValue(userData?.ln ?? userData?.last_name);
+  const externalId = normalizeValue(userData?.external_id);
+  const fbp = normalizeValue(userData?.fbp ?? getCookieValue('_fbp'));
+  const fbc = normalizeValue(userData?.fbc ?? getCookieValue('_fbc'));
+
+  const normalizedUserData: MetaUserData = {};
+
+  if (em) normalizedUserData.em = em;
+  if (ph) normalizedUserData.ph = ph;
+  if (fn) normalizedUserData.fn = fn;
+  if (ln) normalizedUserData.ln = ln;
+  if (externalId) normalizedUserData.external_id = externalId;
+  if (fbp) normalizedUserData.fbp = fbp;
+  if (fbc) normalizedUserData.fbc = fbc;
+
+  return Object.keys(normalizedUserData).length ? normalizedUserData : undefined;
+}
+
 function generateEventId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
@@ -97,6 +177,7 @@ export function trackMetaEvent(
 ): string {
   const eventId = providedEventId || generateEventId();
   const safeEventData = sanitizePayload(eventData);
+  const normalizedUserData = buildMetaUserData(userData);
 
   try {
     initMetaPixel();
@@ -117,7 +198,7 @@ export function trackMetaEvent(
         event_name: eventName,
         event_id: eventId,
         event_data: safeEventData,
-        user_data: userData,
+        user_data: normalizedUserData,
         event_source_url: window.location.href,
       }),
     }).catch((error) => {

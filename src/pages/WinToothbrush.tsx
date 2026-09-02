@@ -14,6 +14,23 @@ import GiveawayThankYou from '@/components/giveaway/GiveawayThankYou';
 
 type GiveawayStep = 'signup' | 'whatsapp' | 'thankyou';
 
+function splitFullName(fullName?: string): { firstName?: string; lastName?: string } {
+  if (!fullName) {
+    return {};
+  }
+
+  const normalized = fullName.trim();
+  if (!normalized) {
+    return {};
+  }
+
+  const [firstName, ...rest] = normalized.split(/\s+/);
+  return {
+    firstName: firstName || undefined,
+    lastName: rest.length ? rest.join(' ') : undefined,
+  };
+}
+
 const WinToothbrush = () => {
   const [currentStep, setCurrentStep] = useState<GiveawayStep>('signup');
   const [pdpaConsent, setPdpaConsent] = useState(false);
@@ -95,6 +112,7 @@ const WinToothbrush = () => {
         setUserId(data.user.id);
         setUserEmail(data.user.email || null);
         setUserName(fullName.trim());
+        const { firstName, lastName } = splitFullName(fullName);
         
         // Track Meta Lead event
         trackMetaEvent(
@@ -106,7 +124,9 @@ const WinToothbrush = () => {
             currency: 'SGD',
           },
           {
-            email: email.trim(),
+            em: email.trim(),
+            fn: firstName,
+            ln: lastName,
             external_id: data.user.id,
           }
         );
@@ -380,6 +400,7 @@ const WinToothbrush = () => {
                   <WhatsAppCaptureForm
                     userId={userId}
                     userEmail={userEmail || undefined}
+                    userFullName={userName || fullName || undefined}
                     onSuccess={() => setCurrentStep('thankyou')}
                   />
                 )}

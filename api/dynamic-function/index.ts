@@ -57,8 +57,43 @@ function normalizePhone(phone?: string): string | undefined {
   return normalized || undefined;
 }
 
+function normalizeName(name?: string): string | undefined {
+  if (!name) {
+    return undefined;
+  }
+
+  const normalized = name.trim().toLowerCase();
+  return normalized || undefined;
+}
+
+function normalizeExternalId(externalId?: string): string | undefined {
+  if (!externalId) {
+    return undefined;
+  }
+
+  const normalized = externalId.trim();
+  return normalized || undefined;
+}
+
+function toStringValue(value: unknown): string | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const normalized = value.trim();
+  return normalized || undefined;
+}
+
+function isSha256(value: string): boolean {
+  return /^[a-f0-9]{64}$/i.test(value);
+}
+
 function sha256(value: string): string {
   return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function hashIfNeeded(value: string): string {
+  return isSha256(value) ? value.toLowerCase() : sha256(value);
 }
 
 function setCorsHeaders(res: VercelResponse): void {
@@ -124,9 +159,6 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
 
   const eventData = sanitizeEventData(req.body?.event_data ?? {});
 
-  const rawEmail = normalizeEmail(req.body?.user_data?.email);
-  const rawPhone = normalizePhone(req.body?.user_data?.phone);
-
   if (!eventName || !eventId) {
     console.error('[CAPI] Aborting: missing event_name or event_id in request body');
     res.status(400).json({ error: 'event_name and event_id are required' });
@@ -139,14 +171,47 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
     : forwardedFor?.split(',')[0]?.trim();
   const userAgent = req.headers['user-agent'];
 
+  const incomingUserData =
+    req.body?.user_data && typeof req.body.user_data === 'object' && !Array.isArray(req.body.user_data)
+      ? (req.body.user_data as Record<string, unknown>)
+      : {};
+
+  const rawEmail = normalizeEmail(toStringValue(incomingUserData.em) ?? toStringValue(incomingUserData.email));
+  const rawPhone = normalizePhone(toStringValue(incomingUserData.ph) ?? toStringValue(incomingUserData.phone));
+  const rawFirstName = normalizeName(toStringValue(incomingUserData.fn) ?? toStringValue(incomingUserData.first_name));
+  const rawLastName = normalizeName(toStringValue(incomingUserData.ln) ?? toStringValue(incomingUserData.last_name));
+  const rawExternalId = normalizeExternalId(toStringValue(incomingUserData.external_id));
+  const fbp = toStringValue(incomingUserData.fbp);
+  const fbc = toStringValue(incomingUserData.fbc);
+
   const userData: Record<string, unknown> = {};
 
   if (rawEmail) {
-    userData.em = [sha256(rawEmail)];
+    userData.em = [hashIfNeeded(rawEmail)];
   }
 
   if (rawPhone) {
-    userData.ph = [sha256(rawPhone)];
+    userData.ph = [hashIfNeeded(rawPhone)];
+  }
+
+  if (rawFirstName) {
+    userData.fn = [hashIfNeeded(rawFirstName)];
+  }
+
+  if (rawLastName) {
+    userData.ln = [hashIfNeeded(rawLastName)];
+  }
+
+  if (rawExternalId) {
+    userData.external_id = [hashIfNeeded(rawExternalId)];
+  }
+
+  if (fbp) {
+    userData.fbp = fbp;
+  }
+
+  if (fbc) {
+    userData.fbc = fbc;
   }
 
   if (clientIpAddress) {
@@ -156,6 +221,8 @@ async function handleMetaCapi(req: VercelRequest, res: VercelResponse): Promise<
   if (userAgent) {
     userData.client_user_agent = userAgent;
   }
+
+  console.log('[CAPI] user_data keys:', Object.keys(userData));
 
   // test_event_code at root level per Meta CAPI spec — always included when env var is set
   const payload: Record<string, unknown> = {
