@@ -29,6 +29,8 @@ const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const TravelGuide = React.lazy(() => import("./pages/TravelGuide"));
 const AIScanPage = React.lazy(() => import("./pages/AIScanPage"));
 const FindClinicsPrototype1 = React.lazy(() => import("./pages/FindClinicsPrototype1"));
+const BlogIndex = React.lazy(() => import("./pages/blog/BlogIndex"));
+const BlogPost = React.lazy(() => import("./pages/blog/BlogPost"));
 
 // Static pages: Can be lazy loaded
 const QA = React.lazy(() => import("./pages/QA"));
@@ -117,6 +119,8 @@ const App = () => (
                 <Route path="/template-demo" element={<TemplateDemo />} />
                 <Route path="/find-clinics-prototype1" element={<FindClinicsPrototype1 />} />
                 <Route path="/travel-guide" element={<TravelGuide />} />
+                <Route path="/blog" element={<BlogIndex />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
                 <Route path="/admin/dashboard" element={
                   <Suspense fallback={<PageLoader />}>
                     <AdminRoute><AdminDashboard /></AdminRoute>
