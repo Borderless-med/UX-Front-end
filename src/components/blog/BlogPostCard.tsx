@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileText } from "lucide-react";
 import type { BlogPost } from "@/data/posts";
 
 interface BlogPostCardProps {
@@ -13,11 +13,14 @@ const BlogPostCard = ({ post }: BlogPostCardProps) => {
   return (
     <Link
       to={`/blog/${post.slug}`}
-      className="group flex flex-col rounded-xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-md"
+      className="card-hover group flex flex-col rounded-xl border-2 border-blue-100 bg-white p-6 shadow-sm hover:border-blue-300"
     >
-      {/* Placeholder graphic slot — swap for a real screenshot, no stock photos */}
-      <div className="mb-4 flex h-36 items-center justify-center rounded-lg bg-blue-150/50 text-blue-primary">
-        <span className="text-xs font-semibold uppercase tracking-wide">{post.category}</span>
+      {/* CSS-based icon graphic slot — swap for a real screenshot when available, no stock photos */}
+      <div className="mb-4 flex h-32 flex-col items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600">
+          <FileText className="h-6 w-6 text-white" aria-hidden="true" />
+        </div>
+        <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">{post.category}</span>
       </div>
 
       <h2 className="mb-2 text-xl font-bold leading-snug text-gray-900 group-hover:text-blue-primary">

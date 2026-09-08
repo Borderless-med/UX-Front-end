@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Stethoscope } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import MedicalDisclaimer from "@/components/MedicalDisclaimer";
 import AIQuickAnswerBox from "@/components/blog/AIQuickAnswerBox";
 import StickyHubCTA from "@/components/blog/StickyHubCTA";
 import ShareOnFacebook from "@/components/blog/ShareOnFacebook";
@@ -28,7 +29,7 @@ const BlogPost = () => {
     return (
       <div className="min-h-screen bg-white">
         <Navigation />
-        <div className="px-4 pb-16 pt-40 text-center sm:px-6 lg:px-8">
+        <div className="px-4 pb-16 pt-44 text-center sm:px-6 lg:px-8">
           <h1 className="mb-4 text-2xl font-bold text-gray-900">Article not found</h1>
           <p className="mb-6 text-neutral-gray">This article may have been moved or no longer exists.</p>
           <Link to="/blog" className="font-semibold text-blue-primary hover:underline">
@@ -41,10 +42,10 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <Navigation />
 
-      <div className="px-4 pb-24 pt-32 sm:px-6 lg:px-8 lg:pb-16">
+      <div className="px-4 pb-24 pt-40 sm:px-6 md:pt-44 lg:px-8 lg:pb-16">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-[1fr_280px]">
           {/* Article column */}
           <article className="min-w-0">
@@ -64,13 +65,15 @@ const BlogPost = () => {
               {formatDate(post.publishDate)} · {post.readTimeMinutes} min read · By {post.author}
             </p>
 
-            {/* Placeholder graphic slot — swap for a real website screenshot, no stock photos */}
+            {/* CSS-based icon graphic slot — swap for a real website screenshot, no stock photos */}
             <div
-              className="mb-6 flex h-48 items-center justify-center rounded-xl bg-blue-150/50 text-blue-primary md:h-64"
+              className="mb-6 flex h-48 items-center justify-center rounded-xl border-2 border-blue-100 bg-gradient-to-br from-blue-50 to-blue-100 md:h-64"
               role="img"
               aria-label={post.heroImageAlt}
             >
-              <span className="px-4 text-center text-xs font-medium">{post.heroImageAlt}</span>
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 shadow-md md:h-20 md:w-20">
+                <Stethoscope className="h-8 w-8 text-white md:h-10 md:w-10" aria-hidden="true" />
+              </div>
             </div>
 
             <AIQuickAnswerBox facts={post.quickAnswer} />
@@ -90,8 +93,10 @@ const BlogPost = () => {
                   </span>
                 ))}
               </div>
-              <ShareOnFacebook />
+              <ShareOnFacebook title={post.title} />
             </div>
+
+            <MedicalDisclaimer variant="compact" className="mt-8" />
           </article>
 
           {/* Sidebar / mobile bottom bar */}

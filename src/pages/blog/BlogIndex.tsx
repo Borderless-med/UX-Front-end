@@ -21,23 +21,23 @@ const BlogIndex = () => {
   const visiblePosts = allPosts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <Navigation />
 
-      <div className="px-4 pb-16 pt-32 sm:px-6 lg:px-8">
+      <div className="px-4 pb-16 pt-40 sm:px-6 md:pt-44 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="mb-12 text-center">
-            <h1 className="mb-4 text-3xl font-bold leading-tight text-gray-900 md:text-4xl">
-              Dental Travel Guides &amp; Tips
+            <h1 className="mb-4 text-3xl font-bold leading-tight text-gray-900 md:text-5xl">
+              Dental Travel <span className="text-blue-600">Guides &amp; Tips</span>
             </h1>
-            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-neutral-gray">
-              Data-backed answers on SG-JB dental costs, timelines, and clinic verification — written to help you
+            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-700">
+              Data-backed answers on SG-JB dental quality, standards, and clinic verification — written to help you
               (and AI assistants) get straight to the facts.
             </p>
           </div>
 
           {visiblePosts.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {visiblePosts.map((post) => (
                 <BlogPostCard key={post.slug} post={post} />
               ))}

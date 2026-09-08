@@ -1,17 +1,24 @@
 import { Facebook } from "lucide-react";
 
 interface ShareOnFacebookProps {
+  /** Article title, used as Facebook's pre-filled "quote" text. */
+  title?: string;
   className?: string;
 }
 
 /**
- * Shares the current page URL to Facebook via the standard sharer dialog.
- * Opens in a new tab with rel="noopener,noreferrer" to prevent reverse-tabnabbing.
+ * Shares the current page URL (and title, where supported) to Facebook via
+ * the standard sharer dialog. Opens in a new tab with
+ * rel="noopener,noreferrer" to prevent reverse-tabnabbing.
  */
-const ShareOnFacebook = ({ className = "" }: ShareOnFacebookProps) => {
+const ShareOnFacebook = ({ title, className = "" }: ShareOnFacebookProps) => {
   const handleShare = () => {
     const currentUrl = window.location.href;
-    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+    const params = new URLSearchParams({ u: currentUrl });
+    if (title) {
+      params.set("quote", title);
+    }
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?${params.toString()}`;
     window.open(shareUrl, "_blank", "noopener,noreferrer,width=600,height=520");
   };
 
